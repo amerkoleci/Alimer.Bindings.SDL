@@ -17,7 +17,7 @@ Task("BuildWindows")
 
     // Copy artifact
     CreateDirectory(artifactsDir);
-    CopyFile("build/_deps/sdl2-build/Release/SDL2.dll", $"{artifactsDir}/SDL2.dll");
+    CopyFile("build/bin/Release/SDL2.dll", $"{artifactsDir}/SDL2.dll");
 });
 
 Task("BuildMacOS")
@@ -47,7 +47,7 @@ Task("BuildLinux")
 
     // Copy artifact
     CreateDirectory(artifactsDir);
-    CopyFile($"build/libSDL2-2.0.so", $"{artifactsDir}/libSDL2-2.0.so");
+    CopyFile($"build/lib/libSDL2-2.0.so", $"{artifactsDir}/libSDL2-2.0.so");
 });
 
 Task("Package")

@@ -18,16 +18,20 @@
 
   <ItemGroup>
     <Content Include="runtimes\win-x64\native\SDL2.dll">
-      <Link>SDL2.dll</Link>
       <PackagePath>runtimes\win-x64\native</PackagePath>
+      <Pack>true</Pack>
+    </Content>
+    <Content Include="runtimes\win-arm64\native\SDL2.dll">
+      <PackagePath>runtimes\win-arm64\native</PackagePath>
+      <Pack>true</Pack>
     </Content>
     <Content Include="runtimes\linux-x64\native\libSDL2-2.0.so.0">
-      <Link>libSDL2-2.0.so.0</Link>
       <PackagePath>runtimes\linux-x64\native</PackagePath>
+      <Pack>true</Pack>
     </Content>
     <Content Include="runtimes\osx-universal\native\libSDL2.dylib">
-      <Link>libSDL2.dylib</Link>
       <PackagePath>runtimes\osx-universal\native</PackagePath>
+      <Pack>true</Pack>
     </Content>
   </ItemGroup>
 

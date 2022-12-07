@@ -10,14 +10,20 @@ Task("BuildWindows")
     .Does(() =>
 {
     // Build
-    var buildDir = "build";
+    var buildDir = "build_win_64";
     CreateDirectory(buildDir);
     StartProcess("cmake", new ProcessSettings { WorkingDirectory = buildDir, Arguments = "-G \"Visual Studio 17 2022\" -A x64 ../" });
     StartProcess("msbuild", new ProcessSettings { WorkingDirectory = buildDir, Arguments = "SDL2.sln /p:Configuration=Release" });
 
+    buildDir = "build_win_arm64";
+    CreateDirectory(buildDir);
+    StartProcess("cmake", new ProcessSettings { WorkingDirectory = buildDir, Arguments = "-G \"Visual Studio 17 2022\" -A ARM64 ../" });
+    StartProcess("msbuild", new ProcessSettings { WorkingDirectory = buildDir, Arguments = "SDL2.sln /p:Configuration=Release" });
+
     // Copy artifact
     CreateDirectory(artifactsDir);
-    CopyFile("build/bin/Release/SDL2.dll", $"{artifactsDir}/SDL2.dll");
+    CopyFile("build_win_64/bin/Release/SDL2.dll", $"{artifactsDir}/win-x64/SDL2.dll");
+    CopyFile("build_win_arm64/bin/Release/SDL2.dll", $"{artifactsDir}/win-arm64/SDL2.dll");
 });
 
 Task("BuildMacOS")

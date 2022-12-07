@@ -114,7 +114,7 @@ internal sealed class NativeLibrary : IDisposable
     /// </summary>
     /// <param name="name">The name of the native export.</param>
     /// <returns>A function pointer for the given name, or 0 if no function with that name exists.</returns>
-    public IntPtr LoadFunction(string name)
+    public nint LoadFunction(string name)
     {
         return _loader.LoadFunctionPointer(Handle, name);
     }

@@ -33,7 +33,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Alimer.Native.SDL;
+namespace Alimer.Bindings.SDL;
 
 public static unsafe class SDL
 {

@@ -1,7 +1,7 @@
 ﻿// Copyright © Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
-using static Alimer.Native.SDL.SDL;
+using static Alimer.Bindings.SDL.SDL;
 
 namespace HelloWorld;
 

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using SystemNativeLibrary = System.Runtime.InteropServices.NativeLibrary;
 #endif
 
-namespace Alimer.Native.SDL;
+namespace Alimer.Bindings.SDL;
 
 internal sealed class NativeLibrary : IDisposable
 {

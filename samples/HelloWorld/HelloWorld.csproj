@@ -11,6 +11,24 @@
     <StripSymbols>true</StripSymbols>
   </PropertyGroup>
 
+  <Choose>
+    <When Condition="($([MSBuild]::IsOsPlatform('windows')) and '$(RuntimeIdentifier)'=='') or '$(RuntimeIdentifier)'=='win-x64'">
+      <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)..\..\Alimer.Native.SDL\runtimes\win-x64\native\SDL2.dll" Link="SDL2.dll" Visible="False" CopyToOutputDirectory="PreserveNewest" />
+      </ItemGroup>
+    </When>
+    <When Condition="($([MSBuild]::IsOsPlatform('linux')) and '$(RuntimeIdentifier)'=='') or '$(RuntimeIdentifier)'=='linux-x64'">
+      <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)..\..\Alimer.Native.SDL\runtimes\linux-x64\native\libSDL2-2.0.so.0" Link="libSDL2-2.0.so.0" Visible="False" CopyToOutputDirectory="PreserveNewest" />
+      </ItemGroup>
+    </When>
+    <When Condition="($([MSBuild]::IsOsPlatform('osx')) and '$(RuntimeIdentifier)'=='') or '$(RuntimeIdentifier)'=='osx-universal'">
+      <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)..\..\Alimer.Native.SDL\runtimes\osx-universal\native\libSDL2.dylib" Link="libSDL2.dylib" Visible="False" CopyToOutputDirectory="PreserveNewest" />
+      </ItemGroup>
+    </When>
+  </Choose>
+
   <ItemGroup>
     <ProjectReference Include="..\..\Alimer.Native.SDL\Alimer.Native.SDL.csproj" />
   </ItemGroup>

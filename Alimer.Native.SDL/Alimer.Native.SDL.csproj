@@ -17,8 +17,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="build\**" PackagePath="build" Pack="true" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="runtimes\**" PackagePath="runtimes" Pack="true" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="runtimes\win-x64\native\SDL2.dll">
+      <Link>SDL2.dll</Link>
+      <PackagePath>runtimes\win-x64\native</PackagePath>
+    </Content>
+    <Content Include="runtimes\linux-x64\native\libSDL2-2.0.so.0">
+      <Link>libSDL2-2.0.so.0</Link>
+      <PackagePath>runtimes\linux-x64\native</PackagePath>
+    </Content>
+    <Content Include="runtimes\osx-universal\native\libSDL2.dylib">
+      <Link>libSDL2.dylib</Link>
+      <PackagePath>runtimes\osx-universal\native</PackagePath>
+    </Content>
   </ItemGroup>
 
 </Project>

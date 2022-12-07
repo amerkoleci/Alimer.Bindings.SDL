@@ -47,7 +47,7 @@ Task("BuildLinux")
 
     // Copy artifact
     CreateDirectory(artifactsDir);
-    CopyFile($"build/lib/libSDL2.so", $"{artifactsDir}/libSDL2.so");
+    CopyFile($"build/libSDL2-2.0.so", $"{artifactsDir}/libSDL2-2.0.so");
 });
 
 Task("Package")

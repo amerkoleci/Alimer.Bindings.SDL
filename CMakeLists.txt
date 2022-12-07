@@ -12,5 +12,6 @@ set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Build architectures for
 
 set (SDL_SHARED ON CACHE BOOL "Build shared library")
 set (SDL_STATIC OFF CACHE BOOL "")
+set (SDL_TESTS OFF CACHE BOOL "")
 
 add_subdirectory (${CMAKE_SOURCE_DIR}/sdl)

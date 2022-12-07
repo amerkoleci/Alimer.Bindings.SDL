@@ -13,11 +13,11 @@ Task("BuildWindows")
     var buildDir = "build";
     CreateDirectory(buildDir);
     StartProcess("cmake", new ProcessSettings { WorkingDirectory = buildDir, Arguments = "-G \"Visual Studio 17 2022\" -A x64 ../" });
-    StartProcess("msbuild", new ProcessSettings { WorkingDirectory = buildDir, Arguments = "JoltC.sln /p:Configuration=Distribution" });
+    StartProcess("msbuild", new ProcessSettings { WorkingDirectory = buildDir, Arguments = "SDL2.sln /p:Configuration=Release" });
 
     // Copy artifact
     CreateDirectory(artifactsDir);
-    CopyFile("build/bin/Distribution/joltc.dll", $"{artifactsDir}/joltc.dll");
+    CopyFile("build/_deps/sdl2-build/Release/SDL2.dll", $"{artifactsDir}/SDL2.dll");
 });
 
 Task("BuildMacOS")
@@ -27,12 +27,12 @@ Task("BuildMacOS")
     // Build
     var buildDir = "build";
     CreateDirectory(buildDir);
-    StartProcess("cmake", new ProcessSettings { WorkingDirectory = buildDir, Arguments = "../ -DCMAKE_BUILD_TYPE=Distribution" });
+    StartProcess("cmake", new ProcessSettings { WorkingDirectory = buildDir, Arguments = "../ -DCMAKE_BUILD_TYPE=Release" });
     StartProcess("make", new ProcessSettings { WorkingDirectory = buildDir });
 
     // Copy artifact
     CreateDirectory(artifactsDir);
-    CopyFile("build/lib/libjoltc.dylib", $"{artifactsDir}/libjoltc.dylib");
+    CopyFile("build/lib/libSDL2.dylib", $"{artifactsDir}/libSDL2.dylib");
 });
 
 Task("BuildLinux")
@@ -42,12 +42,12 @@ Task("BuildLinux")
     // Build
     var buildDir = "build";
     CreateDirectory(buildDir);
-    StartProcess("cmake", new ProcessSettings { WorkingDirectory = buildDir, Arguments = "../ -DCMAKE_BUILD_TYPE=Distribution" });
+    StartProcess("cmake", new ProcessSettings { WorkingDirectory = buildDir, Arguments = "../ -DCMAKE_BUILD_TYPE=Release" });
     StartProcess("make", new ProcessSettings { WorkingDirectory = buildDir });
 
     // Copy artifact
     CreateDirectory(artifactsDir);
-    CopyFile($"build/lib/libjoltc.so", $"{artifactsDir}/libjoltc.so");
+    CopyFile($"build/lib/libSDL2.so", $"{artifactsDir}/libSDL2.so");
 });
 
 Task("Package")
@@ -59,7 +59,7 @@ Task("Package")
     dnPackSettings.Verbosity = DotNetVerbosity.Minimal;
     dnPackSettings.Configuration = "Release";   
 
-    DotNetPack("src/JoltPhysicsSharp/JoltPhysicsSharp.csproj", dnPackSettings);
+    DotNetPack("Alimer.Native.SDL/Alimer.Native.SDL.csproj", dnPackSettings);
 });
 
 //////////////////////////////////////////////////////////////////////

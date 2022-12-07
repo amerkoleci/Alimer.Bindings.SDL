@@ -7,6 +7,9 @@ else()
 	include(FetchContent)
 	set(FETCHCONTENT_QUIET FALSE)
 
+    set (SDL_SHARED ON CACHE BOOL "Build shared library")
+    set (SDL_STATIC OFF CACHE BOOL "")
+
 	FetchContent_Declare(
 		SDL2
 		GIT_REPOSITORY https://github.com/libsdl-org/SDL

@@ -18,74 +18,67 @@ env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
 jobs:
-  build:
-    name: build-${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest, macos-latest, ubuntu-20.04]
+  windows:
+    runs-on: windows-latest
     steps:
-      - name: Add msbuild to PATH
-        if: runner.os == 'Windows'
-        uses: microsoft/setup-msbuild@v1.1
-      - name: Install Linux dependencies
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt update
-          sudo apt-get install make cmake autoconf automake pkg-config 
-        shell: bash
-      - name: Clone repository
-        uses: actions/checkout@v3
-        with:
-          submodules: recursive
-      - name: Restore dotnet tools
-        run: dotnet tool restore
-      - name: Run CAKE
-        run: dotnet cake
-      - name: Package artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: Native-${{ matrix.os }}
-          path: |
-            artifacts/*
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+    - name: Configure Win64
+      run: cmake . -G "Visual Studio 17 2022" -A x64 -Bbuild_win_64 -DCMAKE_BUILD_TYPE:String=Release
+    - name: Build Win64
+      run: cmake --build build_win_64 --config Release
+
+    - name: Configure Win64 ARM64
+      run: cmake . -G "Visual Studio 17 2022" -A ARM64 -Bbuild_win_arm64 -DCMAKE_BUILD_TYPE:String=Release
+    - name: Build Win64
+      run: cmake --build build_win_arm64 --config Release
+    - name: Package Windows
+      run: |
+        mkdir bin/win-x64/native
+        mkdir bin/win-arm64/native
+        mv build_win_64\bin\Release\SDL2.dll bin/win-x64/native
+        mv build_win_arm64\bin\Release\SDL2.dll bin/win-arm64/native
+    - uses: actions/upload-artifact@v3
+      with:
+        name: libs_windows
+        path: bin
   deploy:
     name: deploy
     runs-on: ubuntu-latest
     permissions:
       packages: write
-    needs: [ build ]
+    needs: [ windows ]
     if: ${{ github.event_name == 'push' }}
     steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
       - name: Install .NET 7 SDK
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
-      - name: Clone repository
-        uses: actions/checkout@v3
-        with:
-          submodules: recursive
-      - name: Download artifacts for Windows x64
+
+      - name: Download Windows artifacts
         uses: actions/download-artifact@v3
         with:
-          name: Native-windows-latest
-          path: Alimer.Bindings.SDL/runtimes/win-x64/native
-      - name: Download artifacts for macOS
-        uses: actions/download-artifact@v3
-        with:
-          name: Native-macos-latest
-          path: Alimer.Bindings.SDL/runtimes/osx-universal/native
-      - name: Download artifacts for Linux x64
-        uses: actions/download-artifact@v3
-        with:
-          name: Native-ubuntu-20.04
-          path: Alimer.Bindings.SDL/runtimes/linux-x64/native
-      - name: Restore dotnet tools
-        run: dotnet tool restore
-      - name: Run CAKE
-        run: dotnet cake --target Package
+          path: Alimer.Bindings.SDL/runtimes
+
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: Alimer.Bindings.SDL/runtimes
+
+      - name: Pack
+        run: dotnet pack Alimer.Bindings.SDL/Alimer.Bindings.SDL.csproj --configuration Release
+
       - uses: actions/upload-artifact@v3
         with:
           name: nuget_release
           path: |
             ./artifacts/*
           if-no-files-found: error
+      - uses: geekyeggo/delete-artifact@v2
+        with:
+          name: |
+            libs_windows

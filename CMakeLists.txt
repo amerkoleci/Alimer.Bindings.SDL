@@ -13,12 +13,4 @@ set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Build architectures for
 set (SDL_SHARED ON CACHE BOOL "Build shared library")
 set (SDL_STATIC OFF CACHE BOOL "")
 
-include(FetchContent)
-set(FETCHCONTENT_QUIET FALSE)
-FetchContent_Declare(
-	SDL2
-	GIT_REPOSITORY https://github.com/libsdl-org/SDL
-	GIT_TAG release-2.26.1 # grab latest stable release
-	GIT_PROGRESS TRUE
-)
-FetchContent_MakeAvailable(SDL2)
+add_subdirectory (${CMAKE_SOURCE_DIR}/sdl)

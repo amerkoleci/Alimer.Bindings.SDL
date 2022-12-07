@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alimer.Native.SDL", "Alimer.Native.SDL\Alimer.Native.SDL.csproj", "{6956C543-D7C7-42A6-8E4C-C088E9581BAA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{0FC63B64-13F8-4238-9D1F-82E65F4E5D6C}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		LICENSE = LICENSE
+		NuGet.config = NuGet.config
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{97BE8BBF-3CFA-4EE5-9530-862ED4AAA1B7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorld", "samples\HelloWorld\HelloWorld.csproj", "{F1E62F60-D46E-49F8-BFC8-AD0E9E353F50}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6956C543-D7C7-42A6-8E4C-C088E9581BAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6956C543-D7C7-42A6-8E4C-C088E9581BAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6956C543-D7C7-42A6-8E4C-C088E9581BAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6956C543-D7C7-42A6-8E4C-C088E9581BAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1E62F60-D46E-49F8-BFC8-AD0E9E353F50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1E62F60-D46E-49F8-BFC8-AD0E9E353F50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1E62F60-D46E-49F8-BFC8-AD0E9E353F50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1E62F60-D46E-49F8-BFC8-AD0E9E353F50}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F1E62F60-D46E-49F8-BFC8-AD0E9E353F50} = {97BE8BBF-3CFA-4EE5-9530-862ED4AAA1B7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7315E8D4-D93C-4516-A973-02FEF89B408A}
+	EndGlobalSection
+EndGlobal

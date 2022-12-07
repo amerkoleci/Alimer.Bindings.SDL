@@ -32,7 +32,7 @@ Task("BuildMacOS")
 
     // Copy artifact
     CreateDirectory(artifactsDir);
-    CopyFile("build/lib/libSDL2.dylib", $"{artifactsDir}/libSDL2.dylib");
+    CopyFile("build/lib/libSDL2-2.0.dylib", $"{artifactsDir}/libSDL2.dylib");
 });
 
 Task("BuildLinux")
@@ -47,7 +47,7 @@ Task("BuildLinux")
 
     // Copy artifact
     CreateDirectory(artifactsDir);
-    CopyFile($"build/lib/libSDL2-2.0.so", $"{artifactsDir}/libSDL2-2.0.so");
+    CopyFile($"build/lib/libSDL2-2.0.so", $"{artifactsDir}/libSDL2-2.0.so.0");
 });
 
 Task("Package")

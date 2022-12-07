@@ -30,12 +30,39 @@ jobs:
         name: libs_windows
         path: bin
 
+  linux:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+        lfs: true
+
+    - name: apt_install
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -qq install libzstd-dev ninja-build
+    - name: configure_linux_64
+      run: cmake . -G Ninja -Bbuild_linux_64 -DCMAKE_BUILD_TYPE=Release
+    - name: build_linux_64
+      run: cmake --build build_linux_64
+
+    # Linux artifact 
+    - name: package_linux
+      run: |
+        mkdir -p bin/linux-x64/native
+        mv build_linux_64/libSDL2-2.0.so bin/linux-x64/native
+    - uses: actions/upload-artifact@v3
+      with:
+        name: libs_linux
+        path: bin
+
   combine:
     name: combine artifacts
     runs-on: ubuntu-20.04
-    needs: [windows]
+    needs: [windows, linux]
     steps:
-      - name: download artifacts
+      - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
           path: artifacts
@@ -46,6 +73,7 @@ jobs:
         run: |
           mkdir native_libs
           cp -r artifacts/libs_windows/* native_libs
+          cp -r artifacts/libs_linux/* native_libs
       - uses: edgarrc/action-7z@v1
         with:
           args: 7z a -t7z native_libs.7z ./native_libs/
@@ -62,3 +90,4 @@ jobs:
         with:
           name: |
             libs_windows
+            libs_linux

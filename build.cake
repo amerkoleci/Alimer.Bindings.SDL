@@ -59,7 +59,7 @@ Task("Package")
     dnPackSettings.Verbosity = DotNetVerbosity.Minimal;
     dnPackSettings.Configuration = "Release";   
 
-    DotNetPack("Alimer.Native.SDL/Alimer.Native.SDL.csproj", dnPackSettings);
+    DotNetPack("Alimer.Bindings.SDL/Alimer.Bindings.SDL.csproj", dnPackSettings);
 });
 
 //////////////////////////////////////////////////////////////////////

@@ -6,6 +6,7 @@ using static Alimer.Bindings.SDL.SDL;
 using static Alimer.Bindings.SDL.SDL.SDL_LogPriority;
 using static Alimer.Bindings.SDL.SDL.SDL_WindowFlags;
 using static Alimer.Bindings.SDL.SDL.SDL_EventType;
+using Alimer.Bindings.SDL;
 
 namespace HelloWorld;
 
@@ -47,10 +48,11 @@ public static class Program
 
         // create the window
         SDL_WindowFlags flags = SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN | SDL_WINDOW_VULKAN;
-        nint window = SDL_CreateWindow("Hello World", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, flags);
+        SDL_Window window = SDL_CreateWindow("Hello World", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, flags);
         string[] extensions = SDL_Vulkan_GetInstanceExtensions(window);
         SDL_GetWindowSizeInPixels(window, out int width, out int height);
 
+        var test3 = SDL_GetNumVideoDisplays();
         var test2 = SDL_GetCurrentVideoDriver();
 
         bool done = false;

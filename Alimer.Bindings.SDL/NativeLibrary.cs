@@ -54,7 +54,7 @@ internal sealed class NativeLibrary : IDisposable
     {
         foreach (string rid in GetRuntimeIdentifiers())
         {
-            string nativeLibsPath = Path.Combine(AppContext.BaseDirectory, $@"runtimes\{rid}\native");
+            string nativeLibsPath = Path.Combine(AppContext.BaseDirectory, "runtimes", rid, "native");
 
             if (Directory.Exists(nativeLibsPath))
             {

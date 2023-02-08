@@ -23,8 +23,8 @@ jobs:
       run: |
         mkdir bin/win-x64/native
         mkdir bin/win-arm64/native
-        mv build_win_64\bin\Release\SDL2.dll bin/win-x64/native
-        mv build_win_arm64\bin\Release\SDL2.dll bin/win-arm64/native
+        mv build_win_64\bin\Release\SDL3.dll bin/win-x64/native
+        mv build_win_arm64\bin\Release\SDL3.dll bin/win-arm64/native
     - uses: actions/upload-artifact@v3
       with:
         name: libs_windows
@@ -68,7 +68,7 @@ jobs:
     - name: package_osx
       run: |
         mkdir -p bin/osx-universal/native
-        mv build_osx/lib/libSDL2-2.0.0.dylib bin/osx-universal/native/libSDL2.dylib
+        mv build_osx/lib/libSDL3-0.0.0.dylib bin/osx-universal/native/libSDL3.dylib
     - uses: actions/upload-artifact@v3
       with:
         name: libs_osx

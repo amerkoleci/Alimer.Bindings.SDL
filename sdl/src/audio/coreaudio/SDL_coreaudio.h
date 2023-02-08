@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -18,14 +18,14 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "../../SDL_internal.h"
+#include "SDL_internal.h"
 
 #ifndef SDL_coreaudio_h_
 #define SDL_coreaudio_h_
 
 #include "../SDL_sysaudio.h"
 
-#if !defined(__IPHONEOS__)
+#if !defined(__IOS__)
 #define MACOSX_COREAUDIO 1
 #endif
 
@@ -48,7 +48,7 @@
 #endif
 
 /* Hidden "this" pointer for the audio functions */
-#define _THIS   SDL_AudioDevice *this
+#define _THIS SDL_AudioDevice *this
 
 struct SDL_PrivateAudioData
 {
@@ -72,5 +72,3 @@ struct SDL_PrivateAudioData
 };
 
 #endif /* SDL_coreaudio_h_ */
-
-/* vi: set ts=4 sw=4 expandtab: */

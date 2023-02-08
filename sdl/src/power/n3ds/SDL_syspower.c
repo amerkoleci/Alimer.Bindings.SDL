@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -19,14 +19,11 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-#include "../../SDL_internal.h"
+#include "SDL_internal.h"
 
 #if !defined(SDL_POWER_DISABLED) && defined(SDL_POWER_N3DS)
 
 #include <3ds.h>
-
-#include "SDL_error.h"
-#include "SDL_power.h"
 
 SDL_FORCE_INLINE SDL_PowerState GetPowerState(void);
 SDL_FORCE_INLINE int ReadStateFromPTMU(bool *is_plugged, u8 *is_charging);
@@ -103,9 +100,7 @@ GetBatteryPercentage(void)
 
     mcuHwcExit();
 
-    return (int) SDL_round(data[0] + data[1] / 256.0);
+    return (int)SDL_round(data[0] + data[1] / 256.0);
 }
 
 #endif /* !SDL_POWER_DISABLED && SDL_POWER_N3DS */
-
-/* vi: set sts=4 ts=4 sw=4 expandtab: */

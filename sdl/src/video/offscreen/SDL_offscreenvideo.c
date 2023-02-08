@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "../../SDL_internal.h"
+#include "SDL_internal.h"
 
 #if SDL_VIDEO_DRIVER_OFFSCREEN
 
@@ -30,8 +30,6 @@
  * for automated testing.
  */
 
-#include "SDL_video.h"
-
 #include "SDL_offscreenvideo.h"
 #include "SDL_offscreenevents_c.h"
 #include "SDL_offscreenframebuffer_c.h"
@@ -42,27 +40,25 @@
 
 /* Initialization/Query functions */
 static int OFFSCREEN_VideoInit(_THIS);
-static int OFFSCREEN_SetDisplayMode(_THIS, SDL_VideoDisplay * display, SDL_DisplayMode * mode);
+static int OFFSCREEN_SetDisplayMode(_THIS, SDL_VideoDisplay *display, SDL_DisplayMode *mode);
 static void OFFSCREEN_VideoQuit(_THIS);
 
 /* OFFSCREEN driver bootstrap functions */
 
-static void
-OFFSCREEN_DeleteDevice(SDL_VideoDevice * device)
+static void OFFSCREEN_DeleteDevice(SDL_VideoDevice *device)
 {
     SDL_free(device);
 }
 
-static SDL_VideoDevice *
-OFFSCREEN_CreateDevice(void)
+static SDL_VideoDevice *OFFSCREEN_CreateDevice(void)
 {
     SDL_VideoDevice *device;
 
     /* Initialize all variables that we clean on shutdown */
-    device = (SDL_VideoDevice *) SDL_calloc(1, sizeof(SDL_VideoDevice));
-    if (!device) {
+    device = (SDL_VideoDevice *)SDL_calloc(1, sizeof(SDL_VideoDevice));
+    if (device == NULL) {
         SDL_OutOfMemory();
-        return (0);
+        return 0;
     }
 
     /* General video */
@@ -100,39 +96,30 @@ VideoBootStrap OFFSCREEN_bootstrap = {
     OFFSCREEN_CreateDevice
 };
 
-int
-OFFSCREEN_VideoInit(_THIS)
+int OFFSCREEN_VideoInit(_THIS)
 {
     SDL_DisplayMode mode;
 
     /* Use a fake 32-bpp desktop mode */
+    SDL_zero(mode);
     mode.format = SDL_PIXELFORMAT_RGB888;
-    mode.w = 1024;
-    mode.h = 768;
-    mode.refresh_rate = 0;
-    mode.driverdata = NULL;
-    if (SDL_AddBasicVideoDisplay(&mode) < 0) {
+    mode.pixel_w = 1024;
+    mode.pixel_h = 768;
+    if (SDL_AddBasicVideoDisplay(&mode) == 0) {
         return -1;
     }
-
-    SDL_zero(mode);
-    SDL_AddDisplayMode(&_this->displays[0], &mode);
 
     /* We're done! */
     return 0;
 }
 
-static int
-OFFSCREEN_SetDisplayMode(_THIS, SDL_VideoDisplay * display, SDL_DisplayMode * mode)
+static int OFFSCREEN_SetDisplayMode(_THIS, SDL_VideoDisplay *display, SDL_DisplayMode *mode)
 {
     return 0;
 }
 
-void
-OFFSCREEN_VideoQuit(_THIS)
+void OFFSCREEN_VideoQuit(_THIS)
 {
 }
 
 #endif /* SDL_VIDEO_DRIVER_OFFSCREEN */
-
-/* vi: set ts=4 sw=4 expandtab: */

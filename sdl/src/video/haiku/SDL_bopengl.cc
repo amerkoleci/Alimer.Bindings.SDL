@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "../../SDL_internal.h"
+#include "SDL_internal.h"
 
 #if SDL_VIDEO_DRIVER_HAIKU && SDL_VIDEO_OPENGL
 
@@ -28,7 +28,7 @@
 #include <KernelKit.h>
 #include <OpenGLKit.h>
 #include "SDL_BWin.h"
-#include "../../main/haiku/SDL_BApp.h"
+#include "../../core/haiku/SDL_BApp.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -36,11 +36,11 @@ extern "C" {
 
 
 static SDL_INLINE SDL_BWin *_ToBeWin(SDL_Window *window) {
-    return ((SDL_BWin*)(window->driverdata));
+    return (SDL_BWin *)(window->driverdata);
 }
 
 static SDL_INLINE SDL_BApp *_GetBeApp() {
-    return ((SDL_BApp*)be_app);
+    return (SDL_BApp *)be_app;
 }
 
 /* Passing a NULL path means load pointers from the application */
@@ -51,7 +51,7 @@ int HAIKU_GL_LoadLibrary(_THIS, const char *path)
             int32 cookie = 0;
     while (get_next_image_info(0, &cookie, &info) == B_OK) {
         void *location = NULL;
-        if( get_image_symbol(info.id, "glBegin", B_SYMBOL_TYPE_ANY,
+        if ( get_image_symbol(info.id, "glBegin", B_SYMBOL_TYPE_ANY,
                 &location) == B_OK) {
 
             _this->gl_config.dll_handle = (void *) (addr_t) info.id;
@@ -63,7 +63,7 @@ int HAIKU_GL_LoadLibrary(_THIS, const char *path)
     return 0;
 }
 
-void *HAIKU_GL_GetProcAddress(_THIS, const char *proc)
+SDL_FunctionPointer HAIKU_GL_GetProcAddress(_THIS, const char *proc)
 {
     if (_this->gl_config.dll_handle != NULL) {
         void *location = NULL;
@@ -72,7 +72,7 @@ void *HAIKU_GL_GetProcAddress(_THIS, const char *proc)
             get_image_symbol((image_id) (addr_t) _this->gl_config.dll_handle,
                               proc, B_SYMBOL_TYPE_ANY,
                               &location)) == B_OK) {
-            return location;
+            return (SDL_FunctionPointer)location;
         } else {
                 SDL_SetError("Couldn't find OpenGL symbol");
                 return NULL;
@@ -142,7 +142,7 @@ SDL_GLContext HAIKU_GL_CreateContext(_THIS, SDL_Window * window) {
     return (SDL_GLContext)(bwin->GetGLView());
 }
 
-void HAIKU_GL_DeleteContext(_THIS, SDL_GLContext context) {
+int HAIKU_GL_DeleteContext(_THIS, SDL_GLContext context) {
     // printf("HAIKU_GL_DeleteContext(%llx), thread = %d\n", (uint64)context, find_thread(NULL));
     BGLView* glView = (BGLView*)context;
     SDL_BWin *bwin = (SDL_BWin*)glView->Window();
@@ -151,6 +151,7 @@ void HAIKU_GL_DeleteContext(_THIS, SDL_GLContext context) {
     } else {
         bwin->RemoveGLView();
     }
+    return 0;
 }
 
 
@@ -159,9 +160,8 @@ int HAIKU_GL_SetSwapInterval(_THIS, int interval) {
     return SDL_Unsupported();
 }
 
-int HAIKU_GL_GetSwapInterval(_THIS) {
-    /* TODO: Implement this, if necessary? */
-    return 0;
+int HAIKU_GL_GetSwapInterval(_THIS, int *interval) {
+    return SDL_Unsupported();
 }
 
 
@@ -175,9 +175,9 @@ void HAIKU_GL_UnloadLibrary(_THIS) {
    currently in use. */
 void HAIKU_GL_RebootContexts(_THIS) {
     SDL_Window *window = _this->windows;
-    while(window) {
+    while (window) {
         SDL_BWin *bwin = _ToBeWin(window);
-        if(bwin->GetGLView()) {
+        if (bwin->GetGLView()) {
             bwin->LockLooper();
             bwin->RemoveGLView();
             bwin->CreateGLView(bwin->GetGLType());
@@ -193,5 +193,3 @@ void HAIKU_GL_RebootContexts(_THIS) {
 #endif
 
 #endif /* SDL_VIDEO_DRIVER_HAIKU && SDL_VIDEO_OPENGL */
-
-/* vi: set ts=4 sw=4 expandtab: */

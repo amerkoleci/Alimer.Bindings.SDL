@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -18,15 +18,12 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "../../SDL_internal.h"
+#include "SDL_internal.h"
 
 #if SDL_VIDEO_DRIVER_UIKIT
 
 #import <UIKit/UIKit.h>
 
-#include "SDL_video.h"
-#include "SDL_mouse.h"
-#include "SDL_hints.h"
 #include "../SDL_sysvideo.h"
 #include "../SDL_pixels_c.h"
 #include "../../events/SDL_events_c.h"
@@ -52,23 +49,22 @@ static void UIKit_VideoQuit(_THIS);
 
 /* DUMMY driver bootstrap functions */
 
-static void UIKit_DeleteDevice(SDL_VideoDevice * device)
+static void UIKit_DeleteDevice(SDL_VideoDevice *device)
 {
     @autoreleasepool {
-        CFRelease(device->driverdata);
+        device->driverdata = nil;
         SDL_free(device);
     }
 }
 
-static SDL_VideoDevice *
-UIKit_CreateDevice(void)
+static SDL_VideoDevice *UIKit_CreateDevice(void)
 {
     @autoreleasepool {
         SDL_VideoDevice *device;
         SDL_VideoData *data;
 
         /* Initialize all variables that we clean on shutdown */
-        device = (SDL_VideoDevice *) SDL_calloc(1, sizeof(SDL_VideoDevice));
+        device = (SDL_VideoDevice *)SDL_calloc(1, sizeof(SDL_VideoDevice));
         if (device) {
             data = [SDL_VideoData new];
         } else {
@@ -77,7 +73,7 @@ UIKit_CreateDevice(void)
             return (0);
         }
 
-        device->driverdata = (void *) CFBridgingRetain(data);
+        device->driverdata = data;
 
         /* Set the function pointers */
         device->VideoInit = UIKit_VideoInit;
@@ -97,7 +93,7 @@ UIKit_CreateDevice(void)
         device->DestroyWindow = UIKit_DestroyWindow;
         device->GetWindowWMInfo = UIKit_GetWindowWMInfo;
         device->GetDisplayUsableBounds = UIKit_GetDisplayUsableBounds;
-        device->GetDisplayDPI = UIKit_GetDisplayDPI;
+        device->GetDisplayPhysicalDPI = UIKit_GetDisplayPhysicalDPI;
         device->GetWindowSizeInPixels = UIKit_GetWindowSizeInPixels;
 
 #if SDL_IPHONE_KEYBOARD
@@ -114,30 +110,26 @@ UIKit_CreateDevice(void)
 
         /* OpenGL (ES) functions */
 #if SDL_VIDEO_OPENGL_ES || SDL_VIDEO_OPENGL_ES2
-        device->GL_MakeCurrent      = UIKit_GL_MakeCurrent;
-        device->GL_GetDrawableSize  = UIKit_GL_GetDrawableSize;
-        device->GL_SwapWindow       = UIKit_GL_SwapWindow;
-        device->GL_CreateContext    = UIKit_GL_CreateContext;
-        device->GL_DeleteContext    = UIKit_GL_DeleteContext;
-        device->GL_GetProcAddress   = UIKit_GL_GetProcAddress;
-        device->GL_LoadLibrary      = UIKit_GL_LoadLibrary;
+        device->GL_MakeCurrent = UIKit_GL_MakeCurrent;
+        device->GL_SwapWindow = UIKit_GL_SwapWindow;
+        device->GL_CreateContext = UIKit_GL_CreateContext;
+        device->GL_DeleteContext = UIKit_GL_DeleteContext;
+        device->GL_GetProcAddress = UIKit_GL_GetProcAddress;
+        device->GL_LoadLibrary = UIKit_GL_LoadLibrary;
 #endif
         device->free = UIKit_DeleteDevice;
 
 #if SDL_VIDEO_VULKAN
         device->Vulkan_LoadLibrary = UIKit_Vulkan_LoadLibrary;
         device->Vulkan_UnloadLibrary = UIKit_Vulkan_UnloadLibrary;
-        device->Vulkan_GetInstanceExtensions
-                                     = UIKit_Vulkan_GetInstanceExtensions;
+        device->Vulkan_GetInstanceExtensions = UIKit_Vulkan_GetInstanceExtensions;
         device->Vulkan_CreateSurface = UIKit_Vulkan_CreateSurface;
-        device->Vulkan_GetDrawableSize = UIKit_Vulkan_GetDrawableSize;
 #endif
 
 #if SDL_VIDEO_METAL
         device->Metal_CreateView = UIKit_Metal_CreateView;
         device->Metal_DestroyView = UIKit_Metal_DestroyView;
         device->Metal_GetLayer = UIKit_Metal_GetLayer;
-        device->Metal_GetDrawableSize = UIKit_Metal_GetDrawableSize;
 #endif
 
         device->gl_config.accelerated = 1;
@@ -151,9 +143,7 @@ VideoBootStrap UIKIT_bootstrap = {
     UIKit_CreateDevice
 };
 
-
-int
-UIKit_VideoInit(_THIS)
+int UIKit_VideoInit(_THIS)
 {
     _this->gl_config.driver_loaded = 1;
 
@@ -167,8 +157,7 @@ UIKit_VideoInit(_THIS)
     return 0;
 }
 
-void
-UIKit_VideoQuit(_THIS)
+void UIKit_VideoQuit(_THIS)
 {
     SDL_QuitGCKeyboard();
     SDL_QuitGCMouse();
@@ -176,18 +165,13 @@ UIKit_VideoQuit(_THIS)
     UIKit_QuitModes(_this);
 }
 
-void
-UIKit_SuspendScreenSaver(_THIS)
+void UIKit_SuspendScreenSaver(_THIS)
 {
     @autoreleasepool {
-        /* Ignore ScreenSaver API calls if the idle timer hint has been set. */
-        /* FIXME: The idle timer hint should be deprecated for SDL 2.1. */
-        if (!SDL_GetHintBoolean(SDL_HINT_IDLE_TIMER_DISABLED, SDL_FALSE)) {
-            UIApplication *app = [UIApplication sharedApplication];
+        UIApplication *app = [UIApplication sharedApplication];
 
-            /* Prevent the display from dimming and going to sleep. */
-            app.idleTimerDisabled = (_this->suspend_screensaver != SDL_FALSE);
-        }
+        /* Prevent the display from dimming and going to sleep. */
+        app.idleTimerDisabled = (_this->suspend_screensaver != SDL_FALSE);
     }
 }
 
@@ -200,7 +184,7 @@ UIKit_IsSystemVersionAtLeast(double version)
 CGRect
 UIKit_ComputeViewFrame(SDL_Window *window, UIScreen *screen)
 {
-    SDL_WindowData *data = (__bridge SDL_WindowData *) window->driverdata;
+    SDL_WindowData *data = window->driverdata;
     CGRect frame = screen.bounds;
 
     /* Use the UIWindow bounds instead of the UIScreen bounds, when possible.
@@ -235,14 +219,13 @@ UIKit_ComputeViewFrame(SDL_Window *window, UIScreen *screen)
     return frame;
 }
 
-void
-UIKit_ForceUpdateHomeIndicator()
+void UIKit_ForceUpdateHomeIndicator()
 {
 #if !TARGET_OS_TV
     /* Force the main SDL window to re-evaluate home indicator state */
     SDL_Window *focus = SDL_GetFocusWindow();
     if (focus) {
-        SDL_WindowData *data = (__bridge SDL_WindowData *) focus->driverdata;
+        SDL_WindowData *data = focus->driverdata;
         if (data != nil) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunguarded-availability-new"
@@ -294,5 +277,3 @@ SDL_bool SDL_IsIPad(void)
 }
 
 #endif /* SDL_VIDEO_DRIVER_UIKIT */
-
-/* vi: set ts=4 sw=4 expandtab: */

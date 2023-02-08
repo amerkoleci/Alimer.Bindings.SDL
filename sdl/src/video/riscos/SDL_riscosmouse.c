@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "../../SDL_internal.h"
+#include "SDL_internal.h"
 
 #if SDL_VIDEO_DRIVER_RISCOS
 
@@ -26,9 +26,7 @@
 
 #include <kernel.h>
 
-
-static SDL_Cursor *
-RISCOS_CreateDefaultCursor()
+static SDL_Cursor *RISCOS_CreateDefaultCursor()
 {
     SDL_Cursor *cursor;
 
@@ -43,14 +41,12 @@ RISCOS_CreateDefaultCursor()
     return cursor;
 }
 
-static void
-RISCOS_FreeCursor(SDL_Cursor * cursor)
+static void RISCOS_FreeCursor(SDL_Cursor *cursor)
 {
     SDL_free(cursor);
 }
 
-static int
-RISCOS_ShowCursor(SDL_Cursor * cursor)
+static int RISCOS_ShowCursor(SDL_Cursor *cursor)
 {
     if (cursor) {
         /* Turn the mouse pointer on */
@@ -63,8 +59,7 @@ RISCOS_ShowCursor(SDL_Cursor * cursor)
     return 0;
 }
 
-int
-RISCOS_InitMouse(_THIS)
+int RISCOS_InitMouse(_THIS)
 {
     SDL_Mouse *mouse = SDL_GetMouse();
 
@@ -84,5 +79,3 @@ RISCOS_InitMouse(_THIS)
 }
 
 #endif /* SDL_VIDEO_DRIVER_RISCOS */
-
-/* vi: set ts=4 sw=4 expandtab: */

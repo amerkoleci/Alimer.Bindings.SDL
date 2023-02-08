@@ -40,7 +40,7 @@ namespace Alimer.Bindings.SDL;
 public static unsafe class SDL
 {
     private static readonly NativeLibrary s_sdl2Lib = LoadNativeLibrary();
-    private const string nativeLibName = "SDL2";
+    private const string nativeLibName = "SDL3";
 
     private static NativeLibrary LoadNativeLibrary()
     {
@@ -50,7 +50,7 @@ public static unsafe class SDL
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 #endif
         {
-            return new NativeLibrary("SDL2.dll");
+            return new NativeLibrary("SDL3.dll");
         }
 #if NET6_0_OR_GREATER
         else if (OperatingSystem.IsLinux())
@@ -66,14 +66,16 @@ public static unsafe class SDL
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
 #endif
         {
-            return new NativeLibrary("libSDL2.dylib");
+            return new NativeLibrary("libSDL3.dylib");
         }
         else
         {
             Debug.WriteLine("Unknown SDL platform. Attempting to load \"SDL2\"");
-            return new NativeLibrary("SDL2");
+            return new NativeLibrary("SDL3");
         }
     }
+
+    // https://github.com/libsdl-org/SDL/blob/main/docs/README-migration.md
 
     public enum SDL_bool
     {
@@ -952,8 +954,8 @@ public static unsafe class SDL
     private static readonly delegate* unmanaged[Cdecl]<int, out Rectangle, int> s_SDL_GetDisplayBounds = (delegate* unmanaged[Cdecl]<int, out Rectangle, int>)LoadFunction(nameof(SDL_GetDisplayBounds));
     private static readonly delegate* unmanaged[Cdecl]<int, out float, out float, out float, int> s_SDL_GetDisplayDPI = (delegate* unmanaged[Cdecl]<int, out float, out float, out float, int>)LoadFunction(nameof(SDL_GetDisplayDPI));
     private static readonly delegate* unmanaged[Cdecl]<int, SDL_DisplayOrientation> s_SDL_GetDisplayOrientation = (delegate* unmanaged[Cdecl]<int, SDL_DisplayOrientation>)LoadFunction(nameof(SDL_GetDisplayOrientation));
-    private static readonly delegate* unmanaged[Cdecl]<int, int> s_SDL_GetNumDisplayModes = (delegate* unmanaged[Cdecl]<int, int>)LoadFunction(nameof(SDL_GetNumDisplayModes));
-    private static readonly delegate* unmanaged[Cdecl]<int> s_SDL_GetNumVideoDisplays = (delegate* unmanaged[Cdecl]<int>)LoadFunction(nameof(SDL_GetNumVideoDisplays));
+    //private static readonly delegate* unmanaged[Cdecl]<uint, int*, SDL_DisplayMode*> s_SDL_GetFullscreenDisplayModes = (delegate* unmanaged[Cdecl]<uint, int*, SDL_DisplayMode*>)LoadFunction(nameof(SDL_GetFullscreenDisplayModes));
+    private static readonly delegate* unmanaged[Cdecl]<int*, uint> s_SDL_GetDisplays = (delegate* unmanaged[Cdecl]<int*, uint>)LoadFunction(nameof(SDL_GetDisplays));
     private static readonly delegate* unmanaged[Cdecl]<int> s_SDL_GetNumVideoDrivers = (delegate* unmanaged[Cdecl]<int>)LoadFunction(nameof(SDL_GetNumVideoDrivers));
     private static readonly delegate* unmanaged[Cdecl]<int, byte*> s_SDL_GetVideoDriver = (delegate* unmanaged[Cdecl]<int, byte*>)LoadFunction(nameof(SDL_GetVideoDriver));
 
@@ -972,13 +974,6 @@ public static unsafe class SDL
         return s_SDL_GetDisplayOrientation(displayIndex);
     }
 
-    [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetDisplayMode(
-        int displayIndex,
-        int modeIndex,
-        out SDL_DisplayMode mode
-    );
-
     /* Only available in 2.0.5 or higher. */
     [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern int SDL_GetDisplayUsableBounds(
@@ -986,8 +981,12 @@ public static unsafe class SDL
         out Rectangle rect
     );
 
-    public static int SDL_GetNumDisplayModes(int displayIndex) => s_SDL_GetNumDisplayModes(displayIndex);
-    public static int SDL_GetNumVideoDisplays() => s_SDL_GetNumVideoDisplays();
+    // typedef Uint32 SDL_DisplayID;
+    // typedef Uint32 SDL_WindowID;
+
+    //public static int SDL_GetNumDisplayModes(uint displayID, int* count) => s_SDL_GetFullscreenDisplayModes(displayID, count);
+
+    public static uint SDL_GetDisplays(int* count) => s_SDL_GetDisplays(count);
     public static int SDL_GetNumVideoDrivers() => s_SDL_GetNumVideoDrivers();
 
     public static string SDL_GetVideoDriver(int index) => GetString(s_SDL_GetVideoDriver(index));
@@ -1408,11 +1407,11 @@ public static unsafe class SDL
         out int right
     );
 
-    private static readonly delegate* unmanaged[Cdecl]<SDL_Window, SDL_bool, void> s_SDL_SetWindowResizable = (delegate* unmanaged[Cdecl]<SDL_Window, SDL_bool, void>)LoadFunction(nameof(SDL_SetWindowResizable));
+    private static readonly delegate* unmanaged[Cdecl]<SDL_Window, SDL_bool, int> s_SDL_SetWindowResizable = (delegate* unmanaged[Cdecl]<SDL_Window, SDL_bool, int>)LoadFunction(nameof(SDL_SetWindowResizable));
 
-    public static void SDL_SetWindowResizable(SDL_Window window, bool resizable)
+    public static int SDL_SetWindowResizable(SDL_Window window, bool resizable)
     {
-        s_SDL_SetWindowResizable(window, resizable ? SDL_TRUE : SDL_FALSE);
+        return s_SDL_SetWindowResizable(window, resizable ? SDL_TRUE : SDL_FALSE);
     }
 
     /* window refers to an SDL_Window*
@@ -1554,7 +1553,7 @@ public static unsafe class SDL
     private static readonly delegate* unmanaged[Cdecl]<byte*, int> s_SDL_Vulkan_LoadLibrary = (delegate* unmanaged[Cdecl]<byte*, int>)LoadFunction(nameof(SDL_Vulkan_LoadLibrary));
     private static readonly delegate* unmanaged[Cdecl]<nint> s_SDL_Vulkan_GetVkGetInstanceProcAddr = (delegate* unmanaged[Cdecl]<nint>)LoadFunction(nameof(SDL_Vulkan_GetVkGetInstanceProcAddr));
     private static readonly delegate* unmanaged[Cdecl]<void> s_SDL_Vulkan_UnloadLibrary = (delegate* unmanaged[Cdecl]<void>)LoadFunction(nameof(SDL_Vulkan_UnloadLibrary));
-    private static readonly delegate* unmanaged[Cdecl]<SDL_Window, out int, byte**, SDL_bool> s_SDL_Vulkan_GetInstanceExtensions = (delegate* unmanaged[Cdecl]<SDL_Window, out int, byte**, SDL_bool>)LoadFunction(nameof(SDL_Vulkan_GetInstanceExtensions));
+    private static readonly delegate* unmanaged[Cdecl]<SDL_Window, uint*, byte**, SDL_bool> s_SDL_Vulkan_GetInstanceExtensions = (delegate* unmanaged[Cdecl]<SDL_Window, uint*, byte**, SDL_bool>)LoadFunction(nameof(SDL_Vulkan_GetInstanceExtensions));
     private static readonly delegate* unmanaged[Cdecl]<SDL_Window, nint, out ulong, SDL_bool> s_SDL_Vulkan_CreateSurface = (delegate* unmanaged[Cdecl]<SDL_Window, nint, out ulong, SDL_bool>)LoadFunction(nameof(SDL_Vulkan_CreateSurface));
     private static readonly delegate* unmanaged[Cdecl]<SDL_Window, out int, out int, void> s_SDL_Vulkan_GetDrawableSize = (delegate* unmanaged[Cdecl]<SDL_Window, out int, out int, void>)LoadFunction(nameof(SDL_Vulkan_GetDrawableSize));
 
@@ -1586,22 +1585,24 @@ public static unsafe class SDL
      * Only available in 2.0.6 or higher.
      * This overload allows for IntPtr.Zero (null) to be passed for pNames.
      */
-    public static bool SDL_Vulkan_GetInstanceExtensions(SDL_Window window, out int count, byte** pNames)
+    public static bool SDL_Vulkan_GetInstanceExtensions(SDL_Window window, uint* count, byte** pNames)
     {
-        return s_SDL_Vulkan_GetInstanceExtensions(window, out count, pNames) == SDL_TRUE;
+        return s_SDL_Vulkan_GetInstanceExtensions(window, count, pNames) == SDL_TRUE;
     }
 
     public static string[] SDL_Vulkan_GetInstanceExtensions(SDL_Window window)
     {
         string[] names = Array.Empty<string>();
-        bool result = s_SDL_Vulkan_GetInstanceExtensions(window, out int count, null) == SDL_TRUE;
+
+        uint count;
+        bool result = s_SDL_Vulkan_GetInstanceExtensions(window, &count, null) == SDL_TRUE;
         if (result == true)
         {
-            byte** strings = stackalloc byte*[count];
+            byte** strings = stackalloc byte*[(int)count];
             names = new string[count];
-            s_SDL_Vulkan_GetInstanceExtensions(window, out count, strings);
+            s_SDL_Vulkan_GetInstanceExtensions(window, &count, strings);
 
-            for (int i = 0; i < count; i++)
+            for (uint i = 0; i < count; i++)
             {
                 names[i] = GetString(strings[i]);
             }
@@ -3312,6 +3313,13 @@ public static unsafe class SDL
     #endregion
 
     #region SDL_mouse.c
+    private static readonly delegate* unmanaged[Cdecl]<SDL_Window> s_SDL_GetMouseFocus = (delegate* unmanaged[Cdecl]<SDL_Window>)LoadFunction(nameof(SDL_GetMouseFocus));
+    private static readonly delegate* unmanaged[Cdecl]<out int, out int, uint> s_SDL_GetMouseState = (delegate* unmanaged[Cdecl]<out int, out int, uint>)LoadFunction(nameof(SDL_GetMouseState));
+    private static readonly delegate* unmanaged[Cdecl]<out int, out int, uint> s_SDL_GetGlobalMouseState = (delegate* unmanaged[Cdecl]<out int, out int, uint>)LoadFunction(nameof(SDL_GetGlobalMouseState));
+
+    private static readonly delegate* unmanaged[Cdecl]<SDL_bool, int> s_SDL_CaptureMouse = (delegate* unmanaged[Cdecl]<SDL_bool, int>)LoadFunction(nameof(SDL_CaptureMouse));
+    private static readonly delegate* unmanaged[Cdecl]<SDL_bool> s_SDL_GetRelativeMouseMode = (delegate* unmanaged[Cdecl]<SDL_bool>)LoadFunction(nameof(SDL_GetRelativeMouseMode));
+    private static readonly delegate* unmanaged[Cdecl]<void*, void*, int, int, int, int, SDL_Cursor> s_SDL_CreateCursor = (delegate* unmanaged[Cdecl]<void*, void*, int, int, int, int, SDL_Cursor>)LoadFunction(nameof(SDL_CreateCursor));
 
     /* Note: SDL_Cursor is a typedef normally. We'll treat it as
      * an IntPtr, because C# doesn't do typedefs. Yay!
@@ -3337,18 +3345,20 @@ public static unsafe class SDL
 
     /* Get the window which currently has mouse focus */
     /* Return value is an SDL_Window pointer */
-    [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Window SDL_GetMouseFocus();
+    public static SDL_Window SDL_GetMouseFocus() => s_SDL_GetMouseFocus();
 
-    /* Get the current state of the mouse */
-    [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern uint SDL_GetMouseState(out int x, out int y);
+    /// <summary>
+    /// Get the current state of the mouse
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    public static uint SDL_GetMouseState(out int x, out int y) => s_SDL_GetMouseState(out x, out y);
 
     /* Get the current state of the mouse, in relation to the desktop.
      * Only available in 2.0.4 or higher.
      */
-    [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern uint SDL_GetGlobalMouseState(out int x, out int y);
+    public static uint SDL_GetGlobalMouseState(out int x, out int y) => s_SDL_GetGlobalMouseState(out x, out y);
 
     /* Get the mouse state with relative coords*/
     [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
@@ -3369,17 +3379,18 @@ public static unsafe class SDL
     [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern int SDL_SetRelativeMouseMode(SDL_bool enabled);
 
-    /* Capture the mouse, to track input outside an SDL window.
-     * Only available in 2.0.4 or higher.
-     */
-    [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_CaptureMouse(SDL_bool enabled);
+    /// <summary>
+    /// Capture the mouse, to track input outside an SDL window.
+    /// </summary>
+    /// <param name="enabled"></param>
+    /// <returns></returns>
+    public static int SDL_CaptureMouse(bool enabled) => s_SDL_CaptureMouse(enabled ? SDL_TRUE : SDL_FALSE);
 
-    /* Query if the relative mouse mode is enabled */
-    [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GetRelativeMouseMode();
-
-    private static readonly delegate* unmanaged[Cdecl]<void*, void*, int, int, int, int, SDL_Cursor> s_SDL_CreateCursor = (delegate* unmanaged[Cdecl]<void*, void*, int, int, int, int, SDL_Cursor>)LoadFunction(nameof(SDL_CreateCursor));
+    /// <summary>
+    /// Query if the relative mouse mode is enabled
+    /// </summary>
+    /// <returns></returns>
+    public static bool SDL_GetRelativeMouseMode() => s_SDL_GetRelativeMouseMode() == SDL_TRUE;
 
     /* Create a cursor from bitmap data (amd mask) in MSB format.
      * data and mask are byte arrays, and w must be a multiple of 8.

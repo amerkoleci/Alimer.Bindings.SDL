@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -18,14 +18,12 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "../../SDL_internal.h"
+#include "SDL_internal.h"
 
 #ifndef SDL_VIRTUALJOYSTICK_C_H
 #define SDL_VIRTUALJOYSTICK_C_H
 
 #if SDL_JOYSTICK_VIRTUAL
-
-#include "SDL_joystick.h"
 
 /**
  * Data for a virtual, software-only joystick.
@@ -46,15 +44,13 @@ typedef struct joystick_hwdata
     struct joystick_hwdata *next;
 } joystick_hwdata;
 
-int SDL_JoystickAttachVirtualInner(const SDL_VirtualJoystickDesc *desc);
-int SDL_JoystickDetachVirtualInner(int device_index);
+SDL_JoystickID SDL_JoystickAttachVirtualInner(const SDL_VirtualJoystickDesc *desc);
+int SDL_JoystickDetachVirtualInner(SDL_JoystickID instance_id);
 
-int SDL_JoystickSetVirtualAxisInner(SDL_Joystick * joystick, int axis, Sint16 value);
-int SDL_JoystickSetVirtualButtonInner(SDL_Joystick * joystick, int button, Uint8 value);
-int SDL_JoystickSetVirtualHatInner(SDL_Joystick * joystick, int hat, Uint8 value);
+int SDL_SetJoystickVirtualAxisInner(SDL_Joystick *joystick, int axis, Sint16 value);
+int SDL_SetJoystickVirtualButtonInner(SDL_Joystick *joystick, int button, Uint8 value);
+int SDL_SetJoystickVirtualHatInner(SDL_Joystick *joystick, int hat, Uint8 value);
 
-#endif  /* SDL_JOYSTICK_VIRTUAL */
+#endif /* SDL_JOYSTICK_VIRTUAL */
 
-#endif  /* SDL_VIRTUALJOYSTICK_C_H */
-
-/* vi: set ts=4 sw=4 expandtab: */
+#endif /* SDL_VIRTUALJOYSTICK_C_H */

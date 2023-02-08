@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -19,62 +19,53 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 /* This driver supports the Nintendo Switch Joy-Cons pair controllers */
-#include "../../SDL_internal.h"
+#include "SDL_internal.h"
 
 #ifdef SDL_JOYSTICK_HIDAPI
 
-#include "SDL_joystick.h"
-#include "SDL_gamecontroller.h"
 #include "SDL_hidapijoystick_c.h"
 #include "../SDL_sysjoystick.h"
 
-
-static void
-HIDAPI_DriverCombined_RegisterHints(SDL_HintCallback callback, void *userdata)
+static void HIDAPI_DriverCombined_RegisterHints(SDL_HintCallback callback, void *userdata)
 {
 }
 
-static void
-HIDAPI_DriverCombined_UnregisterHints(SDL_HintCallback callback, void *userdata)
+static void HIDAPI_DriverCombined_UnregisterHints(SDL_HintCallback callback, void *userdata)
 {
 }
 
-static SDL_bool
-HIDAPI_DriverCombined_IsEnabled(void)
+static SDL_bool HIDAPI_DriverCombined_IsEnabled(void)
 {
     return SDL_TRUE;
 }
 
-static SDL_bool
-HIDAPI_DriverCombined_IsSupportedDevice(SDL_HIDAPI_Device *device, const char *name, SDL_GameControllerType type, Uint16 vendor_id, Uint16 product_id, Uint16 version, int interface_number, int interface_class, int interface_subclass, int interface_protocol)
+static SDL_bool HIDAPI_DriverCombined_IsSupportedDevice(SDL_HIDAPI_Device *device, const char *name, SDL_GamepadType type, Uint16 vendor_id, Uint16 product_id, Uint16 version, int interface_number, int interface_class, int interface_subclass, int interface_protocol)
 {
     /* This is always explicitly created for combined devices */
     return SDL_FALSE;
 }
 
-static SDL_bool
-HIDAPI_DriverCombined_InitDevice(SDL_HIDAPI_Device *device)
+static SDL_bool HIDAPI_DriverCombined_InitDevice(SDL_HIDAPI_Device *device)
 {
     return HIDAPI_JoystickConnected(device, NULL);
 }
 
-static int
-HIDAPI_DriverCombined_GetDevicePlayerIndex(SDL_HIDAPI_Device *device, SDL_JoystickID instance_id)
+static int HIDAPI_DriverCombined_GetDevicePlayerIndex(SDL_HIDAPI_Device *device, SDL_JoystickID instance_id)
 {
     return -1;
 }
 
-static void
-HIDAPI_DriverCombined_SetDevicePlayerIndex(SDL_HIDAPI_Device *device, SDL_JoystickID instance_id, int player_index)
+static void HIDAPI_DriverCombined_SetDevicePlayerIndex(SDL_HIDAPI_Device *device, SDL_JoystickID instance_id, int player_index)
 {
 }
 
-static SDL_bool
-HIDAPI_DriverCombined_OpenJoystick(SDL_HIDAPI_Device *device, SDL_Joystick *joystick)
+static SDL_bool HIDAPI_DriverCombined_OpenJoystick(SDL_HIDAPI_Device *device, SDL_Joystick *joystick)
 {
     int i;
     char *serial = NULL, *new_serial;
     size_t serial_length = 0, new_length;
+
+    SDL_AssertJoysticksLocked();
 
     for (i = 0; i < device->num_children; ++i) {
         SDL_HIDAPI_Device *child = device->children[i];
@@ -117,8 +108,7 @@ HIDAPI_DriverCombined_OpenJoystick(SDL_HIDAPI_Device *device, SDL_Joystick *joys
     return SDL_TRUE;
 }
 
-static int
-HIDAPI_DriverCombined_RumbleJoystick(SDL_HIDAPI_Device *device, SDL_Joystick *joystick, Uint16 low_frequency_rumble, Uint16 high_frequency_rumble)
+static int HIDAPI_DriverCombined_RumbleJoystick(SDL_HIDAPI_Device *device, SDL_Joystick *joystick, Uint16 low_frequency_rumble, Uint16 high_frequency_rumble)
 {
     int i;
     int result = -1;
@@ -132,8 +122,7 @@ HIDAPI_DriverCombined_RumbleJoystick(SDL_HIDAPI_Device *device, SDL_Joystick *jo
     return result;
 }
 
-static int
-HIDAPI_DriverCombined_RumbleJoystickTriggers(SDL_HIDAPI_Device *device, SDL_Joystick *joystick, Uint16 left_rumble, Uint16 right_rumble)
+static int HIDAPI_DriverCombined_RumbleJoystickTriggers(SDL_HIDAPI_Device *device, SDL_Joystick *joystick, Uint16 left_rumble, Uint16 right_rumble)
 {
     int i;
     int result = -1;
@@ -147,8 +136,7 @@ HIDAPI_DriverCombined_RumbleJoystickTriggers(SDL_HIDAPI_Device *device, SDL_Joys
     return result;
 }
 
-static Uint32
-HIDAPI_DriverCombined_GetJoystickCapabilities(SDL_HIDAPI_Device *device, SDL_Joystick *joystick)
+static Uint32 HIDAPI_DriverCombined_GetJoystickCapabilities(SDL_HIDAPI_Device *device, SDL_Joystick *joystick)
 {
     int i;
     Uint32 caps = 0;
@@ -160,8 +148,7 @@ HIDAPI_DriverCombined_GetJoystickCapabilities(SDL_HIDAPI_Device *device, SDL_Joy
     return caps;
 }
 
-static int
-HIDAPI_DriverCombined_SetJoystickLED(SDL_HIDAPI_Device *device, SDL_Joystick *joystick, Uint8 red, Uint8 green, Uint8 blue)
+static int HIDAPI_DriverCombined_SetJoystickLED(SDL_HIDAPI_Device *device, SDL_Joystick *joystick, Uint8 red, Uint8 green, Uint8 blue)
 {
     int i;
     int result = -1;
@@ -175,14 +162,12 @@ HIDAPI_DriverCombined_SetJoystickLED(SDL_HIDAPI_Device *device, SDL_Joystick *jo
     return result;
 }
 
-static int
-HIDAPI_DriverCombined_SendJoystickEffect(SDL_HIDAPI_Device *device, SDL_Joystick *joystick, const void *data, int size)
+static int HIDAPI_DriverCombined_SendJoystickEffect(SDL_HIDAPI_Device *device, SDL_Joystick *joystick, const void *data, int size)
 {
     return SDL_Unsupported();
 }
 
-static int
-HIDAPI_DriverCombined_SetJoystickSensorsEnabled(SDL_HIDAPI_Device *device, SDL_Joystick *joystick, SDL_bool enabled)
+static int HIDAPI_DriverCombined_SetJoystickSensorsEnabled(SDL_HIDAPI_Device *device, SDL_Joystick *joystick, SDL_bool enabled)
 {
     int i;
     int result = -1;
@@ -196,8 +181,7 @@ HIDAPI_DriverCombined_SetJoystickSensorsEnabled(SDL_HIDAPI_Device *device, SDL_J
     return result;
 }
 
-static SDL_bool
-HIDAPI_DriverCombined_UpdateDevice(SDL_HIDAPI_Device *device)
+static SDL_bool HIDAPI_DriverCombined_UpdateDevice(SDL_HIDAPI_Device *device)
 {
     int i;
     int result = SDL_TRUE;
@@ -211,8 +195,7 @@ HIDAPI_DriverCombined_UpdateDevice(SDL_HIDAPI_Device *device)
     return result;
 }
 
-static void
-HIDAPI_DriverCombined_CloseJoystick(SDL_HIDAPI_Device *device, SDL_Joystick *joystick)
+static void HIDAPI_DriverCombined_CloseJoystick(SDL_HIDAPI_Device *device, SDL_Joystick *joystick)
 {
     int i;
 
@@ -222,13 +205,11 @@ HIDAPI_DriverCombined_CloseJoystick(SDL_HIDAPI_Device *device, SDL_Joystick *joy
     }
 }
 
-static void
-HIDAPI_DriverCombined_FreeDevice(SDL_HIDAPI_Device *device)
+static void HIDAPI_DriverCombined_FreeDevice(SDL_HIDAPI_Device *device)
 {
 }
 
-SDL_HIDAPI_DeviceDriver SDL_HIDAPI_DriverCombined =
-{
+SDL_HIDAPI_DeviceDriver SDL_HIDAPI_DriverCombined = {
     "SDL_JOYSTICK_HIDAPI_COMBINED",
     SDL_TRUE,
     HIDAPI_DriverCombined_RegisterHints,
@@ -251,5 +232,3 @@ SDL_HIDAPI_DeviceDriver SDL_HIDAPI_DriverCombined =
 };
 
 #endif /* SDL_JOYSTICK_HIDAPI */
-
-/* vi: set ts=4 sw=4 expandtab: */

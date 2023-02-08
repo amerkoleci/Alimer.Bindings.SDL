@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "../../SDL_internal.h"
+#include "SDL_internal.h"
 
 #if SDL_VIDEO_DRIVER_OFFSCREEN && SDL_VIDEO_OPENGL_EGL
 
@@ -28,8 +28,7 @@
 
 /* EGL implementation of SDL OpenGL support */
 
-int
-OFFSCREEN_GLES_LoadLibrary(_THIS, const char* path)
+int OFFSCREEN_GLES_LoadLibrary(_THIS, const char *path)
 {
     int ret = SDL_EGL_LoadLibraryOnly(_this, path);
     if (ret != 0) {
@@ -56,9 +55,9 @@ OFFSCREEN_GLES_LoadLibrary(_THIS, const char* path)
 }
 
 SDL_GLContext
-OFFSCREEN_GLES_CreateContext(_THIS, SDL_Window* window)
+OFFSCREEN_GLES_CreateContext(_THIS, SDL_Window *window)
 {
-    OFFSCREEN_Window* offscreen_window = window->driverdata;
+    SDL_WindowData *offscreen_window = window->driverdata;
 
     SDL_GLContext context;
     context = SDL_EGL_CreateContext(_this, offscreen_window->egl_surface);
@@ -66,25 +65,21 @@ OFFSCREEN_GLES_CreateContext(_THIS, SDL_Window* window)
     return context;
 }
 
-int
-OFFSCREEN_GLES_MakeCurrent(_THIS, SDL_Window* window, SDL_GLContext context)
+int OFFSCREEN_GLES_MakeCurrent(_THIS, SDL_Window *window, SDL_GLContext context)
 {
     if (window) {
-        EGLSurface egl_surface = ((OFFSCREEN_Window*)window->driverdata)->egl_surface;
+        EGLSurface egl_surface = window->driverdata->egl_surface;
         return SDL_EGL_MakeCurrent(_this, egl_surface, context);
     } else {
         return SDL_EGL_MakeCurrent(_this, NULL, NULL);
     }
 }
 
-int
-OFFSCREEN_GLES_SwapWindow(_THIS, SDL_Window* window)
+int OFFSCREEN_GLES_SwapWindow(_THIS, SDL_Window *window)
 {
-    OFFSCREEN_Window* offscreen_wind = window->driverdata;
+    SDL_WindowData *offscreen_wind = window->driverdata;
 
     return SDL_EGL_SwapBuffers(_this, offscreen_wind->egl_surface);
 }
 
 #endif /* SDL_VIDEO_DRIVER_OFFSCREEN && SDL_VIDEO_OPENGL_EGL */
-
-/* vi: set ts=4 sw=4 expandtab: */

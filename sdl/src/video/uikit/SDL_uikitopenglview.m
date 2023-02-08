@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "../../SDL_internal.h"
+#include "SDL_internal.h"
 
 #if SDL_VIDEO_DRIVER_UIKIT && (SDL_VIDEO_OPENGL_ES || SDL_VIDEO_OPENGL_ES2)
 
@@ -27,7 +27,8 @@
 #import "SDL_uikitopenglview.h"
 #include "SDL_uikitwindow.h"
 
-@implementation SDL_uikitopenglview {
+@implementation SDL_uikitopenglview
+{
     /* The renderbuffer and framebuffer used to render to this layer. */
     GLuint viewRenderbuffer, viewFramebuffer;
 
@@ -109,8 +110,8 @@
 
         eaglLayer.opaque = YES;
         eaglLayer.drawableProperties = @{
-            kEAGLDrawablePropertyRetainedBacking:@(retained),
-            kEAGLDrawablePropertyColorFormat:colorFormat
+            kEAGLDrawablePropertyRetainedBacking : @(retained),
+            kEAGLDrawablePropertyColorFormat : colorFormat
         };
 
         /* Set the appropriate scale (for retina display support) */
@@ -279,7 +280,7 @@
 - (void)swapBuffers
 {
     if (msaaFramebuffer) {
-        const GLenum attachments[] = {GL_COLOR_ATTACHMENT0};
+        const GLenum attachments[] = { GL_COLOR_ATTACHMENT0 };
 
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, viewFramebuffer);
 
@@ -317,8 +318,8 @@
 {
     [super layoutSubviews];
 
-    int width  = (int) (self.bounds.size.width * self.contentScaleFactor);
-    int height = (int) (self.bounds.size.height * self.contentScaleFactor);
+    int width = (int)(self.bounds.size.width * self.contentScaleFactor);
+    int height = (int)(self.bounds.size.height * self.contentScaleFactor);
 
     /* Update the color and depth buffer storage if the layer size has changed. */
     if (width != backingWidth || height != backingHeight) {
@@ -374,5 +375,3 @@
 @end
 
 #endif /* SDL_VIDEO_DRIVER_UIKIT */
-
-/* vi: set ts=4 sw=4 expandtab: */

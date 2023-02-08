@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -27,5 +27,3 @@ void N3DS_QuitTouch(void);
 void N3DS_PollTouch(void);
 
 #endif /* SDL_n3dstouch_h_ */
-
-/* vi: set sts=4 ts=4 sw=4 expandtab: */

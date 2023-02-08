@@ -42,16 +42,16 @@ public static class Program
             throw new Exception($"Failed to start SDL2: {error}");
         }
 
-        if (SDL_Vulkan_LoadLibrary() < 0)
-        {
-            return;
-        }
+        //if (SDL_Vulkan_LoadLibrary() < 0)
+        //{
+        //    return;
+        //}
 
         // create the window
-        SDL_WindowFlags flags = SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN | SDL_WINDOW_VULKAN;
+        SDL_WindowFlags flags = SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE; // | SDL_WINDOW_VULKAN;
         SDL_Window window = SDL_CreateWindow("Hello World", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, flags);
         var id = SDL_GetWindowID(window);
-        string[] extensions = SDL_Vulkan_GetInstanceExtensions(window);
+        //string[] extensions = SDL_Vulkan_GetInstanceExtensions(window);
         SDL_GetWindowSizeInPixels(window, out int width, out int height);
 
         SDL_SysWMinfo info = new();
@@ -60,7 +60,7 @@ public static class Program
 
         SDL_SetWindowResizable(window, false);
 
-        var test3 = SDL_GetNumVideoDisplays();
+        //var test3 = SDL_GetNumVideoDisplays();
         var test2 = SDL_GetCurrentVideoDriver();
 
         bool done = false;
@@ -84,6 +84,6 @@ public static class Program
     private static unsafe void OnLog(IntPtr userdata, int category, SDL_LogPriority priority, sbyte* messagePtr)
     {
         string message = new(messagePtr);
-        //Log.Info($"SDL: {message}");
+        Console.WriteLine($"SDL: {message}");
     }
 }

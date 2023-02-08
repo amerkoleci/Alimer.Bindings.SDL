@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "../../SDL_internal.h"
+#include "SDL_internal.h"
 
 #if SDL_VIDEO_DRIVER_VITA && SDL_VIDEO_VITA_PVR && SDL_VIDEO_VITA_PVR_OGL
 #include <stdlib.h>
@@ -27,8 +27,6 @@
 #include <gpu_es4/psp2_pvr_hint.h>
 #include <gl4esinit.h>
 
-#include "SDL_error.h"
-#include "SDL_log.h"
 #include "SDL_vitavideo.h"
 #include "../SDL_egl_c.h"
 #include "SDL_vitagl_pvr_c.h"
@@ -36,29 +34,26 @@
 #define MAX_PATH 256 // vita limits are somehow wrong
 
 /* Defaults */
-int FB_WIDTH = 960;
-int FB_HEIGHT = 544;
+static int FB_WIDTH = 960;
+static int FB_HEIGHT = 544;
 
-void getFBSize(int *width, int *height)
+static void getFBSize(int *width, int *height)
 {
     *width = FB_WIDTH;
     *height = FB_HEIGHT;
 }
 
-int
-VITA_GL_LoadLibrary(_THIS, const char *path)
+int VITA_GL_LoadLibrary(_THIS, const char *path)
 {
     PVRSRV_PSP2_APPHINT hint;
-    char* override = SDL_getenv("VITA_MODULE_PATH");
-    char* skip_init = SDL_getenv("VITA_PVR_SKIP_INIT");
-    char* default_path = "app0:module";
+    char *override = SDL_getenv("VITA_MODULE_PATH");
+    char *skip_init = SDL_getenv("VITA_PVR_SKIP_INIT");
+    char *default_path = "app0:module";
     char target_path[MAX_PATH];
 
-    if (skip_init == NULL) // we don't care about actual value
-    {
-        if (override != NULL)
-        {
-          default_path = override;
+    if (skip_init == NULL) { // we don't care about actual value
+        if (override != NULL) {
+            default_path = override;
         }
 
         sceKernelLoadStartModule("vs0:sys/external/libfios2.suprx", 0, NULL, 0, NULL, NULL);
@@ -82,11 +77,11 @@ VITA_GL_LoadLibrary(_THIS, const char *path)
         PVRSRVCreateVirtualAppHint(&hint);
     }
 
-    return SDL_EGL_LoadLibrary(_this, path, (NativeDisplayType) 0, 0);
+    return SDL_EGL_LoadLibrary(_this, path, (NativeDisplayType)0, 0);
 }
 
 SDL_GLContext
-VITA_GL_CreateContext(_THIS, SDL_Window * window)
+VITA_GL_CreateContext(_THIS, SDL_Window *window)
 {
     char gl_version[3];
     SDL_GLContext context = NULL;
@@ -99,10 +94,9 @@ VITA_GL_CreateContext(_THIS, SDL_Window * window)
     _this->gl_config.minor_version = 0;
     _this->gl_config.profile_mask = SDL_GL_CONTEXT_PROFILE_ES;
 
-    context = SDL_EGL_CreateContext(_this, ((SDL_WindowData *) window->driverdata)->egl_surface);
+    context = SDL_EGL_CreateContext(_this, window->driverdata->egl_surface);
 
-    if (context != NULL)
-    {
+    if (context != NULL) {
         FB_WIDTH = window->w;
         FB_HEIGHT = window->h;
         set_getprocaddress((void *(*)(const char *))eglGetProcAddress);
@@ -121,12 +115,10 @@ VITA_GL_CreateContext(_THIS, SDL_Window * window)
     return context;
 }
 
-void *
+SDL_FunctionPointer
 VITA_GL_GetProcAddress(_THIS, const char *proc)
 {
     return gl4es_GetProcAddress(proc);
 }
 
 #endif /* SDL_VIDEO_DRIVER_VITA && SDL_VIDEO_VITA_PVR */
-
-/* vi: set ts=4 sw=4 expandtab: */

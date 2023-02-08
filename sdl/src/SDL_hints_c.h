@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "./SDL_internal.h"
+#include "SDL_internal.h"
 
 /* This file defines useful function for working with SDL hints */
 
@@ -28,5 +28,3 @@
 extern SDL_bool SDL_GetStringBoolean(const char *value, SDL_bool default_value);
 
 #endif /* SDL_hints_c_h_ */
-
-/* vi: set ts=4 sw=4 expandtab: */

@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "../../SDL_internal.h"
+#include "SDL_internal.h"
 
 #if SDL_VIDEO_DRIVER_OFFSCREEN
 
@@ -27,12 +27,11 @@
 
 #include "SDL_offscreenwindow.h"
 
-int
-OFFSCREEN_CreateWindow(_THIS, SDL_Window* window)
+int OFFSCREEN_CreateWindow(_THIS, SDL_Window *window)
 {
-    OFFSCREEN_Window *offscreen_window = SDL_calloc(1, sizeof(OFFSCREEN_Window));
+    SDL_WindowData *offscreen_window = (SDL_WindowData *)SDL_calloc(1, sizeof(SDL_WindowData));
 
-    if (!offscreen_window) {
+    if (offscreen_window == NULL) {
         return SDL_OutOfMemory();
     }
 
@@ -69,10 +68,9 @@ OFFSCREEN_CreateWindow(_THIS, SDL_Window* window)
     return 0;
 }
 
-void
-OFFSCREEN_DestroyWindow(_THIS, SDL_Window* window)
+void OFFSCREEN_DestroyWindow(_THIS, SDL_Window *window)
 {
-    OFFSCREEN_Window* offscreen_window = window->driverdata;
+    SDL_WindowData *offscreen_window = window->driverdata;
 
     if (offscreen_window) {
 #if SDL_VIDEO_OPENGL_EGL
@@ -85,5 +83,3 @@ OFFSCREEN_DestroyWindow(_THIS, SDL_Window* window)
 }
 
 #endif /* SDL_VIDEO_DRIVER_OFFSCREEN */
-
-/* vi: set ts=4 sw=4 expandtab: */

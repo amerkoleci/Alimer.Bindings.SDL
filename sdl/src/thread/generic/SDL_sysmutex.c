@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -18,13 +18,11 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "../../SDL_internal.h"
+#include "SDL_internal.h"
 
 /* An implementation of mutexes using semaphores */
 
-#include "SDL_thread.h"
 #include "SDL_systhread_c.h"
-
 
 struct SDL_mutex
 {
@@ -40,7 +38,7 @@ SDL_CreateMutex(void)
     SDL_mutex *mutex;
 
     /* Allocate mutex memory */
-    mutex = (SDL_mutex *) SDL_calloc(1, sizeof(*mutex));
+    mutex = (SDL_mutex *)SDL_calloc(1, sizeof(*mutex));
 
 #if !SDL_THREADS_DISABLED
     if (mutex) {
@@ -61,8 +59,7 @@ SDL_CreateMutex(void)
 }
 
 /* Free the mutex */
-void
-SDL_DestroyMutex(SDL_mutex * mutex)
+void SDL_DestroyMutex(SDL_mutex *mutex)
 {
     if (mutex) {
         if (mutex->sem) {
@@ -73,8 +70,7 @@ SDL_DestroyMutex(SDL_mutex * mutex)
 }
 
 /* Lock the mutex */
-int
-SDL_LockMutex(SDL_mutex * mutex)
+int SDL_LockMutex(SDL_mutex *mutex) SDL_NO_THREAD_SAFETY_ANALYSIS /* clang doesn't know about NULL mutexes */
 {
 #if SDL_THREADS_DISABLED
     return 0;
@@ -82,7 +78,7 @@ SDL_LockMutex(SDL_mutex * mutex)
     SDL_threadID this_thread;
 
     if (mutex == NULL) {
-        return SDL_InvalidParamError("mutex");
+        return 0;
     }
 
     this_thread = SDL_ThreadID();
@@ -103,8 +99,7 @@ SDL_LockMutex(SDL_mutex * mutex)
 }
 
 /* try Lock the mutex */
-int
-SDL_TryLockMutex(SDL_mutex * mutex)
+int SDL_TryLockMutex(SDL_mutex *mutex)
 {
 #if SDL_THREADS_DISABLED
     return 0;
@@ -113,7 +108,7 @@ SDL_TryLockMutex(SDL_mutex * mutex)
     SDL_threadID this_thread;
 
     if (mutex == NULL) {
-        return SDL_InvalidParamError("mutex");
+        return 0;
     }
 
     this_thread = SDL_ThreadID();
@@ -136,14 +131,13 @@ SDL_TryLockMutex(SDL_mutex * mutex)
 }
 
 /* Unlock the mutex */
-int
-SDL_mutexV(SDL_mutex * mutex)
+int SDL_UnlockMutex(SDL_mutex *mutex) SDL_NO_THREAD_SAFETY_ANALYSIS /* clang doesn't know about NULL mutexes */
 {
 #if SDL_THREADS_DISABLED
     return 0;
 #else
     if (mutex == NULL) {
-        return SDL_InvalidParamError("mutex");
+        return 0;
     }
 
     /* If we don't own the mutex, we can't unlock it */
@@ -165,5 +159,3 @@ SDL_mutexV(SDL_mutex * mutex)
     return 0;
 #endif /* SDL_THREADS_DISABLED */
 }
-
-/* vi: set ts=4 sw=4 expandtab: */

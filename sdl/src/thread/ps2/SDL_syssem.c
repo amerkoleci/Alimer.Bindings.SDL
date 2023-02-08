@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "../../SDL_internal.h"
+#include "SDL_internal.h"
 
 #if SDL_THREAD_PS2
 
@@ -28,16 +28,15 @@
 #include <stdlib.h>
 #include <timer_alarm.h>
 
-#include "SDL_error.h"
-#include "SDL_thread.h"
-
 #include <kernel.h>
 
-struct SDL_semaphore {
-    s32  semid;
+struct SDL_semaphore
+{
+    s32 semid;
 };
 
-static void usercb(struct timer_alarm_t *alarm, void *arg) {
+static void usercb(struct timer_alarm_t *alarm, void *arg)
+{
     iReleaseWaitThread((int)arg);
 }
 
@@ -47,12 +46,12 @@ SDL_sem *SDL_CreateSemaphore(Uint32 initial_value)
     SDL_sem *sem;
     ee_sema_t sema;
 
-    sem = (SDL_sem *) SDL_malloc(sizeof(*sem));
+    sem = (SDL_sem *)SDL_malloc(sizeof(*sem));
     if (sem != NULL) {
         /* TODO: Figure out the limit on the maximum value. */
         sema.init_count = initial_value;
-        sema.max_count  = 255;
-        sema.option     = 0;
+        sema.max_count = 255;
+        sema.option = 0;
         sem->semid = CreateSema(&sema);
 
         if (sem->semid < 0) {
@@ -80,44 +79,34 @@ void SDL_DestroySemaphore(SDL_sem *sem)
     }
 }
 
-int SDL_SemWaitTimeout(SDL_sem *sem, Uint32 timeout)
+int SDL_SemWaitTimeoutNS(SDL_sem *sem, Sint64 timeoutNS)
 {
     int ret;
     struct timer_alarm_t alarm;
     InitializeTimerAlarm(&alarm);
-    
+
     if (sem == NULL) {
-        SDL_InvalidParamError("sem");
-        return 0;
+        return SDL_InvalidParamError("sem");
     }
 
-    if (timeout == 0) {
+    if (timeoutNS == 0) {
         if (PollSema(sem->semid) < 0) {
             return SDL_MUTEX_TIMEDOUT;
         }
         return 0;
     }
 
-    if (timeout != SDL_MUTEX_MAXWAIT) {
-        SetTimerAlarm(&alarm, MSec2TimerBusClock(timeout), &usercb, (void *)GetThreadId());
+    if (timeoutNS != SDL_MUTEX_MAXWAIT) {
+        SetTimerAlarm(&alarm, MSec2TimerBusClock(SDL_NS_TO_MS(timeoutNS)), &usercb, (void *)GetThreadId());
     }
 
     ret = WaitSema(sem->semid);
     StopTimerAlarm(&alarm);
 
-    if (ret < 0)
+    if (ret < 0) {
         return SDL_MUTEX_TIMEDOUT;
-    return 0; //Wait condition satisfied.
-}
-
-int SDL_SemTryWait(SDL_sem *sem)
-{
-    return SDL_SemWaitTimeout(sem, 0);
-}
-
-int SDL_SemWait(SDL_sem *sem)
-{
-    return SDL_SemWaitTimeout(sem, SDL_MUTEX_MAXWAIT);
+    }
+    return 0; // Wait condition satisfied.
 }
 
 /* Returns the current count of the semaphore */

@@ -74,7 +74,7 @@ jobs:
     - name: package_osx
       run: |
         mkdir -p bin/osx-universal/native
-        mv build_osx/lib/libSDL3-0.0.0.dylib bin/osx-universal/native/libSDL3.dylib
+        mv build_osx/lib/libSDL3.1.0.0.dylib bin/osx-universal/native/libSDL3.dylib
     - uses: actions/upload-artifact@v3
       with:
         name: libs_osx

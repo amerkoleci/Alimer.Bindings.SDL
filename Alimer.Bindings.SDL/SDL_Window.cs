@@ -10,7 +10,10 @@ public readonly partial struct SDL_Window : IEquatable<SDL_Window>
 {
     public readonly nint Handle;
 
-    public SDL_Window(nint handle) { Handle = handle; }
+    public SDL_Window(nint handle)
+    {
+        Handle = handle;
+    }
 
     public bool IsNull => Handle == 0;
     public bool IsNotNull => Handle != 0;
@@ -28,8 +31,10 @@ public readonly partial struct SDL_Window : IEquatable<SDL_Window>
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => obj is SDL_Window handle && Equals(handle);
+
     /// <inheritdoc/>
     public override int GetHashCode() => Handle.GetHashCode();
+
     private string DebuggerDisplay => $"{nameof(SDL_Window)} [0x{Handle:X}]";
 }
 

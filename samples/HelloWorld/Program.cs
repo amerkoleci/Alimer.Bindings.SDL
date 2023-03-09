@@ -1,27 +1,28 @@
 ﻿// Copyright © Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
-using System.Runtime.InteropServices;
 using Alimer.Bindings.SDL;
 using static Alimer.Bindings.SDL.SDL;
 using static Alimer.Bindings.SDL.SDL.SDL_EventType;
+using static Alimer.Bindings.SDL.SDL_GLattr;
+using static Alimer.Bindings.SDL.SDL_GLprofile;
 using static Alimer.Bindings.SDL.SDL.SDL_InitFlags;
-using static Alimer.Bindings.SDL.SDL.SDL_LogPriority;
 using static Alimer.Bindings.SDL.SDL.SDL_WindowFlags;
-using static Alimer.Bindings.SDL.SDL.SDL_GLattr;
-using static Alimer.Bindings.SDL.SDL.SDL_GLprofile;
+using static Alimer.Bindings.SDL.SDL_LogPriority;
+using System.Drawing;
+using System.Runtime.CompilerServices;
 
 namespace HelloWorld;
 
-public static class Program
+public static unsafe class Program
 {
-    public static unsafe void Main()
+    public static void Main()
     {
 #if DEBUG
         SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
 #endif
 
-        SDL_LogSetOutputFunction(&OnLog, IntPtr.Zero);
+        SDL_LogSetOutputFunction(OnLog);
 
         SDL_GetVersion(out SDL_version version);
 
@@ -45,29 +46,47 @@ public static class Program
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
         //SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); // Always required on Mac
 
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+        SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+
         // Enable native IME.
         SDL_SetHint(SDL_HINT_IME_SHOW_UI, true);
 
         // create the window
-        SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL;
+        SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN;
         SDL_Window window = SDL_CreateWindow("Hello World", 800, 600, flags);
         SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+
         SDL_GLContext gl_context = SDL_GL_CreateContext(window);
         SDL_GL_MakeCurrent(window, gl_context);
-        SDL_GL_SetSwapInterval(1); 
+        SDL_GL_SetSwapInterval(1);
+        SDL_ShowWindow(window);
 
-        //SDL_ShowWindow(window);
-        //var id = SDL_GetWindowID(window);
-        //SDL_GetWindowSizeInPixels(window, out int width, out int height);
+        var id = SDL_GetWindowID(window);
+        SDL_GetWindowSizeInPixels(window, out int width, out int height);
 
-        //SDL_MaximizeWindow(window);
-        //var test = SDL_GetWindowFullscreenMode(window);
-        //SDL_SysWMinfo info = new();
-        //SDL_GetWindowWMInfo(window, &info);
-        //SDL_SetWindowResizable(window, false);
+        SDL_SysWMinfo info = new();
+        SDL_GetWindowWMInfo(window, &info);
 
-        //var test3 = SDL_GetNumVideoDisplays();
+        var display = SDL_GetDisplayForWindow(window);
+        display = SDL_GetDisplayForPoint(Point.Empty);
+
+        var primary = SDL_GetPrimaryDisplay();
+        var dispName = SDL_GetDisplayName(primary);
+        var test3 = SDL_GetNumVideoDrivers();
         //var test2 = SDL_GetCurrentVideoDriver();
+        ReadOnlySpan<SDL_DisplayID> displays = SDL_GetDisplays();
+        for(int i = 0; i < displays.Length; i++)
+        {
+            dispName = SDL_GetDisplayName(displays[i]);
+        }
+
+        var driversAudio = SDL_GetNumAudioDrivers();
+        for (int i = 0; i < driversAudio; i++)
+        {
+            dispName = SDL_GetAudioDriver(i);
+        }
 
         bool done = false;
         while (!done)
@@ -89,14 +108,13 @@ public static class Program
             SDL_GL_SwapWindow(window);
         }
 
-        //SDL_DestroyWindow(window);
+        SDL_GL_DeleteContext(gl_context);
+        SDL_DestroyWindow(window);
         SDL_Quit();
     }
 
-    [UnmanagedCallersOnly]
-    private static unsafe void OnLog(IntPtr userdata, int category, SDL_LogPriority priority, sbyte* messagePtr)
+    private static void OnLog(SDL_LogCategory category, SDL_LogPriority priority, string message)
     {
-        string message = new(messagePtr);
         Console.WriteLine($"SDL: {message}");
     }
 }

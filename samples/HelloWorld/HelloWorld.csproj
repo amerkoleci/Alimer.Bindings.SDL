@@ -15,6 +15,7 @@
     <When Condition="($([MSBuild]::IsOsPlatform('windows')) and '$(RuntimeIdentifier)'=='') or '$(RuntimeIdentifier)'=='win-x64'">
       <ItemGroup>
         <None Include="$(MSBuildThisFileDirectory)..\..\Alimer.Bindings.SDL\runtimes\win-x64\native\SDL3.dll" Link="SDL3.dll" Visible="False" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="$(MSBuildThisFileDirectory)..\..\Alimer.Bindings.SDL\runtimes\win-x64\native\SDL3.dll" Link="SDL3.pdb" Visible="False" CopyToOutputDirectory="PreserveNewest" />
       </ItemGroup>
     </When>
     <When Condition="($([MSBuild]::IsOsPlatform('windows')) and '$(RuntimeIdentifier)'=='') or '$(RuntimeIdentifier)'=='win-arm64'">

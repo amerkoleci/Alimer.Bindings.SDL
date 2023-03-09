@@ -1131,10 +1131,6 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         int max_w, max_h;
         BOOL constrain_max_size;
 
-        if (SDL_IsShapedWindow(data->window)) {
-            Win32_ResizeWindowShape(data->window);
-        }
-
         /* If this is an expected size change, allow it */
         if (data->expected_resize) {
             break;
@@ -1241,7 +1237,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         RECT rect;
         int x, y;
         int w, h;
-        SDL_DisplayID displayID = SDL_GetDisplayForWindow(data->window);
+        const SDL_DisplayID original_displayID = data->last_displayID;
 
         if (data->initializing || data->in_border_change) {
             break;
@@ -1294,7 +1290,10 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         /* Forces a WM_PAINT event */
         InvalidateRect(hwnd, NULL, FALSE);
 
-        if (data->window->last_displayID != displayID) {
+        /* Update the window display position */
+        data->last_displayID = SDL_GetDisplayForWindow(data->window);
+
+        if (data->last_displayID != original_displayID) {
             /* Display changed, check ICC profile */
             WIN_UpdateWindowICCProfile(data->window, SDL_TRUE);
         }

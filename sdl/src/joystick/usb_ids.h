@@ -27,6 +27,7 @@
 #define USB_VENDOR_8BITDO       0x2dc8
 #define USB_VENDOR_AMAZON       0x1949
 #define USB_VENDOR_APPLE        0x05ac
+#define USB_VENDOR_BACKBONE     0x358a
 #define USB_VENDOR_DRAGONRISE   0x0079
 #define USB_VENDOR_GOOGLE       0x18d1
 #define USB_VENDOR_HORI         0x0f0d
@@ -50,35 +51,17 @@
 #define USB_VENDOR_VALVE        0x28de
 #define USB_VENDOR_ZEROPLUS     0x0c12
 
-// Most Razer devices are not game controllers, and some of them lock up or reset
-// when we send them the Sony third-party query feature report, so don't include that
-// vendor here. Instead add devices as appropriate to controller_type.c
-// Reference: https://github.com/libsdl-org/SDL/issues/6733
-//            https://github.com/libsdl-org/SDL/issues/6799
-#define SONY_THIRDPARTY_VENDOR(X)    \
-    (X == USB_VENDOR_DRAGONRISE ||   \
-     X == USB_VENDOR_HORI ||         \
-     X == USB_VENDOR_LOGITECH ||     \
-     X == USB_VENDOR_MADCATZ ||      \
-     X == USB_VENDOR_NACON ||        \
-     X == USB_VENDOR_PDP ||          \
-     X == USB_VENDOR_POWERA ||       \
-     X == USB_VENDOR_POWERA_ALT ||   \
-     X == USB_VENDOR_QANBA ||        \
-     X == USB_VENDOR_SHANWAN ||      \
-     X == USB_VENDOR_SHANWAN_ALT ||  \
-     X == USB_VENDOR_THRUSTMASTER || \
-     X == USB_VENDOR_ZEROPLUS ||     \
-     X == 0x7545 /* SZ-MYPOWER */)
-
 #define USB_PRODUCT_8BITDO_XBOX_CONTROLLER                0x2002
 #define USB_PRODUCT_AMAZON_LUNA_CONTROLLER                0x0419
+#define USB_PRODUCT_BACKBONE_ONE_IOS                      0x0103
+#define USB_PRODUCT_BACKBONE_ONE_IOS_PS5                  0x0104
 #define USB_PRODUCT_GOOGLE_STADIA_CONTROLLER              0x9400
 #define USB_PRODUCT_EVORETRO_GAMECUBE_ADAPTER             0x1846
 #define USB_PRODUCT_HORI_FIGHTING_COMMANDER_OCTA_SERIES_X 0x0150
 #define USB_PRODUCT_HORI_HORIPAD_PRO_SERIES_X             0x014f
 #define USB_PRODUCT_HORI_FIGHTING_STICK_ALPHA_PS4         0x011c
 #define USB_PRODUCT_HORI_FIGHTING_STICK_ALPHA_PS5         0x0184
+#define USB_PRODUCT_LOGITECH_F310                         0xc216
 #define USB_PRODUCT_LOGITECH_CHILLSTREAM                  0xcad1
 #define USB_PRODUCT_NINTENDO_GAMECUBE_ADAPTER             0x0337
 #define USB_PRODUCT_NINTENDO_N64_CONTROLLER               0x2019
@@ -101,6 +84,12 @@
 #define USB_PRODUCT_RAZER_TOURNAMENT_EDITION_BLUETOOTH    0x100a
 #define USB_PRODUCT_RAZER_ULTIMATE_EDITION_USB            0x1004
 #define USB_PRODUCT_RAZER_ULTIMATE_EDITION_BLUETOOTH      0x1009
+#define USB_PRODUCT_RAZER_WOLVERINE_V2                    0x0a29
+#define USB_PRODUCT_RAZER_WOLVERINE_V2_CHROMA             0x0a2e
+#define USB_PRODUCT_RAZER_WOLVERINE_V2_PRO_PS5_WIRED      0x100b
+#define USB_PRODUCT_RAZER_WOLVERINE_V2_PRO_PS5_WIRELESS   0x100c
+#define USB_PRODUCT_RAZER_WOLVERINE_V2_PRO_XBOX_WIRED     0x1010
+#define USB_PRODUCT_RAZER_WOLVERINE_V2_PRO_XBOX_WIRELESS  0x1011
 #define USB_PRODUCT_SHANWAN_DS3                           0x0523
 #define USB_PRODUCT_SONY_DS3                              0x0268
 #define USB_PRODUCT_SONY_DS4                              0x05c4

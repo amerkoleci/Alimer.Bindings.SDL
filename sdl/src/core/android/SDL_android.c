@@ -304,7 +304,6 @@ static jmethodID midClipboardSetText;
 static jmethodID midCreateCustomCursor;
 static jmethodID midDestroyCustomCursor;
 static jmethodID midGetContext;
-static jmethodID midGetDisplayPhysicalDPI;
 static jmethodID midGetManifestEnvironmentVariables;
 static jmethodID midGetNativeSurface;
 static jmethodID midInitTouch;
@@ -593,7 +592,6 @@ JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(nativeSetupJNI)(JNIEnv *env, jclass cl
     midCreateCustomCursor = (*env)->GetStaticMethodID(env, mActivityClass, "createCustomCursor", "([IIIII)I");
     midDestroyCustomCursor = (*env)->GetStaticMethodID(env, mActivityClass, "destroyCustomCursor", "(I)V");
     midGetContext = (*env)->GetStaticMethodID(env, mActivityClass, "getContext", "()Landroid/content/Context;");
-    midGetDisplayPhysicalDPI = (*env)->GetStaticMethodID(env, mActivityClass, "getDisplayDPI", "()Landroid/util/DisplayMetrics;");
     midGetManifestEnvironmentVariables = (*env)->GetStaticMethodID(env, mActivityClass, "getManifestEnvironmentVariables", "()Z");
     midGetNativeSurface = (*env)->GetStaticMethodID(env, mActivityClass, "getNativeSurface", "()Landroid/view/Surface;");
     midInitTouch = (*env)->GetStaticMethodID(env, mActivityClass, "initTouch", "()V");
@@ -624,7 +622,6 @@ JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(nativeSetupJNI)(JNIEnv *env, jclass cl
         !midCreateCustomCursor ||
         !midDestroyCustomCursor ||
         !midGetContext ||
-        !midGetDisplayPhysicalDPI ||
         !midGetManifestEnvironmentVariables ||
         !midGetNativeSurface ||
         !midInitTouch ||
@@ -775,11 +772,10 @@ JNIEXPORT int JNICALL SDL_JAVA_INTERFACE(nativeRunMain)(JNIEnv *env, jclass cls,
              */
             argv[argc++] = SDL_strdup("app_process");
             for (i = 0; i < len; ++i) {
-                const char *utf;
                 char *arg = NULL;
                 jstring string = (*env)->GetObjectArrayElement(env, array, i);
                 if (string) {
-                    utf = (*env)->GetStringUTFChars(env, string, 0);
+                    const char *utf = (*env)->GetStringUTFChars(env, string, 0);
                     if (utf) {
                         arg = SDL_strdup(utf);
                         (*env)->ReleaseStringUTFChars(env, string, utf);
@@ -1447,10 +1443,10 @@ SDL_bool Android_JNI_ShouldMinimizeOnFocusLoss()
 
 SDL_bool Android_JNI_GetAccelerometerValues(float values[3])
 {
-    int i;
     SDL_bool retval = SDL_FALSE;
 
     if (bHasNewData) {
+        int i;
         for (i = 0; i < 3; ++i) {
             values[i] = fLastAccelerometer[i];
         }
@@ -1648,37 +1644,6 @@ int Android_JNI_OpenAudioDevice(int iscapture, int device_id, SDL_AudioSpec *spe
 SDL_DisplayOrientation Android_JNI_GetDisplayOrientation(void)
 {
     return displayOrientation;
-}
-
-int Android_JNI_GetDisplayPhysicalDPI(float *ddpi, float *xdpi, float *ydpi)
-{
-    JNIEnv *env = Android_JNI_GetEnv();
-
-    jobject jDisplayObj = (*env)->CallStaticObjectMethod(env, mActivityClass, midGetDisplayPhysicalDPI);
-    jclass jDisplayClass = (*env)->GetObjectClass(env, jDisplayObj);
-
-    jfieldID fidXdpi = (*env)->GetFieldID(env, jDisplayClass, "xdpi", "F");
-    jfieldID fidYdpi = (*env)->GetFieldID(env, jDisplayClass, "ydpi", "F");
-    jfieldID fidDdpi = (*env)->GetFieldID(env, jDisplayClass, "densityDpi", "I");
-
-    float nativeXdpi = (*env)->GetFloatField(env, jDisplayObj, fidXdpi);
-    float nativeYdpi = (*env)->GetFloatField(env, jDisplayObj, fidYdpi);
-    int nativeDdpi = (*env)->GetIntField(env, jDisplayObj, fidDdpi);
-
-    (*env)->DeleteLocalRef(env, jDisplayObj);
-    (*env)->DeleteLocalRef(env, jDisplayClass);
-
-    if (ddpi) {
-        *ddpi = (float)nativeDdpi;
-    }
-    if (xdpi) {
-        *xdpi = nativeXdpi;
-    }
-    if (ydpi) {
-        *ydpi = nativeYdpi;
-    }
-
-    return 0;
 }
 
 void *Android_JNI_GetAudioBuffer(void)
@@ -2185,9 +2150,9 @@ int Android_JNI_SendMessage(int command, int param)
     return success ? 0 : -1;
 }
 
-void Android_JNI_SuspendScreenSaver(SDL_bool suspend)
+int Android_JNI_SuspendScreenSaver(SDL_bool suspend)
 {
-    Android_JNI_SendMessage(COMMAND_SET_KEEP_SCREEN_ON, (suspend == SDL_FALSE) ? 0 : 1);
+    return Android_JNI_SendMessage(COMMAND_SET_KEEP_SCREEN_ON, (suspend == SDL_FALSE) ? 0 : 1);
 }
 
 void Android_JNI_ShowTextInput(SDL_Rect *inputRect)
@@ -2429,19 +2394,22 @@ const char *SDL_AndroidGetInternalStoragePath(void)
     return s_AndroidInternalFilesPath;
 }
 
-int SDL_AndroidGetExternalStorageState(void)
+int SDL_AndroidGetExternalStorageState(Uint32 *state)
 {
     struct LocalReferenceHolder refs = LocalReferenceHolder_Setup(__FUNCTION__);
     jmethodID mid;
     jclass cls;
     jstring stateString;
-    const char *state;
+    const char *state_string;
     int stateFlags;
 
     JNIEnv *env = Android_JNI_GetEnv();
     if (!LocalReferenceHolder_Init(&refs, env)) {
         LocalReferenceHolder_Cleanup(&refs);
-        return 0;
+        if (state) {
+            *state = 0;
+        }
+        return -1;
     }
 
     cls = (*env)->FindClass(env, "android/os/Environment");
@@ -2449,23 +2417,26 @@ int SDL_AndroidGetExternalStorageState(void)
                                     "getExternalStorageState", "()Ljava/lang/String;");
     stateString = (jstring)(*env)->CallStaticObjectMethod(env, cls, mid);
 
-    state = (*env)->GetStringUTFChars(env, stateString, NULL);
+    state_string = (*env)->GetStringUTFChars(env, stateString, NULL);
 
     /* Print an info message so people debugging know the storage state */
-    __android_log_print(ANDROID_LOG_INFO, "SDL", "external storage state: %s", state);
+    __android_log_print(ANDROID_LOG_INFO, "SDL", "external storage state: %s", state_string);
 
-    if (SDL_strcmp(state, "mounted") == 0) {
+    if (SDL_strcmp(state_string, "mounted") == 0) {
         stateFlags = SDL_ANDROID_EXTERNAL_STORAGE_READ |
                      SDL_ANDROID_EXTERNAL_STORAGE_WRITE;
-    } else if (SDL_strcmp(state, "mounted_ro") == 0) {
+    } else if (SDL_strcmp(state_string, "mounted_ro") == 0) {
         stateFlags = SDL_ANDROID_EXTERNAL_STORAGE_READ;
     } else {
         stateFlags = 0;
     }
-    (*env)->ReleaseStringUTFChars(env, stateString, state);
+    (*env)->ReleaseStringUTFChars(env, stateString, state_string);
 
     LocalReferenceHolder_Cleanup(&refs);
-    return stateFlags;
+    if (state) {
+        *state = stateFlags;
+    }
+    return 0;
 }
 
 const char *SDL_AndroidGetExternalStoragePath(void)

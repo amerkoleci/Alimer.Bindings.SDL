@@ -443,6 +443,47 @@ static void GetScaledMouseDeltas(SDL_Mouse *mouse, float *x, float *y)
     }
 }
 
+static void ConstrainMousePosition(SDL_Mouse *mouse, SDL_Window *window, float *x, float *y)
+{
+    /* make sure that the pointers find themselves inside the windows,
+       unless we have the mouse captured. */
+    if (window && !(window->flags & SDL_WINDOW_MOUSE_CAPTURE)) {
+        int x_min = 0, x_max = window->w - 1;
+        int y_min = 0, y_max = window->h - 1;
+        const SDL_Rect *confine = SDL_GetWindowMouseRect(window);
+
+        if (confine) {
+            SDL_Rect window_rect;
+            SDL_Rect mouse_rect;
+
+            window_rect.x = 0;
+            window_rect.y = 0;
+            window_rect.w = x_max + 1;
+            window_rect.h = y_max + 1;
+            if (SDL_GetRectIntersection(confine, &window_rect, &mouse_rect)) {
+                x_min = mouse_rect.x;
+                y_min = mouse_rect.y;
+                x_max = x_min + mouse_rect.w - 1;
+                y_max = y_min + mouse_rect.h - 1;
+            }
+        }
+
+        if (*x >= (float)(x_max + 1)) {
+            *x = SDL_max((float)x_max, mouse->last_x);
+        }
+        if (*x < (float)x_min) {
+            *x = (float)x_min;
+        }
+
+        if (*y >= (float)(y_max + 1)) {
+            *y = SDL_max((float)y_max, mouse->last_y);
+        }
+        if (*y < (float)y_min) {
+            *y = (float)y_min;
+        }
+    }
+}
+
 static int SDL_PrivateSendMouseMotion(Uint64 timestamp, SDL_Window *window, SDL_MouseID mouseID, int relative, float x, float y)
 {
     SDL_Mouse *mouse = SDL_GetMouse();
@@ -462,10 +503,8 @@ static int SDL_PrivateSendMouseMotion(Uint64 timestamp, SDL_Window *window, SDL_
     }
 
     /* SDL_HINT_TOUCH_MOUSE_EVENTS: if not set, discard synthetic mouse events coming from platform layer */
-    if (mouse->touch_mouse_events == 0) {
-        if (mouseID == SDL_TOUCH_MOUSEID) {
-            return 0;
-        }
+    if (!mouse->touch_mouse_events && mouseID == SDL_TOUCH_MOUSEID) {
+        return 0;
     }
 
     if (mouseID != SDL_TOUCH_MOUSEID && mouse->relative_mode_warp) {
@@ -498,21 +537,14 @@ static int SDL_PrivateSendMouseMotion(Uint64 timestamp, SDL_Window *window, SDL_
         yrel = y;
         x = (mouse->last_x + xrel);
         y = (mouse->last_y + yrel);
-    } else if (mouse->has_position) {
-        xrel = x - mouse->last_x;
-        yrel = y - mouse->last_y;
-    }
+        ConstrainMousePosition(mouse, window, &x, &y);
+    } else {
+        ConstrainMousePosition(mouse, window, &x, &y);
 
-    /* Ignore relative motion when first positioning the mouse */
-    if (!mouse->has_position) {
-        mouse->x = x;
-        mouse->y = y;
-        mouse->has_position = SDL_TRUE;
-    } else if (xrel == 0.0f && yrel == 0.0f) { /* Drop events that don't change state */
-#ifdef DEBUG_MOUSE
-        SDL_Log("Mouse event didn't change state - dropped!\n");
-#endif
-        return 0;
+        if (mouse->has_position) {
+            xrel = x - mouse->last_x;
+            yrel = y - mouse->last_y;
+        }
     }
 
     /* Ignore relative motion positioning the first touch */
@@ -521,51 +553,27 @@ static int SDL_PrivateSendMouseMotion(Uint64 timestamp, SDL_Window *window, SDL_
         yrel = 0.0f;
     }
 
-    /* Update internal mouse coordinates */
-    if (!mouse->relative_mode) {
+    if (mouse->has_position) {
+        if (xrel == 0.0f && yrel == 0.0f) { /* Drop events that don't change state */
+#ifdef DEBUG_MOUSE
+            SDL_Log("Mouse event didn't change state - dropped!\n");
+#endif
+            return 0;
+        }
+
+        /* Update internal mouse coordinates */
+        if (!mouse->relative_mode) {
+            mouse->x = x;
+            mouse->y = y;
+        } else {
+            mouse->x += xrel;
+            mouse->y += yrel;
+            ConstrainMousePosition(mouse, window, &mouse->x, &mouse->y);
+        }
+    } else {
         mouse->x = x;
         mouse->y = y;
-    } else {
-        mouse->x += xrel;
-        mouse->y += yrel;
-    }
-
-    /* make sure that the pointers find themselves inside the windows,
-       unless we have the mouse captured. */
-    if (window && !(window->flags & SDL_WINDOW_MOUSE_CAPTURE)) {
-        int x_min = 0, x_max = window->w - 1;
-        int y_min = 0, y_max = window->h - 1;
-        const SDL_Rect *confine = SDL_GetWindowMouseRect(window);
-
-        if (confine) {
-            SDL_Rect window_rect;
-            SDL_Rect mouse_rect;
-
-            window_rect.x = 0;
-            window_rect.y = 0;
-            window_rect.w = x_max + 1;
-            window_rect.h = y_max + 1;
-            if (SDL_GetRectIntersection(confine, &window_rect, &mouse_rect)) {
-                x_min = mouse_rect.x;
-                y_min = mouse_rect.y;
-                x_max = x_min + mouse_rect.w - 1;
-                y_max = y_min + mouse_rect.h - 1;
-            }
-        }
-
-        if (mouse->x > (float)x_max) {
-            mouse->x = (float)x_max;
-        }
-        if (mouse->x < (float)x_min) {
-            mouse->x = (float)x_min;
-        }
-
-        if (mouse->y > (float)y_max) {
-            mouse->y = (float)y_max;
-        }
-        if (mouse->y < (float)y_min) {
-            mouse->y = (float)y_min;
-        }
+        mouse->has_position = SDL_TRUE;
     }
 
     mouse->xdelta += xrel;
@@ -843,6 +851,12 @@ void SDL_QuitMouse(void)
     }
     mouse->num_clickstates = 0;
 
+    if (mouse->system_scale_values) {
+        SDL_free(mouse->system_scale_values);
+        mouse->system_scale_values = NULL;
+    }
+    mouse->num_system_scale_values = 0;
+
     SDL_DelHintCallback(SDL_HINT_MOUSE_DOUBLE_CLICK_TIME,
                         SDL_MouseDoubleClickTimeChanged, mouse);
 
@@ -1059,7 +1073,7 @@ int SDL_SetRelativeMouseMode(SDL_bool enabled)
 }
 
 SDL_bool
-SDL_GetRelativeMouseMode()
+SDL_GetRelativeMouseMode(void)
 {
     SDL_Mouse *mouse = SDL_GetMouse();
 

@@ -22,7 +22,7 @@
 /**
  *  \file SDL_system.h
  *
- *  Include file for platform specific SDL API functions
+ *  \brief Include file for platform specific SDL API functions
  */
 
 #ifndef SDL_system_h_
@@ -173,7 +173,8 @@ extern DECLSPEC int SDLCALL SDL_LinuxSetThreadPriority(Sint64 threadID, int prio
  * \param sdlPriority The new SDL_ThreadPriority value.
  * \param schedPolicy The new scheduling policy (SCHED_FIFO, SCHED_RR,
  *                    SCHED_OTHER, etc...)
- * \returns 0 on success, or -1 on error.
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  */
@@ -384,14 +385,16 @@ extern DECLSPEC const char * SDLCALL SDL_AndroidGetInternalStoragePath(void);
  *
  * If external storage is currently unavailable, this will return 0.
  *
- * \returns the current state of external storage on success or 0 on failure;
- *          call SDL_GetError() for more information.
+ * \param state filled with the current state of external storage. 0 if
+ *              external storage is currently unavailable.
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_AndroidGetExternalStoragePath
  */
-extern DECLSPEC int SDLCALL SDL_AndroidGetExternalStorageState(void);
+extern DECLSPEC int SDLCALL SDL_AndroidGetExternalStorageState(Uint32 *state);
 
 /**
  * Get the path used for external storage for this application.
@@ -442,7 +445,8 @@ extern DECLSPEC SDL_bool SDLCALL SDL_AndroidRequestPermission(const char *permis
  * \param gravity where the notification should appear on the screen.
  * \param xoffset set this parameter only when gravity >=0
  * \param yoffset set this parameter only when gravity >=0
- * \returns 0 if success, -1 if any error occurs.
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  */
@@ -455,6 +459,8 @@ extern DECLSPEC int SDLCALL SDL_AndroidShowToast(const char* message, int durati
  *
  * \param command user command that must be greater or equal to 0x8000
  * \param param user parameter
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  */
@@ -577,13 +583,41 @@ extern DECLSPEC SDL_WinRT_DeviceFamily SDLCALL SDL_WinRTGetDeviceFamily();
 extern DECLSPEC SDL_bool SDLCALL SDL_IsTablet(void);
 
 /* Functions used by iOS application delegates to notify SDL about state changes */
+
+/*
+ * \since This function is available since SDL 3.0.0.
+ */
 extern DECLSPEC void SDLCALL SDL_OnApplicationWillTerminate(void);
+
+/*
+ * \since This function is available since SDL 3.0.0.
+ */
 extern DECLSPEC void SDLCALL SDL_OnApplicationDidReceiveMemoryWarning(void);
+
+/*
+ * \since This function is available since SDL 3.0.0.
+ */
 extern DECLSPEC void SDLCALL SDL_OnApplicationWillResignActive(void);
+
+/*
+ * \since This function is available since SDL 3.0.0.
+ */
 extern DECLSPEC void SDLCALL SDL_OnApplicationDidEnterBackground(void);
+
+/*
+ * \since This function is available since SDL 3.0.0.
+ */
 extern DECLSPEC void SDLCALL SDL_OnApplicationWillEnterForeground(void);
+
+/*
+ * \since This function is available since SDL 3.0.0.
+ */
 extern DECLSPEC void SDLCALL SDL_OnApplicationDidBecomeActive(void);
+
 #ifdef __IOS__
+/*
+ * \since This function is available since SDL 3.0.0.
+ */
 extern DECLSPEC void SDLCALL SDL_OnApplicationDidChangeStatusBarOrientation(void);
 #endif
 
@@ -600,7 +634,8 @@ typedef struct XTaskQueueObject * XTaskQueueHandle;
  * leak.
  *
  * \param outTaskQueue a pointer to be filled in with task queue handle.
- * \returns 0 if success, -1 if any error occurs.
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  */

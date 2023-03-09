@@ -45,7 +45,7 @@ static int X11_VideoInit(_THIS);
 static void X11_VideoQuit(_THIS);
 
 /* Find out what class name we should use */
-static char *get_classname()
+static char *get_classname(void)
 {
     char *spot;
 #if defined(__LINUX__) || defined(__FREEBSD__)
@@ -214,7 +214,6 @@ static SDL_VideoDevice *X11_CreateDevice(void)
     device->GetDisplayModes = X11_GetDisplayModes;
     device->GetDisplayBounds = X11_GetDisplayBounds;
     device->GetDisplayUsableBounds = X11_GetDisplayUsableBounds;
-    device->GetDisplayPhysicalDPI = X11_GetDisplayPhysicalDPI;
     device->GetWindowICCProfile = X11_GetWindowICCProfile;
     device->SetDisplayMode = X11_SetDisplayMode;
     device->SuspendScreenSaver = X11_SuspendScreenSaver;
@@ -261,7 +260,6 @@ static SDL_VideoDevice *X11_CreateDevice(void)
 
     device->shape_driver.CreateShaper = X11_CreateShaper;
     device->shape_driver.SetWindowShape = X11_SetWindowShape;
-    device->shape_driver.ResizeWindowShape = X11_ResizeWindowShape;
 
 #if SDL_VIDEO_OPENGL_GLX
     device->GL_LoadLibrary = X11_GL_LoadLibrary;
@@ -501,5 +499,3 @@ X11_UseDirectColorVisuals(void)
 }
 
 #endif /* SDL_VIDEO_DRIVER_X11 */
-
-/* vim: set ts=4 sw=4 expandtab: */

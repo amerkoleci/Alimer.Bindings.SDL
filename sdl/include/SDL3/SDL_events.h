@@ -93,8 +93,9 @@ typedef enum
     SDL_EVENT_DISPLAY_CONNECTED,           /**< Display has been added to the system */
     SDL_EVENT_DISPLAY_DISCONNECTED,        /**< Display has been removed from the system */
     SDL_EVENT_DISPLAY_MOVED,               /**< Display has changed position */
+    SDL_EVENT_DISPLAY_SCALE_CHANGED,       /**< Display has changed desktop display scale */
     SDL_EVENT_DISPLAY_FIRST = SDL_EVENT_DISPLAY_ORIENTATION,
-    SDL_EVENT_DISPLAY_LAST = SDL_EVENT_DISPLAY_DISCONNECTED,
+    SDL_EVENT_DISPLAY_LAST = SDL_EVENT_DISPLAY_SCALE_CHANGED,
 
     /* Window events */
     /* 0x200 was SDL_WINDOWEVENT, reserve the number for sdl2-compat */
@@ -171,6 +172,7 @@ typedef enum
     SDL_EVENT_DROP_TEXT,                 /**< text/plain drag-and-drop event */
     SDL_EVENT_DROP_BEGIN,                /**< A new set of drops is beginning (NULL filename) */
     SDL_EVENT_DROP_COMPLETE,             /**< Current set of drops is now complete (NULL filename) */
+    SDL_EVENT_DROP_POSITION,             /**< Position while moving over the window */
 
     /* Audio hotplug events */
     SDL_EVENT_AUDIO_DEVICE_ADDED = 0x1100, /**< A new audio device is available */
@@ -405,7 +407,7 @@ typedef struct SDL_JoyBatteryEvent
 } SDL_JoyBatteryEvent;
 
 /**
- *  \brief Gamepad axis motion event structure (event.caxis.*)
+ *  \brief Gamepad axis motion event structure (event.gaxis.*)
  */
 typedef struct SDL_GamepadAxisEvent
 {
@@ -422,7 +424,7 @@ typedef struct SDL_GamepadAxisEvent
 
 
 /**
- *  \brief Gamepad button event structure (event.cbutton.*)
+ *  \brief Gamepad button event structure (event.gbutton.*)
  */
 typedef struct SDL_GamepadButtonEvent
 {
@@ -437,7 +439,7 @@ typedef struct SDL_GamepadButtonEvent
 
 
 /**
- *  \brief Gamepad device event structure (event.cdevice.*)
+ *  \brief Gamepad device event structure (event.gdevice.*)
  */
 typedef struct SDL_GamepadDeviceEvent
 {
@@ -447,7 +449,7 @@ typedef struct SDL_GamepadDeviceEvent
 } SDL_GamepadDeviceEvent;
 
 /**
- *  \brief Gamepad touchpad event structure (event.ctouchpad.*)
+ *  \brief Gamepad touchpad event structure (event.gtouchpad.*)
  */
 typedef struct SDL_GamepadTouchpadEvent
 {
@@ -462,7 +464,7 @@ typedef struct SDL_GamepadTouchpadEvent
 } SDL_GamepadTouchpadEvent;
 
 /**
- *  \brief Gamepad sensor event structure (event.csensor.*)
+ *  \brief Gamepad sensor event structure (event.gsensor.*)
  */
 typedef struct SDL_GamepadSensorEvent
 {
@@ -514,10 +516,12 @@ typedef struct SDL_TouchFingerEvent
  */
 typedef struct SDL_DropEvent
 {
-    Uint32 type;        /**< ::SDL_EVENT_DROP_BEGIN or ::SDL_EVENT_DROP_FILE or ::SDL_EVENT_DROP_TEXT or ::SDL_EVENT_DROP_COMPLETE */
+    Uint32 type;        /**< ::SDL_EVENT_DROP_BEGIN or ::SDL_EVENT_DROP_FILE or ::SDL_EVENT_DROP_TEXT or ::SDL_EVENT_DROP_COMPLETE or ::SDL_EVENT_DROP_POSITION */
     Uint64 timestamp;   /**< In nanoseconds, populated using SDL_GetTicksNS() */
     char *file;         /**< The file name, which should be freed with SDL_free(), is NULL on begin/complete */
-    SDL_WindowID windowID;/**< The window that was dropped on, if any */
+    SDL_WindowID windowID;    /**< The window that was dropped on, if any */
+    float x;            /**< X coordinate, relative to window (not on begin) */
+    float y;            /**< Y coordinate, relative to window (not on begin) */
 } SDL_DropEvent;
 
 
@@ -602,11 +606,11 @@ typedef union SDL_Event
     SDL_JoyButtonEvent jbutton;             /**< Joystick button event data */
     SDL_JoyDeviceEvent jdevice;             /**< Joystick device change event data */
     SDL_JoyBatteryEvent jbattery;           /**< Joystick battery event data */
-    SDL_GamepadAxisEvent caxis;             /**< Gamepad axis event data */
-    SDL_GamepadButtonEvent cbutton;         /**< Gamepad button event data */
-    SDL_GamepadDeviceEvent cdevice;         /**< Gamepad device event data */
-    SDL_GamepadTouchpadEvent ctouchpad;     /**< Gamepad touchpad event data */
-    SDL_GamepadSensorEvent csensor;         /**< Gamepad sensor event data */
+    SDL_GamepadAxisEvent gaxis;             /**< Gamepad axis event data */
+    SDL_GamepadButtonEvent gbutton;         /**< Gamepad button event data */
+    SDL_GamepadDeviceEvent gdevice;         /**< Gamepad device event data */
+    SDL_GamepadTouchpadEvent gtouchpad;     /**< Gamepad touchpad event data */
+    SDL_GamepadSensorEvent gsensor;         /**< Gamepad sensor event data */
     SDL_AudioDeviceEvent adevice;           /**< Audio device event data */
     SDL_SensorEvent sensor;                 /**< Sensor event data */
     SDL_QuitEvent quit;                     /**< Quit request event data */

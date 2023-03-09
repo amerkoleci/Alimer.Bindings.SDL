@@ -746,9 +746,16 @@ SDL_GetKeyboardFocus(void)
     return keyboard->focus;
 }
 
-void SDL_SetKeyboardFocus(SDL_Window *window)
+int SDL_SetKeyboardFocus(SDL_Window *window)
 {
+    SDL_VideoDevice *video = SDL_GetVideoDevice();
     SDL_Keyboard *keyboard = &SDL_keyboard;
+
+    if (window) {
+        if (!video || window->magic != &video->window_magic || window->is_destroying) {
+            return SDL_SetError("Invalid window");
+        }
+    }
 
     if (keyboard->focus && window == NULL) {
         /* We won't get anymore keyboard messages, so reset keyboard state */
@@ -773,7 +780,6 @@ void SDL_SetKeyboardFocus(SDL_Window *window)
 
         /* Ensures IME compositions are committed */
         if (SDL_EventEnabled(SDL_EVENT_TEXT_INPUT)) {
-            SDL_VideoDevice *video = SDL_GetVideoDevice();
             if (video && video->StopTextInput) {
                 video->StopTextInput(video);
             }
@@ -787,12 +793,12 @@ void SDL_SetKeyboardFocus(SDL_Window *window)
                             0, 0);
 
         if (SDL_EventEnabled(SDL_EVENT_TEXT_INPUT)) {
-            SDL_VideoDevice *video = SDL_GetVideoDevice();
             if (video && video->StartTextInput) {
                 video->StartTextInput(video);
             }
         }
     }
+    return 0;
 }
 
 static int SDL_SendKeyboardKeyInternal(Uint64 timestamp, SDL_KeyboardFlags flags, Uint8 state, SDL_Scancode scancode, SDL_Keycode keycode)

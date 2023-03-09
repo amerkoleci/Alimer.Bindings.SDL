@@ -392,6 +392,7 @@ int X11_CreateWindow(_THIS, SDL_Window *window)
     Atom _NET_WM_PID;
     long fevent = 0;
     const char *hint = NULL;
+    SDL_bool undefined_position = SDL_FALSE;
 
 #if SDL_VIDEO_OPENGL_GLX || SDL_VIDEO_OPENGL_EGL
     const char *forced_visual_id = SDL_GetHint(SDL_HINT_VIDEO_X11_WINDOW_VISUALID);
@@ -527,6 +528,11 @@ int X11_CreateWindow(_THIS, SDL_Window *window)
                                 visual, AllocNone);
     }
 
+    if (window->undefined_x && window->undefined_y &&
+        window->last_displayID == SDL_GetPrimaryDisplay()) {
+        undefined_position = SDL_TRUE;
+    }
+
     /* Always create this with the window->windowed.* fields; if we're
        creating a windowed mode window, that's fine. If we're creating a
        fullscreen window, the window manager will want to know these values
@@ -554,9 +560,11 @@ int X11_CreateWindow(_THIS, SDL_Window *window)
         sizehints->min_height = sizehints->max_height = window->h;
         sizehints->flags |= (PMaxSize | PMinSize);
     }
-    sizehints->x = window->x;
-    sizehints->y = window->y;
-    sizehints->flags |= USPosition;
+    if (!undefined_position) {
+        sizehints->x = window->x;
+        sizehints->y = window->y;
+        sizehints->flags |= USPosition;
+    }
 
     /* Setup the input hints so we get keyboard input */
     wmhints = X11_XAllocWMHints();
@@ -739,45 +747,6 @@ void X11_SetWindowTitle(_THIS, SDL_Window *window)
     SDL_X11_SetWindowTitle(display, xwindow, title);
 }
 
-void X11_SetWindowIcon(_THIS, SDL_Window *window, SDL_Surface *icon)
-{
-    SDL_WindowData *data = window->driverdata;
-    Display *display = data->videodata->display;
-    Atom _NET_WM_ICON = data->videodata->_NET_WM_ICON;
-
-    if (icon) {
-        int propsize;
-        long *propdata;
-
-        /* Set the _NET_WM_ICON property */
-        SDL_assert(icon->format->format == SDL_PIXELFORMAT_ARGB8888);
-        propsize = 2 + (icon->w * icon->h);
-        propdata = SDL_malloc(propsize * sizeof(long));
-        if (propdata) {
-            int x, y;
-            Uint32 *src;
-            long *dst;
-
-            propdata[0] = icon->w;
-            propdata[1] = icon->h;
-            dst = &propdata[2];
-            for (y = 0; y < icon->h; ++y) {
-                src = (Uint32 *)((Uint8 *)icon->pixels + y * icon->pitch);
-                for (x = 0; x < icon->w; ++x) {
-                    *dst++ = *src++;
-                }
-            }
-            X11_XChangeProperty(display, data->xwindow, _NET_WM_ICON, XA_CARDINAL,
-                                32, PropModeReplace, (unsigned char *)propdata,
-                                propsize);
-        }
-        SDL_free(propdata);
-    } else {
-        X11_XDeleteProperty(display, data->xwindow, _NET_WM_ICON);
-    }
-    X11_XFlush(display);
-}
-
 static SDL_bool caught_x11_error = SDL_FALSE;
 static int X11_CatchAnyError(Display *d, XErrorEvent *e)
 {
@@ -785,6 +754,64 @@ static int X11_CatchAnyError(Display *d, XErrorEvent *e)
         so just note we had an error and return control. */
     caught_x11_error = SDL_TRUE;
     return 0;
+}
+
+int X11_SetWindowIcon(_THIS, SDL_Window *window, SDL_Surface *icon)
+{
+    SDL_WindowData *data = window->driverdata;
+    Display *display = data->videodata->display;
+    Atom _NET_WM_ICON = data->videodata->_NET_WM_ICON;
+    int rc = 0;
+    int (*prevHandler)(Display *, XErrorEvent *) = NULL;
+
+    if (icon) {
+        int x, y;
+        int propsize;
+        long *propdata;
+        Uint32 *src;
+        long *dst;
+
+        /* Set the _NET_WM_ICON property */
+        SDL_assert(icon->format->format == SDL_PIXELFORMAT_ARGB8888);
+        propsize = 2 + (icon->w * icon->h);
+        propdata = SDL_malloc(propsize * sizeof(long));
+
+        if (!propdata) {
+            return SDL_OutOfMemory();
+        }
+
+        X11_XSync(display, False);
+        prevHandler = X11_XSetErrorHandler(X11_CatchAnyError);
+
+        propdata[0] = icon->w;
+        propdata[1] = icon->h;
+        dst = &propdata[2];
+
+        for (y = 0; y < icon->h; ++y) {
+            src = (Uint32 *)((Uint8 *)icon->pixels + y * icon->pitch);
+            for (x = 0; x < icon->w; ++x) {
+                *dst++ = *src++;
+            }
+        }
+
+        X11_XChangeProperty(display, data->xwindow, _NET_WM_ICON, XA_CARDINAL,
+                                32, PropModeReplace, (unsigned char *)propdata,
+                                propsize);
+        SDL_free(propdata);
+
+        if (caught_x11_error) {
+            rc = SDL_SetError("An error occurred while trying to set the window's icon");
+        }
+    }
+
+    X11_XFlush(display);
+
+    if (prevHandler != NULL) {
+        X11_XSetErrorHandler(prevHandler);
+        caught_x11_error = SDL_FALSE;
+    }
+
+    return rc;
 }
 
 void X11_SetWindowPosition(_THIS, SDL_Window *window)
@@ -914,9 +941,6 @@ void X11_SetWindowSize(_THIS, SDL_Window *window)
     orig_w = attrs.width;
     orig_h = attrs.height;
 
-    if (SDL_IsShapedWindow(window)) {
-        X11_ResizeWindowShape(window);
-    }
     if (!(window->flags & SDL_WINDOW_RESIZABLE)) {
         /* Apparently, if the X11 Window is set to a 'non-resizable' window, you cannot resize it using the X11_XResizeWindow, thus
            we must set the size hints to adjust the window size. */
@@ -978,6 +1002,10 @@ void X11_SetWindowSize(_THIS, SDL_Window *window)
         }
 
         if (SDL_GetTicks() >= timeout) {
+            /* Timeout occurred and window size didn't change
+             * window manager likely denied the resize. */
+            window->w = orig_w;
+            window->h = orig_h;
             break;
         }
 
@@ -1348,6 +1376,11 @@ static void X11_SetWindowFullscreenViaWM(_THIS, SDL_Window *window, SDL_VideoDis
         X11_XSendEvent(display, RootWindow(display, displaydata->screen), 0,
                        SubstructureNotifyMask | SubstructureRedirectMask, &e);
 
+        /* Set the position so the window will be on the target display */
+        if (fullscreen) {
+            X11_XMoveWindow(display, data->xwindow, displaydata->x, displaydata->y);
+        }
+
         /* Fullscreen windows sometimes end up being marked maximized by
             window managers. Force it back to how we expect it to be. */
         if (!fullscreen) {
@@ -1548,7 +1581,7 @@ void X11_SetWindowMouseGrab(_THIS, SDL_Window *window, SDL_bool grabbed)
 
             /* Try for up to 5000ms (5s) to grab. If it still fails, stop trying. */
             for (attempts = 0; attempts < 100; attempts++) {
-                result = X11_XGrabPointer(display, data->xwindow, True, mask, GrabModeAsync,
+                result = X11_XGrabPointer(display, data->xwindow, False, mask, GrabModeAsync,
                                           GrabModeAsync, data->xwindow, None, CurrentTime);
                 if (result == GrabSuccess) {
                     data->mouse_grabbed = SDL_TRUE;

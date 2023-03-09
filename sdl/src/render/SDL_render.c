@@ -89,14 +89,14 @@ this should probably be removed at some point in the future.  --ryan. */
 
 #if !SDL_RENDER_DISABLED
 static const SDL_RenderDriver *render_drivers[] = {
-#if SDL_VIDEO_RENDER_D3D
-    &D3D_RenderDriver,
+#if SDL_VIDEO_RENDER_D3D12
+    &D3D12_RenderDriver,
 #endif
 #if SDL_VIDEO_RENDER_D3D11
     &D3D11_RenderDriver,
 #endif
-#if SDL_VIDEO_RENDER_D3D12
-    &D3D12_RenderDriver,
+#if SDL_VIDEO_RENDER_D3D
+    &D3D_RenderDriver,
 #endif
 #if SDL_VIDEO_RENDER_METAL
     &METAL_RenderDriver,
@@ -599,7 +599,7 @@ static int QueueCmdFillRects(SDL_Renderer *renderer, const SDL_FRect *rects, con
     return retval;
 }
 
-static int QueueCmdCopy(SDL_Renderer *renderer, SDL_Texture *texture, const SDL_Rect *srcrect, const SDL_FRect *dstrect)
+static int QueueCmdCopy(SDL_Renderer *renderer, SDL_Texture *texture, const SDL_FRect *srcrect, const SDL_FRect *dstrect)
 {
     SDL_RenderCommand *cmd = PrepQueueCmdDraw(renderer, SDL_RENDERCMD_COPY, texture);
     int retval = -1;
@@ -613,7 +613,7 @@ static int QueueCmdCopy(SDL_Renderer *renderer, SDL_Texture *texture, const SDL_
 }
 
 static int QueueCmdCopyEx(SDL_Renderer *renderer, SDL_Texture *texture,
-                          const SDL_Rect *srcquad, const SDL_FRect *dstrect,
+                          const SDL_FRect *srcquad, const SDL_FRect *dstrect,
                           const double angle, const SDL_FPoint *center, const SDL_RendererFlip flip, float scale_x, float scale_y)
 {
     SDL_RenderCommand *cmd = PrepQueueCmdDraw(renderer, SDL_RENDERCMD_COPY_EX, texture);
@@ -727,9 +727,7 @@ static int SDLCALL SDL_RendererEventWatch(void *userdata, SDL_Event *event)
 
 int SDL_CreateWindowAndRenderer(int width, int height, Uint32 window_flags, SDL_Window **window, SDL_Renderer **renderer)
 {
-    *window = SDL_CreateWindow(NULL, SDL_WINDOWPOS_UNDEFINED,
-                               SDL_WINDOWPOS_UNDEFINED,
-                               width, height, window_flags);
+    *window = SDL_CreateWindow(NULL, width, height, window_flags);
     if (!*window) {
         *renderer = NULL;
         return -1;
@@ -924,8 +922,6 @@ SDL_Renderer *SDL_CreateRenderer(SDL_Window *window, const char *name, Uint32 fl
     SDL_SetWindowData(window, SDL_WINDOWRENDERDATA, renderer);
 
     SDL_SetRenderViewport(renderer, NULL);
-
-    SDL_SetRenderLogicalPresentation(renderer, 0, 0, SDL_LOGICAL_PRESENTATION_MATCH, SDL_SCALEMODE_LINEAR);
 
     SDL_AddEventWatch(SDL_RendererEventWatch, renderer);
 
@@ -2013,12 +2009,12 @@ static void SDL_UnlockTextureNative(SDL_Texture *texture)
     SDL_UnlockTexture(native);
 }
 
-int SDL_UnlockTexture(SDL_Texture *texture)
+void SDL_UnlockTexture(SDL_Texture *texture)
 {
-    CHECK_TEXTURE_MAGIC(texture, -1);
+    CHECK_TEXTURE_MAGIC(texture,);
 
     if (texture->access != SDL_TEXTUREACCESS_STREAMING) {
-        return 0;
+        return;
     }
 #if SDL_HAVE_YUV
     if (texture->yuv) {
@@ -2034,7 +2030,6 @@ int SDL_UnlockTexture(SDL_Texture *texture)
 
     SDL_DestroySurface(texture->locked_surface);
     texture->locked_surface = NULL;
-    return 0;
 }
 
 static int SDL_SetRenderTargetInternal(SDL_Renderer *renderer, SDL_Texture *texture)
@@ -2153,10 +2148,10 @@ static int UpdateLogicalPresentation(SDL_Renderer *renderer)
         real_aspect = (float)output_w / output_h;
     }
 
-    renderer->logical_src_rect.x = 0;
-    renderer->logical_src_rect.y = 0;
-    renderer->logical_src_rect.w = logical_w;
-    renderer->logical_src_rect.h = logical_h;
+    renderer->logical_src_rect.x = 0.0f;
+    renderer->logical_src_rect.y = 0.0f;
+    renderer->logical_src_rect.w = (float)logical_w;
+    renderer->logical_src_rect.h = (float)logical_h;
 
     if (renderer->logical_presentation_mode == SDL_LOGICAL_PRESENTATION_INTEGER_SCALE) {
         if (want_aspect > real_aspect) {
@@ -2312,7 +2307,7 @@ int SDL_RenderCoordinatesFromWindow(SDL_Renderer *renderer, float window_x, floa
 
     /* Convert from pixels within the window to pixels within the view */
     if (renderer->logical_target) {
-        const SDL_Rect *src = &renderer->logical_src_rect;
+        const SDL_FRect *src = &renderer->logical_src_rect;
         const SDL_FRect *dst = &renderer->logical_dst_rect;
         render_x = ((render_x - dst->x) * src->w) / dst->w;
         render_y = ((render_y - dst->y) * src->h) / dst->h;
@@ -2353,7 +2348,7 @@ int SDL_RenderCoordinatesToWindow(SDL_Renderer *renderer, float x, float y, floa
 
     /* Convert from pixels within the view to pixels within the window */
     if (renderer->logical_target) {
-        const SDL_Rect *src = &renderer->logical_src_rect;
+        const SDL_FRect *src = &renderer->logical_src_rect;
         const SDL_FRect *dst = &renderer->logical_dst_rect;
         x = dst->x + ((x * dst->w) / src->w);
         y = dst->y + ((y * dst->h) / src->h);
@@ -2389,7 +2384,7 @@ int SDL_ConvertEventToRenderCoordinates(SDL_Renderer *renderer, SDL_Event *event
 
                 /* Convert from pixels within the window to pixels within the view */
                 if (renderer->logical_target) {
-                    const SDL_Rect *src = &renderer->logical_src_rect;
+                    const SDL_FRect *src = &renderer->logical_src_rect;
                     const SDL_FRect *dst = &renderer->logical_dst_rect;
                     scale = (scale * src->w) / dst->w;
                 }
@@ -2412,7 +2407,7 @@ int SDL_ConvertEventToRenderCoordinates(SDL_Renderer *renderer, SDL_Event *event
 
                 /* Convert from pixels within the window to pixels within the view */
                 if (renderer->logical_target) {
-                    const SDL_Rect *src = &renderer->logical_src_rect;
+                    const SDL_FRect *src = &renderer->logical_src_rect;
                     const SDL_FRect *dst = &renderer->logical_dst_rect;
                     scale = (scale * src->h) / dst->h;
                 }
@@ -3132,9 +3127,9 @@ int SDL_RenderFillRects(SDL_Renderer *renderer, const SDL_FRect *rects, int coun
     return retval < 0 ? retval : FlushRenderCommandsIfNotBatching(renderer);
 }
 
-int SDL_RenderTexture(SDL_Renderer *renderer, SDL_Texture *texture, const SDL_Rect *srcrect, const SDL_FRect *dstrect)
+int SDL_RenderTexture(SDL_Renderer *renderer, SDL_Texture *texture, const SDL_FRect *srcrect, const SDL_FRect *dstrect)
 {
-    SDL_Rect real_srcrect;
+    SDL_FRect real_srcrect;
     SDL_FRect real_dstrect;
     int retval;
     int use_rendergeometry;
@@ -3155,12 +3150,12 @@ int SDL_RenderTexture(SDL_Renderer *renderer, SDL_Texture *texture, const SDL_Re
 
     use_rendergeometry = (renderer->QueueCopy == NULL);
 
-    real_srcrect.x = 0;
-    real_srcrect.y = 0;
-    real_srcrect.w = texture->w;
-    real_srcrect.h = texture->h;
+    real_srcrect.x = 0.0f;
+    real_srcrect.y = 0.0f;
+    real_srcrect.w = (float)texture->w;
+    real_srcrect.h = (float)texture->h;
     if (srcrect) {
-        if (!SDL_GetRectIntersection(srcrect, &real_srcrect, &real_srcrect)) {
+        if (!SDL_GetRectIntersectionFloat(srcrect, &real_srcrect, &real_srcrect)) {
             return 0;
         }
     }
@@ -3191,10 +3186,10 @@ int SDL_RenderTexture(SDL_Renderer *renderer, SDL_Texture *texture, const SDL_Re
         float minu, minv, maxu, maxv;
         float minx, miny, maxx, maxy;
 
-        minu = (float)(real_srcrect.x) / (float)texture->w;
-        minv = (float)(real_srcrect.y) / (float)texture->h;
-        maxu = (float)(real_srcrect.x + real_srcrect.w) / (float)texture->w;
-        maxv = (float)(real_srcrect.y + real_srcrect.h) / (float)texture->h;
+        minu = real_srcrect.x / texture->w;
+        minv = real_srcrect.y / texture->h;
+        maxu = (real_srcrect.x + real_srcrect.w) / texture->w;
+        maxv = (real_srcrect.y + real_srcrect.h) / texture->h;
 
         minx = real_dstrect.x;
         miny = real_dstrect.y;
@@ -3238,10 +3233,10 @@ int SDL_RenderTexture(SDL_Renderer *renderer, SDL_Texture *texture, const SDL_Re
 }
 
 int SDL_RenderTextureRotated(SDL_Renderer *renderer, SDL_Texture *texture,
-                      const SDL_Rect *srcrect, const SDL_FRect *dstrect,
+                      const SDL_FRect *srcrect, const SDL_FRect *dstrect,
                       const double angle, const SDL_FPoint *center, const SDL_RendererFlip flip)
 {
-    SDL_Rect real_srcrect;
+    SDL_FRect real_srcrect;
     SDL_FRect real_dstrect;
     SDL_FPoint real_center;
     int retval;
@@ -3270,12 +3265,12 @@ int SDL_RenderTextureRotated(SDL_Renderer *renderer, SDL_Texture *texture,
 
     use_rendergeometry = (renderer->QueueCopyEx == NULL);
 
-    real_srcrect.x = 0;
-    real_srcrect.y = 0;
-    real_srcrect.w = texture->w;
-    real_srcrect.h = texture->h;
+    real_srcrect.x = 0.0f;
+    real_srcrect.y = 0.0f;
+    real_srcrect.w = (float)texture->w;
+    real_srcrect.h = (float)texture->h;
     if (srcrect) {
-        if (!SDL_GetRectIntersection(srcrect, &real_srcrect, &real_srcrect)) {
+        if (!SDL_GetRectIntersectionFloat(srcrect, &real_srcrect, &real_srcrect)) {
             return 0;
         }
     }
@@ -3320,10 +3315,10 @@ int SDL_RenderTextureRotated(SDL_Renderer *renderer, SDL_Texture *texture,
         const float s = SDL_sinf(radian_angle);
         const float c = SDL_cosf(radian_angle);
 
-        minu = (float)(real_srcrect.x) / (float)texture->w;
-        minv = (float)(real_srcrect.y) / (float)texture->h;
-        maxu = (float)(real_srcrect.x + real_srcrect.w) / (float)texture->w;
-        maxv = (float)(real_srcrect.y + real_srcrect.h) / (float)texture->h;
+        minu = real_srcrect.x / texture->w;
+        minv = real_srcrect.y / texture->h;
+        maxu = (real_srcrect.x + real_srcrect.w) / texture->w;
+        maxv = (real_srcrect.y + real_srcrect.h) / texture->h;
 
         centerx = real_center.x + real_dstrect.x;
         centery = real_center.y + real_dstrect.y;
@@ -3670,7 +3665,7 @@ static int SDLCALL SDL_SW_RenderGeometryRaw(SDL_Renderer *renderer,
 
         /* Start rendering rect */
         if (is_quad) {
-            SDL_Rect s;
+            SDL_FRect s;
             SDL_FRect d;
             const float *xy0_, *xy1_, *uv0_, *uv1_;
             SDL_Color col0_ = *(const SDL_Color *)((const char *)color + k0 * color_stride);
@@ -3681,10 +3676,10 @@ static int SDLCALL SDL_SW_RenderGeometryRaw(SDL_Renderer *renderer,
             if (texture) {
                 uv0_ = (const float *)((const char *)uv + A * uv_stride);
                 uv1_ = (const float *)((const char *)uv + B * uv_stride);
-                s.x = (int)(uv0_[0] * texw);
-                s.y = (int)(uv0_[1] * texh);
-                s.w = (int)(uv1_[0] * texw - s.x);
-                s.h = (int)(uv1_[1] * texh - s.y);
+                s.x = uv0_[0] * texw;
+                s.y = uv0_[1] * texh;
+                s.w = uv1_[0] * texw - s.x;
+                s.h = uv1_[1] * texh - s.y;
             }
 
             d.x = xy0_[0];
@@ -4016,7 +4011,6 @@ int SDL_RenderPresent(SDL_Renderer *renderer)
         SDL_SetRenderScale(renderer, 1.0f, 1.0f);
         SDL_RenderLogicalBorders(renderer);
         SDL_RenderTexture(renderer, renderer->logical_target, &renderer->logical_src_rect, &renderer->logical_dst_rect);
-        SDL_SetRenderTargetInternal(renderer, renderer->logical_target);
     }
 
     FlushRenderCommands(renderer); /* time to send everything to the GPU! */
@@ -4029,6 +4023,10 @@ int SDL_RenderPresent(SDL_Renderer *renderer)
 #endif
     if (renderer->RenderPresent(renderer) < 0) {
         presented = SDL_FALSE;
+    }
+
+    if (renderer->logical_target) {
+        SDL_SetRenderTargetInternal(renderer, renderer->logical_target);
     }
 
     if (renderer->simulate_vsync ||
@@ -4089,9 +4087,9 @@ static int SDL_DestroyTextureInternal(SDL_Texture *texture, SDL_bool is_destroyi
     return 0;
 }
 
-int SDL_DestroyTexture(SDL_Texture *texture)
+void SDL_DestroyTexture(SDL_Texture *texture)
 {
-    return SDL_DestroyTextureInternal(texture, SDL_FALSE /* is_destroying */);
+    SDL_DestroyTextureInternal(texture, SDL_FALSE /* is_destroying */);
 }
 
 static void SDL_DiscardAllCommands(SDL_Renderer *renderer)
@@ -4116,9 +4114,9 @@ static void SDL_DiscardAllCommands(SDL_Renderer *renderer)
     }
 }
 
-int SDL_DestroyRenderer(SDL_Renderer *renderer)
+void SDL_DestroyRenderer(SDL_Renderer *renderer)
 {
-    CHECK_RENDERER_MAGIC(renderer, -1);
+    CHECK_RENDERER_MAGIC(renderer,);
 
     SDL_DelEventWatch(SDL_RendererEventWatch, renderer);
 
@@ -4147,7 +4145,6 @@ int SDL_DestroyRenderer(SDL_Renderer *renderer)
 
     /* Free the renderer instance */
     renderer->DestroyRenderer(renderer);
-    return 0;
 }
 
 int SDL_GL_BindTexture(SDL_Texture *texture, float *texw, float *texh)

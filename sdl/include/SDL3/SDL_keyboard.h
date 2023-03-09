@@ -22,7 +22,7 @@
 /**
  *  \file SDL_keyboard.h
  *
- *  Include file for SDL keyboard event handling
+ *  \brief Include file for SDL keyboard event handling
  */
 
 #ifndef SDL_keyboard_h_
@@ -292,6 +292,8 @@ extern DECLSPEC void SDLCALL SDL_ClearComposition(void);
 
 /**
  * Returns if an IME Composite or Candidate window is currently shown.
+ *
+ * \returns SDL_TRUE if shown, else SDL_FALSE
  *
  * \since This function is available since SDL 3.0.0.
  */

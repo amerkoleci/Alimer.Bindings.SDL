@@ -39,7 +39,7 @@
 
 #define UIKITVID_DRIVER_NAME "uikit"
 
-@implementation SDL_VideoData
+@implementation SDL_UIKitVideoData
 
 @end
 
@@ -52,7 +52,7 @@ static void UIKit_VideoQuit(_THIS);
 static void UIKit_DeleteDevice(SDL_VideoDevice *device)
 {
     @autoreleasepool {
-        device->driverdata = nil;
+        CFRelease(device->driverdata);
         SDL_free(device);
     }
 }
@@ -61,19 +61,19 @@ static SDL_VideoDevice *UIKit_CreateDevice(void)
 {
     @autoreleasepool {
         SDL_VideoDevice *device;
-        SDL_VideoData *data;
+        SDL_UIKitVideoData *data;
 
         /* Initialize all variables that we clean on shutdown */
         device = (SDL_VideoDevice *)SDL_calloc(1, sizeof(SDL_VideoDevice));
         if (device) {
-            data = [SDL_VideoData new];
+            data = [SDL_UIKitVideoData new];
         } else {
             SDL_free(device);
             SDL_OutOfMemory();
             return (0);
         }
 
-        device->driverdata = data;
+        device->driverdata = (SDL_VideoData *)CFBridgingRetain(data);
 
         /* Set the function pointers */
         device->VideoInit = UIKit_VideoInit;
@@ -93,7 +93,6 @@ static SDL_VideoDevice *UIKit_CreateDevice(void)
         device->DestroyWindow = UIKit_DestroyWindow;
         device->GetWindowWMInfo = UIKit_GetWindowWMInfo;
         device->GetDisplayUsableBounds = UIKit_GetDisplayUsableBounds;
-        device->GetDisplayPhysicalDPI = UIKit_GetDisplayPhysicalDPI;
         device->GetWindowSizeInPixels = UIKit_GetWindowSizeInPixels;
 
 #if SDL_IPHONE_KEYBOARD
@@ -165,7 +164,7 @@ void UIKit_VideoQuit(_THIS)
     UIKit_QuitModes(_this);
 }
 
-void UIKit_SuspendScreenSaver(_THIS)
+int UIKit_SuspendScreenSaver(_THIS)
 {
     @autoreleasepool {
         UIApplication *app = [UIApplication sharedApplication];
@@ -173,6 +172,7 @@ void UIKit_SuspendScreenSaver(_THIS)
         /* Prevent the display from dimming and going to sleep. */
         app.idleTimerDisabled = (_this->suspend_screensaver != SDL_FALSE);
     }
+    return 0;
 }
 
 SDL_bool
@@ -184,7 +184,7 @@ UIKit_IsSystemVersionAtLeast(double version)
 CGRect
 UIKit_ComputeViewFrame(SDL_Window *window, UIScreen *screen)
 {
-    SDL_WindowData *data = window->driverdata;
+    SDL_UIKitWindowData *data = (__bridge SDL_UIKitWindowData *)window->driverdata;
     CGRect frame = screen.bounds;
 
     /* Use the UIWindow bounds instead of the UIScreen bounds, when possible.
@@ -204,7 +204,8 @@ UIKit_ComputeViewFrame(SDL_Window *window, UIScreen *screen)
      * https://bugzilla.libsdl.org/show_bug.cgi?id=3465
      * https://forums.developer.apple.com/thread/65337 */
     UIInterfaceOrientation orient = [UIApplication sharedApplication].statusBarOrientation;
-    BOOL landscape = UIInterfaceOrientationIsLandscape(orient);
+    BOOL landscape = UIInterfaceOrientationIsLandscape(orient) ||
+                    !(UIKit_GetSupportedOrientations(window) & (UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown));
     BOOL fullscreen = CGRectEqualToRect(screen.bounds, frame);
 
     /* The orientation flip doesn't make sense when the window is smaller
@@ -225,7 +226,7 @@ void UIKit_ForceUpdateHomeIndicator()
     /* Force the main SDL window to re-evaluate home indicator state */
     SDL_Window *focus = SDL_GetFocusWindow();
     if (focus) {
-        SDL_WindowData *data = focus->driverdata;
+        SDL_UIKitWindowData *data = (__bridge SDL_UIKitWindowData *)focus->driverdata;
         if (data != nil) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunguarded-availability-new"

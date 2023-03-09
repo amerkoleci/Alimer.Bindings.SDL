@@ -111,10 +111,11 @@ struct SDL_WindowData
     int wl_window_width, wl_window_height;
     int system_min_required_width;
     int system_min_required_height;
-    SDL_DisplayID fullscreen_display;
+    SDL_DisplayID last_displayID;
     SDL_bool floating;
     SDL_bool is_fullscreen;
     SDL_bool in_fullscreen_transition;
+    SDL_bool fullscreen_was_positioned;
 };
 
 extern void Wayland_ShowWindow(_THIS, SDL_Window *window);
@@ -139,7 +140,7 @@ extern void Wayland_GetWindowSizeInPixels(_THIS, SDL_Window *window, int *w, int
 extern int Wayland_SetWindowModalFor(_THIS, SDL_Window *modal_window, SDL_Window *parent_window);
 extern void Wayland_SetWindowTitle(_THIS, SDL_Window *window);
 extern void Wayland_DestroyWindow(_THIS, SDL_Window *window);
-extern void Wayland_SuspendScreenSaver(_THIS);
+extern int Wayland_SuspendScreenSaver(_THIS);
 
 extern int Wayland_GetWindowWMInfo(_THIS, SDL_Window *window, SDL_SysWMinfo *info);
 extern int Wayland_SetWindowHitTest(SDL_Window *window, SDL_bool enabled);

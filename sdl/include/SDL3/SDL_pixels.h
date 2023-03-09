@@ -22,7 +22,7 @@
 /**
  *  \file SDL_pixels.h
  *
- *  Header for the enumerated pixel format definitions.
+ *  \brief Header for the enumerated pixel format definitions.
  */
 
 #ifndef SDL_pixels_h_
@@ -416,14 +416,12 @@ extern DECLSPEC SDL_PixelFormat * SDLCALL SDL_CreatePixelFormat(Uint32 pixel_for
  * Free an SDL_PixelFormat structure allocated by SDL_CreatePixelFormat().
  *
  * \param format the SDL_PixelFormat structure to free
- * \returns 0 on success or a negative error code on failure; call
- *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_CreatePixelFormat
  */
-extern DECLSPEC int SDLCALL SDL_DestroyPixelFormat(SDL_PixelFormat *format);
+extern DECLSPEC void SDLCALL SDL_DestroyPixelFormat(SDL_PixelFormat *format);
 
 /**
  * Create a palette structure with the specified number of color entries.
@@ -464,8 +462,8 @@ extern DECLSPEC int SDLCALL SDL_SetPixelFormatPalette(SDL_PixelFormat * format,
  * \param colors an array of SDL_Color structures to copy into the palette
  * \param firstcolor the index of the first palette entry to modify
  * \param ncolors the number of entries to modify
- * \returns 0 on success or a negative error code if not all of the colors
- *          could be set; call SDL_GetError() for more information.
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -480,14 +478,12 @@ extern DECLSPEC int SDLCALL SDL_SetPaletteColors(SDL_Palette * palette,
  * Free a palette created with SDL_CreatePalette().
  *
  * \param palette the SDL_Palette structure to be freed
- * \returns 0 on success or a negative error code on failure; call
- *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_CreatePalette
  */
-extern DECLSPEC int SDLCALL SDL_DestroyPalette(SDL_Palette * palette);
+extern DECLSPEC void SDLCALL SDL_DestroyPalette(SDL_Palette * palette);
 
 /**
  * Map an RGB triple to an opaque pixel value for a given pixel format.

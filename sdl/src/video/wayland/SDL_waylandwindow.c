@@ -56,7 +56,7 @@ SDL_FORCE_INLINE SDL_bool FloatEqual(float a, float b)
 static SDL_bool SurfaceScaleIsFractional(SDL_Window *window)
 {
     SDL_WindowData *data = window->driverdata;
-    const float scale_value = !(window->fullscreen_exclusive) ? data->windowed_scale_factor : window->fullscreen_mode.display_scale;
+    const float scale_value = !(window->fullscreen_exclusive) ? data->windowed_scale_factor : window->current_fullscreen_mode.display_scale;
     return !FloatEqual(SDL_roundf(scale_value), scale_value);
 }
 
@@ -77,7 +77,7 @@ static SDL_bool WindowNeedsViewport(SDL_Window *window)
         if (SurfaceScaleIsFractional(window)) {
             return SDL_TRUE;
         } else if (window->fullscreen_exclusive) {
-            if (window->fullscreen_mode.screen_w != output_width || window->fullscreen_mode.screen_h != output_height) {
+            if (window->current_fullscreen_mode.screen_w != output_width || window->current_fullscreen_mode.screen_h != output_height) {
                 return SDL_TRUE;
             }
         }
@@ -93,8 +93,8 @@ static void GetBufferSize(SDL_Window *window, int *width, int *height)
     int buf_height;
 
     if (window->fullscreen_exclusive) {
-        buf_width = window->fullscreen_mode.pixel_w;
-        buf_height = window->fullscreen_mode.pixel_h;
+        buf_width = window->current_fullscreen_mode.pixel_w;
+        buf_height = window->current_fullscreen_mode.pixel_h;
     } else {
         /* Round fractional backbuffer sizes halfway away from zero. */
         buf_width = (int)SDL_lroundf((float)data->requested_window_width * data->windowed_scale_factor);
@@ -160,8 +160,8 @@ static void ConfigureWindowGeometry(SDL_Window *window)
         /* If the compositor supplied fullscreen dimensions, use them, otherwise fall back to the display dimensions. */
         const int output_width = data->requested_window_width ? data->requested_window_width : output->screen_width;
         const int output_height = data->requested_window_height ? data->requested_window_height : output->screen_height;
-        window_width = window->fullscreen_mode.screen_w;
-        window_height = window->fullscreen_mode.screen_h;
+        window_width = window->current_fullscreen_mode.screen_w;
+        window_height = window->current_fullscreen_mode.screen_h;
 
         window_size_changed = window_width != window->w || window_height != window->h ||
             data->wl_window_width != output_width || data->wl_window_height != output_height;
@@ -178,10 +178,10 @@ static void ConfigureWindowGeometry(SDL_Window *window)
             } else {
                 /* Always use the mode dimensions for integer scaling. */
                 UnsetDrawSurfaceViewport(window);
-                wl_surface_set_buffer_scale(data->surface, (int32_t)window->fullscreen_mode.display_scale);
+                wl_surface_set_buffer_scale(data->surface, (int32_t)window->current_fullscreen_mode.display_scale);
 
-                data->wl_window_width = window->fullscreen_mode.screen_w;
-                data->wl_window_height = window->fullscreen_mode.screen_h;
+                data->wl_window_width = window->current_fullscreen_mode.screen_w;
+                data->wl_window_height = window->current_fullscreen_mode.screen_h;
             }
 
             data->pointer_scale_x = (float)window_width / (float)data->wl_window_width;
@@ -549,11 +549,14 @@ static void handle_configure_xdg_toplevel(void *data,
                             maximized ? SDL_EVENT_WINDOW_MAXIMIZED : SDL_EVENT_WINDOW_RESTORED,
                             0, 0);
     } else {
-        /* If an exclusive fullscreen mode was requested, ensure it is placed on the appropriate output. */
-        if (window->fullscreen_exclusive && wind->fullscreen_display != window->fullscreen_mode.displayID) {
-            SDL_VideoDisplay *disp = SDL_GetVideoDisplay(window->fullscreen_mode.displayID);
+        /* Unconditionally set the output for exclusive fullscreen windows when entering
+         * fullscreen from a compositor event, as where the compositor will actually
+         * place the fullscreen window is unknown.
+         */
+        if (window->fullscreen_exclusive && !wind->fullscreen_was_positioned) {
+            SDL_VideoDisplay *disp = SDL_GetVideoDisplay(window->current_fullscreen_mode.displayID);
             if (disp) {
-                wind->fullscreen_display = disp->id;
+                wind->fullscreen_was_positioned = SDL_TRUE;
                 xdg_toplevel_set_fullscreen(xdg_toplevel, disp->driverdata->output);
             }
         }
@@ -760,11 +763,14 @@ static void decoration_frame_configure(struct libdecor_frame *frame,
      * Always assume the configure is wrong.
      */
     if (fullscreen) {
-        /* If an exclusive fullscreen mode was requested, ensure it is placed on the appropriate output. */
-        if (window->fullscreen_exclusive && wind->fullscreen_display != window->fullscreen_mode.displayID) {
-            SDL_VideoDisplay *disp = SDL_GetVideoDisplay(window->fullscreen_mode.displayID);
+        /* Unconditionally set the output for exclusive fullscreen windows when entering
+         * fullscreen from a compositor event, as where the compositor will actually
+         * place the fullscreen window is unknown.
+         */
+        if (window->fullscreen_exclusive && !wind->fullscreen_was_positioned) {
+            SDL_VideoDisplay *disp = SDL_GetVideoDisplay(window->current_fullscreen_mode.displayID);
             if (disp) {
-                wind->fullscreen_display = disp->id;
+                wind->fullscreen_was_positioned = SDL_TRUE;
                 libdecor_frame_set_fullscreen(frame, disp->driverdata->output);
             }
         }
@@ -952,6 +958,8 @@ static void Wayland_move_window(SDL_Window *window, SDL_DisplayData *driverdata)
                  */
                 SDL_Rect bounds;
                 SDL_GetDisplayBounds(displays[i], &bounds);
+
+                window->driverdata->last_displayID = displays[i];
                 SDL_SendWindowEvent(window, SDL_EVENT_WINDOW_MOVED, bounds.x, bounds.y);
                 break;
             }
@@ -1466,7 +1474,7 @@ int Wayland_FlashWindow(_THIS, SDL_Window *window, SDL_FlashOperation operation)
     return 0;
 }
 
-void handle_preferred_scale_changed(void *data,
+static void handle_preferred_scale_changed(void *data,
                                     struct wp_fractional_scale_v1 *wp_fractional_scale_v1,
                                     uint preferred_scale)
 {
@@ -1583,8 +1591,8 @@ void Wayland_SetWindowFullscreen(_THIS, SDL_Window *window,
     /* Called from within a configure event or the window is a popup, drop it. */
     if (wind->in_fullscreen_transition || wind->shell_surface_type == WAYLAND_SURFACE_XDG_POPUP) {
         if (!fullscreen) {
-            /* Clear the display ID so it will be set next time. */
-            wind->fullscreen_display = 0;
+            /* Clear the fullscreen positioned flag. */
+            wind->fullscreen_was_positioned = SDL_FALSE;
         }
         return;
     }
@@ -1592,7 +1600,7 @@ void Wayland_SetWindowFullscreen(_THIS, SDL_Window *window,
     /* Don't send redundant fullscreen set/unset events. */
     if (wind->is_fullscreen != fullscreen) {
         wind->is_fullscreen = fullscreen;
-        wind->fullscreen_display = fullscreen ? display->id : 0;
+        wind->fullscreen_was_positioned = fullscreen ? SDL_TRUE : SDL_FALSE;
         SetFullscreen(window, fullscreen ? output : NULL);
 
         /* Roundtrip required to receive the updated window dimensions */
@@ -1601,10 +1609,12 @@ void Wayland_SetWindowFullscreen(_THIS, SDL_Window *window,
         /*
          * If the window is already fullscreen, this is likely a request to switch between
          * fullscreen and fullscreen desktop, change outputs, or change the video mode.
-         * Update the geometry and trigger a commit.
+         *
+         * If the window is already positioned on the target output, just update the
+         * window geometry.
          */
-        if (wind->fullscreen_display != display->id) {
-            wind->fullscreen_display = display->id;
+        if (wind->last_displayID != display->id) {
+            wind->fullscreen_was_positioned = SDL_TRUE;
             SetFullscreen(window, output);
         } else {
             ConfigureWindowGeometry(window);
@@ -2005,13 +2015,13 @@ void Wayland_SetWindowTitle(_THIS, SDL_Window *window)
     WAYLAND_wl_display_flush(viddata->display);
 }
 
-void Wayland_SuspendScreenSaver(_THIS)
+int Wayland_SuspendScreenSaver(_THIS)
 {
     SDL_VideoData *data = _this->driverdata;
 
 #if SDL_USE_LIBDBUS
     if (SDL_DBus_ScreensaverInhibit(_this->suspend_screensaver)) {
-        return;
+        return 0;
     }
 #endif
 
@@ -2040,6 +2050,8 @@ void Wayland_SuspendScreenSaver(_THIS)
             window = window->next;
         }
     }
+
+    return 0;
 }
 
 void Wayland_DestroyWindow(_THIS, SDL_Window *window)

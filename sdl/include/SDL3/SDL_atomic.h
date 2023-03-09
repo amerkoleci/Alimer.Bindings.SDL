@@ -22,7 +22,7 @@
 /**
  * \file SDL_atomic.h
  *
- * Atomic operations.
+ * \brief Atomic operations.
  *
  * IMPORTANT:
  * If you are not an expert in concurrent lockless programming, you should
@@ -41,7 +41,7 @@
  *
  * You can find out a little more about lockless programming and the
  * subtle issues that can arise here:
- * http://msdn.microsoft.com/en-us/library/ee418650%28v=vs.85%29.aspx
+ * https://learn.microsoft.com/en-us/windows/win32/dxtecharts/lockless-programming
  *
  * There's also lots of good information here:
  * http://www.1024cores.net/home/lock-free-algorithms
@@ -186,6 +186,10 @@ extern __inline void SDL_CompilerBarrier(void);
  * \since This function is available since SDL 3.0.0.
  */
 extern DECLSPEC void SDLCALL SDL_MemoryBarrierReleaseFunction(void);
+
+/*
+ * \since This function is available since SDL 3.0.0.
+ */
 extern DECLSPEC void SDLCALL SDL_MemoryBarrierAcquireFunction(void);
 
 #if defined(__GNUC__) && (defined(__powerpc__) || defined(__ppc__))

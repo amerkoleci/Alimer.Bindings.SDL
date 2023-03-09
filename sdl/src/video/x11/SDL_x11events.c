@@ -1222,6 +1222,18 @@ static void X11_DispatchEvent(_THIS, XEvent *xevent)
             }
             printf("Action requested by user is : %s\n", X11_XGetAtomName(display, act));
 #endif
+            {
+                /* Drag and Drop position */
+                int root_x, root_y, window_x, window_y;
+                Window ChildReturn;
+                root_x = xevent->xclient.data.l[2] >> 16;
+                root_y = xevent->xclient.data.l[2] & 0xffff;
+                /* Translate from root to current window position */
+                X11_XTranslateCoordinates(display, DefaultRootWindow(display), data->xwindow,
+                        root_x, root_y, &window_x, &window_y, &ChildReturn);
+
+                SDL_SendDropPosition(data->window, NULL, (float)window_x, (float)window_y); /* FIXME, can we get the filename ? */
+            }
 
             /* reply with status */
             SDL_memset(&m, 0, sizeof(XClientMessageEvent));
@@ -1726,7 +1738,7 @@ void X11_PumpEvents(_THIS)
     }
 }
 
-void X11_SuspendScreenSaver(_THIS)
+int X11_SuspendScreenSaver(_THIS)
 {
 #if SDL_VIDEO_DRIVER_X11_XSCRNSAVER
     SDL_VideoData *data = _this->driverdata;
@@ -1736,7 +1748,7 @@ void X11_SuspendScreenSaver(_THIS)
 
 #if SDL_USE_LIBDBUS
     if (SDL_DBus_ScreensaverInhibit(_this->suspend_screensaver)) {
-        return;
+        return 0;
     }
 
     if (_this->suspend_screensaver) {
@@ -1751,13 +1763,15 @@ void X11_SuspendScreenSaver(_THIS)
             !X11_XScreenSaverQueryVersion(data->display,
                                           &major_version, &minor_version) ||
             major_version < 1 || (major_version == 1 && minor_version < 1)) {
-            return;
+            return SDL_Unsupported();
         }
 
         X11_XScreenSaverSuspend(data->display, _this->suspend_screensaver);
         X11_XResetScreenSaver(data->display);
+        return 0;
     }
 #endif
+    return SDL_Unsupported();
 }
 
 #endif /* SDL_VIDEO_DRIVER_X11 */

@@ -22,7 +22,7 @@
 /**
  *  \file SDL_oldnames.h
  *
- *  Definitions to ease transition from SDL2 code
+ *  \brief Definitions to ease transition from SDL2 code
  */
 
 #ifndef SDL_oldnames_h_
@@ -128,7 +128,7 @@
 #define SDL_WINDOWEVENT_RESIZED SDL_EVENT_WINDOW_RESIZED
 #define SDL_WINDOWEVENT_RESTORED SDL_EVENT_WINDOW_RESTORED
 #define SDL_WINDOWEVENT_SHOWN SDL_EVENT_WINDOW_SHOWN
-#define SDL_WINDOWEVENT_SIZE_CHANGED SDL_EVENT_WINDOW_SIZE_CHANGED
+#define SDL_WINDOWEVENT_SIZE_CHANGED SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED
 #define SDL_WINDOWEVENT_TAKE_FOCUS SDL_EVENT_WINDOW_TAKE_FOCUS
 
 /* ##SDL_gamepad.h */
@@ -425,11 +425,11 @@
 
 /* ##SDL_video.h */
 #define SDL_GetClosestDisplayMode SDL_GetClosestFullscreenDisplayMode
-#define SDL_GetDisplayDPI SDL_GetDisplayPhysicalDPI
 #define SDL_GetPointDisplayIndex SDL_GetDisplayForPoint
 #define SDL_GetRectDisplayIndex SDL_GetDisplayForRect
 #define SDL_GetWindowDisplayIndex SDL_GetDisplayForWindow
 #define SDL_GetWindowDisplayMode SDL_GetWindowFullscreenMode
+#define SDL_IsScreenSaverEnabled SDL_ScreenSaverEnabled
 #define SDL_SetWindowDisplayMode SDL_SetWindowFullscreenMode
 #define SDL_WINDOW_INPUT_GRABBED SDL_WINDOW_MOUSE_GRABBED
 
@@ -508,7 +508,7 @@
 #define SDL_TEXTEDITING_EXT SDL_TEXTEDITING_EXT_renamed_SDL_EVENT_TEXT_EDITING_EXT
 #define SDL_TEXTINPUT SDL_TEXTINPUT_renamed_SDL_EVENT_TEXT_INPUT
 #define SDL_USEREVENT SDL_USEREVENT_renamed_SDL_EVENT_USER
-#define SDL_WINDOWEVENT_CLOSE SDL_WINDOWEVENT_CLOSE_renamed_SDL_EVENT_WINDOW_CLOSE
+#define SDL_WINDOWEVENT_CLOSE SDL_WINDOWEVENT_CLOSE_renamed_SDL_EVENT_WINDOW_CLOSE_REQUESTED
 #define SDL_WINDOWEVENT_DISPLAY_CHANGED SDL_WINDOWEVENT_DISPLAY_CHANGED_renamed_SDL_EVENT_WINDOW_DISPLAY_CHANGED
 #define SDL_WINDOWEVENT_ENTER SDL_WINDOWEVENT_ENTER_renamed_SDL_EVENT_WINDOW_ENTER
 #define SDL_WINDOWEVENT_EXPOSED SDL_WINDOWEVENT_EXPOSED_renamed_SDL_EVENT_WINDOW_EXPOSED
@@ -524,7 +524,7 @@
 #define SDL_WINDOWEVENT_RESIZED SDL_WINDOWEVENT_RESIZED_renamed_SDL_EVENT_WINDOW_RESIZED
 #define SDL_WINDOWEVENT_RESTORED SDL_WINDOWEVENT_RESTORED_renamed_SDL_EVENT_WINDOW_RESTORED
 #define SDL_WINDOWEVENT_SHOWN SDL_WINDOWEVENT_SHOWN_renamed_SDL_EVENT_WINDOW_SHOWN
-#define SDL_WINDOWEVENT_SIZE_CHANGED SDL_WINDOWEVENT_SIZE_CHANGED_renamed_SDL_EVENT_WINDOW_SIZE_CHANGED
+#define SDL_WINDOWEVENT_SIZE_CHANGED SDL_WINDOWEVENT_SIZE_CHANGED_renamed_SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED
 #define SDL_WINDOWEVENT_TAKE_FOCUS SDL_WINDOWEVENT_TAKE_FOCUS_renamed_SDL_EVENT_WINDOW_TAKE_FOCUS
 
 /* ##SDL_gamepad.h */
@@ -822,11 +822,11 @@
 
 /* ##SDL_video.h */
 #define SDL_GetClosestDisplayMode SDL_GetClosestDisplayMode_renamed_SDL_GetClosestFullscreenDisplayMode
-#define SDL_GetDisplayDPI SDL_GetDisplayDPI_renamed_SDL_GetDisplayPhysicalDPI
 #define SDL_GetPointDisplayIndex SDL_GetPointDisplayIndex_renamed_SDL_GetDisplayForPoint
 #define SDL_GetRectDisplayIndex SDL_GetRectDisplayIndex_renamed_SDL_GetDisplayForRect
 #define SDL_GetWindowDisplayIndex SDL_GetWindowDisplayIndex_renamed_SDL_GetDisplayForWindow
 #define SDL_GetWindowDisplayMode SDL_GetWindowDisplayMode_renamed_SDL_GetWindowFullscreenMode
+#define SDL_IsScreenSaverEnabled SDL_IsScreenSaverEnabled_renamed_SDL_ScreenSaverEnabled
 #define SDL_SetWindowDisplayMode SDL_SetWindowDisplayMode_renamed_SDL_SetWindowFullscreenMode
 #define SDL_WINDOW_INPUT_GRABBED SDL_WINDOW_INPUT_GRABBED_renamed_SDL_WINDOW_MOUSE_GRABBED
 

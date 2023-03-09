@@ -309,6 +309,7 @@ static int SetupWindowData(_THIS, SDL_Window *window, HWND hwnd, HWND parent, SD
     data->last_pointer_update = (LPARAM)-1;
     data->videodata = videodata;
     data->initializing = SDL_TRUE;
+    data->last_displayID = window->last_displayID;
     data->scaling_dpi = WIN_GetScalingDPIForHWND(videodata, hwnd);
 
 #ifdef HIGHDPI_DEBUG
@@ -499,9 +500,13 @@ int WIN_CreateWindow(_THIS, SDL_Window *window)
     /* Figure out what the window area will be */
     WIN_AdjustWindowRectWithStyle(window, style, FALSE, &x, &y, &w, &h, SDL_FALSE);
 
-    hwnd =
-        CreateWindow(SDL_Appname, TEXT(""), style, x, y, w, h, parent, NULL,
-                     SDL_Instance, NULL);
+    if (window->undefined_x && window->undefined_y &&
+        window->last_displayID == SDL_GetPrimaryDisplay()) {
+        x = CW_USEDEFAULT;
+        y = CW_USEDEFAULT; /* Not actually used */
+    }
+
+    hwnd = CreateWindow(SDL_Appname, TEXT(""), style, x, y, w, h, parent, NULL, SDL_Instance, NULL);
     if (!hwnd) {
         return WIN_SetError("Couldn't create window");
     }
@@ -628,7 +633,7 @@ void WIN_SetWindowTitle(_THIS, SDL_Window *window)
 #endif
 }
 
-void WIN_SetWindowIcon(_THIS, SDL_Window *window, SDL_Surface *icon)
+int WIN_SetWindowIcon(_THIS, SDL_Window *window, SDL_Surface *icon)
 {
 #if !defined(__XBOXONE__) && !defined(__XBOXSERIES__)
     HWND hwnd = window->driverdata->hwnd;
@@ -638,6 +643,7 @@ void WIN_SetWindowIcon(_THIS, SDL_Window *window, SDL_Surface *icon)
     BITMAPINFOHEADER *bmi;
     Uint8 *dst;
     SDL_bool isstack;
+    int retval = 0;
 
     /* Create temporary buffer for ICONIMAGE structure */
     SDL_COMPILE_TIME_ASSERT(WIN_SetWindowIcon_uses_BITMAPINFOHEADER_to_prepare_an_ICONIMAGE, sizeof(BITMAPINFOHEADER) == 40);
@@ -677,11 +683,18 @@ void WIN_SetWindowIcon(_THIS, SDL_Window *window, SDL_Surface *icon)
 
     SDL_small_free(icon_bmp, isstack);
 
+    if (hicon == NULL) {
+        retval = SDL_SetError("SetWindowIcon() failed, error %08X", (unsigned int)GetLastError());
+    }
+
     /* Set the icon for the window */
     SendMessage(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)hicon);
 
     /* Set the icon in the task manager (should we do this?) */
     SendMessage(hwnd, WM_SETICON, ICON_BIG, (LPARAM)hicon);
+    return retval;
+#else
+    return SDL_Unsupported();
 #endif
 }
 
@@ -1232,14 +1245,16 @@ void WIN_UpdateClipCursor(SDL_Window *window)
         (window->flags & SDL_WINDOW_INPUT_FOCUS)) {
         if (mouse->relative_mode && !mouse->relative_mode_warp && data->mouse_relative_mode_center) {
             if (GetWindowRect(data->hwnd, &rect)) {
+                /* WIN_WarpCursor() jitters by +1, and remote desktop warp wobble is +/- 1 */
+                LONG remote_desktop_adjustment = GetSystemMetrics(SM_REMOTESESSION) ? 2 : 0;
                 LONG cx, cy;
 
                 cx = (rect.left + rect.right) / 2;
                 cy = (rect.top + rect.bottom) / 2;
 
                 /* Make an absurdly small clip rect */
-                rect.left = cx;
-                rect.right = cx + 1;
+                rect.left = cx - remote_desktop_adjustment;
+                rect.right = cx + 1 + remote_desktop_adjustment;
                 rect.top = cy;
                 rect.bottom = cy + 1;
 

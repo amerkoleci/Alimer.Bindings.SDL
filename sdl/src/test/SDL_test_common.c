@@ -39,8 +39,9 @@ static const char *video_usage[] = {
     "[--usable-bounds]"
 };
 
+/* !!! FIXME: Float32? Sint32? */
 static const char *audio_usage[] = {
-    "[--rate N]", "[--format U8|S8|U16|U16LE|U16BE|S16|S16LE|S16BE]",
+    "[--rate N]", "[--format U8|S8|S16|S16LE|S16BE]",
     "[--channels N]", "[--samples N]"
 };
 
@@ -80,7 +81,7 @@ SDLTest_CommonCreateState(char **argv, Uint32 flags)
     state->argv = argv;
     state->flags = flags;
     state->window_title = argv[0];
-    state->window_flags = 0;
+    state->window_flags = SDL_WINDOW_HIDDEN;
     state->window_x = SDL_WINDOWPOS_UNDEFINED;
     state->window_y = SDL_WINDOWPOS_UNDEFINED;
     state->window_w = DEFAULT_WINDOW_WIDTH;
@@ -542,18 +543,6 @@ int SDLTest_CommonArg(SDLTest_CommonState *state, int index)
             state->audiospec.format = AUDIO_S8;
             return 2;
         }
-        if (SDL_strcasecmp(argv[index], "U16") == 0) {
-            state->audiospec.format = AUDIO_U16;
-            return 2;
-        }
-        if (SDL_strcasecmp(argv[index], "U16LE") == 0) {
-            state->audiospec.format = AUDIO_U16LSB;
-            return 2;
-        }
-        if (SDL_strcasecmp(argv[index], "U16BE") == 0) {
-            state->audiospec.format = AUDIO_U16MSB;
-            return 2;
-        }
         if (SDL_strcasecmp(argv[index], "S16") == 0) {
             state->audiospec.format = AUDIO_S16;
             return 2;
@@ -566,6 +555,9 @@ int SDLTest_CommonArg(SDLTest_CommonState *state, int index)
             state->audiospec.format = AUDIO_S16MSB;
             return 2;
         }
+
+        /* !!! FIXME: Float32? Sint32? */
+
         return -1;
     }
     if (SDL_strcasecmp(argv[index], "--channels") == 0) {
@@ -1187,8 +1179,6 @@ SDLTest_CommonInit(SDLTest_CommonState *state)
         if (state->verbose & VERBOSE_MODES) {
             SDL_DisplayID *displays;
             SDL_Rect bounds, usablebounds;
-            float hdpi = 0;
-            float vdpi = 0;
             const SDL_DisplayMode **modes;
             const SDL_DisplayMode *mode;
             int bpp;
@@ -1209,11 +1199,8 @@ SDLTest_CommonInit(SDLTest_CommonState *state)
                 SDL_zero(usablebounds);
                 SDL_GetDisplayUsableBounds(displayID, &usablebounds);
 
-                SDL_GetDisplayPhysicalDPI(displayID, NULL, &hdpi, &vdpi);
-
                 SDL_Log("Bounds: %dx%d at %d,%d\n", bounds.w, bounds.h, bounds.x, bounds.y);
                 SDL_Log("Usable bounds: %dx%d at %d,%d\n", usablebounds.w, usablebounds.h, usablebounds.x, usablebounds.y);
-                SDL_Log("DPI: %gx%g\n", hdpi, vdpi);
 
                 mode = SDL_GetDesktopDisplayMode(displayID);
                 SDL_GetMasksForPixelFormatEnum(mode->format, &bpp, &Rmask, &Gmask,
@@ -1291,10 +1278,6 @@ SDLTest_CommonInit(SDLTest_CommonState *state)
             }
             SDL_free(displays);
 
-            if (SDL_WINDOWPOS_ISUNDEFINED(state->window_x)) {
-                state->window_x = SDL_WINDOWPOS_UNDEFINED_DISPLAY(state->displayID);
-                state->window_y = SDL_WINDOWPOS_UNDEFINED_DISPLAY(state->displayID);
-            }
             if (SDL_WINDOWPOS_ISCENTERED(state->window_x)) {
                 state->window_x = SDL_WINDOWPOS_CENTERED_DISPLAY(state->displayID);
                 state->window_y = SDL_WINDOWPOS_CENTERED_DISPLAY(state->displayID);
@@ -1339,12 +1322,14 @@ SDLTest_CommonInit(SDLTest_CommonState *state)
             } else {
                 SDL_strlcpy(title, state->window_title, SDL_arraysize(title));
             }
-            state->windows[i] =
-                SDL_CreateWindow(title, r.x, r.y, r.w, r.h, state->window_flags);
+            state->windows[i] = SDL_CreateWindow(title, r.w, r.h, state->window_flags);
             if (!state->windows[i]) {
                 SDL_Log("Couldn't create window: %s\n",
                         SDL_GetError());
                 return SDL_FALSE;
+            }
+            if (r.x != SDL_WINDOWPOS_UNDEFINED || r.y != SDL_WINDOWPOS_UNDEFINED) {
+                SDL_SetWindowPosition(state->windows[i], r.x, r.y);
             }
             if (state->window_minW || state->window_minH) {
                 SDL_SetWindowMinimumSize(state->windows[i], state->window_minW, state->window_minH);
@@ -1524,6 +1509,17 @@ static void SDLTest_PrintEvent(SDL_Event *event)
         SDL_Log("SDL EVENT: Display %" SDL_PRIu32 " connected",
                 event->display.displayID);
         break;
+    case SDL_EVENT_DISPLAY_SCALE_CHANGED:
+        {
+            float display_scale = 1.0f;
+            const SDL_DisplayMode *mode = SDL_GetDesktopDisplayMode(event->display.displayID);
+            if (mode) {
+                display_scale = mode->display_scale;
+            }
+            SDL_Log("SDL EVENT: Display %" SDL_PRIu32 " changed scale to %d%%",
+                    event->display.displayID, (int)(display_scale * 100.0f));
+        }
+        break;
     case SDL_EVENT_DISPLAY_MOVED:
         SDL_Log("SDL EVENT: Display %" SDL_PRIu32 " changed position",
                 event->display.displayID);
@@ -1694,28 +1690,28 @@ static void SDLTest_PrintEvent(SDL_Event *event)
         break;
     case SDL_EVENT_GAMEPAD_ADDED:
         SDL_Log("SDL EVENT: Gamepad index %" SDL_PRIu32 " attached",
-                event->cdevice.which);
+                event->gdevice.which);
         break;
     case SDL_EVENT_GAMEPAD_REMOVED:
         SDL_Log("SDL EVENT: Gamepad %" SDL_PRIu32 " removed",
-                event->cdevice.which);
+                event->gdevice.which);
         break;
     case SDL_EVENT_GAMEPAD_AXIS_MOTION:
         SDL_Log("SDL EVENT: Gamepad %" SDL_PRIu32 " axis %d ('%s') value: %d",
-                event->caxis.which,
-                event->caxis.axis,
-                GamepadAxisName((SDL_GamepadAxis)event->caxis.axis),
-                event->caxis.value);
+                event->gaxis.which,
+                event->gaxis.axis,
+                GamepadAxisName((SDL_GamepadAxis)event->gaxis.axis),
+                event->gaxis.value);
         break;
     case SDL_EVENT_GAMEPAD_BUTTON_DOWN:
         SDL_Log("SDL EVENT: Gamepad %" SDL_PRIu32 "button %d ('%s') down",
-                event->cbutton.which, event->cbutton.button,
-                GamepadButtonName((SDL_GamepadButton)event->cbutton.button));
+                event->gbutton.which, event->gbutton.button,
+                GamepadButtonName((SDL_GamepadButton)event->gbutton.button));
         break;
     case SDL_EVENT_GAMEPAD_BUTTON_UP:
         SDL_Log("SDL EVENT: Gamepad %" SDL_PRIu32 " button %d ('%s') up",
-                event->cbutton.which, event->cbutton.button,
-                GamepadButtonName((SDL_GamepadButton)event->cbutton.button));
+                event->gbutton.which, event->gbutton.button,
+                GamepadButtonName((SDL_GamepadButton)event->gbutton.button));
         break;
     case SDL_EVENT_CLIPBOARD_UPDATE:
         SDL_Log("SDL EVENT: Clipboard updated");
@@ -2301,7 +2297,6 @@ void SDLTest_CommonDrawWindowInfo(SDL_Renderer *renderer, SDL_Window *window, fl
     float fx, fy;
     SDL_Rect rect;
     const SDL_DisplayMode *mode;
-    float ddpi, hdpi, vdpi;
     float scaleX, scaleY;
     Uint32 flags;
     SDL_DisplayID windowDisplayID = SDL_GetDisplayForWindow(window);
@@ -2433,13 +2428,6 @@ void SDLTest_CommonDrawWindowInfo(SDL_Renderer *renderer, SDL_Window *window, fl
     if (mode) {
         (void)SDL_snprintf(text, sizeof text, "SDL_GetDesktopDisplayMode: %dx%d@%gHz %d%% scale, (%s)",
                            mode->pixel_w, mode->pixel_h, mode->refresh_rate, (int)(mode->display_scale * 100.0f), SDL_GetPixelFormatName(mode->format));
-        SDLTest_DrawString(renderer, 0.0f, textY, text);
-        textY += lineHeight;
-    }
-
-    if (0 == SDL_GetDisplayPhysicalDPI(windowDisplayID, &ddpi, &hdpi, &vdpi)) {
-        (void)SDL_snprintf(text, sizeof text, "SDL_GetDisplayPhysicalDPI: ddpi: %g, hdpi: %g, vdpi: %g",
-                           ddpi, hdpi, vdpi);
         SDLTest_DrawString(renderer, 0.0f, textY, text);
         textY += lineHeight;
     }

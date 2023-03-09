@@ -22,7 +22,7 @@
 /**
  *  \file SDL_video.h
  *
- *  Header file for SDL video functions.
+ *  \brief Header file for SDL video functions.
  */
 
 #ifndef SDL_video_h_
@@ -376,36 +376,6 @@ extern DECLSPEC int SDLCALL SDL_GetDisplayBounds(SDL_DisplayID displayID, SDL_Re
 extern DECLSPEC int SDLCALL SDL_GetDisplayUsableBounds(SDL_DisplayID displayID, SDL_Rect *rect);
 
 /**
- * Get the dots/pixels-per-inch for a display.
- *
- * Diagonal, horizontal and vertical DPI can all be optionally returned if the
- * appropriate parameter is non-NULL.
- *
- * **WARNING**: This reports the DPI that the hardware reports, and it is not
- * always reliable! It is almost always better to use SDL_GetWindowSize() to
- * find the window size, which might be in logical points instead of pixels,
- * and then SDL_GetWindowSizeInPixels() or SDL_GetRendererOutputSize(), and
- * compare the two values to get an actual scaling value between the two. We
- * will be rethinking how high-dpi details should be managed in SDL3 to make
- * things more consistent, reliable, and clear.
- *
- * \param displayID the instance ID of the display to query
- * \param ddpi a pointer filled in with the diagonal DPI of the display; may
- *             be NULL
- * \param hdpi a pointer filled in with the horizontal DPI of the display; may
- *             be NULL
- * \param vdpi a pointer filled in with the vertical DPI of the display; may
- *             be NULL
- * \returns 0 on success or a negative error code on failure; call
- *          SDL_GetError() for more information.
- *
- * \since This function is available since SDL 3.0.0.
- *
- * \sa SDL_GetDisplays
- */
-extern DECLSPEC int SDLCALL SDL_GetDisplayPhysicalDPI(SDL_DisplayID displayID, float *ddpi, float *hdpi, float *vdpi);
-
-/**
  * Get the orientation of a display.
  *
  * \param displayID the instance ID of the display to query
@@ -422,6 +392,7 @@ extern DECLSPEC SDL_DisplayOrientation SDLCALL SDL_GetDisplayOrientation(SDL_Dis
  * Get a list of fullscreen display modes available on a display.
  *
  * The display modes are sorted in this priority:
+ *
  * - screen_w -> largest to smallest
  * - screen_h -> largest to smallest
  * - pixel_w -> largest to smallest
@@ -432,9 +403,9 @@ extern DECLSPEC SDL_DisplayOrientation SDLCALL SDL_GetDisplayOrientation(SDL_Dis
  *
  * \param displayID the instance ID of the display to query
  * \param count a pointer filled in with the number of displays returned
- * \returns a NULL terminated array of display mode pointers which should be freed
- *          with SDL_free(), or NULL on error; call SDL_GetError() for more
- *          details.
+ * \returns a NULL terminated array of display mode pointers which should be
+ *          freed with SDL_free(), or NULL on error; call SDL_GetError() for
+ *          more details.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -455,10 +426,11 @@ extern DECLSPEC const SDL_DisplayMode **SDLCALL SDL_GetFullscreenDisplayModes(SD
  * \param displayID the instance ID of the display to query
  * \param w the width in pixels of the desired display mode
  * \param h the height in pixels of the desired display mode
- * \param refresh_rate the refresh rate of the desired display mode, or 0.0f for the desktop refresh rate
- * \returns a pointer to the closest display mode equal to or larger than the desired mode, or NULL on error; call SDL_GetError() for more information.
- * \returns the passed in value `closest` or NULL if no matching video mode
- *          was available; call SDL_GetError() for more information.
+ * \param refresh_rate the refresh rate of the desired display mode, or 0.0f
+ *                     for the desktop refresh rate
+ * \returns a pointer to the closest display mode equal to or larger than the
+ *          desired mode, or NULL on error; call SDL_GetError() for more
+ *          information.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -506,7 +478,7 @@ extern DECLSPEC const SDL_DisplayMode *SDLCALL SDL_GetDesktopDisplayMode(SDL_Dis
 extern DECLSPEC const SDL_DisplayMode *SDLCALL SDL_GetCurrentDisplayMode(SDL_DisplayID displayID);
 
 /**
- * Get the display containing a point
+ * Get the display containing a point, in screen coordinates.
  *
  * \param point the point to query
  * \returns the instance ID of the display containing the point or 0 on
@@ -520,7 +492,7 @@ extern DECLSPEC const SDL_DisplayMode *SDLCALL SDL_GetCurrentDisplayMode(SDL_Dis
 extern DECLSPEC SDL_DisplayID SDLCALL SDL_GetDisplayForPoint(const SDL_Point *point);
 
 /**
- * Get the display primarily containing a rect
+ * Get the display primarily containing a rect, in screen coordinates.
  *
  * \param rect the rect to query
  * \returns the instance ID of the display entirely containing the rect or
@@ -557,7 +529,9 @@ extern DECLSPEC SDL_DisplayID SDLCALL SDL_GetDisplayForWindow(SDL_Window *window
  * SDL_SetWindowSize().
  *
  * \param window the window to affect
- * \param mode a pointer to the display mode to use, which can be NULL for desktop mode, or one of the fullscreen modes returned by SDL_GetFullscreenDisplayModes().
+ * \param mode a pointer to the display mode to use, which can be NULL for
+ *             desktop mode, or one of the fullscreen modes returned by
+ *             SDL_GetFullscreenDisplayModes().
  * \returns 0 on success or a negative error code on failure; call
  *          SDL_GetError() for more information.
  *
@@ -657,10 +631,6 @@ extern DECLSPEC Uint32 SDLCALL SDL_GetWindowPixelFormat(SDL_Window *window);
  * in a future version of SDL.
  *
  * \param title the title of the window, in UTF-8 encoding
- * \param x the x position of the window, `SDL_WINDOWPOS_CENTERED`, or
- *          `SDL_WINDOWPOS_UNDEFINED`
- * \param y the y position of the window, `SDL_WINDOWPOS_CENTERED`, or
- *          `SDL_WINDOWPOS_UNDEFINED`
  * \param w the width of the window, in screen coordinates
  * \param h the height of the window, in screen coordinates
  * \param flags 0, or one or more SDL_WindowFlags OR'd together
@@ -672,7 +642,7 @@ extern DECLSPEC Uint32 SDLCALL SDL_GetWindowPixelFormat(SDL_Window *window);
  * \sa SDL_CreateWindowFrom
  * \sa SDL_DestroyWindow
  */
-extern DECLSPEC SDL_Window *SDLCALL SDL_CreateWindow(const char *title, int x, int y, int w, int h, Uint32 flags);
+extern DECLSPEC SDL_Window *SDLCALL SDL_CreateWindow(const char *title, int w, int h, Uint32 flags);
 
 /**
  * Create an SDL window from an existing native window.
@@ -854,8 +824,8 @@ extern DECLSPEC int SDLCALL SDL_GetWindowPosition(SDL_Window *window, int *x, in
  * The window size in screen coordinates may differ from the size in pixels if
  * the window is on a high density display (one with an OS scaling factor).
  *
- * This only affects the size of the window when not in fullscreen mode. To change
- * the fullscreen mode of a window, use SDL_SetWindowFullscreenMode()
+ * This only affects the size of the window when not in fullscreen mode. To
+ * change the fullscreen mode of a window, use SDL_SetWindowFullscreenMode()
  *
  * \param window the window to change
  * \param w the width of the window, must be > 0
@@ -1159,8 +1129,8 @@ extern DECLSPEC int SDLCALL SDL_RestoreWindow(SDL_Window *window);
 /**
  * Set a window's fullscreen state.
  *
- * By default a window in fullscreen state uses fullscreen desktop mode,
- * but a specific display mode can be set using SDL_SetWindowFullscreenMode().
+ * By default a window in fullscreen state uses fullscreen desktop mode, but a
+ * specific display mode can be set using SDL_SetWindowFullscreenMode().
  *
  * \param window the window to change
  * \param fullscreen SDL_TRUE for fullscreen mode, SDL_FALSE for windowed mode
@@ -1488,7 +1458,7 @@ typedef enum
  * \param win the SDL_Window where hit-testing was set on
  * \param area an SDL_Point which should be hit-tested
  * \param data what was passed as `callback_data` to SDL_SetWindowHitTest()
- * \return an SDL_HitTestResult value.
+ * \returns an SDL_HitTestResult value.
  *
  * \sa SDL_SetWindowHitTest
  */
@@ -1531,7 +1501,7 @@ typedef SDL_HitTestResult (SDLCALL *SDL_HitTest)(SDL_Window *win,
  * \param window the window to set hit-testing on
  * \param callback the function to call when doing a hit-test
  * \param callback_data an app-defined void pointer passed to **callback**
- * \returns 0 on success or -1 on error (including unsupported); call
+ * \returns 0 on success or a negative error code on failure; call
  *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
@@ -1557,15 +1527,13 @@ extern DECLSPEC int SDLCALL SDL_FlashWindow(SDL_Window *window, SDL_FlashOperati
  * the SDL error message to "Invalid window". See SDL_GetError().
  *
  * \param window the window to destroy
- * \returns 0 on success or a negative error code on failure; call
- *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_CreateWindow
  * \sa SDL_CreateWindowFrom
  */
-extern DECLSPEC int SDLCALL SDL_DestroyWindow(SDL_Window *window);
+extern DECLSPEC void SDLCALL SDL_DestroyWindow(SDL_Window *window);
 
 
 /**
@@ -1589,12 +1557,15 @@ extern DECLSPEC SDL_bool SDLCALL SDL_ScreenSaverEnabled(void);
 /**
  * Allow the screen to be blanked by a screen saver.
  *
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
+ *
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_DisableScreenSaver
  * \sa SDL_ScreenSaverEnabled
  */
-extern DECLSPEC void SDLCALL SDL_EnableScreenSaver(void);
+extern DECLSPEC int SDLCALL SDL_EnableScreenSaver(void);
 
 /**
  * Prevent the screen from being blanked by a screen saver.
@@ -1605,12 +1576,15 @@ extern DECLSPEC void SDLCALL SDL_EnableScreenSaver(void);
  * The screensaver is disabled by default since SDL 2.0.2. Before SDL 2.0.2
  * the screensaver was enabled by default.
  *
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
+ *
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_EnableScreenSaver
  * \sa SDL_ScreenSaverEnabled
  */
-extern DECLSPEC void SDLCALL SDL_DisableScreenSaver(void);
+extern DECLSPEC int SDLCALL SDL_DisableScreenSaver(void);
 
 
 /**
@@ -1868,6 +1842,7 @@ extern DECLSPEC SDL_EGLConfig SDLCALL SDL_EGL_GetCurrentEGLConfig(void);
 /**
  * Get the EGL surface associated with the window.
  *
+ * \param window the window to query
  * \returns the EGLSurface pointer associated with the window, or NULL on
  *          failure.
  *
@@ -1921,8 +1896,8 @@ extern DECLSPEC void SDLCALL SDL_EGL_SetEGLAttributeCallbacks(SDL_EGLAttribArray
  *
  * \param interval 0 for immediate updates, 1 for updates synchronized with
  *                 the vertical retrace, -1 for adaptive vsync
- * \returns 0 on success or -1 if setting the swap interval is not supported;
- *          call SDL_GetError() for more information.
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -1940,8 +1915,8 @@ extern DECLSPEC int SDLCALL SDL_GL_SetSwapInterval(int interval);
  *                 synchronization, 1 if the buffer swap is synchronized with
  *                 the vertical retrace, and -1 if late swaps happen
  *                 immediately instead of waiting for the next retrace
- * \returns 0 on success or -1 error. call SDL_GetError() for more
- *          information.
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  *

@@ -2,17 +2,15 @@
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 using System.Runtime.InteropServices;
-#if NET6_0_OR_GREATER
 using SystemNativeLibrary = System.Runtime.InteropServices.NativeLibrary;
-#endif
 
 namespace Alimer.Bindings.SDL;
 
-internal sealed class NativeLibrary : IDisposable
+internal sealed class TempNativeLibrary : IDisposable
 {
     private static readonly ILibraryLoader _loader = GetPlatformDefaultLoader();
 
-    public NativeLibrary(params string[] names)
+    public TempNativeLibrary(params string[] names)
     {
         foreach (string name in names)
         {
@@ -69,9 +67,8 @@ internal sealed class NativeLibrary : IDisposable
 
     public static IEnumerable<string> GetRuntimeIdentifiers()
     {
-#if NET6_0_OR_GREATER
         yield return RuntimeInformation.RuntimeIdentifier;
-#endif
+
         var arch = RuntimeInformation.ProcessArchitecture;
         bool isArm = RuntimeInformation.ProcessArchitecture == Architecture.Arm || RuntimeInformation.ProcessArchitecture == Architecture.Arm64;
 
@@ -79,28 +76,16 @@ internal sealed class NativeLibrary : IDisposable
             ? isArm ? "arm64" : "x64"
             : isArm ? "arm" : "x86";
 
-#if NET6_0_OR_GREATER
         if (OperatingSystem.IsWindows())
-#else
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-#endif
         {
             yield return $"win10-{archName}";
             yield return $"win-{archName}";
         }
-#if NET6_0_OR_GREATER
         else if (OperatingSystem.IsLinux())
-#else
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-#endif
         {
             yield return $"linux-{archName}";
         }
-#if NET6_0_OR_GREATER
         else if (OperatingSystem.IsMacOS() || OperatingSystem.IsMacCatalyst())
-#else
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-#endif
         {
             yield return "osx-universal";
             yield return $"linux-{archName}";
@@ -141,27 +126,7 @@ internal sealed class NativeLibrary : IDisposable
 
     private static ILibraryLoader GetPlatformDefaultLoader()
     {
-#if NET6_0_OR_GREATER
         return new SystemNativeLibraryLoader();
-#else
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            return new Win32LibraryLoader();
-        }
-
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ||
-            RuntimeInformation.OSDescription.ToUpper().Contains("BSD"))
-        {
-            return new BsdLibraryLoader();
-        }
-
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            return new UnixLibraryLoader();
-        }
-
-        throw new PlatformNotSupportedException("This platform cannot load native libraries.");
-#endif
     }
 
     private interface ILibraryLoader
@@ -173,7 +138,6 @@ internal sealed class NativeLibrary : IDisposable
         nint LoadFunctionPointer(nint handle, string name);
     }
 
-#if NET6_0_OR_GREATER
     private class SystemNativeLibraryLoader : ILibraryLoader
     {
         public nint LoadNativeLibrary(string name)
@@ -201,110 +165,5 @@ internal sealed class NativeLibrary : IDisposable
             return 0;
         }
     }
-#else
-    private class Win32LibraryLoader : ILibraryLoader
-    {
-        public nint LoadNativeLibrary(string name)
-        {
-            return Kernel32.LoadLibrary(name);
-        }
-
-        public void FreeNativeLibrary(nint handle)
-        {
-            Kernel32.FreeLibrary(handle);
-        }
-
-        public nint LoadFunctionPointer(nint handle, string name)
-        {
-            return Kernel32.GetProcAddress(handle, name);
-        }
-    }
-
-    private class BsdLibraryLoader : ILibraryLoader
-    {
-        public nint LoadNativeLibrary(string name)
-        {
-            return Libc.dlopen(name, Libc.RTLD_NOW);
-        }
-
-        public void FreeNativeLibrary(nint handle)
-        {
-            Libc.dlclose(handle);
-        }
-
-        public nint LoadFunctionPointer(nint handle, string name)
-        {
-            return Libc.dlsym(handle, name);
-        }
-    }
-
-    private class UnixLibraryLoader : ILibraryLoader
-    {
-        public nint LoadNativeLibrary(string name)
-        {
-            return Libdl.dlopen(name, Libdl.RTLD_NOW);
-        }
-
-        public void FreeNativeLibrary(nint handle)
-        {
-            Libdl.dlclose(handle);
-        }
-
-        public nint LoadFunctionPointer(nint handle, string name)
-        {
-            return Libdl.dlsym(handle, name);
-        }
-    }
-
-    internal static class Kernel32
-    {
-        [DllImport("kernel32")]
-        public static extern nint LoadLibrary(string fileName);
-
-        [DllImport("kernel32")]
-        public static extern nint GetProcAddress(nint module, string procName);
-
-        [DllImport("kernel32")]
-        public static extern int FreeLibrary(nint module);
-    }
-
-    internal static class Libc
-    {
-        private const string LibName = "libc";
-
-        public const int RTLD_NOW = 0x002;
-
-        [DllImport(LibName)]
-        public static extern nint dlopen(string fileName, int flags);
-
-        [DllImport(LibName)]
-        public static extern nint dlsym(nint handle, string name);
-
-        [DllImport(LibName)]
-        public static extern int dlclose(nint handle);
-
-        [DllImport(LibName)]
-        public static extern string dlerror();
-    }
-
-    internal static class Libdl
-    {
-        private const string LibName = "libdl";
-
-        public const int RTLD_NOW = 0x002;
-
-        [DllImport(LibName)]
-        public static extern nint dlopen(string fileName, int flags);
-
-        [DllImport(LibName)]
-        public static extern nint dlsym(nint handle, string name);
-
-        [DllImport(LibName)]
-        public static extern int dlclose(nint handle);
-
-        [DllImport(LibName)]
-        public static extern string dlerror();
-    }
-#endif
 }
 

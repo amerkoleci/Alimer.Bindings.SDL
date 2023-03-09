@@ -1,25 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <Title>Cross platform .NET bindings for SDL3</Title>
-    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="PolySharp" Version="1.8.1" PrivateAssets="all" />
-  </ItemGroup>
 
   <PropertyGroup>
-    <VersionPrefix>3.0.0</VersionPrefix>
+    <VersionPrefix>3.0.1</VersionPrefix>
     <VersionSuffix Condition="'$(VersionSuffix)' == ''">beta</VersionSuffix>
   </PropertyGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.Memory" Version="4.5.5" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="runtimes\win-x64\native\SDL3.dll">
@@ -34,10 +23,10 @@
       <PackagePath>runtimes\linux-x64\native</PackagePath>
       <Pack>true</Pack>
     </Content>
-    <!--<Content Include="runtimes\osx-universal\native\libSDL3.dylib">
+    <Content Include="runtimes\osx-universal\native\libSDL3.dylib">
       <PackagePath>runtimes\osx-universal\native</PackagePath>
       <Pack>true</Pack>
-    </Content>-->
+    </Content>
   </ItemGroup>
 
 </Project>

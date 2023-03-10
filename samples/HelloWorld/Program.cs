@@ -88,6 +88,8 @@ public static unsafe class Program
             dispName = SDL_GetAudioDriver(i);
         }
 
+        ReadOnlySpan<SDL_JoystickID> joystics = SDL_GetJoysticks();
+
         bool done = false;
         while (!done)
         {

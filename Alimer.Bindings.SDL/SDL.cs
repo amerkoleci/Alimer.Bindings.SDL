@@ -33,11 +33,17 @@ using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using static Alimer.Bindings.SDL.SDL.SDL_bool;
+using static Alimer.Bindings.SDL.SDL_bool;
 
 namespace Alimer.Bindings.SDL;
 
 #region Enums
+public enum SDL_bool
+{
+    SDL_FALSE = 0,
+    SDL_TRUE = 1
+}
+
 public enum SDL_LogCategory
 {
     SDL_LOG_CATEGORY_APPLICATION,
@@ -82,6 +88,233 @@ public enum SDL_LogPriority
     SDL_LOG_PRIORITY_ERROR,
     SDL_LOG_PRIORITY_CRITICAL,
     SDL_NUM_LOG_PRIORITIES
+}
+
+public enum SDL_InitFlags : uint
+{
+    SDL_INIT_TIMER = 0x00000001,
+    SDL_INIT_AUDIO = 0x00000010,
+    SDL_INIT_VIDEO = 0x00000020,  /**< `SDL_INIT_VIDEO` implies `SDL_INIT_EVENTS` */
+    SDL_INIT_JOYSTICK = 0x00000200,  /**< `SDL_INIT_JOYSTICK` implies `SDL_INIT_EVENTS` */
+    SDL_INIT_HAPTIC = 0x00001000,
+    SDL_INIT_GAMEPAD = 0x00002000,  /**< `SDL_INIT_GAMEPAD` implies `SDL_INIT_JOYSTICK` */
+    SDL_INIT_EVENTS = 0x00004000,
+    SDL_INIT_SENSOR = 0x00008000,
+
+    SDL_INIT_EVERYTHING = (SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO |
+        SDL_INIT_EVENTS | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC |
+        SDL_INIT_GAMEPAD | SDL_INIT_SENSOR)
+}
+
+public enum SDL_HintPriority
+{
+    SDL_HINT_DEFAULT,
+    SDL_HINT_NORMAL,
+    SDL_HINT_OVERRIDE
+}
+
+public enum SDL_EventType : uint
+{
+    SDL_FIRSTEVENT = 0,
+
+    /// <summary>
+    /// User-requested quit
+    /// </summary>
+    SDL_QUIT = 0x100,
+
+    /* iOS/Android/WinRT app events */
+
+    /// <summary>
+    /// The application is being terminated by the OS
+    /// </summary>
+    /// <remarks>
+    /// Called on iOS in applicationWillTerminate()
+    /// Called on Android in onDestroy()
+    /// </remarks>
+    SDL_EVENT_TERMINATING,
+    /// <summary>
+    /// The application is low on memory, free memory if possible.
+    /// </summary>
+    /// <remarks>
+    /// Called on iOS in applicationDidReceiveMemoryWarning()
+    /// Called on Android in onLowMemory()
+    /// </remarks>
+    SDL_EVENT_LOW_MEMORY,
+    SDL_EVENT_WILL_ENTER_BACKGROUND,
+    SDL_EVENT_DID_ENTER_BACKGROUND,
+    SDL_EVENT_WILL_ENTER_FOREGROUND,
+    SDL_EVENT_DID_ENTER_FOREGROUND,
+
+    /// <summary>
+    /// The user's locale preferences have changed.
+    /// </summary>
+    SDL_EVENT_LOCALE_CHANGED,
+
+    /* 0x150 was SDL_DISPLAYEVENT, reserve the number for sdl2-compat */
+    SDL_EVENT_DISPLAY_ORIENTATION = 0x151, /**< Display orientation has changed to data1 */
+    SDL_EVENT_DISPLAY_CONNECTED,           /**< Display has been added to the system */
+    SDL_EVENT_DISPLAY_DISCONNECTED,        /**< Display has been removed from the system */
+    SDL_EVENT_DISPLAY_MOVED,               /**< Display has changed position */
+    SDL_EVENT_DISPLAY_SCALE_CHANGED,       /**< Display has changed desktop display scale */
+    SDL_EVENT_DISPLAY_FIRST = SDL_EVENT_DISPLAY_ORIENTATION,
+    SDL_EVENT_DISPLAY_LAST = SDL_EVENT_DISPLAY_SCALE_CHANGED,
+
+    /* Window events */
+    /* 0x200 was SDL_WINDOWEVENT, reserve the number for sdl2-compat */
+    SDL_EVENT_SYSWM = 0x201,        /**< System specific event */
+    SDL_EVENT_WINDOW_SHOWN,             /**< Window has been shown */
+    SDL_EVENT_WINDOW_HIDDEN,            /**< Window has been hidden */
+    SDL_EVENT_WINDOW_EXPOSED,           /**< Window has been exposed and should be redrawn */
+    SDL_EVENT_WINDOW_MOVED,             /**< Window has been moved to data1, data2 */
+    SDL_EVENT_WINDOW_RESIZED,           /**< Window has been resized to data1xdata2 */
+    SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED,/**< The pixel size of the window has changed to data1xdata2 */
+    SDL_EVENT_WINDOW_MINIMIZED,         /**< Window has been minimized */
+    SDL_EVENT_WINDOW_MAXIMIZED,         /**< Window has been maximized */
+    SDL_EVENT_WINDOW_RESTORED,          /**< Window has been restored to normal size and position */
+    SDL_EVENT_WINDOW_MOUSE_ENTER,       /**< Window has gained mouse focus */
+    SDL_EVENT_WINDOW_MOUSE_LEAVE,       /**< Window has lost mouse focus */
+    SDL_EVENT_WINDOW_FOCUS_GAINED,      /**< Window has gained keyboard focus */
+    SDL_EVENT_WINDOW_FOCUS_LOST,        /**< Window has lost keyboard focus */
+    SDL_EVENT_WINDOW_CLOSE_REQUESTED,   /**< The window manager requests that the window be closed */
+    SDL_EVENT_WINDOW_TAKE_FOCUS,        /**< Window is being offered a focus (should SetWindowInputFocus() on itself or a subwindow, or ignore) */
+    SDL_EVENT_WINDOW_HIT_TEST,          /**< Window had a hit test that wasn't SDL_HITTEST_NORMAL */
+    SDL_EVENT_WINDOW_ICCPROF_CHANGED,   /**< The ICC profile of the window's display has changed */
+    SDL_EVENT_WINDOW_DISPLAY_CHANGED,   /**< Window has been moved to display data1 */
+    SDL_EVENT_WINDOW_FIRST = SDL_EVENT_WINDOW_SHOWN,
+    SDL_EVENT_WINDOW_LAST = SDL_EVENT_WINDOW_DISPLAY_CHANGED,
+
+    /* Keyboard events */
+    SDL_EVENT_KEY_DOWN = 0x300, /**< Key pressed */
+    SDL_EVENT_KEY_UP,                  /**< Key released */
+    SDL_EVENT_TEXT_EDITING,            /**< Keyboard text editing (composition) */
+    SDL_EVENT_TEXT_INPUT,              /**< Keyboard text input */
+    SDL_EVENT_KEYMAP_CHANGED,          /**< Keymap changed due to a system event such as an
+                                            input language or keyboard layout change. */
+    SDL_EVENT_TEXT_EDITING_EXT,        /**< Extended keyboard text editing (composition) */
+
+    /* Mouse events */
+    SDL_EVENT_MOUSE_MOTION = 0x400, /**< Mouse moved */
+    SDL_EVENT_MOUSE_BUTTON_DOWN,       /**< Mouse button pressed */
+    SDL_EVENT_MOUSE_BUTTON_UP,         /**< Mouse button released */
+    SDL_EVENT_MOUSE_WHEEL,             /**< Mouse wheel motion */
+
+    /* Joystick events */
+    SDL_EVENT_JOYSTICK_AXIS_MOTION = 0x600, /**< Joystick axis motion */
+    SDL_EVENT_JOYSTICK_HAT_MOTION = 0x602, /**< Joystick hat position change */
+    SDL_EVENT_JOYSTICK_BUTTON_DOWN,          /**< Joystick button pressed */
+    SDL_EVENT_JOYSTICK_BUTTON_UP,            /**< Joystick button released */
+    SDL_EVENT_JOYSTICK_ADDED,         /**< A new joystick has been inserted into the system */
+    SDL_EVENT_JOYSTICK_REMOVED,       /**< An opened joystick has been removed */
+    SDL_EVENT_JOYSTICK_BATTERY_UPDATED,      /**< Joystick battery level change */
+
+    /* Gamepad events */
+    SDL_EVENT_GAMEPAD_AXIS_MOTION = 0x650, /**< Gamepad axis motion */
+    SDL_EVENT_GAMEPAD_BUTTON_DOWN,          /**< Gamepad button pressed */
+    SDL_EVENT_GAMEPAD_BUTTON_UP,            /**< Gamepad button released */
+    SDL_EVENT_GAMEPAD_ADDED,               /**< A new gamepad has been inserted into the system */
+    SDL_EVENT_GAMEPAD_REMOVED,             /**< An opened gamepad has been removed */
+    SDL_EVENT_GAMEPAD_REMAPPED,            /**< The gamepad mapping was updated */
+    SDL_EVENT_GAMEPAD_TOUCHPAD_DOWN,        /**< Gamepad touchpad was touched */
+    SDL_EVENT_GAMEPAD_TOUCHPAD_MOTION,      /**< Gamepad touchpad finger was moved */
+    SDL_EVENT_GAMEPAD_TOUCHPAD_UP,          /**< Gamepad touchpad finger was lifted */
+    SDL_EVENT_GAMEPAD_SENSOR_UPDATE,        /**< Gamepad sensor was updated */
+
+    /* Touch events */
+    SDL_EVENT_FINGER_DOWN = 0x700,
+    SDL_EVENT_FINGER_UP,
+    SDL_EVENT_FINGER_MOTION,
+
+    /* 0x800, 0x801, and 0x802 were the Gesture events from SDL2. Do not reuse these values! sdl2-compat needs them! */
+
+    /* Clipboard events */
+    SDL_EVENT_CLIPBOARD_UPDATE = 0x900, /**< The clipboard or primary selection changed */
+
+    /* Drag and drop events */
+    SDL_EVENT_DROP_FILE = 0x1000, /**< The system requests a file open */
+    SDL_EVENT_DROP_TEXT,                 /**< text/plain drag-and-drop event */
+    SDL_EVENT_DROP_BEGIN,                /**< A new set of drops is beginning (NULL filename) */
+    SDL_EVENT_DROP_COMPLETE,             /**< Current set of drops is now complete (NULL filename) */
+    SDL_EVENT_DROP_POSITION,             /**< Position while moving over the window */
+
+    /* Audio hotplug events */
+    SDL_EVENT_AUDIO_DEVICE_ADDED = 0x1100, /**< A new audio device is available */
+    SDL_EVENT_AUDIO_DEVICE_REMOVED,        /**< An audio device has been removed. */
+
+    /* Sensor events */
+    SDL_EVENT_SENSOR_UPDATE = 0x1200,     /**< A sensor was updated */
+
+    /* Render events */
+    SDL_EVENT_RENDER_TARGETS_RESET = 0x2000, /**< The render targets have been reset and their contents need to be updated */
+    SDL_EVENT_RENDER_DEVICE_RESET, /**< The device has been reset and all textures need to be recreated */
+
+    /* Internal events */
+    SDL_EVENT_POLL_SENTINEL = 0x7F00, /**< Signals the end of an event poll cycle */
+
+    /** Events ::SDL_EVENT_USER through ::SDL_EVENT_LAST are for your use,
+     *  and should be allocated with SDL_RegisterEvents()
+     */
+    SDL_EVENT_USER = 0x8000,
+
+    /**
+     *  This last event is only for bounding internal arrays
+     */
+    SDL_EVENT_LAST = 0xFFFF
+}
+
+public enum SDL_FlashOperation
+{
+    SDL_FLASH_CANCEL,
+    SDL_FLASH_BRIEFLY,
+    SDL_FLASH_UNTIL_FOCUSED
+}
+
+[Flags]
+public enum SDL_WindowFlags : uint
+{
+    SDL_WINDOW_FULLSCREEN = 0x00000001,   /**< window is in fullscreen mode */
+    SDL_WINDOW_OPENGL = 0x00000002,   /**< window usable with OpenGL context */
+    /* 0x00000004 was SDL_WINDOW_SHOWN in SDL2, please reserve this bit for sdl2-compat. */
+    SDL_WINDOW_HIDDEN = 0x00000008,   /**< window is not visible */
+    SDL_WINDOW_BORDERLESS = 0x00000010,   /**< no window decoration */
+    SDL_WINDOW_RESIZABLE = 0x00000020,   /**< window can be resized */
+    SDL_WINDOW_MINIMIZED = 0x00000040,   /**< window is minimized */
+    SDL_WINDOW_MAXIMIZED = 0x00000080,   /**< window is maximized */
+    SDL_WINDOW_MOUSE_GRABBED = 0x00000100,   /**< window has grabbed mouse input */
+    SDL_WINDOW_INPUT_FOCUS = 0x00000200,   /**< window has input focus */
+    SDL_WINDOW_MOUSE_FOCUS = 0x00000400,   /**< window has mouse focus */
+    /* 0x00001000 was SDL_WINDOW_FULLSCREEN_DESKTOP in SDL2, please reserve this bit for sdl2-compat. */
+    SDL_WINDOW_FOREIGN = 0x00000800,   /**< window not created by SDL */
+    /* 0x00002000 was SDL_WINDOW_ALLOW_HIGHDPI in SDL2, please reserve this bit for sdl2-compat. */
+    SDL_WINDOW_MOUSE_CAPTURE = 0x00004000,   /**< window has mouse captured (unrelated to MOUSE_GRABBED) */
+    SDL_WINDOW_ALWAYS_ON_TOP = 0x00008000,   /**< window should always be above others */
+    SDL_WINDOW_SKIP_TASKBAR = 0x00010000,   /**< window should not be added to the taskbar */
+    SDL_WINDOW_UTILITY = 0x00020000,   /**< window should be treated as a utility window */
+    SDL_WINDOW_TOOLTIP = 0x00040000,   /**< window should be treated as a tooltip */
+    SDL_WINDOW_POPUP_MENU = 0x00080000,   /**< window should be treated as a popup menu */
+    SDL_WINDOW_KEYBOARD_GRABBED = 0x00100000,   /**< window has grabbed keyboard input */
+    SDL_WINDOW_VULKAN = 0x10000000,   /**< window usable for Vulkan surface */
+    SDL_WINDOW_METAL = 0x20000000,   /**< window usable for Metal view */
+}
+
+/* Only available in 2.0.4 or higher. */
+public enum SDL_HitTestResult
+{
+    /// <summary>
+    /// Region is normal. No special properties.
+    /// </summary>
+    SDL_HITTEST_NORMAL,
+    /// <summary>
+    /// Region can drag entire window.
+    /// </summary>
+    SDL_HITTEST_DRAGGABLE, 
+    SDL_HITTEST_RESIZE_TOPLEFT,
+    SDL_HITTEST_RESIZE_TOP,
+    SDL_HITTEST_RESIZE_TOPRIGHT,
+    SDL_HITTEST_RESIZE_RIGHT,
+    SDL_HITTEST_RESIZE_BOTTOMRIGHT,
+    SDL_HITTEST_RESIZE_BOTTOM,
+    SDL_HITTEST_RESIZE_BOTTOMLEFT,
+    SDL_HITTEST_RESIZE_LEFT
 }
 
 public enum SDL_GLattr
@@ -147,31 +380,6 @@ public enum SDL_GLContextResetNotification
     SDL_GL_CONTEXT_RESET_LOSE_CONTEXT = 0x0001
 }
 
-public enum SDL_WindowEventID : byte
-{
-    SDL_WINDOWEVENT_NONE,
-    SDL_WINDOWEVENT_SHOWN,
-    SDL_WINDOWEVENT_HIDDEN,
-    SDL_WINDOWEVENT_EXPOSED,
-    SDL_WINDOWEVENT_MOVED,
-    SDL_WINDOWEVENT_RESIZED,
-    SDL_WINDOWEVENT_SIZE_CHANGED,
-    SDL_WINDOWEVENT_MINIMIZED,
-    SDL_WINDOWEVENT_MAXIMIZED,
-    SDL_WINDOWEVENT_RESTORED,
-    SDL_WINDOWEVENT_ENTER,
-    SDL_WINDOWEVENT_LEAVE,
-    SDL_WINDOWEVENT_FOCUS_GAINED,
-    SDL_WINDOWEVENT_FOCUS_LOST,
-    SDL_WINDOWEVENT_CLOSE,
-    /* Only available in 2.0.5 or higher. */
-    SDL_WINDOWEVENT_TAKE_FOCUS,
-    SDL_WINDOWEVENT_HIT_TEST,
-    /* Only available in 2.0.18 or higher. */
-    SDL_WINDOWEVENT_ICCPROF_CHANGED,
-    SDL_WINDOWEVENT_DISPLAY_CHANGED
-}
-
 public enum SDL_DisplayEventID : byte
 {
     SDL_DISPLAYEVENT_NONE,
@@ -194,6 +402,57 @@ public enum SDL_MouseWheelDirection : uint
     SDL_MOUSEWHEEL_NORMAL,
     SDL_MOUSEWHEEL_FLIPPED
 }
+
+public enum SDL_SYSWM_TYPE
+{
+    SDL_SYSWM_UNKNOWN,
+    SDL_SYSWM_ANDROID,
+    SDL_SYSWM_COCOA,
+    SDL_SYSWM_HAIKU,
+    SDL_SYSWM_KMSDRM,
+    SDL_SYSWM_RISCOS,
+    SDL_SYSWM_UIKIT,
+    SDL_SYSWM_VIVANTE,
+    SDL_SYSWM_WAYLAND,
+    SDL_SYSWM_WINDOWS,
+    SDL_SYSWM_WINRT,
+    SDL_SYSWM_X11
+}
+
+[Flags]
+public enum SDL_BlendMode
+{
+    SDL_BLENDMODE_NONE = 0x00000000,
+    SDL_BLENDMODE_BLEND = 0x00000001,
+    SDL_BLENDMODE_ADD = 0x00000002,
+    SDL_BLENDMODE_MOD = 0x00000004,
+    SDL_BLENDMODE_MUL = 0x00000008, /* >= 2.0.11 */
+    SDL_BLENDMODE_INVALID = 0x7FFFFFFF
+}
+
+public enum SDL_BlendOperation
+{
+    SDL_BLENDOPERATION_ADD = 0x1,
+    SDL_BLENDOPERATION_SUBTRACT = 0x2,
+    SDL_BLENDOPERATION_REV_SUBTRACT = 0x3,
+    SDL_BLENDOPERATION_MINIMUM = 0x4,
+    SDL_BLENDOPERATION_MAXIMUM = 0x5
+}
+
+public enum SDL_BlendFactor
+{
+    SDL_BLENDFACTOR_ZERO = 0x1,
+    SDL_BLENDFACTOR_ONE = 0x2,
+    SDL_BLENDFACTOR_SRC_COLOR = 0x3,
+    SDL_BLENDFACTOR_ONE_MINUS_SRC_COLOR = 0x4,
+    SDL_BLENDFACTOR_SRC_ALPHA = 0x5,
+    SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA = 0x6,
+    SDL_BLENDFACTOR_DST_COLOR = 0x7,
+    SDL_BLENDFACTOR_ONE_MINUS_DST_COLOR = 0x8,
+    SDL_BLENDFACTOR_DST_ALPHA = 0x9,
+    SDL_BLENDFACTOR_ONE_MINUS_DST_ALPHA = 0xA
+}
+
 #endregion
 
 #region Structs
@@ -310,32 +569,11 @@ public static unsafe partial class SDL
         return false;
     }
 
-    public enum SDL_bool
-    {
-        SDL_FALSE = 0,
-        SDL_TRUE = 1
-    }
-
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     private static extern void SDL_free(void* memblock);
 
     #region SDL.h
-    public enum SDL_InitFlags : uint
-    {
-        SDL_INIT_TIMER = 0x00000001,
-        SDL_INIT_AUDIO = 0x00000010,
-        SDL_INIT_VIDEO = 0x00000020,  /**< `SDL_INIT_VIDEO` implies `SDL_INIT_EVENTS` */
-        SDL_INIT_JOYSTICK = 0x00000200,  /**< `SDL_INIT_JOYSTICK` implies `SDL_INIT_EVENTS` */
-        SDL_INIT_HAPTIC = 0x00001000,
-        SDL_INIT_GAMEPAD = 0x00002000,  /**< `SDL_INIT_GAMEPAD` implies `SDL_INIT_JOYSTICK` */
-        SDL_INIT_EVENTS = 0x00004000,
-        SDL_INIT_SENSOR = 0x00008000,
-
-        SDL_INIT_EVERYTHING = (SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO |
-            SDL_INIT_EVENTS | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC |
-            SDL_INIT_GAMEPAD | SDL_INIT_SENSOR)
-    }
-
+    
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern int SDL_Init(SDL_InitFlags flags);
 
@@ -655,13 +893,6 @@ public static unsafe partial class SDL
     public const string SDL_HINT_VIDEO_DRIVER = "SDL_VIDEO_DRIVER";
     public const string SDL_HINT_AUDIO_DRIVER = "SDL_AUDIO_DRIVER";
 
-    public enum SDL_HintPriority
-    {
-        SDL_HINT_DEFAULT,
-        SDL_HINT_NORMAL,
-        SDL_HINT_OVERRIDE
-    }
-
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern void SDL_ClearHints();
 
@@ -830,58 +1061,7 @@ public static unsafe partial class SDL
     #endregion
 
     #region SDL_video.h
-
-    /* Only available in 2.0.16 or higher. */
-    public enum SDL_FlashOperation
-    {
-        SDL_FLASH_CANCEL,
-        SDL_FLASH_BRIEFLY,
-        SDL_FLASH_UNTIL_FOCUSED
-    }
-
-    [Flags]
-    public enum SDL_WindowFlags : uint
-    {
-        SDL_WINDOW_FULLSCREEN = 0x00000001,   /**< window is in fullscreen mode */
-        SDL_WINDOW_OPENGL = 0x00000002,   /**< window usable with OpenGL context */
-        /* 0x00000004 was SDL_WINDOW_SHOWN in SDL2, please reserve this bit for sdl2-compat. */
-        SDL_WINDOW_HIDDEN = 0x00000008,   /**< window is not visible */
-        SDL_WINDOW_BORDERLESS = 0x00000010,   /**< no window decoration */
-        SDL_WINDOW_RESIZABLE = 0x00000020,   /**< window can be resized */
-        SDL_WINDOW_MINIMIZED = 0x00000040,   /**< window is minimized */
-        SDL_WINDOW_MAXIMIZED = 0x00000080,   /**< window is maximized */
-        SDL_WINDOW_MOUSE_GRABBED = 0x00000100,   /**< window has grabbed mouse input */
-        SDL_WINDOW_INPUT_FOCUS = 0x00000200,   /**< window has input focus */
-        SDL_WINDOW_MOUSE_FOCUS = 0x00000400,   /**< window has mouse focus */
-        /* 0x00001000 was SDL_WINDOW_FULLSCREEN_DESKTOP in SDL2, please reserve this bit for sdl2-compat. */
-        SDL_WINDOW_FOREIGN = 0x00000800,   /**< window not created by SDL */
-        /* 0x00002000 was SDL_WINDOW_ALLOW_HIGHDPI in SDL2, please reserve this bit for sdl2-compat. */
-        SDL_WINDOW_MOUSE_CAPTURE = 0x00004000,   /**< window has mouse captured (unrelated to MOUSE_GRABBED) */
-        SDL_WINDOW_ALWAYS_ON_TOP = 0x00008000,   /**< window should always be above others */
-        SDL_WINDOW_SKIP_TASKBAR = 0x00010000,   /**< window should not be added to the taskbar */
-        SDL_WINDOW_UTILITY = 0x00020000,   /**< window should be treated as a utility window */
-        SDL_WINDOW_TOOLTIP = 0x00040000,   /**< window should be treated as a tooltip */
-        SDL_WINDOW_POPUP_MENU = 0x00080000,   /**< window should be treated as a popup menu */
-        SDL_WINDOW_KEYBOARD_GRABBED = 0x00100000,   /**< window has grabbed keyboard input */
-        SDL_WINDOW_VULKAN = 0x10000000,   /**< window usable for Vulkan surface */
-        SDL_WINDOW_METAL = 0x20000000,   /**< window usable for Metal view */
-    }
-
-    /* Only available in 2.0.4 or higher. */
-    public enum SDL_HitTestResult
-    {
-        SDL_HITTEST_NORMAL,     /* Region is normal. No special properties. */
-        SDL_HITTEST_DRAGGABLE,      /* Region can drag entire window. */
-        SDL_HITTEST_RESIZE_TOPLEFT,
-        SDL_HITTEST_RESIZE_TOP,
-        SDL_HITTEST_RESIZE_TOPRIGHT,
-        SDL_HITTEST_RESIZE_RIGHT,
-        SDL_HITTEST_RESIZE_BOTTOMRIGHT,
-        SDL_HITTEST_RESIZE_BOTTOM,
-        SDL_HITTEST_RESIZE_BOTTOMLEFT,
-        SDL_HITTEST_RESIZE_LEFT
-    }
-
+    
     public const int SDL_WINDOWPOS_UNDEFINED_MASK = 0x1FFF0000;
     public const int SDL_WINDOWPOS_CENTERED_MASK = 0x2FFF0000;
     public const int SDL_WINDOWPOS_UNDEFINED = 0x1FFF0000;
@@ -1521,40 +1701,7 @@ public static unsafe partial class SDL
     #endregion
 
     #region SDL_blendmode.h
-    [Flags]
-    public enum SDL_BlendMode
-    {
-        SDL_BLENDMODE_NONE = 0x00000000,
-        SDL_BLENDMODE_BLEND = 0x00000001,
-        SDL_BLENDMODE_ADD = 0x00000002,
-        SDL_BLENDMODE_MOD = 0x00000004,
-        SDL_BLENDMODE_MUL = 0x00000008, /* >= 2.0.11 */
-        SDL_BLENDMODE_INVALID = 0x7FFFFFFF
-    }
-
-    public enum SDL_BlendOperation
-    {
-        SDL_BLENDOPERATION_ADD = 0x1,
-        SDL_BLENDOPERATION_SUBTRACT = 0x2,
-        SDL_BLENDOPERATION_REV_SUBTRACT = 0x3,
-        SDL_BLENDOPERATION_MINIMUM = 0x4,
-        SDL_BLENDOPERATION_MAXIMUM = 0x5
-    }
-
-    public enum SDL_BlendFactor
-    {
-        SDL_BLENDFACTOR_ZERO = 0x1,
-        SDL_BLENDFACTOR_ONE = 0x2,
-        SDL_BLENDFACTOR_SRC_COLOR = 0x3,
-        SDL_BLENDFACTOR_ONE_MINUS_SRC_COLOR = 0x4,
-        SDL_BLENDFACTOR_SRC_ALPHA = 0x5,
-        SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA = 0x6,
-        SDL_BLENDFACTOR_DST_COLOR = 0x7,
-        SDL_BLENDFACTOR_ONE_MINUS_DST_COLOR = 0x8,
-        SDL_BLENDFACTOR_DST_ALPHA = 0x9,
-        SDL_BLENDFACTOR_ONE_MINUS_DST_ALPHA = 0xA
-    }
-
+    
     /* Only available in 2.0.6 or higher. */
     public static SDL_BlendMode SDL_ComposeCustomBlendMode(
         SDL_BlendFactor srcColorFactor,
@@ -1648,22 +1795,7 @@ public static unsafe partial class SDL
     #endregion
 
     #region SDL_syswm.h
-    public enum SDL_SYSWM_TYPE
-    {
-        SDL_SYSWM_UNKNOWN,
-        SDL_SYSWM_ANDROID,
-        SDL_SYSWM_COCOA,
-        SDL_SYSWM_HAIKU,
-        SDL_SYSWM_KMSDRM,
-        SDL_SYSWM_RISCOS,
-        SDL_SYSWM_UIKIT,
-        SDL_SYSWM_VIVANTE,
-        SDL_SYSWM_WAYLAND,
-        SDL_SYSWM_WINDOWS,
-        SDL_SYSWM_WINRT,
-        SDL_SYSWM_X11
-    }
-
+    
     // FIXME: I wish these weren't public...
     [StructLayout(LayoutKind.Sequential)]
     public struct INTERNAL_windows_wminfo
@@ -1864,155 +1996,7 @@ public static unsafe partial class SDL
     public const int SDL_TEXTEDITINGEVENT_TEXT_SIZE = 32;
     public const int SDL_TEXTINPUTEVENT_TEXT_SIZE = 32;
 
-    /* The types of events that can be delivered. */
-    public enum SDL_EventType : uint
-    {
-        SDL_FIRSTEVENT = 0,
-
-        /// <summary>
-        /// User-requested quit
-        /// </summary>
-        SDL_QUIT = 0x100,
-
-        /* iOS/Android/WinRT app events */
-
-        /// <summary>
-        /// The application is being terminated by the OS
-        /// </summary>
-        /// <remarks>
-        /// Called on iOS in applicationWillTerminate()
-        /// Called on Android in onDestroy()
-        /// </remarks>
-        SDL_EVENT_TERMINATING,
-        /// <summary>
-        /// The application is low on memory, free memory if possible.
-        /// </summary>
-        /// <remarks>
-        /// Called on iOS in applicationDidReceiveMemoryWarning()
-        /// Called on Android in onLowMemory()
-        /// </remarks>
-        SDL_EVENT_LOW_MEMORY,
-        SDL_EVENT_WILL_ENTER_BACKGROUND,
-        SDL_EVENT_DID_ENTER_BACKGROUND,
-        SDL_EVENT_WILL_ENTER_FOREGROUND,
-        SDL_EVENT_DID_ENTER_FOREGROUND,
-
-        /// <summary>
-        /// The user's locale preferences have changed.
-        /// </summary>
-        SDL_EVENT_LOCALE_CHANGED,
-
-        /* 0x150 was SDL_DISPLAYEVENT, reserve the number for sdl2-compat */
-        SDL_EVENT_DISPLAY_ORIENTATION = 0x151, /**< Display orientation has changed to data1 */
-        SDL_EVENT_DISPLAY_CONNECTED,           /**< Display has been added to the system */
-        SDL_EVENT_DISPLAY_DISCONNECTED,        /**< Display has been removed from the system */
-        SDL_EVENT_DISPLAY_MOVED,               /**< Display has changed position */
-        SDL_EVENT_DISPLAY_SCALE_CHANGED,       /**< Display has changed desktop display scale */
-        SDL_EVENT_DISPLAY_FIRST = SDL_EVENT_DISPLAY_ORIENTATION,
-        SDL_EVENT_DISPLAY_LAST = SDL_EVENT_DISPLAY_SCALE_CHANGED,
-
-        /* Window events */
-        /* 0x200 was SDL_WINDOWEVENT, reserve the number for sdl2-compat */
-        SDL_EVENT_SYSWM = 0x201,        /**< System specific event */
-        SDL_EVENT_WINDOW_SHOWN,             /**< Window has been shown */
-        SDL_EVENT_WINDOW_HIDDEN,            /**< Window has been hidden */
-        SDL_EVENT_WINDOW_EXPOSED,           /**< Window has been exposed and should be redrawn */
-        SDL_EVENT_WINDOW_MOVED,             /**< Window has been moved to data1, data2 */
-        SDL_EVENT_WINDOW_RESIZED,           /**< Window has been resized to data1xdata2 */
-        SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED,/**< The pixel size of the window has changed to data1xdata2 */
-        SDL_EVENT_WINDOW_MINIMIZED,         /**< Window has been minimized */
-        SDL_EVENT_WINDOW_MAXIMIZED,         /**< Window has been maximized */
-        SDL_EVENT_WINDOW_RESTORED,          /**< Window has been restored to normal size and position */
-        SDL_EVENT_WINDOW_MOUSE_ENTER,       /**< Window has gained mouse focus */
-        SDL_EVENT_WINDOW_MOUSE_LEAVE,       /**< Window has lost mouse focus */
-        SDL_EVENT_WINDOW_FOCUS_GAINED,      /**< Window has gained keyboard focus */
-        SDL_EVENT_WINDOW_FOCUS_LOST,        /**< Window has lost keyboard focus */
-        SDL_EVENT_WINDOW_CLOSE_REQUESTED,   /**< The window manager requests that the window be closed */
-        SDL_EVENT_WINDOW_TAKE_FOCUS,        /**< Window is being offered a focus (should SetWindowInputFocus() on itself or a subwindow, or ignore) */
-        SDL_EVENT_WINDOW_HIT_TEST,          /**< Window had a hit test that wasn't SDL_HITTEST_NORMAL */
-        SDL_EVENT_WINDOW_ICCPROF_CHANGED,   /**< The ICC profile of the window's display has changed */
-        SDL_EVENT_WINDOW_DISPLAY_CHANGED,   /**< Window has been moved to display data1 */
-        SDL_EVENT_WINDOW_FIRST = SDL_EVENT_WINDOW_SHOWN,
-        SDL_EVENT_WINDOW_LAST = SDL_EVENT_WINDOW_DISPLAY_CHANGED,
-
-        /* Keyboard events */
-        SDL_EVENT_KEY_DOWN = 0x300, /**< Key pressed */
-        SDL_EVENT_KEY_UP,                  /**< Key released */
-        SDL_EVENT_TEXT_EDITING,            /**< Keyboard text editing (composition) */
-        SDL_EVENT_TEXT_INPUT,              /**< Keyboard text input */
-        SDL_EVENT_KEYMAP_CHANGED,          /**< Keymap changed due to a system event such as an
-                                            input language or keyboard layout change. */
-        SDL_EVENT_TEXT_EDITING_EXT,        /**< Extended keyboard text editing (composition) */
-
-        /* Mouse events */
-        SDL_EVENT_MOUSE_MOTION = 0x400, /**< Mouse moved */
-        SDL_EVENT_MOUSE_BUTTON_DOWN,       /**< Mouse button pressed */
-        SDL_EVENT_MOUSE_BUTTON_UP,         /**< Mouse button released */
-        SDL_EVENT_MOUSE_WHEEL,             /**< Mouse wheel motion */
-
-        /* Joystick events */
-        SDL_EVENT_JOYSTICK_AXIS_MOTION = 0x600, /**< Joystick axis motion */
-        SDL_EVENT_JOYSTICK_HAT_MOTION = 0x602, /**< Joystick hat position change */
-        SDL_EVENT_JOYSTICK_BUTTON_DOWN,          /**< Joystick button pressed */
-        SDL_EVENT_JOYSTICK_BUTTON_UP,            /**< Joystick button released */
-        SDL_EVENT_JOYSTICK_ADDED,         /**< A new joystick has been inserted into the system */
-        SDL_EVENT_JOYSTICK_REMOVED,       /**< An opened joystick has been removed */
-        SDL_EVENT_JOYSTICK_BATTERY_UPDATED,      /**< Joystick battery level change */
-
-        /* Gamepad events */
-        SDL_EVENT_GAMEPAD_AXIS_MOTION = 0x650, /**< Gamepad axis motion */
-        SDL_EVENT_GAMEPAD_BUTTON_DOWN,          /**< Gamepad button pressed */
-        SDL_EVENT_GAMEPAD_BUTTON_UP,            /**< Gamepad button released */
-        SDL_EVENT_GAMEPAD_ADDED,               /**< A new gamepad has been inserted into the system */
-        SDL_EVENT_GAMEPAD_REMOVED,             /**< An opened gamepad has been removed */
-        SDL_EVENT_GAMEPAD_REMAPPED,            /**< The gamepad mapping was updated */
-        SDL_EVENT_GAMEPAD_TOUCHPAD_DOWN,        /**< Gamepad touchpad was touched */
-        SDL_EVENT_GAMEPAD_TOUCHPAD_MOTION,      /**< Gamepad touchpad finger was moved */
-        SDL_EVENT_GAMEPAD_TOUCHPAD_UP,          /**< Gamepad touchpad finger was lifted */
-        SDL_EVENT_GAMEPAD_SENSOR_UPDATE,        /**< Gamepad sensor was updated */
-
-        /* Touch events */
-        SDL_EVENT_FINGER_DOWN = 0x700,
-        SDL_EVENT_FINGER_UP,
-        SDL_EVENT_FINGER_MOTION,
-
-        /* 0x800, 0x801, and 0x802 were the Gesture events from SDL2. Do not reuse these values! sdl2-compat needs them! */
-
-        /* Clipboard events */
-        SDL_EVENT_CLIPBOARD_UPDATE = 0x900, /**< The clipboard or primary selection changed */
-
-        /* Drag and drop events */
-        SDL_EVENT_DROP_FILE = 0x1000, /**< The system requests a file open */
-        SDL_EVENT_DROP_TEXT,                 /**< text/plain drag-and-drop event */
-        SDL_EVENT_DROP_BEGIN,                /**< A new set of drops is beginning (NULL filename) */
-        SDL_EVENT_DROP_COMPLETE,             /**< Current set of drops is now complete (NULL filename) */
-        SDL_EVENT_DROP_POSITION,             /**< Position while moving over the window */
-
-        /* Audio hotplug events */
-        SDL_EVENT_AUDIO_DEVICE_ADDED = 0x1100, /**< A new audio device is available */
-        SDL_EVENT_AUDIO_DEVICE_REMOVED,        /**< An audio device has been removed. */
-
-        /* Sensor events */
-        SDL_EVENT_SENSOR_UPDATE = 0x1200,     /**< A sensor was updated */
-
-        /* Render events */
-        SDL_EVENT_RENDER_TARGETS_RESET = 0x2000, /**< The render targets have been reset and their contents need to be updated */
-        SDL_EVENT_RENDER_DEVICE_RESET, /**< The device has been reset and all textures need to be recreated */
-
-        /* Internal events */
-        SDL_EVENT_POLL_SENTINEL = 0x7F00, /**< Signals the end of an event poll cycle */
-
-        /** Events ::SDL_EVENT_USER through ::SDL_EVENT_LAST are for your use,
-         *  and should be allocated with SDL_RegisterEvents()
-         */
-        SDL_EVENT_USER = 0x8000,
-
-        /**
-         *  This last event is only for bounding internal arrays
-         */
-        SDL_EVENT_LAST = 0xFFFF
-    }
-
+    
     /// <summary>
     /// Fields shared by every event
     /// </summary>
@@ -3556,417 +3540,6 @@ public static unsafe partial class SDL
     /* Toggle whether or not the cursor is shown */
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern int SDL_ShowCursor(int toggle);
-    #region SDL_touch.h
-
-
-    #endregion
-
-    #region SDL_gamepad.h
-
-    public enum SDL_GamepadBindingType
-    {
-        SDL_GAMEPAD_BINDTYPE_NONE = 0,
-        SDL_GAMEPAD_BINDTYPE_BUTTON,
-        SDL_GAMEPAD_BINDTYPE_AXIS,
-        SDL_GAMEPAD_BINDTYPE_HAT
-    }
-
-    public enum SDL_GamepadAxis
-    {
-        SDL_GAMEPAD_AXIS_INVALID = -1,
-        SDL_GAMEPAD_AXIS_LEFTX,
-        SDL_GAMEPAD_AXIS_LEFTY,
-        SDL_GAMEPAD_AXIS_RIGHTX,
-        SDL_GAMEPAD_AXIS_RIGHTY,
-        SDL_GAMEPAD_AXIS_LEFT_TRIGGER,
-        SDL_GAMEPAD_AXIS_RIGHT_TRIGGER,
-        SDL_GAMEPAD_AXIS_MAX
-    }
-
-    public enum SDL_GamepadButton
-    {
-        SDL_GAMEPAD_BUTTON_INVALID = -1,
-        SDL_GAMEPAD_BUTTON_A,
-        SDL_GAMEPAD_BUTTON_B,
-        SDL_GAMEPAD_BUTTON_X,
-        SDL_GAMEPAD_BUTTON_Y,
-        SDL_GAMEPAD_BUTTON_BACK,
-        SDL_GAMEPAD_BUTTON_GUIDE,
-        SDL_GAMEPAD_BUTTON_START,
-        SDL_GAMEPAD_BUTTON_LEFT_STICK,
-        SDL_GAMEPAD_BUTTON_RIGHT_STICK,
-        SDL_GAMEPAD_BUTTON_LEFT_SHOULDER,
-        SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER,
-        SDL_GAMEPAD_BUTTON_DPAD_UP,
-        SDL_GAMEPAD_BUTTON_DPAD_DOWN,
-        SDL_GAMEPAD_BUTTON_DPAD_LEFT,
-        SDL_GAMEPAD_BUTTON_DPAD_RIGHT,
-        SDL_GAMEPAD_BUTTON_MISC1,    /* Xbox Series X share button, PS5 microphone button, Nintendo Switch Pro capture button, Amazon Luna microphone button */
-        SDL_GAMEPAD_BUTTON_PADDLE1,  /* Xbox Elite paddle P1 (upper left, facing the back) */
-        SDL_GAMEPAD_BUTTON_PADDLE2,  /* Xbox Elite paddle P3 (upper right, facing the back) */
-        SDL_GAMEPAD_BUTTON_PADDLE3,  /* Xbox Elite paddle P2 (lower left, facing the back) */
-        SDL_GAMEPAD_BUTTON_PADDLE4,  /* Xbox Elite paddle P4 (lower right, facing the back) */
-        SDL_GAMEPAD_BUTTON_TOUCHPAD, /* PS4/PS5 touchpad button */
-        SDL_GAMEPAD_BUTTON_MAX
-    }
-
-    public enum SDL_GamepadType
-    {
-        SDL_GAMEPAD_TYPE_UNKNOWN = 0,
-        SDL_GAMEPAD_TYPE_VIRTUAL,
-        SDL_GAMEPAD_TYPE_XBOX360,
-        SDL_GAMEPAD_TYPE_XBOXONE,
-        SDL_GAMEPAD_TYPE_PS3,
-        SDL_GAMEPAD_TYPE_PS4,
-        SDL_GAMEPAD_TYPE_PS5,
-        SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_PRO,
-        SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_LEFT,
-        SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT,
-        SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_PAIR,
-        SDL_GAMEPAD_TYPE_AMAZON_LUNA,
-        SDL_GAMEPAD_TYPE_GOOGLE_STADIA,
-        SDL_GAMEPAD_TYPE_NVIDIA_SHIELD
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct INTERNAL_GamepadBindingButtonBind_hat
-    {
-        public int hat;
-        public int hat_mask;
-    }
-
-    [StructLayout(LayoutKind.Explicit)]
-    public struct INTERNAL_SDL_GamepadBindingBind_union
-    {
-        [FieldOffset(0)]
-        public int button;
-        [FieldOffset(0)]
-        public int axis;
-        [FieldOffset(0)]
-        public INTERNAL_GamepadBindingButtonBind_hat hat;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct SDL_GamepadBinding
-    {
-        public SDL_GamepadBindingType bindType;
-        public INTERNAL_SDL_GamepadBindingBind_union value;
-    }
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_AddGamepadMapping), CallingConvention = CallingConvention.Cdecl)]
-    private static extern int INTERNAL_SDL_AddGamepadMapping(byte* mappingString);
-
-    public static int SDL_AddGamepadMapping(string mappingString
-    )
-    {
-        byte* utf8MappingString = Utf8EncodeHeap(mappingString);
-        int result = INTERNAL_SDL_AddGamepadMapping(
-            utf8MappingString
-        );
-
-        NativeMemory.Free(utf8MappingString);
-        return result;
-    }
-
-    /* Only available in 2.0.6 or higher. */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetNumGamepadMappings();
-
-    /* Only available in 2.0.6 or higher. */
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadMappingForIndex), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadMappingForIndex(int mapping_index);
-    public static string SDL_GetGamepadMappingForIndex(int mapping_index)
-    {
-        return GetString(INTERNAL_SDL_GetGamepadMappingForIndex(mapping_index), true);
-    }
-
-    /* THIS IS AN RWops FUNCTION! */
-    [DllImport(LibName, EntryPoint = "SDL_AddGamepadMappingsFromRW", CallingConvention = CallingConvention.Cdecl)]
-    private static extern int INTERNAL_SDL_AddGamepadMappingsFromRW(
-        IntPtr rw,
-        int freerw
-    );
-    public static int SDL_AddGamepadMappingsFromFile(string file)
-    {
-        IntPtr rwops = SDL_RWFromFile(file, "rb");
-        return INTERNAL_SDL_AddGamepadMappingsFromRW(rwops, 1);
-    }
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadMappingForGUID), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadMappingForGUIDD(
-        Guid guid
-    );
-    public static string SDL_GetGamepadMappingForGUID(Guid guid)
-    {
-        return GetString(
-            INTERNAL_SDL_GetGamepadMappingForGUIDD(guid),
-            true
-        );
-    }
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadMapping), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadMapping(SDL_Gamepad gamepad);
-
-    public static string SDL_GetGamepadMapping(SDL_Gamepad gamepad)
-    {
-        return GetString(
-            INTERNAL_SDL_GetGamepadMapping(
-                gamepad
-            ),
-            true
-        );
-    }
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_IsGamepad(SDL_JoystickID instance_id);
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadInstanceName), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadInstanceName(SDL_JoystickID instance_id);
-
-    public static string SDL_GetGamepadInstanceName(SDL_JoystickID instance_id)
-    {
-        return GetString(
-            INTERNAL_SDL_GetGamepadInstanceName(instance_id)
-        );
-    }
-
-    /* Only available in 2.0.9 or higher. */
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadInstanceMapping), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadInstanceMapping(SDL_JoystickID instance_id);
-
-    public static string SDL_GetGamepadInstanceMapping(SDL_JoystickID instance_id)
-    {
-        return GetString(
-            INTERNAL_SDL_GetGamepadInstanceMapping(instance_id),
-            true
-        );
-    }
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Gamepad SDL_OpenGamepad(SDL_JoystickID instance_id);
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadName), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadName(SDL_Gamepad gamepad);
-
-    public static string SDL_GetGamepadName(SDL_Gamepad gamepad)
-    {
-        return GetString(
-            INTERNAL_SDL_GetGamepadName(gamepad)
-        );
-    }
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort SDL_GetGamepadVendor(SDL_Gamepad gamepad);
-
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort SDL_GetGamepadProduct(SDL_Gamepad gamepad);
-
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort SDL_GetGamepadProductVersion(SDL_Gamepad gamepad);
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadSerial), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadSerial(SDL_Gamepad gamepad);
-
-    public static string SDL_GetGamepadSerial(SDL_Gamepad gamepad)
-    {
-        return GetString(
-            INTERNAL_SDL_GetGamepadSerial(gamepad)
-        );
-    }
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GamepadConnected(SDL_Gamepad gamepad);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Joystick SDL_GetGamepadJoystick(SDL_Gamepad gamepad);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_SetGamepadEventsEnabled(SDL_bool enabled);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GamepadEventsEnabled();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_UpdateGamepads();
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadAxisFromString), CallingConvention = CallingConvention.Cdecl)]
-    private static extern unsafe SDL_GamepadAxis INTERNAL_SDL_GetGamepadAxisFromString(byte* str);
-
-    public static unsafe SDL_GamepadAxis SDL_GetGamepadAxisFromString(
-        string str
-    )
-    {
-        int utf8PchStringBufSize = Utf8Size(str);
-        byte* utf8PchString = stackalloc byte[utf8PchStringBufSize];
-        return INTERNAL_SDL_GetGamepadAxisFromString(
-            Utf8Encode(str, utf8PchString, utf8PchStringBufSize)
-        );
-    }
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadStringForAxis), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadStringForAxis(SDL_GamepadAxis axis);
-
-    public static string SDL_GetGamepadStringForAxis(SDL_GamepadAxis axis)
-    {
-        return GetString(
-            INTERNAL_SDL_GetGamepadStringForAxis(
-                axis
-            )
-        );
-    }
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_GamepadBinding INTERNAL_SDL_GetGamepadBindForAxis(SDL_Gamepad gamepad, SDL_GamepadAxis axis);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern short SDL_GetGamepadAxis(SDL_Gamepad gamepad, SDL_GamepadAxis axis);
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadButtonFromString), CallingConvention = CallingConvention.Cdecl)]
-    private static extern SDL_GamepadButton INTERNAL_SDL_GetGamepadButtonFromString(
-        byte* str
-    );
-    public static SDL_GamepadButton SDL_GetGamepadButtonFromString(string str)
-    {
-        int utf8PchStringBufSize = Utf8Size(str);
-        byte* utf8PchString = stackalloc byte[utf8PchStringBufSize];
-        return INTERNAL_SDL_GetGamepadButtonFromString(
-            Utf8Encode(str, utf8PchString, utf8PchStringBufSize)
-        );
-    }
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadStringForButton), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadStringForButton(SDL_GamepadButton button);
-
-    public static string SDL_GetGamepadStringForButton(SDL_GamepadButton button)
-    {
-        return GetString(
-            INTERNAL_SDL_GetGamepadStringForButton(button)
-        );
-    }
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_GamepadBinding SDL_GetGamepadBindForButton(SDL_Gamepad gamepad, SDL_GamepadButton button);
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern byte SDL_GetGamepadButton(SDL_Gamepad gamepad, SDL_GamepadButton button);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_RumbleGamepad(
-        SDL_Gamepad gamepad,
-        ushort low_frequency_rumble,
-        ushort high_frequency_rumble,
-        uint duration_ms
-    );
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_RumbleGamepadTriggers(
-        SDL_Gamepad gamepad,
-        ushort left_rumble,
-        ushort right_rumble,
-        uint duration_ms
-    );
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_CloseGamepad(SDL_Gamepad gamepad);
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadAppleSFSymbolsNameForButton), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadAppleSFSymbolsNameForButton(
-        SDL_Gamepad gamepad,
-        SDL_GamepadButton button
-    );
-    public static string SDL_GetGamepadAppleSFSymbolsNameForButton(SDL_Gamepad gamepad, SDL_GamepadButton button
-    )
-    {
-        return GetString(
-            INTERNAL_SDL_GetGamepadAppleSFSymbolsNameForButton(gamepad, button)
-        );
-    }
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadAppleSFSymbolsNameForAxis), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadAppleSFSymbolsNameForAxis(
-        SDL_Gamepad gamepad,
-        SDL_GamepadAxis axis
-    );
-
-    public static string SDL_GetGamepadAppleSFSymbolsNameForAxis(SDL_Gamepad gamepad, SDL_GamepadAxis axis)
-    {
-        return GetString(
-            INTERNAL_SDL_GetGamepadAppleSFSymbolsNameForAxis(gamepad, axis)
-        );
-    }
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Gamepad SDL_GetGamepadFromInstanceID(SDL_JoystickID instance_id);
-
-    /* Only available in 2.0.11 or higher. */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_GamepadType SDL_GetGamepadInstanceType(
-        SDL_JoystickID instance_id
-    );
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_GamepadType SDL_GetGamepadType(SDL_Gamepad gamepad);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Gamepad SDL_GetGamepadFromPlayerIndex(int player_index);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_SetGamepadPlayerIndex(SDL_Gamepad gamepad, int player_index);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GamepadHasLED(SDL_Gamepad gamepad);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GamepadHasRumble(SDL_Gamepad gamepad);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GamepadHasRumbleTriggers(SDL_Gamepad gamepad);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_SetGamepadLED(SDL_Gamepad gamepad, byte red, byte green, byte blue);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GamepadHasAxis(SDL_Gamepad gamepad, SDL_GamepadAxis axis);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GamepadHasButton(SDL_Gamepad gamepad, SDL_GamepadButton button);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetNumGamepadTouchpads(SDL_Gamepad gamepad);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetNumGamepadTouchpadFingers(SDL_Gamepad gamepad, int touchpad);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetGamepadTouchpadFinger(
-        SDL_Gamepad gamepad,
-        int touchpad,
-        int finger,
-        out byte state,
-        out float x,
-        out float y,
-        out float pressure
-    );
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GamepadHasSensor(SDL_Gamepad gamepad, SDL_SensorType type);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_SetGamepadSensorEnabled(SDL_Gamepad gamepad, SDL_SensorType type, SDL_bool enabled);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GamepadSensorEnabled(SDL_Gamepad gamepad, SDL_SensorType type);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern float SDL_GetGamepadSensorDataRate(SDL_Gamepad gamepad, SDL_SensorType type);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetGamepadSensorData(SDL_Gamepad gamepad, SDL_SensorType type, float* data, int num_values);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_SendGamepadEffect(SDL_Gamepad gamepad, IntPtr data, int size);
-    #endregion
 
     public static uint SDL_BUTTON(uint X)
     {

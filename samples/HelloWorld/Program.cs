@@ -3,11 +3,11 @@
 
 using Alimer.Bindings.SDL;
 using static Alimer.Bindings.SDL.SDL;
-using static Alimer.Bindings.SDL.SDL.SDL_EventType;
+using static Alimer.Bindings.SDL.SDL_EventType;
 using static Alimer.Bindings.SDL.SDL_GLattr;
 using static Alimer.Bindings.SDL.SDL_GLprofile;
-using static Alimer.Bindings.SDL.SDL.SDL_InitFlags;
-using static Alimer.Bindings.SDL.SDL.SDL_WindowFlags;
+using static Alimer.Bindings.SDL.SDL_InitFlags;
+using static Alimer.Bindings.SDL.SDL_WindowFlags;
 using static Alimer.Bindings.SDL.SDL_LogPriority;
 using System.Drawing;
 using System.Runtime.CompilerServices;

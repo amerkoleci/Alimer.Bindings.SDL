@@ -98,6 +98,7 @@ struct SDL_Window
     SDL_bool surface_valid;
 
     SDL_bool is_hiding;
+    SDL_bool restore_on_show; /* Child was hidden recursively by the parent, restore when shown. */
     SDL_bool is_destroying;
     SDL_bool is_dropping; /* drag/drop in progress, expecting SDL_SendDropComplete(). */
 
@@ -114,12 +115,21 @@ struct SDL_Window
 
     SDL_Window *prev;
     SDL_Window *next;
+
+    SDL_Window *parent;
+    SDL_Window *first_child;
+    SDL_Window *prev_sibling;
+    SDL_Window *next_sibling;
 };
 #define SDL_WINDOW_FULLSCREEN_VISIBLE(W)        \
     ((((W)->flags & SDL_WINDOW_FULLSCREEN) != 0) &&   \
      (((W)->flags & SDL_WINDOW_HIDDEN) == 0) && \
      (((W)->flags & SDL_WINDOW_MINIMIZED) == 0))
 
+#define SDL_WINDOW_IS_POPUP(W)                   \
+    ((((W)->flags & SDL_WINDOW_TOOLTIP) != 0) || \
+    (((W)->flags & SDL_WINDOW_POPUP_MENU) != 0)) \
+                                                 \
 /*
  * Define the SDL display structure.
  * This corresponds to physical monitors attached to the system.
@@ -153,6 +163,7 @@ typedef enum
 {
     VIDEO_DEVICE_QUIRK_MODE_SWITCHING_EMULATED = 0x01,
     VIDEO_DEVICE_QUIRK_DISABLE_UNSET_FULLSCREEN_ON_MINIMIZE = 0x02,
+    VIDEO_DEVICE_QUIRK_HAS_POPUP_WINDOW_SUPPORT = 0x04,
 } DeviceQuirkFlags;
 
 struct SDL_VideoDevice
@@ -354,6 +365,7 @@ struct SDL_VideoDevice
     char *primary_selection_text;
     SDL_bool setting_display_mode;
     Uint32 quirk_flags;
+    SDL_SystemTheme system_theme;
 
     /* * * */
     /* Data used by the GL drivers */
@@ -427,11 +439,11 @@ struct SDL_VideoDevice
     SDL_VideoData *driverdata;
     struct SDL_GLDriverData *gl_data;
 
-#if SDL_VIDEO_OPENGL_EGL
+#ifdef SDL_VIDEO_OPENGL_EGL
     struct SDL_EGL_VideoData *egl_data;
 #endif
 
-#if SDL_VIDEO_OPENGL_ES || SDL_VIDEO_OPENGL_ES2
+#if defined(SDL_VIDEO_OPENGL_ES) || defined(SDL_VIDEO_OPENGL_ES2)
     struct SDL_PrivateGLESData *gles_data;
 #endif
 
@@ -471,11 +483,13 @@ extern VideoBootStrap VIVANTE_bootstrap;
 extern VideoBootStrap Emscripten_bootstrap;
 extern VideoBootStrap OFFSCREEN_bootstrap;
 extern VideoBootStrap NGAGE_bootstrap;
+extern VideoBootStrap QNX_bootstrap;
 
 /* Use SDL_OnVideoThread() sparingly, to avoid regressions in use cases that currently happen to work */
 extern SDL_bool SDL_OnVideoThread(void);
 extern SDL_VideoDevice *SDL_GetVideoDevice(void);
 extern SDL_bool SDL_IsVideoContextExternal(void);
+extern void SDL_SetSystemTheme(SDL_SystemTheme theme);
 extern SDL_DisplayID SDL_AddBasicVideoDisplay(const SDL_DisplayMode *desktop_mode);
 extern SDL_DisplayID SDL_AddVideoDisplay(const SDL_VideoDisplay *display, SDL_bool send_event);
 extern void SDL_DelVideoDisplay(SDL_DisplayID display, SDL_bool send_event);
@@ -494,6 +508,8 @@ extern void SDL_GL_DeduceMaxSupportedESProfile(int *major, int *minor);
 
 extern int SDL_RecreateWindow(SDL_Window *window, Uint32 flags);
 extern SDL_bool SDL_HasWindows(void);
+extern void SDL_RelativeToGlobalForWindow(SDL_Window *window, int rel_x, int rel_y, int *abs_x, int *abs_y);
+extern void SDL_GlobalToRelativeForWindow(SDL_Window *window, int abs_x, int abs_y, int *rel_x, int *rel_y);
 
 extern void SDL_OnWindowShown(SDL_Window *window);
 extern void SDL_OnWindowHidden(SDL_Window *window);

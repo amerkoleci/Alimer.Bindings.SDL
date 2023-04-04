@@ -138,9 +138,9 @@ struct SDL_AudioDevice
     SDL_AudioStream *stream;
 
     /* Current state flags */
-    SDL_atomic_t shutdown; /* true if we are signaling the play thread to end. */
-    SDL_atomic_t enabled;  /* true if device is functioning and connected. */
-    SDL_atomic_t paused;
+    SDL_AtomicInt shutdown; /* true if we are signaling the play thread to end. */
+    SDL_AtomicInt enabled;  /* true if device is functioning and connected. */
+    SDL_AtomicInt paused;
     SDL_bool iscapture;
 
     /* Scratch buffer used in the bridge between SDL and the user callback. */
@@ -198,5 +198,6 @@ extern AudioBootStrap PSPAUDIO_bootstrap;
 extern AudioBootStrap VITAAUD_bootstrap;
 extern AudioBootStrap N3DSAUDIO_bootstrap;
 extern AudioBootStrap EMSCRIPTENAUDIO_bootstrap;
+extern AudioBootStrap QSAAUDIO_bootstrap;
 
 #endif /* SDL_sysaudio_h_ */

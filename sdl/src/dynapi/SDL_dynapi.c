@@ -42,9 +42,9 @@
 /* This is the version of the dynamic API. This doesn't match the SDL version
    and should not change until there's been a major revamp in API/ABI.
    So 2.0.5 adds functions over 2.0.4? This number doesn't change;
-   the sizeof (jump_table) changes instead. But 2.1.0 changes how a function
+   the sizeof(jump_table) changes instead. But 2.1.0 changes how a function
    works in an incompatible way or removes a function? This number changes,
-   since sizeof (jump_table) isn't sufficient anymore. It's likely
+   since sizeof(jump_table) isn't sufficient anymore. It's likely
    we'll forget to bump every time we add a function, so this is the
    failsafe switch for major API change decisions. Respect it and use it
    sparingly. */
@@ -408,6 +408,7 @@ static SDL_INLINE void *get_sdlapi_entry(const char *fname, const char *sym)
 static void dynapi_warn(const char *msg)
 {
     const char *caption = "SDL Dynamic API Failure!";
+    (void)caption;
 /* SDL_ShowSimpleMessageBox() is a too heavy for here. */
 #if (defined(WIN32) || defined(_WIN32) || defined(__CYGWIN__)) && !defined(__XBOXONE__) && !defined(__XBOXSERIES__)
     MessageBoxA(NULL, msg, caption, MB_OK | MB_ICONERROR);
@@ -424,7 +425,7 @@ static void dynapi_warn(const char *msg)
 extern "C" {
 #endif
 extern SDL_NORETURN void SDL_ExitProcess(int exitcode);
-#if defined(__WATCOMC__)
+#ifdef __WATCOMC__
 #pragma aux SDL_ExitProcess aborts;
 #endif
 #ifdef __cplusplus
@@ -484,7 +485,7 @@ static void SDL_InitDynamicAPI(void)
 /* SDL_AtomicLock calls SDL mutex functions to emulate if
    SDL_ATOMIC_DISABLED, which we can't do here, so in such a
    configuration, you're on your own. */
-#if !SDL_ATOMIC_DISABLED
+#ifndef SDL_ATOMIC_DISABLED
     static SDL_SpinLock lock = 0;
     SDL_AtomicLock_REAL(&lock);
 #endif
@@ -494,7 +495,7 @@ static void SDL_InitDynamicAPI(void)
         already_initialized = SDL_TRUE;
     }
 
-#if !SDL_ATOMIC_DISABLED
+#ifndef SDL_ATOMIC_DISABLED
     SDL_AtomicUnlock_REAL(&lock);
 #endif
 }

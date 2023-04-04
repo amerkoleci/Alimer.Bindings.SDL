@@ -22,7 +22,7 @@
 
 #include "../SDL_syshaptic.h"
 
-#if SDL_HAPTIC_XINPUT
+#ifdef SDL_HAPTIC_XINPUT
 
 #include "SDL_windowshaptic_c.h"
 #include "SDL_xinputhaptic_c.h"
@@ -88,7 +88,7 @@ int SDL_XINPUT_HapticMaybeAddDevice(const DWORD dwUserid)
     /* !!! FIXME: I'm not bothering to query for a real name right now (can we even?) */
     {
         char buf[64];
-        (void)SDL_snprintf(buf, sizeof buf, "XInput Controller #%u", userid + 1);
+        (void)SDL_snprintf(buf, sizeof(buf), "XInput Controller #%u", userid + 1);
         item->name = SDL_strdup(buf);
     }
 
@@ -199,7 +199,7 @@ static int SDL_XINPUT_HapticOpenFromUserIndex(SDL_Haptic *haptic, const Uint8 us
         return SDL_SetError("Couldn't create XInput haptic mutex");
     }
 
-    (void)SDL_snprintf(threadName, sizeof threadName, "SDLXInputDev%u", userid);
+    (void)SDL_snprintf(threadName, sizeof(threadName), "SDLXInputDev%d", userid);
     haptic->hwdata->thread = SDL_CreateThreadInternal(SDL_RunXInputHaptic, threadName, 64 * 1024, haptic->hwdata);
 
     if (haptic->hwdata->thread == NULL) {
@@ -226,7 +226,7 @@ int SDL_XINPUT_JoystickSameHaptic(SDL_Haptic *haptic, SDL_Joystick *joystick)
 int SDL_XINPUT_HapticOpenFromJoystick(SDL_Haptic *haptic, SDL_Joystick *joystick)
 {
     SDL_hapticlist_item *item;
-    int index = 0;
+    Uint8 index = 0;
 
     /* Since it comes from a joystick we have to try to match it with a haptic device on our haptic list. */
     for (item = SDL_hapticlist; item != NULL; item = item->next) {

@@ -42,7 +42,7 @@
 #elif defined(__FreeBSD__) && defined(__powerpc__)
 #include <machine/cpu.h>
 #include <sys/auxv.h>
-#elif SDL_ALTIVEC_BLITTERS && HAVE_SETJMP
+#elif defined(SDL_ALTIVEC_BLITTERS) && defined(HAVE_SETJMP)
 #include <signal.h>
 #include <setjmp.h>
 #endif
@@ -87,27 +87,26 @@
 #include <kernel/OS.h>
 #endif
 
-#define CPU_HAS_RDTSC    (1 << 0)
-#define CPU_HAS_ALTIVEC  (1 << 1)
-#define CPU_HAS_MMX      (1 << 2)
-#define CPU_HAS_SSE      (1 << 3)
-#define CPU_HAS_SSE2     (1 << 4)
-#define CPU_HAS_SSE3     (1 << 5)
-#define CPU_HAS_SSE41    (1 << 6)
-#define CPU_HAS_SSE42    (1 << 7)
-#define CPU_HAS_AVX      (1 << 8)
-#define CPU_HAS_AVX2     (1 << 9)
-#define CPU_HAS_NEON     (1 << 10)
-#define CPU_HAS_AVX512F  (1 << 11)
-#define CPU_HAS_ARM_SIMD (1 << 12)
-#define CPU_HAS_LSX      (1 << 13)
-#define CPU_HAS_LASX     (1 << 14)
+#define CPU_HAS_ALTIVEC  (1 << 0)
+#define CPU_HAS_MMX      (1 << 1)
+#define CPU_HAS_SSE      (1 << 2)
+#define CPU_HAS_SSE2     (1 << 3)
+#define CPU_HAS_SSE3     (1 << 4)
+#define CPU_HAS_SSE41    (1 << 5)
+#define CPU_HAS_SSE42    (1 << 6)
+#define CPU_HAS_AVX      (1 << 7)
+#define CPU_HAS_AVX2     (1 << 8)
+#define CPU_HAS_NEON     (1 << 9)
+#define CPU_HAS_AVX512F  (1 << 10)
+#define CPU_HAS_ARM_SIMD (1 << 11)
+#define CPU_HAS_LSX      (1 << 12)
+#define CPU_HAS_LASX     (1 << 13)
 
 #define CPU_CFG2      0x2
 #define CPU_CFG2_LSX  (1 << 6)
 #define CPU_CFG2_LASX (1 << 7)
 
-#if SDL_ALTIVEC_BLITTERS && HAVE_SETJMP && !__MACOS__ && !__OpenBSD__ && !__FreeBSD__
+#if defined(SDL_ALTIVEC_BLITTERS) && defined(HAVE_SETJMP) && !defined(__MACOS__) && !defined(__OpenBSD__) && !defined(__FreeBSD__)
 /* This is the brute force way of detecting instruction sets...
    the idea is borrowed from the libmpeg2 library - thanks!
  */
@@ -246,15 +245,16 @@ done:
         __asm mov c, ecx \
         __asm mov d, edx                   \
     }
-#elif defined(_MSC_VER) && defined(_M_X64)
-#define cpuid(func, a, b, c, d) \
-    {                           \
-        int CPUInfo[4];         \
-        __cpuid(CPUInfo, func); \
-        a = CPUInfo[0];         \
-        b = CPUInfo[1];         \
-        c = CPUInfo[2];         \
-        d = CPUInfo[3];         \
+#elif (defined(_MSC_VER) && defined(_M_X64))
+/* Use __cpuidex instead of __cpuid because ICL does not clear ecx register */
+#define cpuid(func, a, b, c, d)      \
+    {                                \
+        int CPUInfo[4];              \
+        __cpuidex(CPUInfo, func, 0); \
+        a = CPUInfo[0];              \
+        b = CPUInfo[1];              \
+        c = CPUInfo[2];              \
+        d = CPUInfo[3];              \
     }
 #else
 #define cpuid(func, a, b, c, d) \
@@ -335,7 +335,7 @@ static int CPU_haveAltiVec(void)
     elf_aux_info(AT_HWCAP, &cpufeatures, sizeof(cpufeatures));
     altivec = cpufeatures & PPC_FEATURE_HAS_ALTIVEC;
     return altivec;
-#elif SDL_ALTIVEC_BLITTERS && HAVE_SETJMP
+#elif defined(SDL_ALTIVEC_BLITTERS) && defined(HAVE_SETJMP)
     void (*handler)(int sig);
     handler = signal(SIGILL, illegal_instruction);
     if (setjmp(jmpbuf) == 0) {
@@ -370,7 +370,7 @@ static int CPU_haveARMSIMD(void)
     fd = open("/proc/self/auxv", O_RDONLY | O_CLOEXEC);
     if (fd >= 0) {
         Elf32_auxv_t aux;
-        while (read(fd, &aux, sizeof aux) == sizeof aux) {
+        while (read(fd, &aux, sizeof(aux)) == sizeof(aux)) {
             if (aux.a_type == AT_PLATFORM) {
                 const char *plat = (const char *)aux.a_un.a_val;
                 if (plat) {
@@ -439,21 +439,21 @@ static int CPU_haveNEON(void)
 {
 /* The way you detect NEON is a privileged instruction on ARM, so you have
    query the OS kernel in a platform-specific way. :/ */
-#if defined(SDL_CPUINFO_DISABLED)
+#ifdef SDL_CPUINFO_DISABLED
     return 0; /* disabled */
 #elif (defined(__WINDOWS__) || defined(__WINRT__) || defined(__GDK__)) && (defined(_M_ARM) || defined(_M_ARM64))
 /* Visual Studio, for ARM, doesn't define __ARM_ARCH. Handle this first. */
 /* Seems to have been removed */
-#if !defined(PF_ARM_NEON_INSTRUCTIONS_AVAILABLE)
+#ifndef PF_ARM_NEON_INSTRUCTIONS_AVAILABLE
 #define PF_ARM_NEON_INSTRUCTIONS_AVAILABLE 19
 #endif
     /* All WinRT ARM devices are required to support NEON, but just in case. */
     return IsProcessorFeaturePresent(PF_ARM_NEON_INSTRUCTIONS_AVAILABLE) != 0;
 #elif (defined(__ARM_ARCH) && (__ARM_ARCH >= 8)) || defined(__aarch64__)
     return 1; /* ARMv8 always has non-optional NEON support. */
-#elif __VITA__
+#elif defined(__VITA__)
     return 1;
-#elif __3DS__
+#elif defined(__3DS__)
     return 0;
 #elif defined(__APPLE__) && defined(__ARM_ARCH) && (__ARM_ARCH >= 7)
     /* (note that sysctlbyname("hw.optional.neon") doesn't work!) */
@@ -519,45 +519,43 @@ static int CPU_readCPUCFG(void)
 #define CPU_haveLSX()  (CPU_readCPUCFG() & CPU_CFG2_LSX)
 #define CPU_haveLASX() (CPU_readCPUCFG() & CPU_CFG2_LASX)
 
-#if defined(__e2k__)
-#define CPU_haveRDTSC() (0)
-#if defined(__MMX__)
+#ifdef __e2k__
+#ifdef __MMX__
 #define CPU_haveMMX() (1)
 #else
 #define CPU_haveMMX() (0)
 #endif
-#if defined(__SSE__)
+#ifdef __SSE__
 #define CPU_haveSSE() (1)
 #else
 #define CPU_haveSSE() (0)
 #endif
-#if defined(__SSE2__)
+#ifdef __SSE2__
 #define CPU_haveSSE2() (1)
 #else
 #define CPU_haveSSE2() (0)
 #endif
-#if defined(__SSE3__)
+#ifdef __SSE3__
 #define CPU_haveSSE3() (1)
 #else
 #define CPU_haveSSE3() (0)
 #endif
-#if defined(__SSE4_1__)
+#ifdef __SSE4_1__
 #define CPU_haveSSE41() (1)
 #else
 #define CPU_haveSSE41() (0)
 #endif
-#if defined(__SSE4_2__)
+#ifdef __SSE4_2__
 #define CPU_haveSSE42() (1)
 #else
 #define CPU_haveSSE42() (0)
 #endif
-#if defined(__AVX__)
+#ifdef __AVX__
 #define CPU_haveAVX() (1)
 #else
 #define CPU_haveAVX() (0)
 #endif
 #else
-#define CPU_haveRDTSC() (CPU_CPUIDFeatures[3] & 0x00000010)
 #define CPU_haveMMX()   (CPU_CPUIDFeatures[3] & 0x00800000)
 #define CPU_haveSSE()   (CPU_CPUIDFeatures[3] & 0x02000000)
 #define CPU_haveSSE2()  (CPU_CPUIDFeatures[3] & 0x04000000)
@@ -567,11 +565,11 @@ static int CPU_readCPUCFG(void)
 #define CPU_haveAVX()   (CPU_OSSavesYMM && (CPU_CPUIDFeatures[2] & 0x10000000))
 #endif
 
-#if defined(__e2k__)
+#ifdef __e2k__
 inline int
 CPU_haveAVX2(void)
 {
-#if defined(__AVX2__)
+#ifdef __AVX2__
     return 1;
 #else
     return 0;
@@ -593,7 +591,7 @@ static int CPU_haveAVX2(void)
 }
 #endif
 
-#if defined(__e2k__)
+#ifdef __e2k__
 inline int
 CPU_haveAVX512F(void)
 {
@@ -648,7 +646,7 @@ int SDL_GetCPUCount(void)
     return SDL_CPUCount;
 }
 
-#if defined(__e2k__)
+#ifdef __e2k__
 inline const char *
 SDL_GetCPUType(void)
 {
@@ -706,7 +704,7 @@ static const char *SDL_GetCPUType(void)
 
 #if 0
 !!! FIXME: Not used at the moment. */
-#if defined(__e2k__)
+#ifdef __e2k__
 inline const char *
 SDL_GetCPUName(void)
 {
@@ -868,9 +866,6 @@ static Uint32 SDL_GetCPUFeatures(void)
         CPU_calcCPUIDFeatures();
         SDL_CPUFeatures = 0;
         SDL_SIMDAlignment = sizeof(void *); /* a good safe base value */
-        if (CPU_haveRDTSC()) {
-            SDL_CPUFeatures |= CPU_HAS_RDTSC;
-        }
         if (CPU_haveAltiVec()) {
             SDL_CPUFeatures |= CPU_HAS_ALTIVEC;
             SDL_SIMDAlignment = SDL_max(SDL_SIMDAlignment, 16);
@@ -932,11 +927,6 @@ static Uint32 SDL_GetCPUFeatures(void)
 }
 
 #define CPU_FEATURE_AVAILABLE(f) ((SDL_GetCPUFeatures() & (f)) ? SDL_TRUE : SDL_FALSE)
-
-SDL_bool SDL_HasRDTSC(void)
-{
-    return CPU_FEATURE_AVAILABLE(CPU_HAS_RDTSC);
-}
 
 SDL_bool
 SDL_HasAltiVec(void)

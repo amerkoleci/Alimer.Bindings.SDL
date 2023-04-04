@@ -20,7 +20,7 @@
 */
 #include "SDL_internal.h"
 
-#if SDL_VIDEO_DRIVER_UIKIT
+#ifdef SDL_VIDEO_DRIVER_UIKIT
 
 #import <UIKit/UIKit.h>
 
@@ -74,6 +74,7 @@ static SDL_VideoDevice *UIKit_CreateDevice(void)
         }
 
         device->driverdata = (SDL_VideoData *)CFBridgingRetain(data);
+        device->system_theme = UIKit_GetSystemTheme();
 
         /* Set the function pointers */
         device->VideoInit = UIKit_VideoInit;
@@ -95,7 +96,7 @@ static SDL_VideoDevice *UIKit_CreateDevice(void)
         device->GetDisplayUsableBounds = UIKit_GetDisplayUsableBounds;
         device->GetWindowSizeInPixels = UIKit_GetWindowSizeInPixels;
 
-#if SDL_IPHONE_KEYBOARD
+#ifdef SDL_IPHONE_KEYBOARD
         device->HasScreenKeyboardSupport = UIKit_HasScreenKeyboardSupport;
         device->ShowScreenKeyboard = UIKit_ShowScreenKeyboard;
         device->HideScreenKeyboard = UIKit_HideScreenKeyboard;
@@ -108,7 +109,7 @@ static SDL_VideoDevice *UIKit_CreateDevice(void)
         device->HasClipboardText = UIKit_HasClipboardText;
 
         /* OpenGL (ES) functions */
-#if SDL_VIDEO_OPENGL_ES || SDL_VIDEO_OPENGL_ES2
+#if defined(SDL_VIDEO_OPENGL_ES) || defined(SDL_VIDEO_OPENGL_ES2)
         device->GL_MakeCurrent = UIKit_GL_MakeCurrent;
         device->GL_SwapWindow = UIKit_GL_SwapWindow;
         device->GL_CreateContext = UIKit_GL_CreateContext;
@@ -118,14 +119,14 @@ static SDL_VideoDevice *UIKit_CreateDevice(void)
 #endif
         device->free = UIKit_DeleteDevice;
 
-#if SDL_VIDEO_VULKAN
+#ifdef SDL_VIDEO_VULKAN
         device->Vulkan_LoadLibrary = UIKit_Vulkan_LoadLibrary;
         device->Vulkan_UnloadLibrary = UIKit_Vulkan_UnloadLibrary;
         device->Vulkan_GetInstanceExtensions = UIKit_Vulkan_GetInstanceExtensions;
         device->Vulkan_CreateSurface = UIKit_Vulkan_CreateSurface;
 #endif
 
-#if SDL_VIDEO_METAL
+#ifdef SDL_VIDEO_METAL
         device->Metal_CreateView = UIKit_Metal_CreateView;
         device->Metal_DestroyView = UIKit_Metal_DestroyView;
         device->Metal_GetLayer = UIKit_Metal_GetLayer;
@@ -175,14 +176,27 @@ int UIKit_SuspendScreenSaver(_THIS)
     return 0;
 }
 
-SDL_bool
-UIKit_IsSystemVersionAtLeast(double version)
+SDL_bool UIKit_IsSystemVersionAtLeast(double version)
 {
     return [[UIDevice currentDevice].systemVersion doubleValue] >= version;
 }
 
-CGRect
-UIKit_ComputeViewFrame(SDL_Window *window, UIScreen *screen)
+SDL_SystemTheme UIKit_GetSystemTheme(void)
+{
+    if (@available(iOS 12.0, tvOS 10.0, *)) {
+        switch ([UIScreen mainScreen].traitCollection.userInterfaceStyle) {
+        case UIUserInterfaceStyleDark:
+            return SDL_SYSTEM_THEME_DARK;
+        case UIUserInterfaceStyleLight:
+            return SDL_SYSTEM_THEME_LIGHT;
+        default:
+            break;
+        }
+    }
+    return SDL_SYSTEM_THEME_UNKNOWN;
+}
+
+CGRect UIKit_ComputeViewFrame(SDL_Window *window, UIScreen *screen)
 {
     SDL_UIKitWindowData *data = (__bridge SDL_UIKitWindowData *)window->driverdata;
     CGRect frame = screen.bounds;
@@ -251,7 +265,7 @@ void UIKit_ForceUpdateHomeIndicator()
  *  identical!
  */
 
-#if !defined(SDL_VIDEO_DRIVER_COCOA)
+#ifndef SDL_VIDEO_DRIVER_COCOA
 void SDL_NSLog(const char *prefix, const char *text)
 {
     @autoreleasepool {

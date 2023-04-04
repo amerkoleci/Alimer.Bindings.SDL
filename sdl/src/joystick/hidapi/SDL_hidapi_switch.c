@@ -681,12 +681,15 @@ static void SDLCALL SDL_HomeLEDHintChanged(void *userdata, const char *name, con
 
         if (SDL_strchr(hint, '.') != NULL) {
             value = (int)(100.0f * SDL_atof(hint));
+            if (value > 255) {
+                value = 255;
+            }
         } else if (SDL_GetStringBoolean(hint, SDL_TRUE)) {
             value = 100;
         } else {
             value = 0;
         }
-        SetHomeLED(ctx, value);
+        SetHomeLED(ctx, (Uint8)value);
     }
 }
 
@@ -1214,7 +1217,7 @@ static void UpdateDeviceIdentity(SDL_HIDAPI_Device *device)
     }
     device->guid.data[15] = ctx->m_eControllerType;
 
-    (void)SDL_snprintf(serial, sizeof serial, "%.2x-%.2x-%.2x-%.2x-%.2x-%.2x",
+    (void)SDL_snprintf(serial, sizeof(serial), "%.2x-%.2x-%.2x-%.2x-%.2x-%.2x",
                        ctx->m_rgucMACAddress[0],
                        ctx->m_rgucMACAddress[1],
                        ctx->m_rgucMACAddress[2],

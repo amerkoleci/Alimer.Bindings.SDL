@@ -20,7 +20,7 @@
 */
 #include "SDL_internal.h"
 
-#if SDL_AUDIO_DRIVER_ANDROID
+#ifdef SDL_AUDIO_DRIVER_ANDROID
 
 /* Output audio to Android */
 
@@ -40,8 +40,17 @@ static int ANDROIDAUDIO_OpenDevice(_THIS, const char *devname)
     SDL_AudioFormat test_format;
     SDL_bool iscapture = this->iscapture;
 
-    SDL_assert((captureDevice == NULL) || !iscapture);
-    SDL_assert((audioDevice == NULL) || iscapture);
+    if (iscapture) {
+        if (captureDevice) {
+            return SDL_SetError("An audio capture device is already opened");
+        }
+    }
+
+    if (!iscapture) {
+        if (audioDevice) {
+            return SDL_SetError("An audio playback device is already opened");
+        }
+    }
 
     if (iscapture) {
         captureDevice = this;
@@ -49,7 +58,7 @@ static int ANDROIDAUDIO_OpenDevice(_THIS, const char *devname)
         audioDevice = this;
     }
 
-    this->hidden = (struct SDL_PrivateAudioData *)SDL_calloc(1, (sizeof *this->hidden));
+    this->hidden = (struct SDL_PrivateAudioData *)SDL_calloc(1, sizeof(*this->hidden));
     if (this->hidden == NULL) {
         return SDL_OutOfMemory();
     }

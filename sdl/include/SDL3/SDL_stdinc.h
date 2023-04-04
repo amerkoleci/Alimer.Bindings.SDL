@@ -37,8 +37,8 @@
 #include <stdint.h>
 #include <wchar.h>
 
-#if !defined(alloca)
-# if defined(HAVE_ALLOCA_H)
+#ifndef alloca
+# ifdef HAVE_ALLOCA_H
 #  include <alloca.h>
 # elif defined(__GNUC__)
 #  define alloca __builtin_alloca
@@ -309,7 +309,7 @@ typedef uint64_t Uint64;
 #define SDL_PRINTF_FORMAT_STRING
 #define SDL_SCANF_FORMAT_STRING
 #endif
-#if defined(__GNUC__)
+#ifdef __GNUC__
 #define SDL_PRINTF_VARARG_FUNC( fmtargnumber ) __attribute__ (( format( __printf__, fmtargnumber, fmtargnumber+1 )))
 #define SDL_SCANF_VARARG_FUNC( fmtargnumber ) __attribute__ (( format( __scanf__, fmtargnumber, fmtargnumber+1 )))
 #else
@@ -319,7 +319,7 @@ typedef uint64_t Uint64;
 #endif /* SDL_DISABLE_ANALYZE_MACROS */
 
 #ifndef SDL_COMPILE_TIME_ASSERT
-#if defined(__cplusplus)
+#ifdef __cplusplus
 #if (__cplusplus >= 201103L)
 #define SDL_COMPILE_TIME_ASSERT(name, x)  static_assert(x, #x)
 #endif
@@ -689,6 +689,11 @@ size_t strlcpy(char* dst, const char* src, size_t size);
 #ifndef HAVE_STRLCAT
 size_t strlcat(char* dst, const char* src, size_t size);
 #endif
+
+/* Starting LLVM 16, the analyser errors out if these functions do not have
+   their prototype defined (clang-diagnostic-implicit-function-declaration) */
+#include <stdlib.h>
+#include <string.h>
 
 #define SDL_malloc malloc
 #define SDL_calloc calloc

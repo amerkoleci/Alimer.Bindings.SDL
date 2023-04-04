@@ -27,7 +27,7 @@
 */
 #include "SDL_internal.h"
 
-#if SDL_AUDIO_DRIVER_PULSEAUDIO
+#ifdef SDL_AUDIO_DRIVER_PULSEAUDIO
 
 /* Allow access to a raw mixing buffer */
 
@@ -529,8 +529,7 @@ static int PULSEAUDIO_OpenDevice(_THIS, const char *devname)
     int rc = 0;
 
     /* Initialize all variables that we clean on shutdown */
-    h = this->hidden = (struct SDL_PrivateAudioData *)
-        SDL_malloc((sizeof *this->hidden));
+    h = this->hidden = (struct SDL_PrivateAudioData *)SDL_malloc(sizeof(*this->hidden));
     if (this->hidden == NULL) {
         return SDL_OutOfMemory();
     }

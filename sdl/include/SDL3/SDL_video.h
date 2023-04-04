@@ -44,6 +44,16 @@ typedef Uint32 SDL_DisplayID;
 typedef Uint32 SDL_WindowID;
 
 /**
+ *  \brief System theme
+ */
+typedef enum
+{
+    SDL_SYSTEM_THEME_UNKNOWN,   /**< Unknown system theme */
+    SDL_SYSTEM_THEME_LIGHT,     /**< Light colored system theme */
+    SDL_SYSTEM_THEME_DARK,      /**< Dark colored system theme */
+} SDL_SystemTheme;
+
+/**
  *  \brief  The structure that defines a display mode
  *
  *  \sa SDL_GetFullscreenDisplayModes()
@@ -66,10 +76,23 @@ typedef struct
 } SDL_DisplayMode;
 
 /**
+ *  \brief Display orientation
+ */
+typedef enum
+{
+    SDL_ORIENTATION_UNKNOWN,            /**< The display orientation can't be determined */
+    SDL_ORIENTATION_LANDSCAPE,          /**< The display is in landscape mode, with the right side up, relative to portrait mode */
+    SDL_ORIENTATION_LANDSCAPE_FLIPPED,  /**< The display is in landscape mode, with the left side up, relative to portrait mode */
+    SDL_ORIENTATION_PORTRAIT,           /**< The display is in portrait mode */
+    SDL_ORIENTATION_PORTRAIT_FLIPPED    /**< The display is in portrait mode, upside down */
+} SDL_DisplayOrientation;
+
+/**
  *  \brief The type used to identify a window
  *
  *  \sa SDL_CreateWindow()
  *  \sa SDL_CreateWindowFrom()
+ *  \sa SDL_CreateWindowWithPosition()
  *  \sa SDL_DestroyWindow()
  *  \sa SDL_FlashWindow()
  *  \sa SDL_GetWindowData()
@@ -130,6 +153,7 @@ typedef enum
     SDL_WINDOW_KEYBOARD_GRABBED     = 0x00100000,   /**< window has grabbed keyboard input */
     SDL_WINDOW_VULKAN               = 0x10000000,   /**< window usable for Vulkan surface */
     SDL_WINDOW_METAL                = 0x20000000,   /**< window usable for Metal view */
+    SDL_WINDOW_TRANSPARENT          = 0x40000000,   /**< window with transparent buffer */
 
 } SDL_WindowFlags;
 
@@ -150,18 +174,6 @@ typedef enum
 #define SDL_WINDOWPOS_CENTERED         SDL_WINDOWPOS_CENTERED_DISPLAY(0)
 #define SDL_WINDOWPOS_ISCENTERED(X)    \
             (((X)&0xFFFF0000) == SDL_WINDOWPOS_CENTERED_MASK)
-
-/**
- *  \brief Display orientation
- */
-typedef enum
-{
-    SDL_ORIENTATION_UNKNOWN,            /**< The display orientation can't be determined */
-    SDL_ORIENTATION_LANDSCAPE,          /**< The display is in landscape mode, with the right side up, relative to portrait mode */
-    SDL_ORIENTATION_LANDSCAPE_FLIPPED,  /**< The display is in landscape mode, with the left side up, relative to portrait mode */
-    SDL_ORIENTATION_PORTRAIT,           /**< The display is in portrait mode */
-    SDL_ORIENTATION_PORTRAIT_FLIPPED    /**< The display is in portrait mode, upside down */
-} SDL_DisplayOrientation;
 
 /**
  *  \brief Window flash operation
@@ -296,6 +308,15 @@ extern DECLSPEC const char *SDLCALL SDL_GetVideoDriver(int index);
  * \sa SDL_GetVideoDriver
  */
 extern DECLSPEC const char *SDLCALL SDL_GetCurrentVideoDriver(void);
+
+/**
+ * Get the current system theme
+ *
+ * \returns the current system theme, light, dark, or unknown
+ *
+ * \since This function is available since SDL 3.0.0.
+ */
+extern DECLSPEC SDL_SystemTheme SDLCALL SDL_GetSystemTheme(void);
 
 /**
  * Get a list of currently connected displays.
@@ -582,7 +603,7 @@ extern DECLSPEC void *SDLCALL SDL_GetWindowICCProfile(SDL_Window *window, size_t
 extern DECLSPEC Uint32 SDLCALL SDL_GetWindowPixelFormat(SDL_Window *window);
 
 /**
- * Create a window with the specified position, dimensions, and flags.
+ * Create a window with the specified dimensions and flags.
  *
  * `flags` may be any of the following OR'd together:
  *
@@ -639,10 +660,130 @@ extern DECLSPEC Uint32 SDLCALL SDL_GetWindowPixelFormat(SDL_Window *window);
  *
  * \since This function is available since SDL 3.0.0.
  *
+ * \sa SDL_CreatePopupWindow
  * \sa SDL_CreateWindowFrom
+ * \sa SDL_CreateWindowWithPosition
  * \sa SDL_DestroyWindow
  */
 extern DECLSPEC SDL_Window *SDLCALL SDL_CreateWindow(const char *title, int w, int h, Uint32 flags);
+
+/**
+ * Create a window with the specified position, dimensions, and flags.
+ *
+ * `flags` may be any of the following OR'd together:
+ *
+ * - `SDL_WINDOW_FULLSCREEN`: fullscreen window at desktop resolution
+ * - `SDL_WINDOW_OPENGL`: window usable with an OpenGL context
+ * - `SDL_WINDOW_VULKAN`: window usable with a Vulkan instance
+ * - `SDL_WINDOW_METAL`: window usable with a Metal instance
+ * - `SDL_WINDOW_HIDDEN`: window is not visible
+ * - `SDL_WINDOW_BORDERLESS`: no window decoration
+ * - `SDL_WINDOW_RESIZABLE`: window can be resized
+ * - `SDL_WINDOW_MINIMIZED`: window is minimized
+ * - `SDL_WINDOW_MAXIMIZED`: window is maximized
+ * - `SDL_WINDOW_MOUSE_GRABBED`: window has grabbed mouse focus
+ *
+ * The SDL_Window is implicitly shown if SDL_WINDOW_HIDDEN is not set.
+ *
+ * On Apple's macOS, you **must** set the NSHighResolutionCapable Info.plist
+ * property to YES, otherwise you will not receive a High-DPI OpenGL canvas.
+ *
+ * The window size in pixels may differ from its size in screen coordinates if
+ * the window is on a high density display (one with an OS scaling factor).
+ * Use SDL_GetWindowSize() to query the client area's size in screen
+ * coordinates, and SDL_GetWindowSizeInPixels() or SDL_GetRenderOutputSize()
+ * to query the drawable size in pixels. Note that the drawable size can vary
+ * after the window is created and should be queried again if you get an
+ * SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED event.
+ *
+ * If the window is set fullscreen, the width and height parameters `w` and
+ * `h` will not be used. However, invalid size parameters (e.g. too large) may
+ * still fail. Window size is actually limited to 16384 x 16384 for all
+ * platforms at window creation.
+ *
+ * If the window is created with any of the SDL_WINDOW_OPENGL or
+ * SDL_WINDOW_VULKAN flags, then the corresponding LoadLibrary function
+ * (SDL_GL_LoadLibrary or SDL_Vulkan_LoadLibrary) is called and the
+ * corresponding UnloadLibrary function is called by SDL_DestroyWindow().
+ *
+ * If SDL_WINDOW_VULKAN is specified and there isn't a working Vulkan driver,
+ * SDL_CreateWindow() will fail because SDL_Vulkan_LoadLibrary() will fail.
+ *
+ * If SDL_WINDOW_METAL is specified on an OS that does not support Metal,
+ * SDL_CreateWindow() will fail.
+ *
+ * On non-Apple devices, SDL requires you to either not link to the Vulkan
+ * loader or link to a dynamic library version. This limitation may be removed
+ * in a future version of SDL.
+ *
+ * \param title the title of the window, in UTF-8 encoding
+ * \param x the x position of the window, or `SDL_WINDOWPOS_CENTERED`
+ * \param y the y position of the window, or `SDL_WINDOWPOS_CENTERED`
+ * \param w the width of the window, in screen coordinates
+ * \param h the height of the window, in screen coordinates
+ * \param flags 0, or one or more SDL_WindowFlags OR'd together
+ * \returns the window that was created or NULL on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_CreatePopupWindow
+ * \sa SDL_CreateWindow
+ * \sa SDL_CreateWindowFrom
+ * \sa SDL_DestroyWindow
+ */
+extern DECLSPEC SDL_Window *SDLCALL SDL_CreateWindowWithPosition(const char *title, int x, int y, int w, int h, Uint32 flags);
+
+/**
+ * Create a child popup window of the specified parent window.
+ *
+ * 'flags' **must** contain exactly one of the following: -
+ * 'SDL_WINDOW_TOOLTIP': The popup window is a tooltip and will not pass any
+ * input events. - 'SDL_WINDOW_POPUP_MENU': The popup window is a popup menu.
+ * The topmost popup menu will implicitly gain the keyboard focus.
+ *
+ * The following flags are not relevant to popup window creation and will be
+ * ignored: - 'SDL_WINDOW_MINIMIZED' - 'SDL_WINDOW_MAXIMIZED' -
+ * 'SDL_WINDOW_FULLSCREEN' - 'SDL_WINDOW_BORDERLESS' -
+ * 'SDL_WINDOW_SKIP_TASKBAR'
+ *
+ * The parent parameter **must** be non-null and a valid window. The parent of
+ * a popup window can be either a regular, toplevel window, or another popup
+ * window.
+ *
+ * Popup windows cannot be minimized, maximized, made fullscreen, raised,
+ * flash, be made a modal window, be the parent of a modal window, or grab the
+ * mouse and/or keyboard. Attempts to do so will fail.
+ *
+ * Popup windows implicitly do not have a border/decorations and do not appear
+ * on the taskbar/dock or in lists of windows such as alt-tab menus.
+ *
+ * If a parent window is hidden, any child popup windows will be recursively
+ * hidden as well. Child popup windows not explicitly hidden will be restored
+ * when the parent is shown.
+ *
+ * If the parent window is destroyed, any child popup windows will be
+ * recursively destroyed as well.
+ *
+ * \param parent the parent of the window, must not be NULL
+ * \param offset_x the x position of the popup window relative to the origin
+ *                 of the parent, in screen coordinates
+ * \param offset_y the y position of the popup window relative to the origin
+ *                 of the parent window, in screen coordinates
+ * \param w the width of the window, in screen coordinates
+ * \param h the height of the window, in screen coordinates
+ * \param flags SDL_WINDOW_TOOLTIP or SDL_WINDOW_POPUP MENU, and zero or more
+ *              additional SDL_WindowFlags OR'd together.
+ * \returns the window that was created or NULL on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_CreateWindow
+ * \sa SDL_DestroyWindow
+ * \sa SDL_GetWindowParent
+ */
+extern DECLSPEC SDL_Window *SDLCALL SDL_CreatePopupWindow(SDL_Window *parent, int offset_x, int offset_y, int w, int h, Uint32 flags);
 
 /**
  * Create an SDL window from an existing native window.
@@ -694,6 +835,19 @@ extern DECLSPEC SDL_WindowID SDLCALL SDL_GetWindowID(SDL_Window *window);
  * \sa SDL_GetWindowID
  */
 extern DECLSPEC SDL_Window *SDLCALL SDL_GetWindowFromID(SDL_WindowID id);
+
+/**
+ * Get parent of a window.
+ *
+ * \param window the window to query
+ * \returns the parent of the window on success or NULL if the window has no
+ *          parent.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_CreatePopupWindow
+ */
+extern DECLSPEC SDL_Window *SDLCALL SDL_GetWindowParent(SDL_Window *window);
 
 /**
  * Get the window flags.
@@ -924,8 +1078,8 @@ extern DECLSPEC int SDLCALL SDL_GetWindowSizeInPixels(SDL_Window *window, int *w
  * Set the minimum size of a window's client area, in screen coordinates.
  *
  * \param window the window to change
- * \param min_w the minimum width of the window
- * \param min_h the minimum height of the window
+ * \param min_w the minimum width of the window, or 0 for no limit
+ * \param min_h the minimum height of the window, or 0 for no limit
  * \returns 0 on success or a negative error code on failure; call
  *          SDL_GetError() for more information.
  *
@@ -958,8 +1112,8 @@ extern DECLSPEC int SDLCALL SDL_GetWindowMinimumSize(SDL_Window *window, int *w,
  * Set the maximum size of a window's client area, in screen coordinates.
  *
  * \param window the window to change
- * \param max_w the maximum width of the window
- * \param max_h the maximum height of the window
+ * \param max_w the maximum width of the window, or 0 for no limit
+ * \param max_h the maximum height of the window, or 0 for no limit
  * \returns 0 on success or a negative error code on failure; call
  *          SDL_GetError() for more information.
  *

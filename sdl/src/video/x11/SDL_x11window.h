@@ -29,7 +29,7 @@
 */
 #define PENDING_FOCUS_TIME 200
 
-#if SDL_VIDEO_OPENGL_EGL
+#ifdef SDL_VIDEO_OPENGL_EGL
 #include <EGL/egl.h>
 #endif
 
@@ -70,10 +70,11 @@ struct SDL_WindowData
     Window xdnd_source;
     SDL_bool flashing_window;
     Uint64 flash_cancel_time;
-#if SDL_VIDEO_OPENGL_EGL
+    SDL_Window *keyboard_focus;
+#ifdef SDL_VIDEO_OPENGL_EGL
     EGLSurface egl_surface;
 #endif
-#if SDL_VIDEO_DRIVER_X11_XFIXES
+#ifdef SDL_VIDEO_DRIVER_X11_XFIXES
     SDL_bool pointer_barrier_active;
     PointerBarrier barrier[4];
     SDL_Rect barrier_rect;
@@ -116,5 +117,6 @@ extern void X11_AcceptDragAndDrop(SDL_Window *window, SDL_bool accept);
 extern int X11_FlashWindow(_THIS, SDL_Window *window, SDL_FlashOperation operation);
 
 int SDL_X11_SetWindowTitle(Display *display, Window xwindow, char *title);
+void X11_UpdateWindowPosition(SDL_Window *window);
 
 #endif /* SDL_x11window_h_ */

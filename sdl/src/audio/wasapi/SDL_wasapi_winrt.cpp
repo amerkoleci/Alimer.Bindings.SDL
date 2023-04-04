@@ -25,7 +25,7 @@
 //  is in SDL_wasapi_win32.c. The code in SDL_wasapi.c is used by both standard
 //  Windows and WinRT builds to deal with audio and calls into these functions.
 
-#if SDL_AUDIO_DRIVER_WASAPI && defined(__WINRT__)
+#if defined(SDL_AUDIO_DRIVER_WASAPI) && defined(__WINRT__)
 
 #include <Windows.h>
 #include <windows.ui.core.h>
@@ -56,8 +56,8 @@ static Platform::String ^ SDL_PKEY_AudioEngine_DeviceFormat = L"{f19f064d-082c-4
 static void WASAPI_AddDevice(const SDL_bool iscapture, const char *devname, WAVEFORMATEXTENSIBLE *fmt, LPCWSTR devid);
 static void WASAPI_RemoveDevice(const SDL_bool iscapture, LPCWSTR devid);
 extern "C" {
-SDL_atomic_t SDL_IMMDevice_DefaultPlaybackGeneration;
-SDL_atomic_t SDL_IMMDevice_DefaultCaptureGeneration;
+SDL_AtomicInt SDL_IMMDevice_DefaultPlaybackGeneration;
+SDL_AtomicInt SDL_IMMDevice_DefaultCaptureGeneration;
 }
 
 /* This is a list of device id strings we have inflight, so we have consistent pointers to the same device. */

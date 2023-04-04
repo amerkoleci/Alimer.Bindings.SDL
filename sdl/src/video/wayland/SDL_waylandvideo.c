@@ -21,9 +21,10 @@
 
 #include "SDL_internal.h"
 
-#if SDL_VIDEO_DRIVER_WAYLAND
+#ifdef SDL_VIDEO_DRIVER_WAYLAND
 
 #include "../../events/SDL_events_c.h"
+#include "../../core/linux/SDL_system_theme.h"
 
 #include "SDL_waylandvideo.h"
 #include "SDL_waylandevents_c.h"
@@ -100,7 +101,7 @@ static char *get_classname(void)
 
     /* Next look at the application's executable name */
 #if defined(__LINUX__) || defined(__FREEBSD__)
-#if defined(__LINUX__)
+#ifdef __LINUX__
     (void)SDL_snprintf(procfile, SDL_arraysize(procfile), "/proc/%d/exe", getpid());
 #elif defined(__FREEBSD__)
     (void)SDL_snprintf(procfile, SDL_arraysize(procfile), "/proc/%d/file", getpid());
@@ -212,7 +213,7 @@ static SDL_VideoDevice *Wayland_CreateDevice(void)
     device->WaitEventTimeout = Wayland_WaitEventTimeout;
     device->SendWakeupEvent = Wayland_SendWakeupEvent;
 
-#if SDL_VIDEO_OPENGL_EGL
+#ifdef SDL_VIDEO_OPENGL_EGL
     device->GL_SwapWindow = Wayland_GLES_SwapWindow;
     device->GL_GetSwapInterval = Wayland_GLES_GetSwapInterval;
     device->GL_SetSwapInterval = Wayland_GLES_SetSwapInterval;
@@ -238,6 +239,7 @@ static SDL_VideoDevice *Wayland_CreateDevice(void)
     device->RestoreWindow = Wayland_RestoreWindow;
     device->SetWindowBordered = Wayland_SetWindowBordered;
     device->SetWindowResizable = Wayland_SetWindowResizable;
+    device->SetWindowPosition = Wayland_SetWindowPosition;
     device->SetWindowSize = Wayland_SetWindowSize;
     device->SetWindowMinimumSize = Wayland_SetWindowMinimumSize;
     device->SetWindowMaximumSize = Wayland_SetWindowMaximumSize;
@@ -249,6 +251,11 @@ static SDL_VideoDevice *Wayland_CreateDevice(void)
     device->FlashWindow = Wayland_FlashWindow;
     device->HasScreenKeyboardSupport = Wayland_HasScreenKeyboardSupport;
 
+#ifdef SDL_USE_LIBDBUS
+    if (SDL_SystemTheme_Init())
+        device->system_theme = SDL_SystemTheme_Get();
+#endif
+
     device->SetClipboardText = Wayland_SetClipboardText;
     device->GetClipboardText = Wayland_GetClipboardText;
     device->HasClipboardText = Wayland_HasClipboardText;
@@ -259,7 +266,7 @@ static SDL_VideoDevice *Wayland_CreateDevice(void)
     device->StopTextInput = Wayland_StopTextInput;
     device->SetTextInputRect = Wayland_SetTextInputRect;
 
-#if SDL_VIDEO_VULKAN
+#ifdef SDL_VIDEO_VULKAN
     device->Vulkan_LoadLibrary = Wayland_Vulkan_LoadLibrary;
     device->Vulkan_UnloadLibrary = Wayland_Vulkan_UnloadLibrary;
     device->Vulkan_GetInstanceExtensions = Wayland_Vulkan_GetInstanceExtensions;
@@ -269,7 +276,8 @@ static SDL_VideoDevice *Wayland_CreateDevice(void)
     device->free = Wayland_DeleteDevice;
 
     device->quirk_flags = VIDEO_DEVICE_QUIRK_MODE_SWITCHING_EMULATED |
-                          VIDEO_DEVICE_QUIRK_DISABLE_UNSET_FULLSCREEN_ON_MINIMIZE;
+                          VIDEO_DEVICE_QUIRK_DISABLE_UNSET_FULLSCREEN_ON_MINIMIZE |
+                          VIDEO_DEVICE_QUIRK_HAS_POPUP_WINDOW_SUPPORT;
 
     return device;
 }
@@ -293,24 +301,6 @@ static void xdg_output_handle_logical_size(void *data, struct zxdg_output_v1 *xd
                                            int32_t width, int32_t height)
 {
     SDL_DisplayData *driverdata = (SDL_DisplayData *)data;
-
-    if (driverdata->screen_width != 0 && driverdata->screen_height != 0) {
-        /* FIXME: GNOME has a bug where the logical size does not account for
-         * scale, resulting in bogus viewport sizes.
-         *
-         * Until this is fixed, validate that _some_ kind of scaling is being
-         * done (we can't match exactly because fractional scaling can't be
-         * detected otherwise), then override if necessary.
-         * -flibit
-         */
-        const float scale = (float)driverdata->screen_width / (float)width;
-        if ((scale == 1.0f) && (driverdata->scale_factor != 1.0f)) {
-            SDL_LogWarn(
-                SDL_LOG_CATEGORY_VIDEO,
-                "xdg_output scale did not match, overriding with wl_output scale");
-            return;
-        }
-    }
 
     driverdata->screen_width = width;
     driverdata->screen_height = height;
@@ -574,13 +564,22 @@ static void display_handle_done(void *data,
     native_mode.driverdata = driverdata->output;
 
     if (driverdata->has_logical_size) { /* If xdg-output is present... */
-        if (video->viewporter) {
-            /* ...and viewports are supported, calculate the true scale of the output. */
-            driverdata->scale_factor = (float)native_mode.pixel_w / (float)driverdata->screen_width;
+        if (native_mode.pixel_w != driverdata->screen_width || native_mode.pixel_h != driverdata->screen_height) {
+            /* ...and the compositor scales the logical viewport... */
+            if (video->viewporter) {
+                /* ...and viewports are supported, calculate the true scale of the output. */
+                driverdata->scale_factor = (float)native_mode.pixel_w / (float)driverdata->screen_width;
+            } else {
+                /* ...otherwise, the 'native' pixel values are a multiple of the logical screen size. */
+                driverdata->pixel_width = driverdata->screen_width * (int)driverdata->scale_factor;
+                driverdata->pixel_height = driverdata->screen_height * (int)driverdata->scale_factor;
+            }
         } else {
-            /* ...otherwise, the 'native' pixel values are a multiple of the logical screen size. */
-            driverdata->pixel_width = driverdata->screen_width * (int)driverdata->scale_factor;
-            driverdata->pixel_height = driverdata->screen_height * (int)driverdata->scale_factor;
+            /* ...and the output viewport is not scaled in the global compositing
+             * space, the output dimensions need to be divided by the scale factor.
+             */
+            driverdata->screen_width /= (int)driverdata->scale_factor;
+            driverdata->screen_height /= (int)driverdata->scale_factor;
         }
     } else {
         /* Calculate the screen coordinates from the pixel values, if xdg-output isn't present.
@@ -940,7 +939,6 @@ int Wayland_VideoInit(_THIS)
     WAYLAND_wl_display_flush(data->display);
 
     Wayland_InitKeyboard(_this);
-    Wayland_InitWin(data);
 
     data->initializing = SDL_FALSE;
 
@@ -973,7 +971,6 @@ static void Wayland_VideoCleanup(_THIS)
     SDL_VideoData *data = _this->driverdata;
     int i, j;
 
-    Wayland_QuitWin(data);
     Wayland_FiniMouse(data);
 
     for (i = _this->num_displays - 1; i >= 0; --i) {

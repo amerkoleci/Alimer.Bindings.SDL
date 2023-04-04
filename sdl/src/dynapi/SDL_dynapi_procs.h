@@ -29,7 +29,7 @@
 */
 
 /* direct jump magic can use these, the rest needs special code. */
-#if !SDL_DYNAPI_PROC_NO_VARARGS
+#ifndef SDL_DYNAPI_PROC_NO_VARARGS
 SDL_DYNAPI_PROC(void,SDL_Log,(SDL_PRINTF_FORMAT_STRING const char *a, ...),(a),)
 SDL_DYNAPI_PROC(void,SDL_LogCritical,(int a, SDL_PRINTF_FORMAT_STRING const char *b, ...),(a,b),)
 SDL_DYNAPI_PROC(void,SDL_LogDebug,(int a, SDL_PRINTF_FORMAT_STRING const char *b, ...),(a,b),)
@@ -78,7 +78,7 @@ SDL_DYNAPI_PROC(ID3D11Device*,SDL_GetRenderD3D11Device,(SDL_Renderer *a),(a),ret
 SDL_DYNAPI_PROC(IDirect3DDevice9*,SDL_GetRenderD3D9Device,(SDL_Renderer *a),(a),return)
 #endif
 
-#if defined(__GDK__)
+#ifdef __GDK__
 SDL_DYNAPI_PROC(int,SDL_GDKGetTaskQueue,(XTaskQueueHandle *a),(a),return)
 SDL_DYNAPI_PROC(void,SDL_GDKSuspendComplete,(void),(),)
 #endif
@@ -122,13 +122,13 @@ SDL_DYNAPI_PROC(int,SDL_AddGamepadMappingsFromRW,(SDL_RWops *a, int b),(a,b),ret
 SDL_DYNAPI_PROC(int,SDL_AddHintCallback,(const char *a, SDL_HintCallback b, void *c),(a,b,c),return)
 SDL_DYNAPI_PROC(SDL_TimerID,SDL_AddTimer,(Uint32 a, SDL_TimerCallback b, void *c),(a,b,c),return)
 SDL_DYNAPI_PROC(SDL_RWops*,SDL_CreateRW,(void),(),return)
-SDL_DYNAPI_PROC(int,SDL_AtomicAdd,(SDL_atomic_t *a, int b),(a,b),return)
-SDL_DYNAPI_PROC(SDL_bool,SDL_AtomicCAS,(SDL_atomic_t *a, int b, int c),(a,b,c),return)
+SDL_DYNAPI_PROC(int,SDL_AtomicAdd,(SDL_AtomicInt *a, int b),(a,b),return)
+SDL_DYNAPI_PROC(SDL_bool,SDL_AtomicCAS,(SDL_AtomicInt *a, int b, int c),(a,b,c),return)
 SDL_DYNAPI_PROC(SDL_bool,SDL_AtomicCASPtr,(void **a, void *b, void *c),(a,b,c),return)
-SDL_DYNAPI_PROC(int,SDL_AtomicGet,(SDL_atomic_t *a),(a),return)
+SDL_DYNAPI_PROC(int,SDL_AtomicGet,(SDL_AtomicInt *a),(a),return)
 SDL_DYNAPI_PROC(void*,SDL_AtomicGetPtr,(void **a),(a),return)
 SDL_DYNAPI_PROC(void,SDL_AtomicLock,(SDL_SpinLock *a),(a),)
-SDL_DYNAPI_PROC(int,SDL_AtomicSet,(SDL_atomic_t *a, int b),(a,b),return)
+SDL_DYNAPI_PROC(int,SDL_AtomicSet,(SDL_AtomicInt *a, int b),(a,b),return)
 SDL_DYNAPI_PROC(void*,SDL_AtomicSetPtr,(void **a, void *b),(a,b),return)
 SDL_DYNAPI_PROC(SDL_bool,SDL_AtomicTryLock,(SDL_SpinLock *a),(a),return)
 SDL_DYNAPI_PROC(void,SDL_AtomicUnlock,(SDL_SpinLock *a),(a),)
@@ -500,7 +500,6 @@ SDL_DYNAPI_PROC(SDL_bool,SDL_HasLSX,(void),(),return)
 SDL_DYNAPI_PROC(SDL_bool,SDL_HasMMX,(void),(),return)
 SDL_DYNAPI_PROC(SDL_bool,SDL_HasNEON,(void),(),return)
 SDL_DYNAPI_PROC(SDL_bool,SDL_HasPrimarySelectionText,(void),(),return)
-SDL_DYNAPI_PROC(SDL_bool,SDL_HasRDTSC,(void),(),return)
 SDL_DYNAPI_PROC(SDL_bool,SDL_HasRectIntersection,(const SDL_Rect *a, const SDL_Rect *b),(a,b),return)
 SDL_DYNAPI_PROC(SDL_bool,SDL_HasRectIntersectionFloat,(const SDL_FRect *a, const SDL_FRect *b),(a,b),return)
 SDL_DYNAPI_PROC(SDL_bool,SDL_HasSSE,(void),(),return)
@@ -910,3 +909,7 @@ SDL_DYNAPI_PROC(int,SDL_ConvertEventToRenderCoordinates,(SDL_Renderer *a, SDL_Ev
 SDL_DYNAPI_PROC(int,SDL_SetRenderScale,(SDL_Renderer *a, float b, float c),(a,b,c),return)
 SDL_DYNAPI_PROC(int,SDL_GetRenderScale,(SDL_Renderer *a, float *b, float *c),(a,b,c),return)
 SDL_DYNAPI_PROC(int,SDL_GetRenderWindowSize,(SDL_Renderer *a, int *b, int *c),(a,b,c),return)
+SDL_DYNAPI_PROC(SDL_SystemTheme,SDL_GetSystemTheme,(void),(),return)
+SDL_DYNAPI_PROC(SDL_Window*,SDL_CreatePopupWindow,(SDL_Window *a, int b, int c, int d, int e, Uint32 f),(a,b,c,d,e,f),return)
+SDL_DYNAPI_PROC(SDL_Window*,SDL_GetWindowParent,(SDL_Window *a),(a),return)
+SDL_DYNAPI_PROC(SDL_Window*,SDL_CreateWindowWithPosition,(const char *a, int b, int c, int d, int e, Uint32 f),(a,b,c,d,e,f),return)

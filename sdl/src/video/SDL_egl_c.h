@@ -23,7 +23,7 @@
 #ifndef SDL_egl_h_
 #define SDL_egl_h_
 
-#if SDL_VIDEO_OPENGL_EGL
+#ifdef SDL_VIDEO_OPENGL_EGL
 
 #include <SDL3/SDL_egl.h>
 
@@ -129,7 +129,7 @@ extern int SDL_EGL_ChooseConfig(_THIS);
 extern int SDL_EGL_SetSwapInterval(_THIS, int interval);
 extern int SDL_EGL_GetSwapInterval(_THIS, int *interval);
 extern int SDL_EGL_DeleteContext(_THIS, SDL_GLContext context);
-extern EGLSurface *SDL_EGL_CreateSurface(_THIS, NativeWindowType nw);
+extern EGLSurface *SDL_EGL_CreateSurface(_THIS, SDL_Window *window, NativeWindowType nw);
 extern void SDL_EGL_DestroySurface(_THIS, EGLSurface egl_surface);
 
 extern EGLSurface SDL_EGL_CreateOffscreenSurface(_THIS, int width, int height);

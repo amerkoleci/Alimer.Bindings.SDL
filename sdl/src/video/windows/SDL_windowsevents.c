@@ -20,7 +20,7 @@
 */
 #include "SDL_internal.h"
 
-#if SDL_VIDEO_DRIVER_WINDOWS
+#ifdef SDL_VIDEO_DRIVER_WINDOWS
 
 #include "SDL_windowsvideo.h"
 #include "SDL_windowsshape.h"
@@ -38,7 +38,7 @@
 #include <windowsx.h>
 
 /* For WM_TABLET_QUERYSYSTEMGESTURESTATUS et. al. */
-#if HAVE_TPCSHRD_H
+#ifdef HAVE_TPCSHRD_H
 #include <tpcshrd.h>
 #endif /* HAVE_TPCSHRD_H */
 
@@ -351,9 +351,10 @@ static SDL_Scancode WindowsScanCodeToSDLScanCode(LPARAM lParam, WPARAM wParam)
 }
 
 #if !defined(__XBOXONE__) && !defined(__XBOXSERIES__)
-static SDL_bool WIN_ShouldIgnoreFocusClick()
+static SDL_bool WIN_ShouldIgnoreFocusClick(SDL_WindowData *data)
 {
-    return !SDL_GetHintBoolean(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, SDL_FALSE);
+    return !SDL_WINDOW_IS_POPUP(data->window) &&
+           !SDL_GetHintBoolean(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, SDL_FALSE);
 }
 
 static void WIN_CheckWParamMouseButton(SDL_bool bwParamMousePressed, Uint32 mouseFlags, SDL_bool bSwapButtons, SDL_WindowData *data, Uint8 button, SDL_MouseID mouseID)
@@ -372,7 +373,7 @@ static void WIN_CheckWParamMouseButton(SDL_bool bwParamMousePressed, Uint32 mous
             data->focus_click_pending &= ~SDL_BUTTON(button);
             WIN_UpdateClipCursor(data->window);
         }
-        if (WIN_ShouldIgnoreFocusClick()) {
+        if (WIN_ShouldIgnoreFocusClick(data)) {
             return;
         }
     }
@@ -512,7 +513,7 @@ static void WIN_UpdateFocus(SDL_Window *window, SDL_bool expect_focus)
             data->focus_click_pending |= SDL_BUTTON_X2MASK;
         }
 
-        SDL_SetKeyboardFocus(window);
+        SDL_SetKeyboardFocus(data->keyboard_focus ? data->keyboard_focus : window);
 
         /* In relative mode we are guaranteed to have mouse focus if we have keyboard focus */
         if (!SDL_GetMouse()->relative_mode) {
@@ -586,7 +587,7 @@ static BOOL WIN_ConvertUTF32toUTF8(UINT32 codepoint, char *text)
 
 static BOOL WIN_ConvertUTF16toUTF8(UINT32 high_surrogate, UINT32 low_surrogate, char *text)
 {
-    const UINT32 SURROGATE_OFFSET = 0x10000 - (0xD800 << 10) - 0xDC00;
+    const UINT32 SURROGATE_OFFSET = 0x10000U - (0xD800 << 10) - 0xDC00;
     const UINT32 codepoint = (high_surrogate << 10) + low_surrogate + SURROGATE_OFFSET;
     return WIN_ConvertUTF32toUTF8(codepoint, text);
 }
@@ -786,6 +787,13 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     {
         /* Update the focus in case we changed focus to a child window and then away from the application */
         WIN_UpdateFocus(data->window, !!LOWORD(wParam));
+    } break;
+
+    case WM_MOUSEACTIVATE:
+    {
+        if (SDL_WINDOW_IS_POPUP(data->window)) {
+            return MA_NOACTIVATE;
+        }
     } break;
 
     case WM_SETFOCUS:
@@ -1234,6 +1242,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
     case WM_WINDOWPOSCHANGED:
     {
+        SDL_Window *win;
         RECT rect;
         int x, y;
         int w, h;
@@ -1260,6 +1269,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         y = rect.top;
         WIN_ScreenPointToSDL(&x, &y);
 
+        SDL_GlobalToRelativeForWindow(data->window, x, y, &x, &y);
         SDL_SendWindowEvent(data->window, SDL_EVENT_WINDOW_MOVED, x, y);
 
         // Moving the window from one display to another can change the size of the window (in the handling of SDL_EVENT_WINDOW_MOVED), so we need to re-query the bounds
@@ -1296,6 +1306,14 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         if (data->last_displayID != original_displayID) {
             /* Display changed, check ICC profile */
             WIN_UpdateWindowICCProfile(data->window, SDL_TRUE);
+        }
+
+        /* Update the position of any child windows */
+        for (win = data->window->first_child; win != NULL; win = win->next_sibling) {
+            /* Don't update hidden child windows, their relative position doesn't change */
+            if (!(win->flags & SDL_WINDOW_HIDDEN)) {
+                WIN_SetWindowPositionInternal(win, SWP_NOCOPYBITS | SWP_NOACTIVATE);
+            }
         }
     } break;
 
@@ -1395,8 +1413,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 RECT rect;
                 float x, y;
 
-                if (!GetClientRect(hwnd, &rect) ||
-                    (rect.right == rect.left && rect.bottom == rect.top)) {
+                if (!GetClientRect(hwnd, &rect) || IsRectEmpty(&rect)) {
                     if (inputs) {
                         SDL_small_free(inputs, isstack);
                     }
@@ -1444,7 +1461,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         }
         break;
 
-#if HAVE_TPCSHRD_H
+#ifdef HAVE_TPCSHRD_H
 
     case WM_TABLET_QUERYSYSTEMGESTURESTATUS:
         /* See https://msdn.microsoft.com/en-us/library/windows/desktop/bb969148(v=vs.85).aspx .
@@ -1508,6 +1525,11 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     case WM_NCHITTEST:
     {
         SDL_Window *window = data->window;
+
+        if (window->flags & SDL_WINDOW_TOOLTIP) {
+            return HTTRANSPARENT;
+        }
+
         if (window->hit_test) {
             POINT winpoint;
             winpoint.x = GET_X_LPARAM(lParam);
@@ -1723,6 +1745,10 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         break;
 
     case WM_SETTINGCHANGE:
+        if (wParam == 0 && lParam != 0 && SDL_wcscmp((wchar_t *)lParam, L"ImmersiveColorSet") == 0) {
+            SDL_SetSystemTheme(WIN_GetSystemTheme());
+            WIN_UpdateDarkModeForHWND(hwnd);
+        }
         if (wParam == SPI_SETMOUSE || wParam == SPI_SETMOUSESPEED) {
             WIN_UpdateMouseSystemScale();
         }

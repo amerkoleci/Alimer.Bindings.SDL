@@ -20,7 +20,7 @@
 */
 #include "SDL_internal.h"
 
-#if SDL_AUDIO_DRIVER_WASAPI
+#ifdef SDL_AUDIO_DRIVER_WASAPI
 
 #include "../../core/windows/SDL_windows.h"
 #include "../../core/windows/SDL_immdevice.h"
@@ -46,6 +46,7 @@
 /* Some GUIDs we need to know without linking to libraries that aren't available before Vista. */
 static const IID SDL_IID_IAudioRenderClient = { 0xf294acfc, 0x3146, 0x4483, { 0xa7, 0xbf, 0xad, 0xdc, 0xa7, 0xc2, 0x60, 0xe2 } };
 static const IID SDL_IID_IAudioCaptureClient = { 0xc8adbd64, 0xe71e, 0x48a0, { 0xa4, 0xde, 0x18, 0x5c, 0x39, 0x5c, 0xd3, 0x17 } };
+
 
 static void WASAPI_DetectDevices(void)
 {
@@ -447,7 +448,7 @@ int WASAPI_PrepDevice(_THIS, const SDL_bool updatestream)
     this->spec.freq = waveformat->nSamplesPerSec;  /* force sampling rate so our resampler kicks in, if necessary. */
 #else
     /* favor WASAPI's resampler over our own */
-    if (this->spec.freq != waveformat->nSamplesPerSec) {
+    if ((DWORD)this->spec.freq != waveformat->nSamplesPerSec) {
         streamflags |= (AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM | AUDCLNT_STREAMFLAGS_SRC_DEFAULT_QUALITY);
         waveformat->nSamplesPerSec = this->spec.freq;
         waveformat->nAvgBytesPerSec = waveformat->nSamplesPerSec * waveformat->nChannels * (waveformat->wBitsPerSample / 8);
@@ -528,8 +529,7 @@ static int WASAPI_OpenDevice(_THIS, const char *devname)
     LPCWSTR devid = (LPCWSTR)this->handle;
 
     /* Initialize all variables that we clean on shutdown */
-    this->hidden = (struct SDL_PrivateAudioData *)
-        SDL_malloc((sizeof *this->hidden));
+    this->hidden = (struct SDL_PrivateAudioData *) SDL_malloc(sizeof(*this->hidden));
     if (this->hidden == NULL) {
         return SDL_OutOfMemory();
     }

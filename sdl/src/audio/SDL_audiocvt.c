@@ -29,35 +29,6 @@
 
 #define DEBUG_AUDIOSTREAM 0
 
-#ifdef __ARM_NEON
-#define HAVE_NEON_INTRINSICS 1
-#endif
-
-#ifdef __SSE__
-#define HAVE_SSE_INTRINSICS 1
-#endif
-
-#ifdef __SSE3__
-#define HAVE_SSE3_INTRINSICS 1
-#endif
-
-#if defined(HAVE_IMMINTRIN_H) && !defined(SDL_DISABLE_IMMINTRIN_H)
-#define HAVE_AVX_INTRINSICS 1
-#endif
-#if defined __clang__
-#if (!__has_attribute(target))
-#undef HAVE_AVX_INTRINSICS
-#endif
-#if (defined(_MSC_VER) || defined(__SCE__)) && !defined(__AVX__)
-#undef HAVE_AVX_INTRINSICS
-#endif
-#elif defined __GNUC__
-#if (__GNUC__ < 4) || (__GNUC__ == 4 && __GNUC_MINOR__ < 9)
-#undef HAVE_AVX_INTRINSICS
-#endif
-#endif
-
-
 /**
  * Initialize an SDL_AudioCVT structure for conversion.
  *
@@ -173,9 +144,9 @@ static int SDL_ConvertAudio(SDL_AudioCVT * cvt);
  * 8 channels (7.1) layout: FL+FR+FC+LFE+BL+BR+SL+SR
  */
 
-#if HAVE_SSE3_INTRINSICS
+#ifdef SDL_SSE3_INTRINSICS
 /* Convert from stereo to mono. Average left and right. */
-static void SDLCALL SDL_ConvertStereoToMono_SSE3(SDL_AudioCVT *cvt, SDL_AudioFormat format)
+static void SDLCALL SDL_TARGETING("sse3") SDL_ConvertStereoToMono_SSE3(SDL_AudioCVT *cvt, SDL_AudioFormat format)
 {
     const __m128 divby2 = _mm_set1_ps(0.5f);
     float *dst = (float *)cvt->buf;
@@ -210,9 +181,9 @@ static void SDLCALL SDL_ConvertStereoToMono_SSE3(SDL_AudioCVT *cvt, SDL_AudioFor
 }
 #endif
 
-#if HAVE_SSE_INTRINSICS
+#ifdef SDL_SSE_INTRINSICS
 /* Convert from mono to stereo. Duplicate to stereo left and right. */
-static void SDLCALL SDL_ConvertMonoToStereo_SSE(SDL_AudioCVT *cvt, SDL_AudioFormat format)
+static void SDLCALL SDL_TARGETING("sse") SDL_ConvertMonoToStereo_SSE(SDL_AudioCVT *cvt, SDL_AudioFormat format)
 {
     float *dst = ((float *)(cvt->buf + (cvt->len_cvt * 2))) - 8;
     const float *src = ((const float *)(cvt->buf + cvt->len_cvt)) - 4;
@@ -261,82 +232,80 @@ static void SDLCALL SDL_ConvertMonoToStereo_SSE(SDL_AudioCVT *cvt, SDL_AudioForm
 
 #include "SDL_audio_resampler_filter.h"
 
-static int GetResamplerPadding(const int inrate, const int outrate)
+static Sint32 GetResamplerPadding(const Sint32 inrate, const Sint32 outrate)
 {
+    /* This function uses integer arithmetics to avoid precision loss caused
+     * by large floating point numbers. Sint32 is needed for the large number
+     * multiplication. The integers are assumed to be non-negative so that
+     * division rounds by truncation. */
     if (inrate == outrate) {
         return 0;
     }
     if (inrate > outrate) {
-        return (int)SDL_ceilf(((float)(RESAMPLER_SAMPLES_PER_ZERO_CROSSING * inrate) / ((float)outrate)));
+        return (RESAMPLER_SAMPLES_PER_ZERO_CROSSING * inrate + outrate - 1) / outrate;
     }
     return RESAMPLER_SAMPLES_PER_ZERO_CROSSING;
 }
 
-/* lpadding and rpadding are expected to be buffers of (ResamplePadding(inrate, outrate) * chans * sizeof (float)) bytes. */
+/* lpadding and rpadding are expected to be buffers of (ResamplePadding(inrate, outrate) * chans * sizeof(float)) bytes. */
 static int SDL_ResampleAudio(const int chans, const int inrate, const int outrate,
                              const float *lpadding, const float *rpadding,
                              const float *inbuf, const int inbuflen,
                              float *outbuf, const int outbuflen)
 {
-    /* !!! FIXME: this produces artifacts if we don't work at double precision, but this turns out to
-                  be a big performance hit. Until we can resolve this better, we force this to double
-                  for amd64 CPUs, which should be able to take the hit for now, vs small embedded
-                  things that might end up in a software fallback here. */
-    /* Note that this used to be double, but it looks like we can get by with float in most cases at
-       almost twice the speed on Intel processors, and orders of magnitude more
-       on CPUs that need a software fallback for double calculations. */
-    #if defined(_M_X64) || defined(__x86_64__)
-    typedef double ResampleFloatType;
-    #else
-    typedef float ResampleFloatType;
-    #endif
-
-    const ResampleFloatType finrate = (ResampleFloatType)inrate;
-    const ResampleFloatType ratio = ((float)outrate) / ((float)inrate);
+    /* This function uses integer arithmetics to avoid precision loss caused
+     * by large floating point numbers. For some operations, Sint32 or Sint64
+     * are needed for the large number multiplications. The input integers are
+     * assumed to be non-negative so that division rounds by truncation and
+     * modulo is always non-negative. Note that the operator order is important
+     * for these integer divisions. */
     const int paddinglen = GetResamplerPadding(inrate, outrate);
     const int framelen = chans * (int)sizeof(float);
     const int inframes = inbuflen / framelen;
-    const int wantedoutframes = (int)(inframes * ratio); /* outbuflen isn't total to write, it's total available. */
+    /* outbuflen isn't total to write, it's total available. */
+    const int wantedoutframes = (int)((Sint64)inframes * outrate / inrate);
     const int maxoutframes = outbuflen / framelen;
     const int outframes = SDL_min(wantedoutframes, maxoutframes);
-    ResampleFloatType outtime = 0.0f;
     float *dst = outbuf;
     int i, j, chan;
 
     for (i = 0; i < outframes; i++) {
-        const int srcindex = (int)(outtime * inrate);
-        const ResampleFloatType intime = ((ResampleFloatType)srcindex) / finrate;
-        const ResampleFloatType innexttime = ((ResampleFloatType)(srcindex + 1)) / finrate;
-        const ResampleFloatType indeltatime = innexttime - intime;
-        const ResampleFloatType interpolation1 = (indeltatime == 0.0f) ? 1.0f : (1.0f - ((innexttime - outtime) / indeltatime));
-        const int filterindex1 = (int)(interpolation1 * RESAMPLER_SAMPLES_PER_ZERO_CROSSING);
-        const ResampleFloatType interpolation2 = 1.0f - interpolation1;
-        const int filterindex2 = (int)(interpolation2 * RESAMPLER_SAMPLES_PER_ZERO_CROSSING);
+        const int srcindex = (int)((Sint64)i * inrate / outrate);
+        /* Calculating the following way avoids subtraction or modulo of large
+         * floats which have low result precision.
+         *   interpolation1
+         * = (i / outrate * inrate) - floor(i / outrate * inrate)
+         * = mod(i / outrate * inrate, 1)
+         * = mod(i * inrate, outrate) / outrate */
+        const int srcfraction = ((Sint64)i) * inrate % outrate;
+        const float interpolation1 = ((float)srcfraction) / ((float)outrate);
+        const int filterindex1 = ((Sint32)srcfraction) * RESAMPLER_SAMPLES_PER_ZERO_CROSSING / outrate;
+        const float interpolation2 = 1.0f - interpolation1;
+        const int filterindex2 = ((Sint32)(outrate - srcfraction)) * RESAMPLER_SAMPLES_PER_ZERO_CROSSING / outrate;
 
         for (chan = 0; chan < chans; chan++) {
             float outsample = 0.0f;
 
             /* do this twice to calculate the sample, once for the "left wing" and then same for the right. */
             for (j = 0; (filterindex1 + (j * RESAMPLER_SAMPLES_PER_ZERO_CROSSING)) < RESAMPLER_FILTER_SIZE; j++) {
+                const int filt_ind = filterindex1 + j * RESAMPLER_SAMPLES_PER_ZERO_CROSSING;
                 const int srcframe = srcindex - j;
                 /* !!! FIXME: we can bubble this conditional out of here by doing a pre loop. */
                 const float insample = (srcframe < 0) ? lpadding[((paddinglen + srcframe) * chans) + chan] : inbuf[(srcframe * chans) + chan];
-                outsample += (float) (insample * (ResamplerFilter[filterindex1 + (j * RESAMPLER_SAMPLES_PER_ZERO_CROSSING)] + (interpolation1 * ResamplerFilterDifference[filterindex1 + (j * RESAMPLER_SAMPLES_PER_ZERO_CROSSING)])));
+                outsample += (float) (insample * (ResamplerFilter[filt_ind] + (interpolation1 * ResamplerFilterDifference[filt_ind])));
             }
 
             /* Do the right wing! */
             for (j = 0; (filterindex2 + (j * RESAMPLER_SAMPLES_PER_ZERO_CROSSING)) < RESAMPLER_FILTER_SIZE; j++) {
-                const int jsamples = j * RESAMPLER_SAMPLES_PER_ZERO_CROSSING;
+                const int filt_ind = filterindex2 + j * RESAMPLER_SAMPLES_PER_ZERO_CROSSING;
                 const int srcframe = srcindex + 1 + j;
                 /* !!! FIXME: we can bubble this conditional out of here by doing a post loop. */
                 const float insample = (srcframe >= inframes) ? rpadding[((srcframe - inframes) * chans) + chan] : inbuf[(srcframe * chans) + chan];
-                outsample += (float) (insample * (ResamplerFilter[filterindex2 + jsamples] + (interpolation2 * ResamplerFilterDifference[filterindex2 + jsamples])));
+                outsample += (float) (insample * (ResamplerFilter[filt_ind] + (interpolation2 * ResamplerFilterDifference[filt_ind])));
             }
 
             *(dst++) = outsample;
         }
-
-        outtime = ((ResampleFloatType)i) / ((ResampleFloatType)outrate);
     }
 
     return outframes * chans * sizeof(float);
@@ -525,7 +494,7 @@ static int SDL_BuildAudioTypeCVTFromFloat(SDL_AudioCVT *cvt, const SDL_AudioForm
     return retval;
 }
 
-#ifdef HAVE_LIBSAMPLERATE_H
+#ifdef HAVE_LIBSAMPLERATE
 
 static void SDL_ResampleCVT_SRC(SDL_AudioCVT *cvt, const int chans, const SDL_AudioFormat format)
 {
@@ -549,10 +518,12 @@ static void SDL_ResampleCVT_SRC(SDL_AudioCVT *cvt, const int chans, const SDL_Au
 
     result = SRC_src_simple(&data, SRC_converter, chans); /* Simple API converts the whole buffer at once.  No need for initialization. */
 /* !!! FIXME: Handle library failures? */
-#ifdef DEBUG_CONVERT
+#if DEBUG_CONVERT
     if (result != 0) {
         SDL_Log("src_simple() failed: %s", SRC_src_strerror(result));
     }
+#else
+    (void)result;
 #endif
 
     cvt->len_cvt = data.output_frames_gen * framelen;
@@ -564,7 +535,7 @@ static void SDL_ResampleCVT_SRC(SDL_AudioCVT *cvt, const int chans, const SDL_Au
     }
 }
 
-#endif /* HAVE_LIBSAMPLERATE_H */
+#endif /* HAVE_LIBSAMPLERATE */
 
 static int SDL_ResampleCVT(SDL_AudioCVT *cvt, const int chans, const SDL_AudioFormat format)
 {
@@ -626,7 +597,7 @@ RESAMPLER_FUNCS(6)
 RESAMPLER_FUNCS(8)
 #undef RESAMPLER_FUNCS
 
-#ifdef HAVE_LIBSAMPLERATE_H
+#ifdef HAVE_LIBSAMPLERATE
 #define RESAMPLER_FUNCS(chans)                                                  \
     static void SDLCALL                                                         \
         SDL_ResampleCVT_SRC_c##chans(SDL_AudioCVT *cvt, SDL_AudioFormat format) \
@@ -639,11 +610,11 @@ RESAMPLER_FUNCS(4)
 RESAMPLER_FUNCS(6)
 RESAMPLER_FUNCS(8)
 #undef RESAMPLER_FUNCS
-#endif /* HAVE_LIBSAMPLERATE_H */
+#endif /* HAVE_LIBSAMPLERATE */
 
 static SDL_AudioFilter ChooseCVTResampler(const int dst_channels)
 {
-#ifdef HAVE_LIBSAMPLERATE_H
+#ifdef HAVE_LIBSAMPLERATE
     if (SRC_available) {
         switch (dst_channels) {
         case 1:
@@ -660,7 +631,7 @@ static SDL_AudioFilter ChooseCVTResampler(const int dst_channels)
             break;
         }
     }
-#endif /* HAVE_LIBSAMPLERATE_H */
+#endif /* HAVE_LIBSAMPLERATE */
 
     switch (dst_channels) {
     case 1:
@@ -863,7 +834,7 @@ static int SDL_BuildAudioCVT(SDL_AudioCVT *cvt,
         /* swap in some SIMD versions for a few of these. */
         if (channel_converter == SDL_ConvertStereoToMono) {
             SDL_AudioFilter filter = NULL;
-#if HAVE_SSE3_INTRINSICS
+#ifdef SDL_SSE3_INTRINSICS
             if (!filter && SDL_HasSSE3()) {
                 filter = SDL_ConvertStereoToMono_SSE3;
             }
@@ -873,7 +844,7 @@ static int SDL_BuildAudioCVT(SDL_AudioCVT *cvt,
             }
         } else if (channel_converter == SDL_ConvertMonoToStereo) {
             SDL_AudioFilter filter = NULL;
-#if HAVE_SSE_INTRINSICS
+#ifdef SDL_SSE_INTRINSICS
             if (!filter && SDL_HasSSE()) {
                 filter = SDL_ConvertMonoToStereo_SSE;
             }
@@ -965,7 +936,7 @@ static Uint8 *EnsureStreamBufferSize(SDL_AudioStream *stream, int newlen)
     return offset ? ptr + (16 - offset) : ptr;
 }
 
-#ifdef HAVE_LIBSAMPLERATE_H
+#ifdef HAVE_LIBSAMPLERATE
 static int SDL_ResampleAudioStream_SRC(SDL_AudioStream *stream, const void *_inbuf, const int inbuflen, void *_outbuf, const int outbuflen)
 {
     const float *inbuf = (const float *)_inbuf;
@@ -1041,7 +1012,7 @@ static SDL_bool SetupLibSampleRateResampling(SDL_AudioStream *stream)
 
     return SDL_TRUE;
 }
-#endif /* HAVE_LIBSAMPLERATE_H */
+#endif /* HAVE_LIBSAMPLERATE */
 
 static int SDL_ResampleAudioStream(SDL_AudioStream *stream, const void *_inbuf, const int inbuflen, void *_outbuf, const int outbuflen)
 {
@@ -1064,7 +1035,7 @@ static int SDL_ResampleAudioStream(SDL_AudioStream *stream, const void *_inbuf, 
 
     /* update our left padding with end of current input, for next run. */
     if (cpy < paddingbytes) {  /* slide end of the padding buffer to the start if we aren't replacing the whole thing. */
-        SDL_memmove(lpadding, lpadding + (cpy / sizeof (float)), paddingbytes - cpy);
+        SDL_memmove(lpadding, lpadding + (cpy / sizeof(float)), paddingbytes - cpy);
     }
     SDL_memcpy((lpadding + paddingsamples) - (cpy / sizeof(float)), inbufend - cpy, cpy);
     return retval;
@@ -1101,6 +1072,16 @@ SDL_CreateAudioStream(SDL_AudioFormat src_format,
 
     if (dst_channels == 0) {
         SDL_InvalidParamError("dst_channels");
+        return NULL;
+    }
+
+    if (src_rate <= 0) {
+        SDL_InvalidParamError("src_rate");
+        return NULL;
+    }
+
+    if (dst_rate <= 0) {
+        SDL_InvalidParamError("dst_rate");
         return NULL;
     }
 
@@ -1162,7 +1143,7 @@ SDL_CreateAudioStream(SDL_AudioFormat src_format,
             return NULL; /* SDL_BuildAudioCVT should have called SDL_SetError. */
         }
 
-#ifdef HAVE_LIBSAMPLERATE_H
+#ifdef HAVE_LIBSAMPLERATE
         SetupLibSampleRateResampling(retval);
 #endif
 

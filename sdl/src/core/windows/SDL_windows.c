@@ -25,7 +25,7 @@
 #include "SDL_windows.h"
 
 #include <objbase.h> /* for CoInitialize/CoUninitialize (Win32 only) */
-#if defined(HAVE_ROAPI_H)
+#ifdef HAVE_ROAPI_H
 #include <roapi.h> /* For RoInitialize/RoUninitialize (Win32 only) */
 #else
 typedef enum RO_INIT_TYPE
@@ -266,7 +266,7 @@ WIN_LookupAudioDeviceName(const WCHAR *name, const GUID *guid)
     }
 
     ptr = (const unsigned char *)guid;
-    (void)SDL_snprintf(keystr, sizeof keystr,
+    (void)SDL_snprintf(keystr, sizeof(keystr),
                        "System\\CurrentControlSet\\Control\\MediaCategories\\{%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X}",
                        ptr[3], ptr[2], ptr[1], ptr[0], ptr[5], ptr[4], ptr[7], ptr[6],
                        ptr[8], ptr[9], ptr[10], ptr[11], ptr[12], ptr[13], ptr[14], ptr[15]);
@@ -411,7 +411,7 @@ SDL_RunApp(int _argc, char* _argv[], SDL_main_func mainFunction, void * reserved
 /*
  * Public APIs
  */
-#if !defined(SDL_VIDEO_DRIVER_WINDOWS)
+#ifndef SDL_VIDEO_DRIVER_WINDOWS
 
 #if defined(__WIN32__) || defined(__GDK__)
 int SDL_RegisterApp(const char *name, Uint32 style, void *hInst)

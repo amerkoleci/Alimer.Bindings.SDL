@@ -40,7 +40,7 @@
 #define __FreeBSD_kernel_version __FreeBSD_version
 #endif
 
-#if defined(HAVE_USB_H)
+#ifdef HAVE_USB_H
 #include <usb.h>
 #endif
 #ifdef __DragonFly__
@@ -51,7 +51,7 @@
 #include <dev/usb/usbhid.h>
 #endif
 
-#if defined(HAVE_USBHID_H)
+#ifdef HAVE_USBHID_H
 #include <usbhid.h>
 #elif defined(HAVE_LIBUSB_H)
 #include <libusb.h>
@@ -647,7 +647,7 @@ static void BSD_JoystickUpdate(SDL_Joystick *joy)
     static int x, y, xmin = 0xffff, ymin = 0xffff, xmax = 0, ymax = 0;
 
     if (joy->hwdata->type == BSDJOY_JOY) {
-        while (read(joy->hwdata->fd, &gameport, sizeof gameport) == sizeof gameport) {
+        while (read(joy->hwdata->fd, &gameport, sizeof(gameport)) == sizeof(gameport)) {
             if (SDL_abs(x - gameport.x) > 8) {
                 x = gameport.x;
                 if (x < xmin) {

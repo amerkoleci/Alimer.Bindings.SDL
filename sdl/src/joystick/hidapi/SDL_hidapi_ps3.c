@@ -69,7 +69,7 @@ static SDL_bool HIDAPI_DriverPS3_IsEnabled(void)
 {
     SDL_bool default_value;
 
-#if defined(__MACOS__)
+#ifdef __MACOS__
     /* This works well on macOS */
     default_value = SDL_TRUE;
 #elif defined(__WINDOWS__)
@@ -447,7 +447,7 @@ static void HIDAPI_DriverPS3_HandleStatePacket(SDL_Joystick *joystick, SDL_Drive
             17, /* SDL_GAMEPAD_BUTTON_DPAD_LEFT */
             15, /* SDL_GAMEPAD_BUTTON_DPAD_RIGHT */
         };
-        int i, axis_index = 6;
+        Uint8 i, axis_index = 6;
 
         for (i = 0; i < SDL_arraysize(button_axis_offsets); ++i) {
             int offset = button_axis_offsets[i];
@@ -583,7 +583,7 @@ static SDL_bool HIDAPI_DriverPS3ThirdParty_IsSupportedDevice(SDL_HIDAPI_Device *
 
     if (HIDAPI_SupportsPlaystationDetection(vendor_id, product_id)) {
         if (device && device->dev) {
-            size = ReadFeatureReport(device->dev, 0x03, data, sizeof data);
+            size = ReadFeatureReport(device->dev, 0x03, data, sizeof(data));
             if (size == 8 && data[2] == 0x26) {
                 /* Supported third party controller */
                 return SDL_TRUE;
@@ -772,7 +772,7 @@ static void HIDAPI_DriverPS3ThirdParty_HandleStatePacket18(SDL_Joystick *joystic
             7,  /* SDL_GAMEPAD_BUTTON_DPAD_LEFT */
             6,  /* SDL_GAMEPAD_BUTTON_DPAD_RIGHT */
         };
-        int i, axis_index = 6;
+        Uint8 i, axis_index = 6;
 
         for (i = 0; i < SDL_arraysize(button_axis_offsets); ++i) {
             int offset = button_axis_offsets[i];
@@ -888,7 +888,7 @@ static void HIDAPI_DriverPS3ThirdParty_HandleStatePacket19(SDL_Joystick *joystic
             8,  /* SDL_GAMEPAD_BUTTON_DPAD_LEFT */
             7,  /* SDL_GAMEPAD_BUTTON_DPAD_RIGHT */
         };
-        int i, axis_index = 6;
+        Uint8 i, axis_index = 6;
 
         for (i = 0; i < SDL_arraysize(button_axis_offsets); ++i) {
             int offset = button_axis_offsets[i];

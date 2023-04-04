@@ -22,7 +22,7 @@
 
 /* NSOpenGL implementation of SDL OpenGL support */
 
-#if SDL_VIDEO_OPENGL_CGL
+#ifdef SDL_VIDEO_OPENGL_CGL
 #include "SDL_cocoavideo.h"
 #include "SDL_cocoaopengl.h"
 #include "SDL_cocoaopengles.h"
@@ -270,9 +270,10 @@ SDL_GLContext Cocoa_GL_CreateContext(_THIS, SDL_Window *window)
         int glversion_minor;
         NSOpenGLPixelFormatAttribute profile;
         int interval;
+        int opaque;
 
         if (_this->gl_config.profile_mask == SDL_GL_CONTEXT_PROFILE_ES) {
-#if SDL_VIDEO_OPENGL_EGL
+#ifdef SDL_VIDEO_OPENGL_EGL
             /* Switch to EGL based functions */
             Cocoa_GL_UnloadLibrary(_this);
             _this->GL_LoadLibrary = Cocoa_GLES_LoadLibrary;
@@ -380,6 +381,9 @@ SDL_GLContext Cocoa_GL_CreateContext(_THIS, SDL_Window *window)
         /* vsync is handled separately by synchronizing with a display link. */
         interval = 0;
         [context setValues:&interval forParameter:NSOpenGLCPSwapInterval];
+
+        opaque = (window->flags & SDL_WINDOW_TRANSPARENT) ? 0 : 1;
+        [context setValues:&opaque forParameter:NSOpenGLCPSurfaceOpacity];
 
         if (Cocoa_GL_MakeCurrent(_this, window, sdlcontext) < 0) {
             SDL_GL_DeleteContext(sdlcontext);

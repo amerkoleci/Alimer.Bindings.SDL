@@ -28,7 +28,7 @@
 
 /* Need this so Linux systems define fseek64o, ftell64o and off64_t */
 #ifndef _LARGEFILE64_SOURCE
-#define _LARGEFILE64_SOURCE
+#define _LARGEFILE64_SOURCE 1
 #endif
 
 /* This is for a variable-length array at the end of a struct:
@@ -75,15 +75,15 @@
 #ifdef HAVE_STDIO_H
 #include <stdio.h>
 #endif
-#if defined(HAVE_STDLIB_H)
+#ifdef HAVE_STDLIB_H
 #include <stdlib.h>
 #elif defined(HAVE_MALLOC_H)
 #include <malloc.h>
 #endif
-#if defined(HAVE_STDDEF_H)
+#ifdef HAVE_STDDEF_H
 #include <stddef.h>
 #endif
-#if defined(HAVE_STDARG_H)
+#ifdef HAVE_STDARG_H
 #include <stdarg.h>
 #endif
 #ifdef HAVE_STRING_H
@@ -98,7 +98,7 @@
 #ifdef HAVE_WCHAR_H
 #include <wchar.h>
 #endif
-#if defined(HAVE_INTTYPES_H)
+#ifdef HAVE_INTTYPES_H
 #include <inttypes.h>
 #elif defined(HAVE_STDINT_H)
 #include <stdint.h>
@@ -185,6 +185,7 @@
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_intrin.h>
+
 #define SDL_MAIN_NOIMPL /* don't drag in header-only implementation of SDL_main */
 #include <SDL3/SDL_main.h>
 

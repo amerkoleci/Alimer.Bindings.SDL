@@ -23,7 +23,7 @@
 #ifndef SDL_x11opengl_h_
 #define SDL_x11opengl_h_
 
-#if SDL_VIDEO_OPENGL_GLX
+#ifdef SDL_VIDEO_OPENGL_GLX
 #include <SDL3/SDL_opengl.h>
 #include <GL/glx.h>
 
@@ -72,7 +72,7 @@ extern int X11_GL_LoadLibrary(_THIS, const char *path);
 extern SDL_FunctionPointer X11_GL_GetProcAddress(_THIS, const char *proc);
 extern void X11_GL_UnloadLibrary(_THIS);
 extern SDL_bool X11_GL_UseEGL(_THIS);
-extern XVisualInfo *X11_GL_GetVisual(_THIS, Display *display, int screen);
+extern XVisualInfo *X11_GL_GetVisual(_THIS, Display *display, int screen, SDL_bool transparent);
 extern SDL_GLContext X11_GL_CreateContext(_THIS, SDL_Window *window);
 extern int X11_GL_MakeCurrent(_THIS, SDL_Window *window,
                               SDL_GLContext context);

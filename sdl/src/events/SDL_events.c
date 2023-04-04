@@ -25,10 +25,10 @@
 #include "SDL_events_c.h"
 #include "../SDL_hints_c.h"
 #include "../timer/SDL_timer_c.h"
-#if !SDL_JOYSTICK_DISABLED
+#ifndef SDL_JOYSTICK_DISABLED
 #include "../joystick/SDL_joystick_c.h"
 #endif
-#if !SDL_SENSOR_DISABLED
+#ifndef SDL_SENSOR_DISABLED
 #include "../sensor/SDL_sensor_c.h"
 #endif
 #include "../video/SDL_sysvideo.h"
@@ -60,7 +60,7 @@ static SDL_EventWatcher *SDL_event_watchers = NULL;
 static int SDL_event_watchers_count = 0;
 static SDL_bool SDL_event_watchers_dispatching = SDL_FALSE;
 static SDL_bool SDL_event_watchers_removed = SDL_FALSE;
-static SDL_atomic_t SDL_sentinel_pending;
+static SDL_AtomicInt SDL_sentinel_pending;
 
 typedef struct
 {
@@ -89,7 +89,7 @@ static struct
 {
     SDL_mutex *lock;
     SDL_bool active;
-    SDL_atomic_t count;
+    SDL_AtomicInt count;
     int max_events_seen;
     SDL_EventEntry *head;
     SDL_EventEntry *tail;
@@ -98,7 +98,7 @@ static struct
     SDL_SysWMEntry *wmmsg_free;
 } SDL_EventQ = { NULL, SDL_FALSE, { 0 }, 0, NULL, NULL, NULL, NULL, NULL };
 
-#if !SDL_JOYSTICK_DISABLED
+#ifndef SDL_JOYSTICK_DISABLED
 
 static SDL_bool SDL_update_joysticks = SDL_TRUE;
 
@@ -109,7 +109,7 @@ static void SDLCALL SDL_AutoUpdateJoysticksChanged(void *userdata, const char *n
 
 #endif /* !SDL_JOYSTICK_DISABLED */
 
-#if !SDL_SENSOR_DISABLED
+#ifndef SDL_SENSOR_DISABLED
 
 static SDL_bool SDL_update_sensors = SDL_TRUE;
 
@@ -141,7 +141,7 @@ static void SDLCALL SDL_EventLoggingChanged(void *userdata, const char *name, co
 
 static void SDL_LogEvent(const SDL_Event *event)
 {
-    char name[32];
+    char name[64];
     char details[128];
 
     /* sensor/mouse/finger motion are spammy, ignore these if they aren't demanded. */
@@ -203,6 +203,8 @@ static void SDL_LogEvent(const SDL_Event *event)
         SDL_EVENT_CASE(SDL_EVENT_DID_ENTER_FOREGROUND)
         break;
         SDL_EVENT_CASE(SDL_EVENT_LOCALE_CHANGED)
+        break;
+        SDL_EVENT_CASE(SDL_EVENT_SYSTEM_THEME_CHANGED)
         break;
         SDL_EVENT_CASE(SDL_EVENT_KEYMAP_CHANGED)
         break;
@@ -549,7 +551,7 @@ int SDL_StartEventLoop(void)
      */
 
     /* Create the lock and set ourselves active */
-#if !SDL_THREADS_DISABLED
+#ifndef SDL_THREADS_DISABLED
     if (!SDL_EventQ.lock) {
         SDL_EventQ.lock = SDL_CreateMutex();
         if (SDL_EventQ.lock == NULL) {
@@ -850,14 +852,14 @@ static void SDL_PumpEventsInternal(SDL_bool push_sentinel)
         _this->PumpEvents(_this);
     }
 
-#if !SDL_JOYSTICK_DISABLED
+#ifndef SDL_JOYSTICK_DISABLED
     /* Check for joystick state change */
     if (SDL_update_joysticks) {
         SDL_UpdateJoysticks();
     }
 #endif
 
-#if !SDL_SENSOR_DISABLED
+#ifndef SDL_SENSOR_DISABLED
     /* Check for sensor state change */
     if (SDL_update_sensors) {
         SDL_UpdateSensors();
@@ -891,7 +893,7 @@ static SDL_bool SDL_events_need_periodic_poll(void)
 {
     SDL_bool need_periodic_poll = SDL_FALSE;
 
-#if !SDL_JOYSTICK_DISABLED
+#ifndef SDL_JOYSTICK_DISABLED
     need_periodic_poll = SDL_WasInit(SDL_INIT_JOYSTICK) && SDL_update_joysticks;
 #endif
 
@@ -974,11 +976,11 @@ static SDL_bool SDL_events_need_polling(void)
 {
     SDL_bool need_polling = SDL_FALSE;
 
-#if !SDL_JOYSTICK_DISABLED
+#ifndef SDL_JOYSTICK_DISABLED
     need_polling = SDL_WasInit(SDL_INIT_JOYSTICK) && SDL_update_joysticks && SDL_JoysticksOpened();
 #endif
 
-#if !SDL_SENSOR_DISABLED
+#ifndef SDL_SENSOR_DISABLED
     need_polling = need_polling ||
                    (SDL_WasInit(SDL_INIT_SENSOR) && SDL_update_sensors && SDL_SensorsOpened());
 #endif
@@ -1346,12 +1348,17 @@ int SDL_SendLocaleChangedEvent(void)
     return SDL_SendAppEvent(SDL_EVENT_LOCALE_CHANGED);
 }
 
+int SDL_SendSystemThemeChangedEvent(void)
+{
+    return SDL_SendAppEvent(SDL_EVENT_SYSTEM_THEME_CHANGED);
+}
+
 int SDL_InitEvents(void)
 {
-#if !SDL_JOYSTICK_DISABLED
+#ifndef SDL_JOYSTICK_DISABLED
     SDL_AddHintCallback(SDL_HINT_AUTO_UPDATE_JOYSTICKS, SDL_AutoUpdateJoysticksChanged, NULL);
 #endif
-#if !SDL_SENSOR_DISABLED
+#ifndef SDL_SENSOR_DISABLED
     SDL_AddHintCallback(SDL_HINT_AUTO_UPDATE_SENSORS, SDL_AutoUpdateSensorsChanged, NULL);
 #endif
     SDL_AddHintCallback(SDL_HINT_EVENT_LOGGING, SDL_EventLoggingChanged, NULL);
@@ -1372,10 +1379,10 @@ void SDL_QuitEvents(void)
     SDL_StopEventLoop();
     SDL_DelHintCallback(SDL_HINT_POLL_SENTINEL, SDL_PollSentinelChanged, NULL);
     SDL_DelHintCallback(SDL_HINT_EVENT_LOGGING, SDL_EventLoggingChanged, NULL);
-#if !SDL_JOYSTICK_DISABLED
+#ifndef SDL_JOYSTICK_DISABLED
     SDL_DelHintCallback(SDL_HINT_AUTO_UPDATE_JOYSTICKS, SDL_AutoUpdateJoysticksChanged, NULL);
 #endif
-#if !SDL_SENSOR_DISABLED
+#ifndef SDL_SENSOR_DISABLED
     SDL_DelHintCallback(SDL_HINT_AUTO_UPDATE_SENSORS, SDL_AutoUpdateSensorsChanged, NULL);
 #endif
 }

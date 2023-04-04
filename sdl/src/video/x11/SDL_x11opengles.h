@@ -23,7 +23,7 @@
 #ifndef SDL_x11opengles_h_
 #define SDL_x11opengles_h_
 
-#if SDL_VIDEO_OPENGL_EGL
+#ifdef SDL_VIDEO_OPENGL_EGL
 
 #include "../SDL_sysvideo.h"
 #include "../SDL_egl_c.h"
@@ -44,7 +44,7 @@ typedef struct SDL_PrivateGLESData
 #define X11_GLES_DeleteContext   SDL_EGL_DeleteContext
 
 extern int X11_GLES_LoadLibrary(_THIS, const char *path);
-extern XVisualInfo *X11_GLES_GetVisual(_THIS, Display *display, int screen);
+extern XVisualInfo *X11_GLES_GetVisual(_THIS, Display *display, int screen, SDL_bool transparent);
 extern SDL_GLContext X11_GLES_CreateContext(_THIS, SDL_Window *window);
 extern int X11_GLES_SwapWindow(_THIS, SDL_Window *window);
 extern int X11_GLES_MakeCurrent(_THIS, SDL_Window *window, SDL_GLContext context);

@@ -428,7 +428,6 @@
 #define SDL_HasMMX SDL_HasMMX_REAL
 #define SDL_HasNEON SDL_HasNEON_REAL
 #define SDL_HasPrimarySelectionText SDL_HasPrimarySelectionText_REAL
-#define SDL_HasRDTSC SDL_HasRDTSC_REAL
 #define SDL_HasRectIntersection SDL_HasRectIntersection_REAL
 #define SDL_HasRectIntersectionFloat SDL_HasRectIntersectionFloat_REAL
 #define SDL_HasSSE SDL_HasSSE_REAL
@@ -865,3 +864,7 @@
 #define SDL_SetRenderScale SDL_SetRenderScale_REAL
 #define SDL_GetRenderScale SDL_GetRenderScale_REAL
 #define SDL_GetRenderWindowSize SDL_GetRenderWindowSize_REAL
+#define SDL_GetSystemTheme SDL_GetSystemTheme_REAL
+#define SDL_CreatePopupWindow SDL_CreatePopupWindow_REAL
+#define SDL_GetWindowParent SDL_GetWindowParent_REAL
+#define SDL_CreateWindowWithPosition SDL_CreateWindowWithPosition_REAL

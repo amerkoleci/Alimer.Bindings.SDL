@@ -21,7 +21,7 @@
 
 #include "SDL_internal.h"
 
-#if SDL_VIDEO_DRIVER_RPI
+#ifdef SDL_VIDEO_DRIVER_RPI
 
 /* References
  * http://elinux.org/RPi_VideoCore_APIs
@@ -287,7 +287,7 @@ int RPI_CreateWindow(_THIS, SDL_Window *window)
             return -1;
         }
     }
-    wdata->egl_surface = SDL_EGL_CreateSurface(_this, (NativeWindowType)&wdata->dispman_window);
+    wdata->egl_surface = SDL_EGL_CreateSurface(_this, window, (NativeWindowType)&wdata->dispman_window);
 
     if (wdata->egl_surface == EGL_NO_SURFACE) {
         return SDL_SetError("Could not create GLES window surface");
@@ -331,7 +331,7 @@ void RPI_DestroyWindow(_THIS, SDL_Window *window)
             SDL_DestroyMutex(data->vsync_cond_mutex);
         }
 
-#if SDL_VIDEO_OPENGL_EGL
+#ifdef SDL_VIDEO_OPENGL_EGL
         if (data->egl_surface != EGL_NO_SURFACE) {
             SDL_EGL_DestroySurface(_this, data->egl_surface);
         }

@@ -20,7 +20,7 @@
 */
 #include "SDL_internal.h"
 
-#if SDL_AUDIO_DRIVER_NETBSD
+#ifdef SDL_AUDIO_DRIVER_NETBSD
 
 /*
  * Driver for native NetBSD audio(4).
@@ -208,8 +208,7 @@ static int NETBSDAUDIO_OpenDevice(_THIS, const char *devname)
     }
 
     /* Initialize all variables that we clean on shutdown */
-    this->hidden = (struct SDL_PrivateAudioData *)
-        SDL_malloc((sizeof *this->hidden));
+    this->hidden = (struct SDL_PrivateAudioData *) SDL_malloc(sizeof(*this->hidden));
     if (this->hidden == NULL) {
         return SDL_OutOfMemory();
     }

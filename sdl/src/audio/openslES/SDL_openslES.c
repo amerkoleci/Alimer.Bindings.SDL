@@ -20,7 +20,7 @@
 */
 #include "SDL_internal.h"
 
-#if SDL_AUDIO_DRIVER_OPENSLES
+#ifdef SDL_AUDIO_DRIVER_OPENSLES
 
 /* For more discussion of low latency audio on Android, see this:
    https://googlesamples.github.io/android-audio-high-performance/guides/opensl_es.html
@@ -589,7 +589,7 @@ failed:
 
 static int openslES_OpenDevice(_THIS, const char *devname)
 {
-    this->hidden = (struct SDL_PrivateAudioData *)SDL_calloc(1, (sizeof *this->hidden));
+    this->hidden = (struct SDL_PrivateAudioData *)SDL_calloc(1, sizeof(*this->hidden));
     if (this->hidden == NULL) {
         return SDL_OutOfMemory();
     }

@@ -21,7 +21,7 @@
 
 #include "SDL_internal.h"
 
-#if SDL_VIDEO_DRIVER_KMSDRM
+#ifdef SDL_VIDEO_DRIVER_KMSDRM
 
 /* SDL internals */
 #include "../../events/SDL_events_c.h"
@@ -218,7 +218,7 @@ static int KMSDRM_Available(void)
 
     kmsdrm_dri_pathsize = SDL_strlen(kmsdrm_dri_path);
     kmsdrm_dri_devnamesize = SDL_strlen(kmsdrm_dri_devname);
-    (void)SDL_snprintf(kmsdrm_dri_cardpath, sizeof kmsdrm_dri_cardpath, "%s%s",
+    (void)SDL_snprintf(kmsdrm_dri_cardpath, sizeof(kmsdrm_dri_cardpath), "%s%s",
                        kmsdrm_dri_path, kmsdrm_dri_devname);
 
     ret = get_driindex();
@@ -308,7 +308,7 @@ static SDL_VideoDevice *KMSDRM_CreateDevice(void)
     device->GL_DeleteContext = KMSDRM_GLES_DeleteContext;
     device->GL_DefaultProfileConfig = KMSDRM_GLES_DefaultProfileConfig;
 
-#if SDL_VIDEO_VULKAN
+#ifdef SDL_VIDEO_VULKAN
     device->Vulkan_LoadLibrary = KMSDRM_Vulkan_LoadLibrary;
     device->Vulkan_UnloadLibrary = KMSDRM_Vulkan_UnloadLibrary;
     device->Vulkan_GetInstanceExtensions = KMSDRM_Vulkan_GetInstanceExtensions;
@@ -914,7 +914,7 @@ static int KMSDRM_InitDisplays(_THIS)
     int i;
 
     /* Open /dev/dri/cardNN (/dev/drmN if on OpenBSD version less than 6.9) */
-    (void)SDL_snprintf(viddata->devpath, sizeof viddata->devpath, "%s%d",
+    (void)SDL_snprintf(viddata->devpath, sizeof(viddata->devpath), "%s%d",
                        kmsdrm_dri_cardpath, viddata->devindex);
 
     SDL_LogDebug(SDL_LOG_CATEGORY_VIDEO, "Opening device %s", viddata->devpath);
@@ -1198,7 +1198,7 @@ int KMSDRM_CreateSurfaces(_THIS, SDL_Window *window)
        but we need an EGL surface NOW, or GL won't be able to render into any surface
        and we won't see the first frame. */
     SDL_EGL_SetRequiredVisualId(_this, surface_fmt);
-    windata->egl_surface = SDL_EGL_CreateSurface(_this, (NativeWindowType)windata->gs);
+    windata->egl_surface = SDL_EGL_CreateSurface(_this, window, (NativeWindowType)windata->gs);
 
     if (windata->egl_surface == EGL_NO_SURFACE) {
         ret = SDL_SetError("Could not create EGL window surface");

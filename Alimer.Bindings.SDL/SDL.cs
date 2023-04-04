@@ -388,6 +388,26 @@ public enum SDL_DisplayEventID : byte
     SDL_DISPLAYEVENT_DISCONNECTED   /* Requires >= 2.0.14 */
 }
 
+/// <summary>
+/// System theme
+/// </summary>
+public enum SDL_SystemTheme
+{
+    /// <summary>
+    ///  Unknown system theme
+    /// </summary>
+    SDL_SYSTEM_THEME_UNKNOWN,
+    /// <summary>
+    /// Light colored system theme
+    /// </summary>
+    SDL_SYSTEM_THEME_LIGHT,
+    /// <summary>
+    /// Dark colored system theme
+    /// </summary>
+    SDL_SYSTEM_THEME_DARK,
+}
+
+
 public enum SDL_DisplayOrientation
 {
     SDL_ORIENTATION_UNKNOWN,
@@ -1108,7 +1128,25 @@ public static unsafe partial class SDL
     public static extern int SDL_CreateWindowAndRenderer(int width, int height, SDL_WindowFlags windowFlags, out SDL_Window window, out SDL_Renderer renderer);
 
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+    private static extern SDL_Window SDL_CreatePopupWindow(SDL_Window parent, int offset_x, int offset_y, int w, int h, SDL_WindowFlags flags);
+
+    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern SDL_Window SDL_CreateWindowFrom(nint data);
+
+    [DllImport(LibName, EntryPoint = "SDL_CreateWindowWithPosition", CallingConvention = CallingConvention.Cdecl)]
+    private static extern SDL_Window INTERNAL_SDL_CreateWindowWithPosition(byte* title, int x, int y, int w, int h, uint flags);
+
+    public static SDL_Window SDL_CreateWindowWithPosition(string title, int x, int y, int width, int height, SDL_WindowFlags flags)
+    {
+        int utf8TitleBufSize = Utf8Size(title);
+        byte* utf8Title = stackalloc byte[utf8TitleBufSize];
+        return INTERNAL_SDL_CreateWindowWithPosition(
+            Utf8Encode(title, utf8Title, utf8TitleBufSize),
+            x, y,
+            width, height,
+            (uint)flags
+        );
+    }
 
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern void SDL_DestroyWindow(SDL_Window window);
@@ -1171,6 +1209,9 @@ public static unsafe partial class SDL
     {
         return GetString(INTERNAL_SDL_GetCurrentVideoDriver());
     }
+
+    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+    public static extern SDL_SystemTheme SDL_GetSystemTheme();
 
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern SDL_DisplayMode* SDL_GetDesktopDisplayMode(SDL_DisplayID displayID, out SDL_DisplayMode mode);
@@ -1305,6 +1346,9 @@ public static unsafe partial class SDL
 
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern SDL_Window SDL_GetWindowFromID(uint id);
+
+    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+    public static extern SDL_Window SDL_GetWindowParent(SDL_Window window);
 
     /* window refers to an SDL_Window* */
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]

@@ -64,7 +64,9 @@
 #include "../../events/SDL_keysym_to_scancode_c.h"
 
 /* Clamp the wl_seat version on older versions of libwayland. */
-#if SDL_WAYLAND_CHECK_VERSION(1, 21, 0)
+#if SDL_WAYLAND_CHECK_VERSION(1, 22, 0)
+#define SDL_WL_SEAT_VERSION 9
+#elif SDL_WAYLAND_CHECK_VERSION(1, 21, 0)
 #define SDL_WL_SEAT_VERSION 8
 #else
 #define SDL_WL_SEAT_VERSION 5
@@ -844,11 +846,31 @@ static void pointer_handle_axis(void *data, struct wl_pointer *pointer,
     }
 }
 
-static void pointer_handle_frame(void *data, struct wl_pointer *pointer)
+static void
+pointer_handle_axis_relative_direction(void *data, struct wl_pointer *pointer,
+                    uint32_t axis, uint32_t axis_relative_direction)
+{
+    struct SDL_WaylandInput *input = data;
+    if (axis != WL_POINTER_AXIS_VERTICAL_SCROLL) {
+        return;
+    }
+    switch (axis_relative_direction) {
+        case WL_POINTER_AXIS_RELATIVE_DIRECTION_IDENTICAL:
+            input->pointer_curr_axis_info.direction = SDL_MOUSEWHEEL_NORMAL;
+            break;
+        case WL_POINTER_AXIS_RELATIVE_DIRECTION_INVERTED:
+            input->pointer_curr_axis_info.direction = SDL_MOUSEWHEEL_FLIPPED;
+            break;
+    }
+}
+
+static void
+pointer_handle_frame(void *data, struct wl_pointer *pointer)
 {
     struct SDL_WaylandInput *input = data;
     SDL_WindowData *window = input->pointer_focus;
     float x, y;
+    SDL_MouseWheelDirection direction = input->pointer_curr_axis_info.direction;
 
     switch (input->pointer_curr_axis_info.x_axis_type) {
     case AXIS_EVENT_CONTINUOUS:
@@ -885,7 +907,7 @@ static void pointer_handle_frame(void *data, struct wl_pointer *pointer)
 
     if (x != 0.0f || y != 0.0f) {
         SDL_SendMouseWheel(input->pointer_curr_axis_info.timestamp_ns,
-                           window->sdlwindow, 0, x, y, SDL_MOUSEWHEEL_NORMAL);
+                           window->sdlwindow, 0, x, y, direction);
     }
 }
 
@@ -927,7 +949,8 @@ static const struct wl_pointer_listener pointer_listener = {
     pointer_handle_axis_source,   /* Version 5 */
     pointer_handle_axis_stop,     /* Version 5 */
     pointer_handle_axis_discrete, /* Version 5 */
-    pointer_handle_axis_value120  /* Version 8 */
+    pointer_handle_axis_value120,  /* Version 8 */
+    pointer_handle_axis_relative_direction /* Version 9 */
 };
 
 static void touch_handler_down(void *data, struct wl_touch *touch, uint32_t serial,
@@ -2707,16 +2730,28 @@ void Wayland_display_destroy_input(SDL_VideoData *d)
     }
 
     if (input->keyboard) {
-        wl_keyboard_destroy(input->keyboard);
+        if (wl_keyboard_get_version(input->keyboard) >= WL_KEYBOARD_RELEASE_SINCE_VERSION) {
+            wl_keyboard_release(input->keyboard);
+        } else {
+            wl_keyboard_destroy(input->keyboard);
+        }
     }
 
     if (input->pointer) {
-        wl_pointer_destroy(input->pointer);
+        if (wl_pointer_get_version(input->pointer) >= WL_POINTER_RELEASE_SINCE_VERSION) {
+            wl_pointer_release(input->pointer);
+        } else {
+            wl_pointer_destroy(input->pointer);
+        }
     }
 
     if (input->touch) {
         SDL_DelTouch(1);
-        wl_touch_destroy(input->touch);
+        if (wl_touch_get_version(input->touch) >= WL_TOUCH_RELEASE_SINCE_VERSION) {
+            wl_touch_release(input->touch);
+        } else {
+            wl_touch_destroy(input->touch);
+        }
     }
 
     if (input->tablet) {
@@ -2724,7 +2759,11 @@ void Wayland_display_destroy_input(SDL_VideoData *d)
     }
 
     if (input->seat) {
-        wl_seat_destroy(input->seat);
+        if (wl_seat_get_version(input->seat) >= WL_SEAT_RELEASE_SINCE_VERSION) {
+            wl_seat_release(input->seat);
+        } else {
+            wl_seat_destroy(input->seat);
+        }
     }
 
     if (input->xkb.compose_state) {

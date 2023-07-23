@@ -37,8 +37,8 @@
 @end
 
 /* Initialization/Query functions */
-static int Cocoa_VideoInit(_THIS);
-static void Cocoa_VideoQuit(_THIS);
+static int Cocoa_VideoInit(SDL_VideoDevice *_this);
+static void Cocoa_VideoQuit(SDL_VideoDevice *_this);
 
 /* Cocoa driver bootstrap functions */
 
@@ -171,9 +171,9 @@ static SDL_VideoDevice *Cocoa_CreateDevice(void)
         device->StopTextInput = Cocoa_StopTextInput;
         device->SetTextInputRect = Cocoa_SetTextInputRect;
 
-        device->SetClipboardText = Cocoa_SetClipboardText;
-        device->GetClipboardText = Cocoa_GetClipboardText;
-        device->HasClipboardText = Cocoa_HasClipboardText;
+        device->SetClipboardData = Cocoa_SetClipboardData;
+        device->GetClipboardData = Cocoa_GetClipboardData;
+        device->HasClipboardData = Cocoa_HasClipboardData;
 
         device->free = Cocoa_DeleteDevice;
 
@@ -188,7 +188,7 @@ VideoBootStrap COCOA_bootstrap = {
     Cocoa_CreateDevice
 };
 
-int Cocoa_VideoInit(_THIS)
+int Cocoa_VideoInit(SDL_VideoDevice *_this)
 {
     @autoreleasepool {
         SDL_CocoaVideoData *data = (__bridge SDL_CocoaVideoData *)_this->driverdata;
@@ -211,7 +211,7 @@ int Cocoa_VideoInit(_THIS)
     }
 }
 
-void Cocoa_VideoQuit(_THIS)
+void Cocoa_VideoQuit(SDL_VideoDevice *_this)
 {
     @autoreleasepool {
         SDL_CocoaVideoData *data = (__bridge SDL_CocoaVideoData *)_this->driverdata;
@@ -291,7 +291,7 @@ NSImage *Cocoa_CreateImage(SDL_Surface *surface)
 /*
  * macOS log support.
  *
- * This doesn't really have aything to do with the interfaces of the SDL video
+ * This doesn't really have anything to do with the interfaces of the SDL video
  *  subsystem, but we need to stuff this into an Objective-C source code file.
  *
  * NOTE: This is copypasted in src/video/uikit/SDL_uikitvideo.m! Be sure both

@@ -49,7 +49,7 @@ static SDL_AssertState SDLCALL SDL_PromptAssertion(const SDL_AssertData *data, v
 static SDL_AssertData *triggered_assertions = NULL;
 
 #ifndef SDL_THREADS_DISABLED
-static SDL_mutex *assertion_mutex = NULL;
+static SDL_Mutex *assertion_mutex = NULL;
 #endif
 
 static SDL_AssertionHandler assertion_handler = SDL_PromptAssertion;
@@ -270,7 +270,7 @@ static SDL_AssertState SDLCALL SDL_PromptAssertion(const SDL_AssertData *data, v
             } else {
                 okay = SDL_FALSE;
             }
-            free(buf);
+            free(buf);  /* This should NOT be SDL_free() */
 
             if (okay) {
                 break;
@@ -318,9 +318,7 @@ static SDL_AssertState SDLCALL SDL_PromptAssertion(const SDL_AssertData *data, v
     return state;
 }
 
-SDL_AssertState
-SDL_ReportAssertion(SDL_AssertData *data, const char *func, const char *file,
-                    int line)
+SDL_AssertState SDL_ReportAssertion(SDL_AssertData *data, const char *func, const char *file, int line)
 {
     SDL_AssertState state = SDL_ASSERTION_IGNORE;
     static int assertion_running = 0;

@@ -101,7 +101,7 @@ typedef struct
     GL_FBOList *framebuffers;
 
     /* OpenGL functions */
-#define SDL_PROC(ret, func, params) ret(APIENTRY *func) params;
+#define SDL_PROC(ret, func, params) ret (APIENTRY *func) params;
 #include "SDL_glfuncs.h"
 #undef SDL_PROC
 
@@ -145,8 +145,7 @@ typedef struct
     GL_FBOList *fbo;
 } GL_TextureData;
 
-SDL_FORCE_INLINE const char *
-GL_TranslateError(GLenum error)
+static const char *GL_TranslateError(GLenum error)
 {
 #define GL_ERROR_TRANSLATE(e) \
     case e:                   \
@@ -166,8 +165,7 @@ GL_TranslateError(GLenum error)
 #undef GL_ERROR_TRANSLATE
 }
 
-SDL_FORCE_INLINE void
-GL_ClearErrors(SDL_Renderer *renderer)
+static void GL_ClearErrors(SDL_Renderer *renderer)
 {
     GL_RenderData *data = (GL_RenderData *)renderer->driverdata;
 
@@ -192,8 +190,7 @@ GL_ClearErrors(SDL_Renderer *renderer)
     }
 }
 
-SDL_FORCE_INLINE int
-GL_CheckAllErrors(const char *prefix, SDL_Renderer *renderer, const char *file, int line, const char *function)
+static int GL_CheckAllErrors(const char *prefix, SDL_Renderer *renderer, const char *file, int line, const char *function)
 {
     GL_RenderData *data = (GL_RenderData *)renderer->driverdata;
     int ret = 0;
@@ -400,19 +397,18 @@ static SDL_bool GL_SupportsBlendMode(SDL_Renderer *renderer, SDL_BlendMode blend
     return SDL_TRUE;
 }
 
-SDL_FORCE_INLINE SDL_bool
-convert_format(GL_RenderData *renderdata, Uint32 pixel_format,
+static SDL_bool convert_format(GL_RenderData *renderdata, Uint32 pixel_format,
                GLint *internalFormat, GLenum *format, GLenum *type)
 {
     switch (pixel_format) {
     case SDL_PIXELFORMAT_ARGB8888:
-    case SDL_PIXELFORMAT_RGB888:
+    case SDL_PIXELFORMAT_XRGB8888:
         *internalFormat = GL_RGBA8;
         *format = GL_BGRA;
         *type = GL_UNSIGNED_INT_8_8_8_8_REV;
         break;
     case SDL_PIXELFORMAT_ABGR8888:
-    case SDL_PIXELFORMAT_BGR888:
+    case SDL_PIXELFORMAT_XBGR8888:
         *internalFormat = GL_RGBA8;
         *format = GL_RGBA;
         *type = GL_UNSIGNED_INT_8_8_8_8_REV;
@@ -1975,8 +1971,8 @@ SDL_RenderDriver GL_RenderDriver = {
       4,
       { SDL_PIXELFORMAT_ARGB8888,
         SDL_PIXELFORMAT_ABGR8888,
-        SDL_PIXELFORMAT_RGB888,
-        SDL_PIXELFORMAT_BGR888 },
+        SDL_PIXELFORMAT_XRGB8888,
+        SDL_PIXELFORMAT_XBGR8888 },
       0,
       0 }
 };

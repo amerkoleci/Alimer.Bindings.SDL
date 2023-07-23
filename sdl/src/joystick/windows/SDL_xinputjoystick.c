@@ -66,13 +66,6 @@ int SDL_XINPUT_JoystickInit(void)
 {
     s_bXInputEnabled = SDL_GetHintBoolean(SDL_HINT_XINPUT_ENABLED, SDL_TRUE);
 
-#ifdef SDL_JOYSTICK_RAWINPUT
-    if (RAWINPUT_IsEnabled()) {
-        /* The raw input driver handles more than 4 controllers, so prefer that when available */
-        s_bXInputEnabled = SDL_FALSE;
-    }
-#endif
-
     if (s_bXInputEnabled && WIN_LoadXInputDLL() < 0) {
         s_bXInputEnabled = SDL_FALSE; /* oh well. */
     }
@@ -239,6 +232,20 @@ static void AddXInputDevice(Uint8 userid, BYTE SubType, JoyStick_DeviceData **pC
     Uint16 version = 0;
     JoyStick_DeviceData *pPrevJoystick = NULL;
     JoyStick_DeviceData *pNewJoystick = *pContext;
+
+#ifdef SDL_JOYSTICK_RAWINPUT
+    if (RAWINPUT_IsEnabled()) {
+        /* The raw input driver handles more than 4 controllers, so prefer that when available */
+        /* We do this check here rather than at the top of SDL_XINPUT_JoystickDetect() because
+           we need to check XInput state before RAWINPUT gets a hold of the device, otherwise
+           when a controller is connected via the wireless adapter, it will shut down at the
+           first subsequent XInput call. This seems like a driver stack bug?
+
+           Reference: https://github.com/libsdl-org/SDL/issues/3468
+         */
+        return;
+    }
+#endif
 
     if (SDL_XInputUseOldJoystickMapping() && SubType != XINPUT_DEVSUBTYPE_GAMEPAD) {
         return;
@@ -497,8 +504,7 @@ int SDL_XINPUT_JoystickRumble(SDL_Joystick *joystick, Uint16 low_frequency_rumbl
     return 0;
 }
 
-Uint32
-SDL_XINPUT_JoystickGetCapabilities(SDL_Joystick *joystick)
+Uint32 SDL_XINPUT_JoystickGetCapabilities(SDL_Joystick *joystick)
 {
     return SDL_JOYCAP_RUMBLE;
 }
@@ -583,8 +589,7 @@ int SDL_XINPUT_JoystickRumble(SDL_Joystick *joystick, Uint16 low_frequency_rumbl
     return SDL_Unsupported();
 }
 
-Uint32
-SDL_XINPUT_JoystickGetCapabilities(SDL_Joystick *joystick)
+Uint32 SDL_XINPUT_JoystickGetCapabilities(SDL_Joystick *joystick)
 {
     return 0;
 }

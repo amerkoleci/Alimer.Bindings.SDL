@@ -31,11 +31,15 @@
 #include "SDL_windowsshape.h"
 #include "SDL_windowsvulkan.h"
 
+#ifdef SDL_GDK_TEXTINPUT
+#include "../gdk/SDL_gdktextinput.h"
+#endif
+
 /* #define HIGHDPI_DEBUG */
 
 /* Initialization/Query functions */
-static int WIN_VideoInit(_THIS);
-static void WIN_VideoQuit(_THIS);
+static int WIN_VideoInit(SDL_VideoDevice *_this);
+static void WIN_VideoQuit(SDL_VideoDevice *_this);
 
 /* Hints */
 SDL_bool g_WindowsEnableMessageLoop = SDL_TRUE;
@@ -58,7 +62,7 @@ static void SDLCALL UpdateWindowFrameUsableWhileCursorHidden(void *userdata, con
 }
 
 #if !defined(__XBOXONE__) && !defined(__XBOXSERIES__)
-static int WIN_SuspendScreenSaver(_THIS)
+static int WIN_SuspendScreenSaver(SDL_VideoDevice *_this)
 {
     if (_this->suspend_screensaver) {
         SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED);
@@ -253,9 +257,24 @@ static SDL_VideoDevice *WIN_CreateDevice(void)
     device->ClearComposition = WIN_ClearComposition;
     device->IsTextInputShown = WIN_IsTextInputShown;
 
-    device->SetClipboardText = WIN_SetClipboardText;
-    device->GetClipboardText = WIN_GetClipboardText;
-    device->HasClipboardText = WIN_HasClipboardText;
+    device->SetClipboardData = WIN_SetClipboardData;
+    device->GetClipboardData = WIN_GetClipboardData;
+    device->HasClipboardData = WIN_HasClipboardData;
+#endif
+
+#ifdef SDL_GDK_TEXTINPUT
+    GDK_EnsureHints();
+
+    device->StartTextInput = GDK_StartTextInput;
+    device->StopTextInput = GDK_StopTextInput;
+    device->SetTextInputRect = GDK_SetTextInputRect;
+    device->ClearComposition = GDK_ClearComposition;
+    device->IsTextInputShown = GDK_IsTextInputShown;
+
+    device->HasScreenKeyboardSupport = GDK_HasScreenKeyboardSupport;
+    device->ShowScreenKeyboard = GDK_ShowScreenKeyboard;
+    device->HideScreenKeyboard = GDK_HideScreenKeyboard;
+    device->IsScreenKeyboardShown = GDK_IsScreenKeyboardShown;
 #endif
 
     device->free = WIN_DeleteDevice;
@@ -269,7 +288,7 @@ VideoBootStrap WINDOWS_bootstrap = {
     "windows", "SDL Windows video driver", WIN_CreateDevice
 };
 
-static BOOL WIN_DeclareDPIAwareUnaware(_THIS)
+static BOOL WIN_DeclareDPIAwareUnaware(SDL_VideoDevice *_this)
 {
 #if !defined(__XBOXONE__) && !defined(__XBOXSERIES__)
     SDL_VideoData *data = _this->driverdata;
@@ -284,7 +303,7 @@ static BOOL WIN_DeclareDPIAwareUnaware(_THIS)
     return FALSE;
 }
 
-static BOOL WIN_DeclareDPIAwareSystem(_THIS)
+static BOOL WIN_DeclareDPIAwareSystem(SDL_VideoDevice *_this)
 {
 #if !defined(__XBOXONE__) && !defined(__XBOXSERIES__)
     SDL_VideoData *data = _this->driverdata;
@@ -303,7 +322,7 @@ static BOOL WIN_DeclareDPIAwareSystem(_THIS)
     return FALSE;
 }
 
-static BOOL WIN_DeclareDPIAwarePerMonitor(_THIS)
+static BOOL WIN_DeclareDPIAwarePerMonitor(SDL_VideoDevice *_this)
 {
 #if !defined(__XBOXONE__) && !defined(__XBOXSERIES__)
     SDL_VideoData *data = _this->driverdata;
@@ -323,7 +342,7 @@ static BOOL WIN_DeclareDPIAwarePerMonitor(_THIS)
 #endif
 }
 
-static BOOL WIN_DeclareDPIAwarePerMonitorV2(_THIS)
+static BOOL WIN_DeclareDPIAwarePerMonitorV2(SDL_VideoDevice *_this)
 {
 #if defined(__XBOXONE__) || defined(__XBOXSERIES__)
     return FALSE;
@@ -362,7 +381,7 @@ static BOOL WIN_DeclareDPIAwarePerMonitorV2(_THIS)
 }
 
 #ifdef HIGHDPI_DEBUG
-static const char *WIN_GetDPIAwareness(_THIS)
+static const char *WIN_GetDPIAwareness(SDL_VideoDevice *_this)
 {
     SDL_VideoData *data = _this->driverdata;
 
@@ -386,7 +405,7 @@ static const char *WIN_GetDPIAwareness(_THIS)
 }
 #endif
 
-static void WIN_InitDPIAwareness(_THIS)
+static void WIN_InitDPIAwareness(SDL_VideoDevice *_this)
 {
     const char *hint = SDL_GetHint("SDL_WINDOWS_DPI_AWARENESS");
 
@@ -401,23 +420,11 @@ static void WIN_InitDPIAwareness(_THIS)
     }
 }
 
-static void WIN_InitDPIScaling(_THIS)
-{
-    SDL_VideoData *data = _this->driverdata;
-
-    if (SDL_GetHintBoolean("SDL_WINDOWS_DPI_SCALING", SDL_TRUE)) {
-        WIN_DeclareDPIAwarePerMonitorV2(_this);
-
-        data->dpi_scaling_enabled = SDL_TRUE;
-    }
-}
-
-int WIN_VideoInit(_THIS)
+int WIN_VideoInit(SDL_VideoDevice *_this)
 {
     SDL_VideoData *data = _this->driverdata;
 
     WIN_InitDPIAwareness(_this);
-    WIN_InitDPIScaling(_this);
 
 #ifdef HIGHDPI_DEBUG
     SDL_Log("DPI awareness: %s", WIN_GetDPIAwareness(_this));
@@ -429,7 +436,7 @@ int WIN_VideoInit(_THIS)
         SDL_DisplayMode mode;
 
         SDL_zero(mode);
-        D3D12_XBOX_GetResolution(&mode.pixel_w, &mode.pixel_h);
+        D3D12_XBOX_GetResolution(&mode.w, &mode.h);
         mode.refresh_rate = 60.0f;
         mode.format = SDL_PIXELFORMAT_ARGB8888;
 
@@ -455,7 +462,7 @@ int WIN_VideoInit(_THIS)
     return 0;
 }
 
-void WIN_VideoQuit(_THIS)
+void WIN_VideoQuit(SDL_VideoDevice *_this)
 {
 #if !defined(__XBOXONE__) && !defined(__XBOXSERIES__)
     WIN_QuitModes(_this);
@@ -484,8 +491,7 @@ void WIN_VideoQuit(_THIS)
 #endif
 #endif
 
-SDL_bool
-D3D_LoadDLL(void **pD3DDLL, IDirect3D9 **pDirect3D9Interface)
+SDL_bool D3D_LoadDLL(void **pD3DDLL, IDirect3D9 **pDirect3D9Interface)
 {
     *pD3DDLL = SDL_LoadObject("D3D9.DLL");
     if (*pD3DDLL) {
@@ -699,7 +705,7 @@ SDL_SystemTheme WIN_GetSystemTheme(void)
     return theme;
 }
 
-SDL_bool WIN_IsPerMonitorV2DPIAware(_THIS)
+SDL_bool WIN_IsPerMonitorV2DPIAware(SDL_VideoDevice *_this)
 {
 #if !defined(__XBOXONE__) && !defined(__XBOXSERIES__)
     SDL_VideoData *data = _this->driverdata;

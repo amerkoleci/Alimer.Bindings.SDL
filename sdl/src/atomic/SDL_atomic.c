@@ -85,7 +85,7 @@ extern __inline int _SDL_xadd_watcom(volatile int *a, int v);
   of the function.
 
   To generate the index of the lock we first shift by 3 bits to get
-  rid on the zero bits that result from 32 and 64 bit allignment of
+  rid on the zero bits that result from 32 and 64 bit alignment of
   data. We then mask off all but 5 bits and use those 5 bits as an
   index into the table.
 
@@ -122,8 +122,7 @@ static SDL_INLINE void leaveLock(void *a)
 }
 #endif
 
-SDL_bool
-SDL_AtomicCAS(SDL_AtomicInt *a, int oldval, int newval)
+SDL_bool SDL_AtomicCAS(SDL_AtomicInt *a, int oldval, int newval)
 {
 #ifdef HAVE_MSC_ATOMICS
     SDL_COMPILE_TIME_ASSERT(atomic_cas, sizeof(long) == sizeof(a->value));
@@ -152,8 +151,7 @@ SDL_AtomicCAS(SDL_AtomicInt *a, int oldval, int newval)
 #endif
 }
 
-SDL_bool
-SDL_AtomicCASPtr(void **a, void *oldval, void *newval)
+SDL_bool SDL_AtomicCASPtr(void **a, void *oldval, void *newval)
 {
 #ifdef HAVE_MSC_ATOMICS
     return _InterlockedCompareExchangePointer(a, newval, oldval) == oldval;
@@ -203,8 +201,7 @@ int SDL_AtomicSet(SDL_AtomicInt *a, int v)
 #endif
 }
 
-void *
-SDL_AtomicSetPtr(void **a, void *v)
+void *SDL_AtomicSetPtr(void **a, void *v)
 {
 #ifdef HAVE_MSC_ATOMICS
     return _InterlockedExchangePointer(a, v);
@@ -270,8 +267,7 @@ int SDL_AtomicGet(SDL_AtomicInt *a)
 #endif
 }
 
-void *
-SDL_AtomicGetPtr(void **a)
+void *SDL_AtomicGetPtr(void **a)
 {
 #ifdef HAVE_ATOMIC_LOAD_N
     return __atomic_load_n(a, __ATOMIC_SEQ_CST);

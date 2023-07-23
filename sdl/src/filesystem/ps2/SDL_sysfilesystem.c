@@ -28,8 +28,7 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /* System dependent filesystem routines                                */
 
-char *
-SDL_GetBasePath(void)
+char *SDL_GetBasePath(void)
 {
     char *retval;
     size_t len;
@@ -53,8 +52,8 @@ static void recursive_mkdir(const char *dir)
     char *p = NULL;
     size_t len;
 
-    snprintf(tmp, sizeof(tmp), "%s", dir);
-    len = strlen(tmp);
+    SDL_snprintf(tmp, sizeof(tmp), "%s", dir);
+    len = SDL_strlen(tmp);
     if (tmp[len - 1] == '/') {
         tmp[len - 1] = 0;
     }
@@ -63,7 +62,7 @@ static void recursive_mkdir(const char *dir)
         if (*p == '/') {
             *p = 0;
             // Just creating subfolders from current path
-            if (strstr(tmp, base) != NULL) {
+            if (SDL_strstr(tmp, base) != NULL) {
                 mkdir(tmp, S_IRWXU);
             }
 
@@ -71,12 +70,11 @@ static void recursive_mkdir(const char *dir)
         }
     }
 
-    free(base);
+    SDL_free(base);
     mkdir(tmp, S_IRWXU);
 }
 
-char *
-SDL_GetPrefPath(const char *org, const char *app)
+char *SDL_GetPrefPath(const char *org, const char *app)
 {
     char *retval = NULL;
     size_t len;
@@ -97,11 +95,18 @@ SDL_GetPrefPath(const char *org, const char *app)
     } else {
         SDL_snprintf(retval, len, "%s%s/", base, app);
     }
-    free(base);
+    SDL_free(base);
 
     recursive_mkdir(retval);
 
     return retval;
+}
+
+/* TODO */
+char *SDL_GetPath(SDL_Folder folder)
+{
+    SDL_Unsupported();
+    return NULL;
 }
 
 #endif /* SDL_FILESYSTEM_PS2 */

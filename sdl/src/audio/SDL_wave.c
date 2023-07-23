@@ -1709,7 +1709,7 @@ static int WaveCheckFormat(WaveFile *file, size_t datalength)
 
         /* All supported formats must have a proper block size. */
         if (format->blockalign == 0) {
-            return SDL_SetError("Invalid block alignment");
+            format->blockalign = 1;  /* force it to 1 if it was unset. */
         }
 
         /* If the fact chunk is valid and the appropriate hint is set, the
@@ -2039,22 +2039,22 @@ static int WaveLoad(SDL_RWops *src, WaveFile *file, SDL_AudioSpec *spec, Uint8 *
     case ALAW_CODE:
     case MULAW_CODE:
         /* These can be easily stored in the byte order of the system. */
-        spec->format = AUDIO_S16SYS;
+        spec->format = SDL_AUDIO_S16SYS;
         break;
     case IEEE_FLOAT_CODE:
-        spec->format = AUDIO_F32LSB;
+        spec->format = SDL_AUDIO_F32LSB;
         break;
     case PCM_CODE:
         switch (format->bitspersample) {
         case 8:
-            spec->format = AUDIO_U8;
+            spec->format = SDL_AUDIO_U8;
             break;
         case 16:
-            spec->format = AUDIO_S16LSB;
+            spec->format = SDL_AUDIO_S16LSB;
             break;
         case 24: /* Has been shifted to 32 bits. */
         case 32:
-            spec->format = AUDIO_S32LSB;
+            spec->format = SDL_AUDIO_S32LSB;
             break;
         default:
             /* Just in case something unexpected happened in the checks. */
@@ -2075,10 +2075,9 @@ static int WaveLoad(SDL_RWops *src, WaveFile *file, SDL_AudioSpec *spec, Uint8 *
     return 0;
 }
 
-SDL_AudioSpec *
-SDL_LoadWAV_RW(SDL_RWops *src, int freesrc, SDL_AudioSpec *spec, Uint8 **audio_buf, Uint32 *audio_len)
+SDL_AudioSpec *SDL_LoadWAV_RW(SDL_RWops *src, SDL_bool freesrc, SDL_AudioSpec *spec, Uint8 **audio_buf, Uint32 *audio_len)
 {
-    int result;
+    int result = -1;
     WaveFile file;
 
     SDL_zero(file);
@@ -2086,16 +2085,16 @@ SDL_LoadWAV_RW(SDL_RWops *src, int freesrc, SDL_AudioSpec *spec, Uint8 **audio_b
     /* Make sure we are passed a valid data source */
     if (src == NULL) {
         /* Error may come from RWops. */
-        return NULL;
+        goto done;
     } else if (spec == NULL) {
         SDL_InvalidParamError("spec");
-        return NULL;
+        goto done;
     } else if (audio_buf == NULL) {
         SDL_InvalidParamError("audio_buf");
-        return NULL;
+        goto done;
     } else if (audio_len == NULL) {
         SDL_InvalidParamError("audio_len");
-        return NULL;
+        goto done;
     }
 
     *audio_buf = NULL;
@@ -2114,13 +2113,19 @@ SDL_LoadWAV_RW(SDL_RWops *src, int freesrc, SDL_AudioSpec *spec, Uint8 **audio_b
     }
 
     /* Cleanup */
-    if (freesrc) {
-        SDL_RWclose(src);
-    } else {
+    if (!freesrc) {
         SDL_RWseek(src, file.chunk.position, SDL_RW_SEEK_SET);
     }
     WaveFreeChunkData(&file.chunk);
     SDL_free(file.decoderdata);
 
-    return spec;
+done:
+    if (freesrc && src) {
+        SDL_RWclose(src);
+    }
+    if (result == 0) {
+        return spec;
+    } else {
+        return NULL;
+    }
 }

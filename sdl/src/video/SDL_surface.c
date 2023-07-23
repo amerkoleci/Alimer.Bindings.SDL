@@ -42,8 +42,7 @@ SDL_COMPILE_TIME_ASSERT(can_indicate_overflow, SDL_SIZE_MAX > SDL_MAX_SINT32);
  *
  * for FOURCC, use SDL_CalculateYUVSize()
  */
-static int
-SDL_CalculateRGBSize(Uint32 format, size_t width, size_t height, size_t *size, size_t *pitch, SDL_bool minimal)
+static int SDL_CalculateRGBSize(Uint32 format, size_t width, size_t height, size_t *size, size_t *pitch, SDL_bool minimal)
 {
     if (SDL_BITSPERPIXEL(format) >= 8) {
         if (SDL_size_mul_overflow(width, SDL_BYTESPERPIXEL(format), pitch)) {
@@ -113,8 +112,7 @@ int SDL_CalculateSize(Uint32 format, int width, int height, size_t *size, size_t
  * Create an empty RGB surface of the appropriate depth using the given
  * enum SDL_PIXELFORMAT_* format
  */
-SDL_Surface *
-SDL_CreateSurface(int width, int height, Uint32 format)
+SDL_Surface *SDL_CreateSurface(int width, int height, Uint32 format)
 {
     size_t pitch, size;
     SDL_Surface *surface;
@@ -206,8 +204,7 @@ SDL_CreateSurface(int width, int height, Uint32 format)
  * Create an RGB surface from an existing memory buffer using the given given
  * enum SDL_PIXELFORMAT_* format
  */
-SDL_Surface *
-SDL_CreateSurfaceFrom(void *pixels,
+SDL_Surface *SDL_CreateSurfaceFrom(void *pixels,
                       int width, int height, int pitch,
                       Uint32 format)
 {
@@ -285,8 +282,7 @@ int SDL_SetSurfaceRLE(SDL_Surface *surface, int flag)
     return 0;
 }
 
-SDL_bool
-SDL_SurfaceHasRLE(SDL_Surface *surface)
+SDL_bool SDL_SurfaceHasRLE(SDL_Surface *surface)
 {
     if (surface == NULL) {
         return SDL_FALSE;
@@ -329,8 +325,7 @@ int SDL_SetSurfaceColorKey(SDL_Surface *surface, int flag, Uint32 key)
     return 0;
 }
 
-SDL_bool
-SDL_SurfaceHasColorKey(SDL_Surface *surface)
+SDL_bool SDL_SurfaceHasColorKey(SDL_Surface *surface)
 {
     if (surface == NULL) {
         return SDL_FALSE;
@@ -595,8 +590,7 @@ int SDL_GetSurfaceBlendMode(SDL_Surface *surface, SDL_BlendMode *blendMode)
     return 0;
 }
 
-SDL_bool
-SDL_SetSurfaceClipRect(SDL_Surface *surface, const SDL_Rect *rect)
+SDL_bool SDL_SetSurfaceClipRect(SDL_Surface *surface, const SDL_Rect *rect)
 {
     SDL_Rect full_rect;
 
@@ -638,12 +632,12 @@ int SDL_GetSurfaceClipRect(SDL_Surface *surface, SDL_Rect *rect)
  * accelerated blitting function.
  *
  * These parts are separated out and each used internally by this
- * library in the optimimum places.  They are exported so that if
+ * library in the optimum places.  They are exported so that if
  * you know exactly what you are doing, you can optimize your code
  * by calling the one(s) you need.
  */
-int SDL_BlitSurfaceUnchecked(SDL_Surface *src, SDL_Rect *srcrect,
-                  SDL_Surface *dst, SDL_Rect *dstrect)
+int SDL_BlitSurfaceUnchecked(SDL_Surface *src, const SDL_Rect *srcrect,
+                             SDL_Surface *dst, const SDL_Rect *dstrect)
 {
     /* Check to make sure the blit mapping is valid */
     if ((src->map->dst != dst) ||
@@ -933,14 +927,14 @@ int SDL_PrivateBlitSurfaceScaled(SDL_Surface *src, const SDL_Rect *srcrect,
  *  This is a semi-private blit function and it performs low-level surface
  *  scaled blitting only.
  */
-int SDL_BlitSurfaceUncheckedScaled(SDL_Surface *src, SDL_Rect *srcrect,
-                        SDL_Surface *dst, SDL_Rect *dstrect)
+int SDL_BlitSurfaceUncheckedScaled(SDL_Surface *src, const SDL_Rect *srcrect,
+                                   SDL_Surface *dst, const SDL_Rect *dstrect)
 {
     return SDL_PrivateBlitSurfaceUncheckedScaled(src, srcrect, dst, dstrect, SDL_SCALEMODE_NEAREST);
 }
 
-int SDL_PrivateBlitSurfaceUncheckedScaled(SDL_Surface *src, SDL_Rect *srcrect,
-                               SDL_Surface *dst, SDL_Rect *dstrect, SDL_ScaleMode scaleMode)
+int SDL_PrivateBlitSurfaceUncheckedScaled(SDL_Surface *src, const SDL_Rect *srcrect,
+                                          SDL_Surface *dst, const SDL_Rect *dstrect, SDL_ScaleMode scaleMode)
 {
     static const Uint32 complex_copy_flags = (SDL_COPY_MODULATE_COLOR | SDL_COPY_MODULATE_ALPHA |
                                               SDL_COPY_BLEND | SDL_COPY_ADD | SDL_COPY_MOD | SDL_COPY_MUL |
@@ -1087,8 +1081,7 @@ void SDL_UnlockSurface(SDL_Surface *surface)
 /*
  * Creates a new surface identical to the existing surface
  */
-SDL_Surface *
-SDL_DuplicateSurface(SDL_Surface *surface)
+SDL_Surface *SDL_DuplicateSurface(SDL_Surface *surface)
 {
     return SDL_ConvertSurface(surface, surface->format);
 }
@@ -1096,8 +1089,7 @@ SDL_DuplicateSurface(SDL_Surface *surface)
 /*
  * Convert a surface into the specified pixel format.
  */
-SDL_Surface *
-SDL_ConvertSurface(SDL_Surface *surface, const SDL_PixelFormat *format)
+SDL_Surface *SDL_ConvertSurface(SDL_Surface *surface, const SDL_PixelFormat *format)
 {
     SDL_Surface *convert;
     Uint32 copy_flags;
@@ -1293,6 +1285,10 @@ SDL_ConvertSurface(SDL_Surface *surface, const SDL_PixelFormat *format)
 
             /* Create a dummy surface to get the colorkey converted */
             tmp = SDL_CreateSurface(1, 1, surface->format->format);
+            if (tmp == NULL) {
+                SDL_DestroySurface(convert);
+                return NULL;
+            }
 
             /* Share the palette, if any */
             if (surface->format->palette) {
@@ -1303,8 +1299,13 @@ SDL_ConvertSurface(SDL_Surface *surface, const SDL_PixelFormat *format)
 
             tmp->map->info.flags &= ~SDL_COPY_COLORKEY;
 
-            /* Convertion of the colorkey */
+            /* Conversion of the colorkey */
             tmp2 = SDL_ConvertSurface(tmp, format);
+            if (tmp2 == NULL) {
+                SDL_DestroySurface(tmp);
+                SDL_DestroySurface(convert);
+                return NULL;
+            }
 
             /* Get the converted colorkey */
             SDL_memcpy(&converted_colorkey, tmp2->pixels, tmp2->format->BytesPerPixel);
@@ -1341,8 +1342,7 @@ end:
     return convert;
 }
 
-SDL_Surface *
-SDL_ConvertSurfaceFormat(SDL_Surface *surface, Uint32 pixel_format)
+SDL_Surface *SDL_ConvertSurfaceFormat(SDL_Surface *surface, Uint32 pixel_format)
 {
     SDL_PixelFormat *fmt;
     SDL_Surface *convert = NULL;

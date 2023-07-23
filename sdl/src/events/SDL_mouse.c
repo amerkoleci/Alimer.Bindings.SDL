@@ -217,8 +217,7 @@ void SDL_SetDefaultCursor(SDL_Cursor *cursor)
     }
 }
 
-SDL_Mouse *
-SDL_GetMouse(void)
+SDL_Mouse *SDL_GetMouse(void)
 {
     return &SDL_mouse;
 }
@@ -236,8 +235,7 @@ static Uint32 GetButtonState(SDL_Mouse *mouse, SDL_bool include_touch)
     return buttonstate;
 }
 
-SDL_Window *
-SDL_GetMouseFocus(void)
+SDL_Window *SDL_GetMouseFocus(void)
 {
     SDL_Mouse *mouse = SDL_GetMouse();
 
@@ -252,8 +250,7 @@ SDL_GetMouseFocus(void)
  * -flibit
  */
 #if 0
-void
-SDL_ResetMouse(void)
+void SDL_ResetMouse(void)
 {
     SDL_Mouse *mouse = SDL_GetMouse();
     Uint32 buttonState = GetButtonState(mouse, SDL_FALSE);
@@ -353,7 +350,7 @@ int SDL_SendMouseMotion(Uint64 timestamp, SDL_Window *window, SDL_MouseID mouseI
     return SDL_PrivateSendMouseMotion(timestamp, window, mouseID, relative, x, y);
 }
 
-static float CalculateSystemScale(SDL_Mouse *mouse, const float *x, const float *y)
+static float CalculateSystemScale(SDL_Mouse *mouse, SDL_Window *window, const float *x, const float *y)
 {
     int i;
     int n = mouse->num_system_scale_values;
@@ -362,23 +359,38 @@ static float CalculateSystemScale(SDL_Mouse *mouse, const float *x, const float 
 
     /* If we're using a single scale value, return that */
     if (n == 1) {
-        return v[0];
-    }
-
-    speed = SDL_sqrtf((*x * *x) + (*y * *y));
-    for (i = 0; i < (n - 2); i += 2) {
-        if (speed < v[i + 2]) {
-            break;
+        scale = v[0];
+    } else {
+        speed = SDL_sqrtf((*x * *x) + (*y * *y));
+        for (i = 0; i < (n - 2); i += 2) {
+            if (speed < v[i + 2]) {
+                break;
+            }
+        }
+        if (i == (n - 2)) {
+            scale = v[n - 1];
+        } else if (speed <= v[i]) {
+            scale = v[i + 1];
+        } else {
+            coef = (speed - v[i]) / (v[i + 2] - v[i]);
+            scale = v[i + 1] + (coef * (v[i + 3] - v[i + 1]));
         }
     }
-    if (i == (n - 2)) {
-        scale = v[n - 1];
-    } else if (speed <= v[i]) {
-        scale = v[i + 1];
-    } else {
-        coef = (speed - v[i]) / (v[i + 2] - v[i]);
-        scale = v[i + 1] + (coef * (v[i + 3] - v[i + 1]));
+#ifdef __WIN32__
+    {
+        /* On Windows the mouse speed is affected by the content scale */
+        SDL_VideoDisplay *display;
+
+        if (window) {
+            display = SDL_GetVideoDisplayForWindow(window);
+        } else {
+            display = SDL_GetVideoDisplay(SDL_GetPrimaryDisplay());
+        }
+        if (display) {
+            scale *= display->content_scale;
+        }
     }
+#endif
     return scale;
 }
 
@@ -424,14 +436,14 @@ int SDL_SetMouseSystemScale(int num_values, const float *values)
     return 0;
 }
 
-static void GetScaledMouseDeltas(SDL_Mouse *mouse, float *x, float *y)
+static void GetScaledMouseDeltas(SDL_Mouse *mouse, SDL_Window *window, float *x, float *y)
 {
     if (mouse->relative_mode) {
         if (mouse->enable_relative_speed_scale) {
             *x *= mouse->relative_speed_scale;
             *y *= mouse->relative_speed_scale;
         } else if (mouse->enable_relative_system_scale && mouse->num_system_scale_values > 0) {
-            float relative_system_scale = CalculateSystemScale(mouse, x, y);
+            float relative_system_scale = CalculateSystemScale(mouse, window, x, y);
             *x *= relative_system_scale;
             *y *= relative_system_scale;
         }
@@ -532,7 +544,7 @@ static int SDL_PrivateSendMouseMotion(Uint64 timestamp, SDL_Window *window, SDL_
     }
 
     if (relative) {
-        GetScaledMouseDeltas(mouse, &x, &y);
+        GetScaledMouseDeltas(mouse, window, &x, &y);
         xrel = x;
         yrel = y;
         x = (mouse->last_x + xrel);
@@ -885,8 +897,7 @@ void SDL_QuitMouse(void)
                         SDL_MouseRelativeWarpMotionChanged, mouse);
 }
 
-Uint32
-SDL_GetMouseState(float *x, float *y)
+Uint32 SDL_GetMouseState(float *x, float *y)
 {
     SDL_Mouse *mouse = SDL_GetMouse();
 
@@ -899,8 +910,7 @@ SDL_GetMouseState(float *x, float *y)
     return GetButtonState(mouse, SDL_TRUE);
 }
 
-Uint32
-SDL_GetRelativeMouseState(float *x, float *y)
+Uint32 SDL_GetRelativeMouseState(float *x, float *y)
 {
     SDL_Mouse *mouse = SDL_GetMouse();
 
@@ -915,8 +925,7 @@ SDL_GetRelativeMouseState(float *x, float *y)
     return GetButtonState(mouse, SDL_TRUE);
 }
 
-Uint32
-SDL_GetGlobalMouseState(float *x, float *y)
+Uint32 SDL_GetGlobalMouseState(float *x, float *y)
 {
     SDL_Mouse *mouse = SDL_GetMouse();
 
@@ -1072,8 +1081,7 @@ int SDL_SetRelativeMouseMode(SDL_bool enabled)
     return 0;
 }
 
-SDL_bool
-SDL_GetRelativeMouseMode(void)
+SDL_bool SDL_GetRelativeMouseMode(void)
 {
     SDL_Mouse *mouse = SDL_GetMouse();
 
@@ -1158,9 +1166,7 @@ int SDL_CaptureMouse(SDL_bool enabled)
     return SDL_UpdateMouseCapture(SDL_FALSE);
 }
 
-SDL_Cursor *
-SDL_CreateCursor(const Uint8 *data, const Uint8 *mask,
-                 int w, int h, int hot_x, int hot_y)
+SDL_Cursor *SDL_CreateCursor(const Uint8 *data, const Uint8 *mask, int w, int h, int hot_x, int hot_y)
 {
     SDL_Surface *surface;
     SDL_Cursor *cursor;
@@ -1203,8 +1209,7 @@ SDL_CreateCursor(const Uint8 *data, const Uint8 *mask,
     return cursor;
 }
 
-SDL_Cursor *
-SDL_CreateColorCursor(SDL_Surface *surface, int hot_x, int hot_y)
+SDL_Cursor *SDL_CreateColorCursor(SDL_Surface *surface, int hot_x, int hot_y)
 {
     SDL_Mouse *mouse = SDL_GetMouse();
     SDL_Surface *temp = NULL;
@@ -1246,8 +1251,7 @@ SDL_CreateColorCursor(SDL_Surface *surface, int hot_x, int hot_y)
     return cursor;
 }
 
-SDL_Cursor *
-SDL_CreateSystemCursor(SDL_SystemCursor id)
+SDL_Cursor *SDL_CreateSystemCursor(SDL_SystemCursor id)
 {
     SDL_Mouse *mouse = SDL_GetMouse();
     SDL_Cursor *cursor;
@@ -1314,8 +1318,7 @@ int SDL_SetCursor(SDL_Cursor *cursor)
     return 0;
 }
 
-SDL_Cursor *
-SDL_GetCursor(void)
+SDL_Cursor *SDL_GetCursor(void)
 {
     SDL_Mouse *mouse = SDL_GetMouse();
 
@@ -1325,8 +1328,7 @@ SDL_GetCursor(void)
     return mouse->cur_cursor;
 }
 
-SDL_Cursor *
-SDL_GetDefaultCursor(void)
+SDL_Cursor *SDL_GetDefaultCursor(void)
 {
     SDL_Mouse *mouse = SDL_GetMouse();
 

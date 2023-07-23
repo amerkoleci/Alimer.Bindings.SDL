@@ -33,10 +33,14 @@
 #ifdef SDL_JOYSTICK_HIDAPI_PS4
 
 /* Define this if you want to log all packets from the controller */
-/*#define DEBUG_PS4_PROTOCOL*/
+#if 0
+#define DEBUG_PS4_PROTOCOL
+#endif
 
 /* Define this if you want to log calibration data */
-/*#define DEBUG_PS4_CALIBRATION*/
+#if 0
+#define DEBUG_PS4_CALIBRATION
+#endif
 
 #define BLUETOOTH_DISCONNECT_TIMEOUT_MS 500
 
@@ -131,8 +135,10 @@ typedef struct
     SDL_bool touchpad_supported;
     SDL_bool effects_supported;
     SDL_bool enhanced_mode;
+    SDL_bool enhanced_mode_available;
     SDL_bool report_sensors;
     SDL_bool report_touchpad;
+    SDL_bool report_battery;
     SDL_bool hardware_calibration;
     IMUCalibrationData calibration[6];
     Uint64 last_packet;
@@ -230,6 +236,20 @@ static void SetLedsForPlayerIndex(DS4EffectsState_t *effects, int player_index)
     effects->ucLedBlue = colors[player_index][2];
 }
 
+static SDL_bool ReadWiredSerial(SDL_HIDAPI_Device *device, char *serial, size_t serial_size)
+{
+    Uint8 data[USB_PACKET_LENGTH];
+    int size;
+
+    size = ReadFeatureReport(device->dev, k_ePS4FeatureReportIdSerialNumber, data, sizeof(data));
+    if (size >= 7 && (data[1] || data[2] || data[3] || data[4] || data[5] || data[6])) {
+        (void)SDL_snprintf(serial, serial_size, "%.2x-%.2x-%.2x-%.2x-%.2x-%.2x",
+                           data[6], data[5], data[4], data[3], data[2], data[1]);
+        return SDL_TRUE;
+    }
+    return SDL_FALSE;
+}
+
 static SDL_bool HIDAPI_DriverPS4_InitDevice(SDL_HIDAPI_Device *device)
 {
     SDL_DriverPS4_Context *ctx;
@@ -270,28 +290,13 @@ static SDL_bool HIDAPI_DriverPS4_InitDevice(SDL_HIDAPI_Device *device)
     /* Check for type of connection */
     ctx->is_dongle = (device->vendor_id == USB_VENDOR_SONY && device->product_id == USB_PRODUCT_SONY_DS4_DONGLE);
     if (ctx->is_dongle) {
-        size = ReadFeatureReport(device->dev, k_ePS4FeatureReportIdSerialNumber, data, sizeof(data));
-        if (size >= 7 && (data[1] || data[2] || data[3] || data[4] || data[5] || data[6])) {
-            (void)SDL_snprintf(serial, sizeof(serial), "%.2x-%.2x-%.2x-%.2x-%.2x-%.2x",
-                               data[6], data[5], data[4], data[3], data[2], data[1]);
-        }
-        device->is_bluetooth = SDL_FALSE;
+        ReadWiredSerial(device, serial, sizeof(serial));
         ctx->enhanced_mode = SDL_TRUE;
     } else if (device->vendor_id == USB_VENDOR_SONY && device->product_id == USB_PRODUCT_SONY_DS4_STRIKEPAD) {
-        device->is_bluetooth = SDL_FALSE;
         ctx->enhanced_mode = SDL_TRUE;
 
     } else if (device->vendor_id == USB_VENDOR_SONY) {
-        /* This will fail if we're on Bluetooth */
-        size = ReadFeatureReport(device->dev, k_ePS4FeatureReportIdSerialNumber, data, sizeof(data));
-        if (size >= 7 && (data[1] || data[2] || data[3] || data[4] || data[5] || data[6])) {
-            (void)SDL_snprintf(serial, sizeof(serial), "%.2x-%.2x-%.2x-%.2x-%.2x-%.2x",
-                               data[6], data[5], data[4], data[3], data[2], data[1]);
-            device->is_bluetooth = SDL_FALSE;
-            ctx->enhanced_mode = SDL_TRUE;
-        } else {
-            device->is_bluetooth = SDL_TRUE;
-
+        if (device->is_bluetooth) {
             /* Read a report to see if we're in enhanced mode */
             size = SDL_hid_read_timeout(device->dev, data, sizeof(data), 16);
 #ifdef DEBUG_PS4_PROTOCOL
@@ -306,97 +311,95 @@ static SDL_bool HIDAPI_DriverPS4_InitDevice(SDL_HIDAPI_Device *device)
                 data[0] <= k_EPS4ReportIdBluetoothState9) {
                 ctx->enhanced_mode = SDL_TRUE;
             }
+        } else {
+            ReadWiredSerial(device, serial, sizeof(serial));
+            ctx->enhanced_mode = SDL_TRUE;
         }
     } else {
         /* Third party controllers appear to all be wired */
-        device->is_bluetooth = SDL_FALSE;
         ctx->enhanced_mode = SDL_TRUE;
     }
-#ifdef DEBUG_PS4
-    SDL_Log("PS4 dongle = %s, bluetooth = %s\n", ctx->is_dongle ? "TRUE" : "FALSE", device->is_bluetooth ? "TRUE" : "FALSE");
-#endif
 
-    size = ReadFeatureReport(device->dev, k_ePS4FeatureReportIdCapabilities, data, sizeof(data));
-    /* Get the device capabilities */
-    if (size == 48 && data[2] == 0x27) {
-        Uint8 capabilities = data[4];
-        Uint8 device_type = data[5];
-        Uint16 gyro_numerator = LOAD16(data[10], data[11]);
-        Uint16 gyro_denominator = LOAD16(data[12], data[13]);
-        Uint16 accel_numerator = LOAD16(data[14], data[15]);
-        Uint16 accel_denominator = LOAD16(data[16], data[17]);
-
-#ifdef DEBUG_PS4_PROTOCOL
-        HIDAPI_DumpPacket("PS4 capabilities: size = %d", data, size);
-#endif
-        if (capabilities & 0x02) {
-            ctx->sensors_supported = SDL_TRUE;
-        }
-        if (capabilities & 0x04) {
-            ctx->lightbar_supported = SDL_TRUE;
-        }
-        if (capabilities & 0x08) {
-            ctx->vibration_supported = SDL_TRUE;
-        }
-        if (capabilities & 0x40) {
-            ctx->touchpad_supported = SDL_TRUE;
-        }
-
-        switch (device_type) {
-        case 0x00:
-            joystick_type = SDL_JOYSTICK_TYPE_GAMEPAD;
-            break;
-        case 0x01:
-            joystick_type = SDL_JOYSTICK_TYPE_GUITAR;
-            break;
-        case 0x02:
-            joystick_type = SDL_JOYSTICK_TYPE_DRUM_KIT;
-            break;
-        case 0x04:
-            joystick_type = SDL_JOYSTICK_TYPE_DANCE_PAD;
-            break;
-        case 0x06:
-            joystick_type = SDL_JOYSTICK_TYPE_WHEEL;
-            break;
-        case 0x07:
-            joystick_type = SDL_JOYSTICK_TYPE_ARCADE_STICK;
-            break;
-        case 0x08:
-            joystick_type = SDL_JOYSTICK_TYPE_FLIGHT_STICK;
-            break;
-        default:
-            joystick_type = SDL_JOYSTICK_TYPE_UNKNOWN;
-            break;
-        }
-
-        if (gyro_numerator && gyro_denominator) {
-            ctx->gyro_numerator = gyro_numerator;
-            ctx->gyro_denominator = gyro_denominator;
-        }
-        if (accel_numerator && accel_denominator) {
-            ctx->accel_numerator = accel_numerator;
-            ctx->accel_denominator = accel_denominator;
-        }
-    } else if (device->vendor_id == USB_VENDOR_SONY) {
+    if (device->vendor_id == USB_VENDOR_SONY) {
         ctx->official_controller = SDL_TRUE;
         ctx->sensors_supported = SDL_TRUE;
         ctx->lightbar_supported = SDL_TRUE;
         ctx->vibration_supported = SDL_TRUE;
         ctx->touchpad_supported = SDL_TRUE;
-    } else if (device->vendor_id == USB_VENDOR_RAZER) {
-        /* The Razer Raiju doesn't respond to the detection protocol, but has a touchpad and vibration */
-        ctx->vibration_supported = SDL_TRUE;
-        ctx->touchpad_supported = SDL_TRUE;
+    } else {
+        /* Third party controller capability request */
+        size = ReadFeatureReport(device->dev, k_ePS4FeatureReportIdCapabilities, data, sizeof(data));
+        /* Get the device capabilities */
+        if (size == 48 && data[2] == 0x27) {
+            Uint8 capabilities = data[4];
+            Uint8 device_type = data[5];
+            Uint16 gyro_numerator = LOAD16(data[10], data[11]);
+            Uint16 gyro_denominator = LOAD16(data[12], data[13]);
+            Uint16 accel_numerator = LOAD16(data[14], data[15]);
+            Uint16 accel_denominator = LOAD16(data[16], data[17]);
 
-        if (device->product_id == USB_PRODUCT_RAZER_TOURNAMENT_EDITION_BLUETOOTH ||
-            device->product_id == USB_PRODUCT_RAZER_ULTIMATE_EDITION_BLUETOOTH) {
-            device->is_bluetooth = SDL_TRUE;
+#ifdef DEBUG_PS4_PROTOCOL
+            HIDAPI_DumpPacket("PS4 capabilities: size = %d", data, size);
+#endif
+            if (capabilities & 0x02) {
+                ctx->sensors_supported = SDL_TRUE;
+            }
+            if (capabilities & 0x04) {
+                ctx->lightbar_supported = SDL_TRUE;
+            }
+            if (capabilities & 0x08) {
+                ctx->vibration_supported = SDL_TRUE;
+            }
+            if (capabilities & 0x40) {
+                ctx->touchpad_supported = SDL_TRUE;
+            }
+
+            switch (device_type) {
+            case 0x00:
+                joystick_type = SDL_JOYSTICK_TYPE_GAMEPAD;
+                break;
+            case 0x01:
+                joystick_type = SDL_JOYSTICK_TYPE_GUITAR;
+                break;
+            case 0x02:
+                joystick_type = SDL_JOYSTICK_TYPE_DRUM_KIT;
+                break;
+            case 0x04:
+                joystick_type = SDL_JOYSTICK_TYPE_DANCE_PAD;
+                break;
+            case 0x06:
+                joystick_type = SDL_JOYSTICK_TYPE_WHEEL;
+                break;
+            case 0x07:
+                joystick_type = SDL_JOYSTICK_TYPE_ARCADE_STICK;
+                break;
+            case 0x08:
+                joystick_type = SDL_JOYSTICK_TYPE_FLIGHT_STICK;
+                break;
+            default:
+                joystick_type = SDL_JOYSTICK_TYPE_UNKNOWN;
+                break;
+            }
+
+            if (gyro_numerator && gyro_denominator) {
+                ctx->gyro_numerator = gyro_numerator;
+                ctx->gyro_denominator = gyro_denominator;
+            }
+            if (accel_numerator && accel_denominator) {
+                ctx->accel_numerator = accel_numerator;
+                ctx->accel_denominator = accel_denominator;
+            }
+        } else if (device->vendor_id == USB_VENDOR_RAZER) {
+            /* The Razer Raiju doesn't respond to the detection protocol, but has a touchpad and vibration */
+            ctx->vibration_supported = SDL_TRUE;
+            ctx->touchpad_supported = SDL_TRUE;
         }
     }
     ctx->effects_supported = (ctx->lightbar_supported || ctx->vibration_supported);
 
     if (device->vendor_id == USB_VENDOR_PDP &&
-        device->product_id == USB_PRODUCT_VICTRIX_FS_PRO_V2) {
+        (device->product_id == USB_PRODUCT_VICTRIX_FS_PRO ||
+         device->product_id == USB_PRODUCT_VICTRIX_FS_PRO_V2)) {
         /* The Victrix FS Pro V2 reports that it has lightbar support,
          * but it doesn't respond to the effects packet, and will hang
          * on reboot if we send it.
@@ -630,10 +633,6 @@ static int HIDAPI_DriverPS4_UpdateEffects(SDL_HIDAPI_Device *device)
     SDL_DriverPS4_Context *ctx = (SDL_DriverPS4_Context *)device->context;
     DS4EffectsState_t effects;
 
-    if (!ctx->enhanced_mode || !ctx->effects_supported) {
-        return SDL_Unsupported();
-    }
-
     SDL_zero(effects);
 
     if (ctx->vibration_supported) {
@@ -656,36 +655,64 @@ static int HIDAPI_DriverPS4_UpdateEffects(SDL_HIDAPI_Device *device)
 
 static void HIDAPI_DriverPS4_TickleBluetooth(SDL_HIDAPI_Device *device)
 {
-    /* This is just a dummy packet that should have no effect, since we don't set the CRC */
-    Uint8 data[78];
+    SDL_DriverPS4_Context *ctx = (SDL_DriverPS4_Context *)device->context;
 
-    SDL_zeroa(data);
+    if (ctx->enhanced_mode) {
+        /* This is just a dummy packet that should have no effect, since we don't set the CRC */
+        Uint8 data[78];
 
-    data[0] = k_EPS4ReportIdBluetoothEffects;
-    data[1] = 0xC0; /* Magic value HID + CRC */
+        SDL_zeroa(data);
 
-    if (SDL_HIDAPI_LockRumble() == 0) {
-        SDL_HIDAPI_SendRumbleAndUnlock(device, data, sizeof(data));
+        data[0] = k_EPS4ReportIdBluetoothEffects;
+        data[1] = 0xC0; /* Magic value HID + CRC */
+
+        if (SDL_HIDAPI_LockRumble() == 0) {
+            SDL_HIDAPI_SendRumbleAndUnlock(device, data, sizeof(data));
+        }
+    } else {
+        /* We can't even send an invalid effects packet, or it will put the controller in enhanced mode */
+        if (device->num_joysticks > 0) {
+            HIDAPI_JoystickDisconnected(device, device->joysticks[0]);
+        }
     }
 }
 
-static void HIDAPI_DriverPS4_SetEnhancedMode(SDL_HIDAPI_Device *device, SDL_Joystick *joystick)
+static void HIDAPI_DriverPS4_SetEnhancedModeAvailable(SDL_DriverPS4_Context *ctx)
 {
-    SDL_DriverPS4_Context *ctx = (SDL_DriverPS4_Context *)device->context;
+    if (!ctx->effects_supported) {
+        /* We shouldn't be sending any packets to the controller */
+        return;
+    }
 
-    if (!ctx->enhanced_mode) {
+    ctx->enhanced_mode_available = SDL_TRUE;
+
+    if (ctx->touchpad_supported) {
+        SDL_PrivateJoystickAddTouchpad(ctx->joystick, 2);
+    }
+    if (ctx->sensors_supported) {
+        SDL_PrivateJoystickAddSensor(ctx->joystick, SDL_SENSOR_GYRO, 250.0f);
+        SDL_PrivateJoystickAddSensor(ctx->joystick, SDL_SENSOR_ACCEL, 250.0f);
+    }
+}
+
+static void HIDAPI_DriverPS4_SetEnhancedMode(SDL_DriverPS4_Context *ctx)
+{
+    if (!ctx->enhanced_mode_available) {
+        HIDAPI_DriverPS4_SetEnhancedModeAvailable(ctx);
+    }
+
+    if (!ctx->enhanced_mode && ctx->enhanced_mode_available) {
         ctx->enhanced_mode = SDL_TRUE;
 
         if (ctx->touchpad_supported) {
-            SDL_PrivateJoystickAddTouchpad(joystick, 2);
             ctx->report_touchpad = SDL_TRUE;
         }
-        if (ctx->sensors_supported) {
-            SDL_PrivateJoystickAddSensor(joystick, SDL_SENSOR_GYRO, 250.0f);
-            SDL_PrivateJoystickAddSensor(joystick, SDL_SENSOR_ACCEL, 250.0f);
+
+        if (ctx->device->is_bluetooth && ctx->official_controller) {
+            ctx->report_battery = SDL_TRUE;
         }
 
-        HIDAPI_DriverPS4_UpdateEffects(device);
+        HIDAPI_DriverPS4_UpdateEffects(ctx->device);
     }
 }
 
@@ -693,9 +720,12 @@ static void SDLCALL SDL_PS4RumbleHintChanged(void *userdata, const char *name, c
 {
     SDL_DriverPS4_Context *ctx = (SDL_DriverPS4_Context *)userdata;
 
-    /* This is a one-way trip, you can't switch the controller back to simple report mode */
-    if (SDL_GetStringBoolean(hint, SDL_FALSE)) {
-        HIDAPI_DriverPS4_SetEnhancedMode(ctx->device, ctx->joystick);
+    if (SDL_strcasecmp(hint, "auto") == 0) {
+        /* Mark the controller as enhanced mode capable, but wait for API calls to enable it */
+        HIDAPI_DriverPS4_SetEnhancedModeAvailable(ctx);
+    } else if (SDL_GetStringBoolean(hint, SDL_FALSE)) {
+        /* This is a one-way trip, you can't switch the controller back to simple report mode */
+        HIDAPI_DriverPS4_SetEnhancedMode(ctx);
     }
 }
 
@@ -734,11 +764,9 @@ static SDL_bool HIDAPI_DriverPS4_OpenJoystick(SDL_HIDAPI_Device *device, SDL_Joy
     /* Initialize the joystick capabilities */
     joystick->nbuttons = ctx->touchpad_supported ? 16 : 15;
     joystick->naxes = SDL_GAMEPAD_AXIS_MAX;
-    if (device->is_bluetooth && ctx->official_controller) {
+    if (device->is_bluetooth) {
+        /* We'll update this once we're in enhanced mode */
         joystick->epowerlevel = SDL_JOYSTICK_POWER_UNKNOWN;
-    } else if (device->is_bluetooth) {
-        /* We can't get the power status, assume it's full */
-        joystick->epowerlevel = SDL_JOYSTICK_POWER_FULL;
     } else {
         joystick->epowerlevel = SDL_JOYSTICK_POWER_WIRED;
     }
@@ -746,7 +774,7 @@ static SDL_bool HIDAPI_DriverPS4_OpenJoystick(SDL_HIDAPI_Device *device, SDL_Joy
     if (ctx->enhanced_mode) {
         /* Force initialization when opening the joystick */
         ctx->enhanced_mode = SDL_FALSE;
-        HIDAPI_DriverPS4_SetEnhancedMode(device, joystick);
+        HIDAPI_DriverPS4_SetEnhancedMode(ctx);
     } else {
         SDL_AddHintCallback(SDL_HINT_JOYSTICK_HIDAPI_PS4_RUMBLE,
                             SDL_PS4RumbleHintChanged, ctx);
@@ -778,7 +806,7 @@ static Uint32 HIDAPI_DriverPS4_GetJoystickCapabilities(SDL_HIDAPI_Device *device
     SDL_DriverPS4_Context *ctx = (SDL_DriverPS4_Context *)device->context;
     Uint32 result = 0;
 
-    if (ctx->enhanced_mode) {
+    if (ctx->enhanced_mode_available) {
         if (ctx->lightbar_supported) {
             result |= SDL_JOYCAP_LED;
         }
@@ -812,12 +840,12 @@ static int HIDAPI_DriverPS4_SendJoystickEffect(SDL_HIDAPI_Device *device, SDL_Jo
     Uint8 data[78];
     int report_size, offset;
 
-    if (!ctx->effects_supported) {
+    if (!ctx->enhanced_mode_available) {
         return SDL_Unsupported();
     }
 
     if (!ctx->enhanced_mode) {
-        HIDAPI_DriverPS4_SetEnhancedMode(device, joystick);
+        HIDAPI_DriverPS4_SetEnhancedMode(ctx);
     }
 
     SDL_zeroa(data);
@@ -858,11 +886,12 @@ static int HIDAPI_DriverPS4_SetJoystickSensorsEnabled(SDL_HIDAPI_Device *device,
 {
     SDL_DriverPS4_Context *ctx = (SDL_DriverPS4_Context *)device->context;
 
-    if (!ctx->enhanced_mode) {
+    if (!ctx->enhanced_mode_available) {
         return SDL_Unsupported();
     }
 
     if (enabled) {
+        HIDAPI_DriverPS4_SetEnhancedMode(ctx);
         HIDAPI_DriverPS4_LoadCalibrationData(device);
     }
     ctx->report_sensors = enabled;
@@ -974,21 +1003,17 @@ static void HIDAPI_DriverPS4_HandleStatePacket(SDL_Joystick *joystick, SDL_hid_d
     axis = ((int)packet->ucRightJoystickY * 257) - 32768;
     SDL_SendJoystickAxis(timestamp, joystick, SDL_GAMEPAD_AXIS_RIGHTY, axis);
 
-    if (size > 9 && ctx->device->is_bluetooth && ctx->official_controller) {
-        if (packet->ucBatteryLevel & 0x10) {
-            SDL_SendJoystickBatteryLevel(joystick, SDL_JOYSTICK_POWER_WIRED);
+    if (size > 9 && ctx->report_battery) {
+        /* Battery level ranges from 0 to 10 */
+        int level = (packet->ucBatteryLevel & 0xF);
+        if (level == 0) {
+            SDL_SendJoystickBatteryLevel(joystick, SDL_JOYSTICK_POWER_EMPTY);
+        } else if (level <= 2) {
+            SDL_SendJoystickBatteryLevel(joystick, SDL_JOYSTICK_POWER_LOW);
+        } else if (level <= 7) {
+            SDL_SendJoystickBatteryLevel(joystick, SDL_JOYSTICK_POWER_MEDIUM);
         } else {
-            /* Battery level ranges from 0 to 10 */
-            int level = (packet->ucBatteryLevel & 0xF);
-            if (level == 0) {
-                SDL_SendJoystickBatteryLevel(joystick, SDL_JOYSTICK_POWER_EMPTY);
-            } else if (level <= 2) {
-                SDL_SendJoystickBatteryLevel(joystick, SDL_JOYSTICK_POWER_LOW);
-            } else if (level <= 7) {
-                SDL_SendJoystickBatteryLevel(joystick, SDL_JOYSTICK_POWER_MEDIUM);
-            } else {
-                SDL_SendJoystickBatteryLevel(joystick, SDL_JOYSTICK_POWER_FULL);
-            }
+            SDL_SendJoystickBatteryLevel(joystick, SDL_JOYSTICK_POWER_FULL);
         }
     }
 
@@ -1143,7 +1168,7 @@ static SDL_bool HIDAPI_DriverPS4_UpdateDevice(SDL_HIDAPI_Device *device)
         case k_EPS4ReportIdBluetoothState9:
             if (!ctx->enhanced_mode) {
                 /* This is the extended report, we can enable effects now */
-                HIDAPI_DriverPS4_SetEnhancedMode(device, joystick);
+                HIDAPI_DriverPS4_SetEnhancedMode(ctx);
             }
             /* Bluetooth state packets have two additional bytes at the beginning, the first notes if HID is present */
             HIDAPI_DriverPS4_HandleStatePacket(joystick, device->dev, ctx, (PS4StatePacket_t *)&data[3], size - 3);

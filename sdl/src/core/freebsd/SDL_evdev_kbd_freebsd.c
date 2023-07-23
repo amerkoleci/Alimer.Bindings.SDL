@@ -155,7 +155,7 @@ static void kbd_unregister_emerg_cleanup()
             continue;
         }
 
-        /* Check if action installed and not modifed */
+        /* Check if action installed and not modified */
         if (!(cur_action.sa_flags & SA_SIGINFO) || cur_action.sa_sigaction != &kbd_cleanup_signal_action) {
             continue;
         }
@@ -220,8 +220,7 @@ static void kbd_register_emerg_cleanup(SDL_EVDEV_keyboard_state *kbd)
     }
 }
 
-SDL_EVDEV_keyboard_state *
-SDL_EVDEV_kbd_init(void)
+SDL_EVDEV_keyboard_state *SDL_EVDEV_kbd_init(void)
 {
     SDL_EVDEV_keyboard_state *kbd;
     struct mouse_info mData;

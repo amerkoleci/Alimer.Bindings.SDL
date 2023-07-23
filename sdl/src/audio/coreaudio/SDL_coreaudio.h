@@ -47,9 +47,6 @@
 #endif
 #endif
 
-/* Hidden "this" pointer for the audio functions */
-#define _THIS SDL_AudioDevice *this
-
 struct SDL_PrivateAudioData
 {
     SDL_Thread *thread;
@@ -60,7 +57,7 @@ struct SDL_PrivateAudioData
     UInt32 bufferOffset;
     UInt32 bufferSize;
     AudioStreamBasicDescription strdesc;
-    SDL_sem *ready_semaphore;
+    SDL_Semaphore *ready_semaphore;
     char *thread_error;
 #ifdef MACOSX_COREAUDIO
     AudioDeviceID deviceID;

@@ -67,7 +67,6 @@
 #cmakedefine HAVE_SYS_TYPES_H 1
 #cmakedefine HAVE_WCHAR_H 1
 #cmakedefine HAVE_PTHREAD_NP_H 1
-#cmakedefine HAVE_LIBUNWIND_H 1
 
 /* C library functions */
 #cmakedefine HAVE_DLOPEN 1
@@ -91,6 +90,7 @@
 #cmakedefine HAVE_MEMMOVE 1
 #cmakedefine HAVE_MEMCMP 1
 #cmakedefine HAVE_WCSLEN 1
+#cmakedefine HAVE_WCSNLEN 1
 #cmakedefine HAVE_WCSLCPY 1
 #cmakedefine HAVE_WCSLCAT 1
 #cmakedefine HAVE__WCSDUP 1
@@ -102,7 +102,9 @@
 #cmakedefine HAVE__WCSICMP 1
 #cmakedefine HAVE_WCSNCASECMP 1
 #cmakedefine HAVE__WCSNICMP 1
+#cmakedefine HAVE_WCSTOL 1
 #cmakedefine HAVE_STRLEN 1
+#cmakedefine HAVE_STRNLEN 1
 #cmakedefine HAVE_STRLCPY 1
 #cmakedefine HAVE_STRLCAT 1
 #cmakedefine HAVE__STRREV 1
@@ -192,7 +194,6 @@
 #cmakedefine HAVE_SYSCTLBYNAME 1
 #cmakedefine HAVE_CLOCK_GETTIME 1
 #cmakedefine HAVE_GETPAGESIZE 1
-#cmakedefine HAVE_MPROTECT 1
 #cmakedefine HAVE_ICONV 1
 #cmakedefine HAVE_PTHREAD_SETNAME_NP 1
 #cmakedefine HAVE_PTHREAD_SET_NAME_NP 1
@@ -221,7 +222,6 @@
 
 #cmakedefine HAVE_LINUX_INPUT_H 1
 #cmakedefine HAVE_LIBUDEV_H 1
-#cmakedefine HAVE_LIBSAMPLERATE 1
 #cmakedefine HAVE_LIBDECOR_H  1
 
 #cmakedefine HAVE_D3D_H @HAVE_D3D_H@
@@ -349,6 +349,7 @@
 
 /* Enable various threading systems */
 #cmakedefine SDL_THREAD_GENERIC_COND_SUFFIX @SDL_THREAD_GENERIC_COND_SUFFIX@
+#cmakedefine SDL_THREAD_GENERIC_RWLOCK_SUFFIX @SDL_THREAD_GENERIC_RWLOCK_SUFFIX@
 #cmakedefine SDL_THREAD_PTHREAD @SDL_THREAD_PTHREAD@
 #cmakedefine SDL_THREAD_PTHREAD_RECURSIVE_MUTEX @SDL_THREAD_PTHREAD_RECURSIVE_MUTEX@
 #cmakedefine SDL_THREAD_PTHREAD_RECURSIVE_MUTEX_NP @SDL_THREAD_PTHREAD_RECURSIVE_MUTEX_NP@
@@ -543,9 +544,6 @@
 /* Whether SDL_DYNAMIC_API needs dlopen */
 #cmakedefine DYNAPI_NEEDS_DLOPEN  @DYNAPI_NEEDS_DLOPEN@
 
-/* Enable dynamic libsamplerate support */
-#cmakedefine SDL_LIBSAMPLERATE_DYNAMIC @SDL_LIBSAMPLERATE_DYNAMIC@
-
 /* Enable ime support */
 #cmakedefine SDL_USE_IME @SDL_USE_IME@
 
@@ -557,7 +555,7 @@
 #cmakedefine SDL_VIDEO_VITA_PVR @SDL_VIDEO_VITA_PVR@
 #cmakedefine SDL_VIDEO_VITA_PVR_OGL @SDL_VIDEO_VITA_PVR_OGL@
 
-#cmakedefine SDL_HAVE_LIBDECOR_GET_MIN_MAX @SDL_HAVE_LIBDECOR_GET_MIN_MAX@
+#cmakedefine SDL_HAVE_LIBDECOR_VER_0_1_2 @SDL_HAVE_LIBDECOR_VER_0_1_2@
 
 #if !defined(HAVE_STDINT_H) && !defined(_STDINT_H_)
 /* Most everything except Visual Studio 2008 and earlier has stdint.h now */

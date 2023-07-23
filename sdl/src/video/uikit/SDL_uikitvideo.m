@@ -44,8 +44,8 @@
 @end
 
 /* Initialization/Query functions */
-static int UIKit_VideoInit(_THIS);
-static void UIKit_VideoQuit(_THIS);
+static int UIKit_VideoInit(SDL_VideoDevice *_this);
+static void UIKit_VideoQuit(SDL_VideoDevice *_this);
 
 /* DUMMY driver bootstrap functions */
 
@@ -143,7 +143,7 @@ VideoBootStrap UIKIT_bootstrap = {
     UIKit_CreateDevice
 };
 
-int UIKit_VideoInit(_THIS)
+int UIKit_VideoInit(SDL_VideoDevice *_this)
 {
     _this->gl_config.driver_loaded = 1;
 
@@ -157,7 +157,7 @@ int UIKit_VideoInit(_THIS)
     return 0;
 }
 
-void UIKit_VideoQuit(_THIS)
+void UIKit_VideoQuit(SDL_VideoDevice *_this)
 {
     SDL_QuitGCKeyboard();
     SDL_QuitGCMouse();
@@ -165,7 +165,7 @@ void UIKit_VideoQuit(_THIS)
     UIKit_QuitModes(_this);
 }
 
-int UIKit_SuspendScreenSaver(_THIS)
+int UIKit_SuspendScreenSaver(SDL_VideoDevice *_this)
 {
     @autoreleasepool {
         UIApplication *app = [UIApplication sharedApplication];
@@ -234,7 +234,7 @@ CGRect UIKit_ComputeViewFrame(SDL_Window *window, UIScreen *screen)
     return frame;
 }
 
-void UIKit_ForceUpdateHomeIndicator()
+void UIKit_ForceUpdateHomeIndicator(void)
 {
 #if !TARGET_OS_TV
     /* Force the main SDL window to re-evaluate home indicator state */
@@ -257,7 +257,7 @@ void UIKit_ForceUpdateHomeIndicator()
 /*
  * iOS log support.
  *
- * This doesn't really have aything to do with the interfaces of the SDL video
+ * This doesn't really have anything to do with the interfaces of the SDL video
  *  subsystem, but we need to stuff this into an Objective-C source code file.
  *
  * NOTE: This is copypasted from src/video/cocoa/SDL_cocoavideo.m! Thus, if
@@ -283,7 +283,7 @@ void SDL_NSLog(const char *prefix, const char *text)
 /*
  * iOS Tablet detection
  *
- * This doesn't really have aything to do with the interfaces of the SDL video
+ * This doesn't really have anything to do with the interfaces of the SDL video
  * subsystem, but we need to stuff this into an Objective-C source code file.
  */
 SDL_bool SDL_IsIPad(void)

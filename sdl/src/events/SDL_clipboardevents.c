@@ -34,7 +34,7 @@ int SDL_SendClipboardUpdate(void)
     if (SDL_EventEnabled(SDL_EVENT_CLIPBOARD_UPDATE)) {
         SDL_Event event;
         event.type = SDL_EVENT_CLIPBOARD_UPDATE;
-        event.common.timestamp = 0;
+        event.clipboard.timestamp = 0;
         posted = (SDL_PushEvent(&event) > 0);
     }
     return posted;

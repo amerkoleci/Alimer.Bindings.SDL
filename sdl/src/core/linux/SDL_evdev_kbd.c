@@ -230,7 +230,7 @@ static void kbd_unregister_emerg_cleanup(void)
             continue;
         }
 
-        /* Check if action installed and not modifed */
+        /* Check if action installed and not modified */
         if (!(cur_action.sa_flags & SA_SIGINFO) || cur_action.sa_sigaction != &kbd_cleanup_signal_action) {
             continue;
         }
@@ -295,8 +295,7 @@ static void kbd_register_emerg_cleanup(SDL_EVDEV_keyboard_state *kbd)
     }
 }
 
-SDL_EVDEV_keyboard_state *
-SDL_EVDEV_kbd_init(void)
+SDL_EVDEV_keyboard_state *SDL_EVDEV_kbd_init(void)
 {
     SDL_EVDEV_keyboard_state *kbd;
     char flag_state;
@@ -804,8 +803,7 @@ void SDL_EVDEV_kbd_keycode(SDL_EVDEV_keyboard_state *state, unsigned int keycode
 
 #elif !defined(SDL_INPUT_FBSDKBIO) /* !SDL_INPUT_LINUXKD */
 
-SDL_EVDEV_keyboard_state *
-SDL_EVDEV_kbd_init(void)
+SDL_EVDEV_keyboard_state *SDL_EVDEV_kbd_init(void)
 {
     return NULL;
 }

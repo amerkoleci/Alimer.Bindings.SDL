@@ -28,12 +28,12 @@
 
 #define X11_BARRIER_HANDLED_BY_EVENT 1
 
-extern void X11_InitXfixes(_THIS);
+extern void X11_InitXfixes(SDL_VideoDevice *_this);
 extern int X11_XfixesIsInitialized(void);
-extern void X11_SetWindowMouseRect(_THIS, SDL_Window *window);
-extern int X11_ConfineCursorWithFlags(_THIS, SDL_Window *window, const SDL_Rect *rect, int flags);
-extern void X11_DestroyPointerBarrier(_THIS, SDL_Window *window);
-
+extern void X11_SetWindowMouseRect(SDL_VideoDevice *_this, SDL_Window *window);
+extern int X11_ConfineCursorWithFlags(SDL_VideoDevice *_this, SDL_Window *window, const SDL_Rect *rect, int flags);
+extern void X11_DestroyPointerBarrier(SDL_VideoDevice *_this, SDL_Window *window);
+extern int X11_GetXFixesSelectionNotifyEvent(void);
 #endif /* SDL_VIDEO_DRIVER_X11_XFIXES */
 
 #endif /* SDL_x11xfixes_h_ */

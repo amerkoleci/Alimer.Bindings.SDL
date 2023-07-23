@@ -193,7 +193,7 @@ static D3DFORMAT PixelFormatToD3DFMT(Uint32 format)
     switch (format) {
     case SDL_PIXELFORMAT_RGB565:
         return D3DFMT_R5G6B5;
-    case SDL_PIXELFORMAT_RGB888:
+    case SDL_PIXELFORMAT_XRGB8888:
         return D3DFMT_X8R8G8B8;
     case SDL_PIXELFORMAT_ARGB8888:
         return D3DFMT_A8R8G8B8;
@@ -213,7 +213,7 @@ static Uint32 D3DFMTToPixelFormat(D3DFORMAT format)
     case D3DFMT_R5G6B5:
         return SDL_PIXELFORMAT_RGB565;
     case D3DFMT_X8R8G8B8:
-        return SDL_PIXELFORMAT_RGB888;
+        return SDL_PIXELFORMAT_XRGB8888;
     case D3DFMT_A8R8G8B8:
         return SDL_PIXELFORMAT_ARGB8888;
     default:
@@ -1538,8 +1538,7 @@ static int D3D_SetVSync(SDL_Renderer *renderer, const int vsync)
     return 0;
 }
 
-SDL_Renderer *
-D3D_CreateRenderer(SDL_Window *window, Uint32 flags)
+SDL_Renderer *D3D_CreateRenderer(SDL_Window *window, Uint32 flags)
 {
     SDL_Renderer *renderer;
     D3D_RenderData *data;
@@ -1730,8 +1729,7 @@ SDL_RenderDriver D3D_RenderDriver = {
 
 #if defined(__WIN32__) || defined(__WINGDK__)
 /* This function needs to always exist on Windows, for the Dynamic API. */
-IDirect3DDevice9 *
-SDL_GetRenderD3D9Device(SDL_Renderer *renderer)
+IDirect3DDevice9 *SDL_GetRenderD3D9Device(SDL_Renderer *renderer)
 {
     IDirect3DDevice9 *device = NULL;
 

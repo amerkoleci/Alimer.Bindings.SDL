@@ -52,14 +52,14 @@ typedef struct
     SDL_Thread *thread;
     SDL_AtomicInt nextID;
     SDL_TimerMap *timermap;
-    SDL_mutex *timermap_lock;
+    SDL_Mutex *timermap_lock;
 
     /* Padding to separate cache lines between threads */
     char cache_pad[SDL_CACHELINE_SIZE];
 
     /* Data used to communicate with the timer thread */
     SDL_SpinLock lock;
-    SDL_sem *sem;
+    SDL_Semaphore *sem;
     SDL_Timer *pending;
     SDL_Timer *freelist;
     SDL_AtomicInt active;
@@ -197,7 +197,7 @@ static int SDLCALL SDL_TimerThread(void *_data)
            That's okay, it just means we run through the loop a few
            extra times.
          */
-        SDL_SemWaitTimeoutNS(data->sem, delay);
+        SDL_WaitSemaphoreTimeoutNS(data->sem, delay);
     }
     return 0;
 }
@@ -242,7 +242,7 @@ void SDL_QuitTimers(void)
     if (SDL_AtomicCAS(&data->active, 1, 0)) { /* active? Move to inactive. */
         /* Shutdown the timer thread */
         if (data->thread) {
-            SDL_SemPost(data->sem);
+            SDL_PostSemaphore(data->sem);
             SDL_WaitThread(data->thread, NULL);
             data->thread = NULL;
         }
@@ -329,7 +329,7 @@ SDL_TimerID SDL_AddTimer(Uint32 interval, SDL_TimerCallback callback, void *para
     SDL_AtomicUnlock(&data->lock);
 
     /* Wake up the timer thread if necessary */
-    SDL_SemPost(data->sem);
+    SDL_PostSemaphore(data->sem);
 
     return entry->timerID;
 }
@@ -565,8 +565,7 @@ void SDL_QuitTicks(void)
     tick_start = 0;
 }
 
-Uint64
-SDL_GetTicksNS(void)
+Uint64 SDL_GetTicksNS(void)
 {
     Uint64 starting_value, value;
 

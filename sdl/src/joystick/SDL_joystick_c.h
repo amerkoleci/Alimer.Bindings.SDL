@@ -32,6 +32,7 @@ extern "C" {
 #endif
 
 struct SDL_JoystickDriver;
+extern char SDL_joystick_magic;
 
 /* Initialization and shutdown functions */
 extern int SDL_InitJoysticks(void);
@@ -110,6 +111,15 @@ extern SDL_bool SDL_IsJoystickNintendoSwitchJoyConRight(Uint16 vendor_id, Uint16
 extern SDL_bool SDL_IsJoystickNintendoSwitchJoyConGrip(Uint16 vendor_id, Uint16 product_id);
 extern SDL_bool SDL_IsJoystickNintendoSwitchJoyConPair(Uint16 vendor_id, Uint16 product_id);
 
+/* Function to return whether a joystick is an Amazon Luna controller */
+extern SDL_bool SDL_IsJoystickAmazonLunaController(Uint16 vendor_id, Uint16 product_id);
+
+/* Function to return whether a joystick is a Google Stadia controller */
+extern SDL_bool SDL_IsJoystickGoogleStadiaController(Uint16 vendor_id, Uint16 product_id);
+
+/* Function to return whether a joystick is an NVIDIA SHIELD controller */
+extern SDL_bool SDL_IsJoystickNVIDIASHIELDController(Uint16 vendor_id, Uint16 product_id);
+
 /* Function to return whether a joystick is a Steam Controller */
 extern SDL_bool SDL_IsJoystickSteamController(Uint16 vendor_id, Uint16 product_id);
 
@@ -135,6 +145,7 @@ extern SDL_bool SDL_ShouldIgnoreJoystick(const char *name, SDL_JoystickGUID guid
 extern void SDL_PrivateJoystickAddTouchpad(SDL_Joystick *joystick, int nfingers);
 extern void SDL_PrivateJoystickAddSensor(SDL_Joystick *joystick, SDL_SensorType type, float rate);
 extern void SDL_PrivateJoystickAdded(SDL_JoystickID instance_id);
+extern SDL_bool SDL_IsJoystickBeingAdded(void);
 extern void SDL_PrivateJoystickRemoved(SDL_JoystickID instance_id);
 extern void SDL_PrivateJoystickForceRecentering(SDL_Joystick *joystick);
 extern int SDL_SendJoystickAxis(Uint64 timestamp, SDL_Joystick *joystick,
@@ -200,6 +211,18 @@ typedef struct SDL_GamepadMapping
 /* Function to get autodetected gamepad controller mapping from the driver */
 extern SDL_bool SDL_PrivateJoystickGetAutoGamepadMapping(SDL_JoystickID instance_id,
                                                          SDL_GamepadMapping *out);
+
+
+typedef struct
+{
+    int num_entries;
+    int max_entries;
+    Uint32 *entries;
+} SDL_vidpid_list;
+
+extern void SDL_LoadVIDPIDListFromHint(const char *hint, SDL_vidpid_list *list);
+extern SDL_bool SDL_VIDPIDInList(Uint16 vendor_id, Uint16 product_id, const SDL_vidpid_list *list);
+extern void SDL_FreeVIDPIDList(SDL_vidpid_list *list);
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus

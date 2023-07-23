@@ -238,7 +238,7 @@ static int SetDIerror(const char *function, HRESULT code)
 
 static SDL_bool SDL_IsXInputDevice(Uint16 vendor_id, Uint16 product_id, const char *hidPath)
 {
-#ifdef SDL_JOYSTICK_XINPUT
+#if defined(SDL_JOYSTICK_XINPUT) || defined(SDL_JOYSTICK_RAWINPUT)
     SDL_GamepadType type;
 
     /* XInput and RawInput backends will pick up XInput-compatible devices */
@@ -262,7 +262,7 @@ static SDL_bool SDL_IsXInputDevice(Uint16 vendor_id, Uint16 product_id, const ch
         (vendor_id == USB_VENDOR_VALVE && product_id == USB_PRODUCT_STEAM_VIRTUAL_GAMEPAD)) {
         return SDL_TRUE;
     }
-#endif /* SDL_JOYSTICK_XINPUT */
+#endif /* SDL_JOYSTICK_XINPUT || SDL_JOYSTICK_RAWINPUT */
 
     return SDL_FALSE;
 }
@@ -451,6 +451,7 @@ static BOOL CALLBACK EnumJoystickDetectCallback(LPCDIDEVICEINSTANCE pDeviceInsta
     char *hidPath = NULL;
     char *name = NULL;
     LPDIRECTINPUTDEVICE8 device = NULL;
+    DIDEVCAPS caps;
 
     /* We are only supporting HID devices. */
     CHECK(pDeviceInstance->dwDevType & DIDEVTYPE_HID);
@@ -459,6 +460,13 @@ static BOOL CALLBACK EnumJoystickDetectCallback(LPCDIDEVICEINSTANCE pDeviceInsta
     CHECK(QueryDeviceName(device, &name));
     CHECK(QueryDevicePath(device, &hidPath));
     CHECK(QueryDeviceInfo(device, &vendor, &product));
+
+    /* Check to make sure the device has buttons and axes.
+     * This fixes incorrectly detecting the ROG CHAKRAM X mouse as a game controller on Windows 10
+     */
+    caps.dwSize = sizeof(caps);
+    CHECK(SUCCEEDED(IDirectInputDevice8_GetCapabilities(device, &caps)));
+    CHECK(caps.dwAxes > 0 && caps.dwButtons > 0);
 
     CHECK(!SDL_IsXInputDevice(vendor, product, hidPath));
 
@@ -583,8 +591,7 @@ err:
 #undef CHECK
 }
 
-SDL_bool
-SDL_DINPUT_JoystickPresent(Uint16 vendor_id, Uint16 product_id, Uint16 version_number)
+SDL_bool SDL_DINPUT_JoystickPresent(Uint16 vendor_id, Uint16 product_id, Uint16 version_number)
 {
     Joystick_PresentData data;
 
@@ -935,8 +942,7 @@ int SDL_DINPUT_JoystickRumble(SDL_Joystick *joystick, Uint16 low_frequency_rumbl
     return 0;
 }
 
-Uint32
-SDL_DINPUT_JoystickGetCapabilities(SDL_Joystick *joystick)
+Uint32 SDL_DINPUT_JoystickGetCapabilities(SDL_Joystick *joystick)
 {
     Uint32 result = 0;
 
@@ -1169,8 +1175,7 @@ void SDL_DINPUT_JoystickDetect(JoyStick_DeviceData **pContext)
 {
 }
 
-SDL_bool
-SDL_DINPUT_JoystickPresent(Uint16 vendor, Uint16 product, Uint16 version)
+SDL_bool SDL_DINPUT_JoystickPresent(Uint16 vendor, Uint16 product, Uint16 version)
 {
     return SDL_FALSE;
 }
@@ -1185,8 +1190,7 @@ int SDL_DINPUT_JoystickRumble(SDL_Joystick *joystick, Uint16 low_frequency_rumbl
     return SDL_Unsupported();
 }
 
-Uint32
-SDL_DINPUT_JoystickGetCapabilities(SDL_Joystick *joystick)
+Uint32 SDL_DINPUT_JoystickGetCapabilities(SDL_Joystick *joystick)
 {
     return 0;
 }

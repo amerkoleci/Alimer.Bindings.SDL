@@ -3,16 +3,6 @@
 
 using System.Runtime.InteropServices;
 
-namespace Alimer.Bindings.SDL;
-
-public enum SDL_GamepadBindingType
-{
-    SDL_GAMEPAD_BINDTYPE_NONE = 0,
-    SDL_GAMEPAD_BINDTYPE_BUTTON,
-    SDL_GAMEPAD_BINDTYPE_AXIS,
-    SDL_GAMEPAD_BINDTYPE_HAT
-}
-
 public enum SDL_GamepadAxis
 {
     SDL_GAMEPAD_AXIS_INVALID = -1,
@@ -55,7 +45,7 @@ public enum SDL_GamepadButton
 public enum SDL_GamepadType
 {
     SDL_GAMEPAD_TYPE_UNKNOWN = 0,
-    SDL_GAMEPAD_TYPE_VIRTUAL,
+    SDL_GAMEPAD_TYPE_STANDARD,
     SDL_GAMEPAD_TYPE_XBOX360,
     SDL_GAMEPAD_TYPE_XBOXONE,
     SDL_GAMEPAD_TYPE_PS3,
@@ -65,34 +55,7 @@ public enum SDL_GamepadType
     SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_LEFT,
     SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT,
     SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_PAIR,
-    SDL_GAMEPAD_TYPE_AMAZON_LUNA,
-    SDL_GAMEPAD_TYPE_GOOGLE_STADIA,
-    SDL_GAMEPAD_TYPE_NVIDIA_SHIELD
-}
-
-[StructLayout(LayoutKind.Sequential)]
-public struct INTERNAL_GamepadBindingButtonBind_hat
-{
-    public int hat;
-    public int hat_mask;
-}
-
-[StructLayout(LayoutKind.Explicit)]
-public struct INTERNAL_SDL_GamepadBindingBind_union
-{
-    [FieldOffset(0)]
-    public int button;
-    [FieldOffset(0)]
-    public int axis;
-    [FieldOffset(0)]
-    public INTERNAL_GamepadBindingButtonBind_hat hat;
-}
-
-[StructLayout(LayoutKind.Sequential)]
-public struct SDL_GamepadBinding
-{
-    public SDL_GamepadBindingType bindType;
-    public INTERNAL_SDL_GamepadBindingBind_union value;
+    SDL_GAMEPAD_TYPE_MAX
 }
 
 unsafe partial class SDL
@@ -262,9 +225,6 @@ unsafe partial class SDL
     }
 
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_GamepadBinding INTERNAL_SDL_GetGamepadBindForAxis(SDL_Gamepad gamepad, SDL_GamepadAxis axis);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern short SDL_GetGamepadAxis(SDL_Gamepad gamepad, SDL_GamepadAxis axis);
 
     [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadButtonFromString), CallingConvention = CallingConvention.Cdecl)]
@@ -290,8 +250,6 @@ unsafe partial class SDL
         );
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_GamepadBinding SDL_GetGamepadBindForButton(SDL_Gamepad gamepad, SDL_GamepadButton button);
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern byte SDL_GetGamepadButton(SDL_Gamepad gamepad, SDL_GamepadButton button);
 
@@ -343,7 +301,6 @@ unsafe partial class SDL
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern SDL_Gamepad SDL_GetGamepadFromInstanceID(SDL_JoystickID instance_id);
 
-    /* Only available in 2.0.11 or higher. */
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern SDL_GamepadType SDL_GetGamepadInstanceType(
         SDL_JoystickID instance_id
@@ -351,6 +308,9 @@ unsafe partial class SDL
 
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern SDL_GamepadType SDL_GetGamepadType(SDL_Gamepad gamepad);
+
+    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+    public static extern SDL_GamepadType SDL_GetRealGamepadType(SDL_Gamepad gamepad);
 
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern SDL_Gamepad SDL_GetGamepadFromPlayerIndex(int player_index);
@@ -429,5 +389,39 @@ unsafe partial class SDL
         {
             return SDL_SendGamepadEffect(gamepad, dataPtr, size);
         }
+    }
+
+    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadTypeFromString), CallingConvention = CallingConvention.Cdecl)]
+    private static extern SDL_GamepadType INTERNAL_SDL_GetGamepadTypeFromString(byte* str);
+
+    public static SDL_GamepadType SDL_GetGamepadTypeFromString(string str)
+    {
+        byte* strString = Utf8EncodeHeap(str);
+        SDL_GamepadType result = INTERNAL_SDL_GetGamepadTypeFromString(strString);
+        NativeMemory.Free(strString);
+        return result;
+    }
+
+    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadStringForType), CallingConvention = CallingConvention.Cdecl)]
+    private static extern byte* INTERNAL_SDL_GetGamepadStringForType(SDL_GamepadType type);
+    public static string SDL_GetGamepadStringForType(SDL_GamepadType type)
+    {
+        return GetString(INTERNAL_SDL_GetGamepadStringForType(type), true);
+    }
+
+    public static bool SDL_IsJoystickAmazonLunaController(ushort vendor_id, ushort product_id)
+    {
+        return ((vendor_id == 0x1949 && product_id == 0x0419) ||
+                (vendor_id == 0x0171 && product_id == 0x0419));
+    }
+
+    public static bool SDL_IsJoystickGoogleStadiaController(ushort vendor_id, ushort product_id)
+    {
+        return (vendor_id == 0x18d1 && product_id == 0x9400);
+    }
+
+    public static bool SDL_IsJoystickNVIDIASHIELDController(ushort vendor_id, ushort product_id)
+    {
+        return (vendor_id == 0x0955 && (product_id == 0x7210 || product_id == 0x7214));
     }
 }

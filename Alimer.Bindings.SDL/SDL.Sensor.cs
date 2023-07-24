@@ -3,8 +3,6 @@
 
 using System.Runtime.InteropServices;
 
-namespace Alimer.Bindings.SDL;
-
 /// <summary>
 /// The different sensors defined by SDL.
 /// </summary>

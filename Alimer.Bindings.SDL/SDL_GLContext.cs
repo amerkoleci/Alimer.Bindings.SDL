@@ -1,9 +1,6 @@
 ﻿// Copyright © Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
-
-namespace Alimer.Bindings.SDL;
-
 public readonly unsafe partial struct SDL_GLContext : IComparable, IComparable<SDL_GLContext>, IEquatable<SDL_GLContext>, IFormattable
 {
     public readonly void* Value;

@@ -1,16 +1,13 @@
 ﻿// Copyright © Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
-using Alimer.Bindings.SDL;
-using static Alimer.Bindings.SDL.SDL;
-using static Alimer.Bindings.SDL.SDL_EventType;
-using static Alimer.Bindings.SDL.SDL_GLattr;
-using static Alimer.Bindings.SDL.SDL_GLprofile;
-using static Alimer.Bindings.SDL.SDL_InitFlags;
-using static Alimer.Bindings.SDL.SDL_WindowFlags;
-using static Alimer.Bindings.SDL.SDL_LogPriority;
+using static SDL;
+using static SDL_EventType;
+using static SDL_GLattr;
+using static SDL_GLprofile;
+using static SDL_InitFlags;
+using static SDL_LogPriority;
 using System.Drawing;
-using System.Runtime.CompilerServices;
 
 namespace HelloWorld;
 
@@ -54,7 +51,7 @@ public static unsafe class Program
         SDL_SetHint(SDL_HINT_IME_SHOW_UI, true);
 
         // create the window
-        SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL;
+        SDL_WindowFlags flags = SDL_WindowFlags.Resizable | SDL_WindowFlags.OpenGL;
         SDL_Window window = SDL_CreateWindowWithPosition("Hello World", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, flags);
 
         SDL_GLContext gl_context = SDL_GL_CreateContext(window);

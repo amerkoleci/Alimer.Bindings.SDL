@@ -1,8 +1,6 @@
 ﻿// Copyright © Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
-namespace Alimer.Bindings.SDL;
-
 public readonly partial struct SDL_TouchID : IComparable, IComparable<SDL_TouchID>, IEquatable<SDL_TouchID>, IFormattable
 {
     public readonly long Value;

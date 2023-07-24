@@ -3,8 +3,6 @@
 
 using System.Runtime.InteropServices;
 
-namespace Alimer.Bindings.SDL;
-
 public enum SDL_JoystickPowerLevel
 {
     SDL_JOYSTICK_POWER_UNKNOWN = -1,

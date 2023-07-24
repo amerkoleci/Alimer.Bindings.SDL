@@ -33,9 +33,7 @@ using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using static Alimer.Bindings.SDL.SDL_bool;
-
-namespace Alimer.Bindings.SDL;
+using static SDL_bool;
 
 #region Enums
 public enum SDL_bool
@@ -268,33 +266,6 @@ public enum SDL_FlashOperation
     SDL_FLASH_UNTIL_FOCUSED
 }
 
-[Flags]
-public enum SDL_WindowFlags : uint
-{
-    SDL_WINDOW_FULLSCREEN = 0x00000001,   /**< window is in fullscreen mode */
-    SDL_WINDOW_OPENGL = 0x00000002,   /**< window usable with OpenGL context */
-    /* 0x00000004 was SDL_WINDOW_SHOWN in SDL2, please reserve this bit for sdl2-compat. */
-    SDL_WINDOW_HIDDEN = 0x00000008,   /**< window is not visible */
-    SDL_WINDOW_BORDERLESS = 0x00000010,   /**< no window decoration */
-    SDL_WINDOW_RESIZABLE = 0x00000020,   /**< window can be resized */
-    SDL_WINDOW_MINIMIZED = 0x00000040,   /**< window is minimized */
-    SDL_WINDOW_MAXIMIZED = 0x00000080,   /**< window is maximized */
-    SDL_WINDOW_MOUSE_GRABBED = 0x00000100,   /**< window has grabbed mouse input */
-    SDL_WINDOW_INPUT_FOCUS = 0x00000200,   /**< window has input focus */
-    SDL_WINDOW_MOUSE_FOCUS = 0x00000400,   /**< window has mouse focus */
-    /* 0x00001000 was SDL_WINDOW_FULLSCREEN_DESKTOP in SDL2, please reserve this bit for sdl2-compat. */
-    SDL_WINDOW_FOREIGN = 0x00000800,   /**< window not created by SDL */
-    /* 0x00002000 was SDL_WINDOW_ALLOW_HIGHDPI in SDL2, please reserve this bit for sdl2-compat. */
-    SDL_WINDOW_MOUSE_CAPTURE = 0x00004000,   /**< window has mouse captured (unrelated to MOUSE_GRABBED) */
-    SDL_WINDOW_ALWAYS_ON_TOP = 0x00008000,   /**< window should always be above others */
-    SDL_WINDOW_SKIP_TASKBAR = 0x00010000,   /**< window should not be added to the taskbar */
-    SDL_WINDOW_UTILITY = 0x00020000,   /**< window should be treated as a utility window */
-    SDL_WINDOW_TOOLTIP = 0x00040000,   /**< window should be treated as a tooltip */
-    SDL_WINDOW_POPUP_MENU = 0x00080000,   /**< window should be treated as a popup menu */
-    SDL_WINDOW_KEYBOARD_GRABBED = 0x00100000,   /**< window has grabbed keyboard input */
-    SDL_WINDOW_VULKAN = 0x10000000,   /**< window usable for Vulkan surface */
-    SDL_WINDOW_METAL = 0x20000000,   /**< window usable for Metal view */
-}
 
 /* Only available in 2.0.4 or higher. */
 public enum SDL_HitTestResult
@@ -1220,7 +1191,7 @@ public static unsafe partial class SDL
     public static extern int SDL_GetDisplayBounds(SDL_DisplayID displayID, out Rectangle rect);
 
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_DisplayOrientation SDL_GetDisplayOrientation(SDL_DisplayID displayID);
+    public static extern SDL_DisplayOrientation SDL_GetCurrentDisplayOrientation(SDL_DisplayID displayID);
 
     /* Only available in 2.0.5 or higher. */
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]

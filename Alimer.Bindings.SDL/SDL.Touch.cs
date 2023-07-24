@@ -3,8 +3,6 @@
 
 using System.Runtime.InteropServices;
 
-namespace Alimer.Bindings.SDL;
-
 public enum SDL_TouchDeviceType
 {
     SDL_TOUCH_DEVICE_INVALID = -1,

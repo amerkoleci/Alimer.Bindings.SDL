@@ -3,8 +3,6 @@
 
 using System.Diagnostics;
 
-namespace Alimer.Bindings.SDL;
-
 public readonly partial struct SDL_SensorID : IComparable, IComparable<SDL_SensorID>, IEquatable<SDL_SensorID>, IFormattable
 {
     public readonly uint Value;

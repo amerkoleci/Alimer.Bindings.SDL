@@ -3,8 +3,6 @@
 
 using System.Diagnostics;
 
-namespace Alimer.Bindings.SDL;
-
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_Surface : IEquatable<SDL_Surface>
 {

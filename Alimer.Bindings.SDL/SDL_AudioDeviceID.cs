@@ -3,8 +3,6 @@
 
 using System.Diagnostics;
 
-namespace Alimer.Bindings.SDL;
-
 public readonly partial struct SDL_AudioDeviceID : IComparable, IComparable<SDL_AudioDeviceID>, IEquatable<SDL_AudioDeviceID>, IFormattable
 {
     public readonly uint Value;

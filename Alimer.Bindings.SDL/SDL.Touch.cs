@@ -3,6 +3,8 @@
 
 using System.Runtime.InteropServices;
 
+namespace SDL;
+
 public enum SDL_TouchDeviceType
 {
     SDL_TOUCH_DEVICE_INVALID = -1,

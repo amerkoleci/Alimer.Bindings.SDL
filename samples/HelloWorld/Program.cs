@@ -1,13 +1,14 @@
 ﻿// Copyright © Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
-using static SDL;
-using static SDL_EventType;
-using static SDL_GLattr;
-using static SDL_GLprofile;
-using static SDL_InitFlags;
-using static SDL_LogPriority;
+using static SDL.SDL;
+using static SDL.SDL_EventType;
+using static SDL.SDL_GLattr;
+using static SDL.SDL_GLprofile;
+using static SDL.SDL_InitFlags;
+using static SDL.SDL_LogPriority;
 using System.Drawing;
+using SDL;
 
 namespace HelloWorld;
 

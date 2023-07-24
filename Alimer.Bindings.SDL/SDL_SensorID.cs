@@ -1,7 +1,7 @@
 ﻿// Copyright © Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
-using System.Diagnostics;
+namespace SDL;
 
 public readonly partial struct SDL_SensorID : IComparable, IComparable<SDL_SensorID>, IEquatable<SDL_SensorID>, IFormattable
 {

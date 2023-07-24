@@ -33,7 +33,9 @@ using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using static SDL_bool;
+using static SDL.SDL_bool;
+
+namespace SDL;
 
 #region Enums
 public enum SDL_bool
@@ -4420,7 +4422,7 @@ public static unsafe partial class SDL
         return Encoding.UTF8.GetString(ptr, characters);
     }
 
-    public static unsafe string GetString(byte* s, bool freePtr = false)
+    public static string GetString(byte* s, bool freePtr = false)
     {
         if (s == null)
         {
@@ -4470,7 +4472,7 @@ public static unsafe partial class SDL
         return (str.Length * 4) + 1;
     }
 
-    private static unsafe byte* Utf8EncodeHeap(string str)
+    private static byte* Utf8EncodeHeap(string str)
     {
         if (str == null)
         {
@@ -4487,7 +4489,7 @@ public static unsafe partial class SDL
     }
 
 
-    private static unsafe byte* Utf8Encode(string str, byte* buffer, int bufferSize)
+    private static byte* Utf8Encode(string str, byte* buffer, int bufferSize)
     {
         if (str == null)
         {

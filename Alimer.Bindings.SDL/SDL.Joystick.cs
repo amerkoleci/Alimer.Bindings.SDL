@@ -3,6 +3,8 @@
 
 using System.Runtime.InteropServices;
 
+namespace SDL;
+
 public enum SDL_JoystickPowerLevel
 {
     SDL_JOYSTICK_POWER_UNKNOWN = -1,

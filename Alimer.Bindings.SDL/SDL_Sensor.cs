@@ -3,6 +3,8 @@
 
 using System.Diagnostics;
 
+namespace SDL;
+
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_Sensor : IEquatable<SDL_Sensor>
 {

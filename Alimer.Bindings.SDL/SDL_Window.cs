@@ -3,6 +3,8 @@
 
 using System.Diagnostics;
 
+namespace SDL;
+
 [Flags]
 public enum SDL_WindowFlags : uint
 {

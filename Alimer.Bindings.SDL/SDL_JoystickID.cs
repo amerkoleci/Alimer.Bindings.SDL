@@ -1,6 +1,8 @@
 ﻿// Copyright © Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
+namespace SDL;
+
 public readonly partial struct SDL_JoystickID : IComparable, IComparable<SDL_JoystickID>, IEquatable<SDL_JoystickID>, IFormattable
 {
     public readonly uint Value;

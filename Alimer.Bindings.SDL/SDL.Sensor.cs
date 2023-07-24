@@ -3,6 +3,8 @@
 
 using System.Runtime.InteropServices;
 
+namespace SDL;
+
 /// <summary>
 /// The different sensors defined by SDL.
 /// </summary>

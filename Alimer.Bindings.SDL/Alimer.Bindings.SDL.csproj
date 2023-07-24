@@ -3,12 +3,13 @@
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <Title>Cross platform .NET bindings for SDL3</Title>
+    <RootNamespace>SDL</RootNamespace>
     <IsPackable>true</IsPackable>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup>
-    <VersionPrefix>3.2.2</VersionPrefix>
+    <VersionPrefix>3.2.3</VersionPrefix>
     <VersionSuffix Condition="'$(VersionSuffix)' == ''"></VersionSuffix>
   </PropertyGroup>
 

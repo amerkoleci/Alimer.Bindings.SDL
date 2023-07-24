@@ -3,6 +3,8 @@
 
 using System.Runtime.InteropServices;
 
+namespace SDL;
+
 public enum SDL_GamepadAxis
 {
     SDL_GAMEPAD_AXIS_INVALID = -1,

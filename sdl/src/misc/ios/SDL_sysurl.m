@@ -20,6 +20,8 @@
 */
 #include "SDL_internal.h"
 
+#if defined(__IOS__) || defined(__TVOS__)
+
 #include "../SDL_sysurl.h"
 
 #import <UIKit/UIKit.h>
@@ -28,8 +30,14 @@ int SDL_SYS_OpenURL(const char *url)
 {
     @autoreleasepool {
 
+#if TARGET_OS_XR
+        return SDL_Unsupported();  // openURL is not suported on visionOS
+#else
         NSString *nsstr = [NSString stringWithUTF8String:url];
         NSURL *nsurl = [NSURL URLWithString:nsstr];
         return [[UIApplication sharedApplication] openURL:nsurl] ? 0 : -1;
+#endif
     }
 }
+
+#endif /* __IOS__ || __TVOS__ */

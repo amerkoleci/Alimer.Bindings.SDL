@@ -150,26 +150,33 @@ void SDL_LockJoysticks(void)
 
 void SDL_UnlockJoysticks(void)
 {
-    SDL_Mutex *joystick_lock = SDL_joystick_lock;
     SDL_bool last_unlock = SDL_FALSE;
 
     --SDL_joysticks_locked;
 
     if (!SDL_joysticks_initialized) {
+        /* NOTE: There's a small window here where another thread could lock the mutex after we've checked for pending locks */
         if (!SDL_joysticks_locked && SDL_AtomicGet(&SDL_joystick_lock_pending) == 0) {
-            /* NOTE: There's a small window here where another thread could lock the mutex */
-            SDL_joystick_lock = NULL;
             last_unlock = SDL_TRUE;
         }
     }
-
-    SDL_UnlockMutex(joystick_lock);
 
     /* The last unlock after joysticks are uninitialized will cleanup the mutex,
      * allowing applications to lock joysticks while reinitializing the system.
      */
     if (last_unlock) {
+        SDL_Mutex *joystick_lock = SDL_joystick_lock;
+
+        SDL_LockMutex(joystick_lock);
+        {
+            SDL_UnlockMutex(SDL_joystick_lock);
+
+            SDL_joystick_lock = NULL;
+        }
+        SDL_UnlockMutex(joystick_lock);
         SDL_DestroyMutex(joystick_lock);
+    } else {
+        SDL_UnlockMutex(SDL_joystick_lock);
     }
 }
 
@@ -560,6 +567,8 @@ static SDL_bool ShouldAttemptSensorFusion(SDL_Joystick *joystick, SDL_bool *inve
     const char *hint;
     int hint_value;
 
+    SDL_AssertJoysticksLocked();
+
     *invert_sensors = SDL_FALSE;
 
     /* The SDL controller sensor API is only available for gamepads (at the moment) */
@@ -619,6 +628,8 @@ static void AttemptSensorFusion(SDL_Joystick *joystick, SDL_bool invert_sensors)
 {
     SDL_SensorID *sensors;
     unsigned int i, j;
+
+    SDL_AssertJoysticksLocked();
 
     if (SDL_InitSubSystem(SDL_INIT_SENSOR) < 0) {
         return;
@@ -686,6 +697,8 @@ static void AttemptSensorFusion(SDL_Joystick *joystick, SDL_bool invert_sensors)
 
 static void CleanupSensorFusion(SDL_Joystick *joystick)
 {
+    SDL_AssertJoysticksLocked();
+
     if (joystick->accel_sensor || joystick->gyro_sensor) {
         if (joystick->accel_sensor) {
             if (joystick->accel) {
@@ -1782,6 +1795,7 @@ int SDL_SendJoystickAxis(Uint64 timestamp, SDL_Joystick *joystick, Uint8 axis, S
     }
 
     /* Update internal joystick state */
+    SDL_assert(timestamp != 0);
     info->value = value;
     joystick->update_complete = timestamp;
 
@@ -1825,6 +1839,7 @@ int SDL_SendJoystickHat(Uint64 timestamp, SDL_Joystick *joystick, Uint8 hat, Uin
     }
 
     /* Update internal joystick state */
+    SDL_assert(timestamp != 0);
     joystick->hats[hat] = value;
     joystick->update_complete = timestamp;
 
@@ -1884,6 +1899,7 @@ int SDL_SendJoystickButton(Uint64 timestamp, SDL_Joystick *joystick, Uint8 butto
     }
 
     /* Update internal joystick state */
+    SDL_assert(timestamp != 0);
     joystick->buttons[button] = state;
     joystick->update_complete = timestamp;
 
@@ -1953,7 +1969,7 @@ void SDL_UpdateJoysticks(void)
 
                 event.type = SDL_EVENT_JOYSTICK_UPDATE_COMPLETE;
                 event.common.timestamp = joystick->update_complete;
-                event.gdevice.which = joystick->instance_id;
+                event.jdevice.which = joystick->instance_id;
                 SDL_PushEvent(&event);
 
                 joystick->update_complete = 0;
@@ -2624,8 +2640,11 @@ static SDL_bool SDL_IsJoystickProductWheel(Uint32 vidpid)
         MAKE_VIDPID(0x046d, 0xc262), /* Logitech G920 (active mode) */
         MAKE_VIDPID(0x046d, 0xc268), /* Logitech PRO Racing Wheel (PC mode) */
         MAKE_VIDPID(0x046d, 0xc269), /* Logitech PRO Racing Wheel (PS4/PS5 mode) */
+        MAKE_VIDPID(0x046d, 0xc272), /* Logitech PRO Racing Wheel for Xbox (PC mode) */
         MAKE_VIDPID(0x046d, 0xc26d), /* Logitech G923 (Xbox) */
         MAKE_VIDPID(0x046d, 0xc26e), /* Logitech G923 */
+        MAKE_VIDPID(0x046d, 0xc266), /* Logitech G923 for Playstation 4 and PC (PC mode) */
+        MAKE_VIDPID(0x046d, 0xc267), /* Logitech G923 for Playstation 4 and PC (PS4 mode)*/
         MAKE_VIDPID(0x046d, 0xca03), /* Logitech Momo Racing */
         MAKE_VIDPID(0x044f, 0xb65d), /* Thrustmaster Wheel FFB */
         MAKE_VIDPID(0x044f, 0xb66d), /* Thrustmaster Wheel FFB */
@@ -2637,6 +2656,7 @@ static SDL_bool SDL_IsJoystickProductWheel(Uint32 vidpid)
         MAKE_VIDPID(0x044f, 0xb65e), /* Thrustmaster T500RS */
         MAKE_VIDPID(0x044f, 0xb664), /* Thrustmaster TX (initial mode) */
         MAKE_VIDPID(0x044f, 0xb669), /* Thrustmaster TX (active mode) */
+        MAKE_VIDPID(0x0483, 0x0522), /* Simagic Wheelbase (including M10, Alpha Mini, Alpha, Alpha U) */
         MAKE_VIDPID(0x11ff, 0x0511), /* DragonRise Inc. Wired Wheel (initial mode) (also known as PXN V900 (PS3), Superdrive SV-750, or a Genesis Seaborg 400) */
     };
     int i;
@@ -3225,6 +3245,7 @@ int SDL_SendJoystickTouchpad(Uint64 timestamp, SDL_Joystick *joystick, int touch
     }
 
     /* Update internal joystick state */
+    SDL_assert(timestamp != 0);
     finger_info->state = state;
     finger_info->x = x;
     finger_info->y = y;

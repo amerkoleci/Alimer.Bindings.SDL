@@ -209,6 +209,7 @@ static SDL_VideoDevice *Wayland_CreateDevice(void)
     device->SetWindowHitTest = Wayland_SetWindowHitTest;
     device->FlashWindow = Wayland_FlashWindow;
     device->HasScreenKeyboardSupport = Wayland_HasScreenKeyboardSupport;
+    device->ShowWindowSystemMenu = Wayland_ShowWindowSystemMenu;
 
 #ifdef SDL_USE_LIBDBUS
     if (SDL_SystemTheme_Init())
@@ -672,6 +673,10 @@ static void Wayland_free_display(SDL_VideoDisplay *display)
         SDL_DisplayData *display_data = display->driverdata;
         int i;
 
+        if (display_data->xdg_output) {
+            zxdg_output_v1_destroy(display_data->xdg_output);
+        }
+
         if (wl_output_get_version(display_data->output) >= WL_OUTPUT_RELEASE_SINCE_VERSION) {
             wl_output_release(display_data->output);
         } else {
@@ -931,7 +936,7 @@ static void Wayland_VideoCleanup(SDL_VideoDevice *_this)
     Wayland_FiniMouse(data);
 
     for (i = _this->num_displays - 1; i >= 0; --i) {
-        SDL_VideoDisplay *display = &_this->displays[i];
+        SDL_VideoDisplay *display = _this->displays[i];
         Wayland_free_display(display);
     }
 

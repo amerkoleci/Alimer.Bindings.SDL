@@ -116,7 +116,7 @@
 - (BOOL)canBecomeKeyWindow
 {
     SDL_Window *window = [self findSDLWindow];
-    if (window && !(window->flags & SDL_WINDOW_TOOLTIP)) {
+    if (window && !(window->flags & (SDL_WINDOW_TOOLTIP | SDL_WINDOW_NOT_FOCUSABLE))) {
         return YES;
     } else {
         return NO;
@@ -643,7 +643,7 @@ static void Cocoa_SendExposedEventIfVisible(SDL_Window *window)
         int newVisibility = [[change objectForKey:@"new"] intValue];
         if (newVisibility) {
             SDL_SendWindowEvent(_data.window, SDL_EVENT_WINDOW_SHOWN, 0, 0);
-        } else {
+        } else if (![_data.nswindow isMiniaturized]) {
             SDL_SendWindowEvent(_data.window, SDL_EVENT_WINDOW_HIDDEN, 0, 0);
         }
     }
@@ -662,7 +662,7 @@ static void Cocoa_SendExposedEventIfVisible(SDL_Window *window)
     if (wasVisible != isVisible) {
         if (isVisible) {
             SDL_SendWindowEvent(_data.window, SDL_EVENT_WINDOW_SHOWN, 0, 0);
-        } else {
+        } else if (![_data.nswindow isMiniaturized]) {
             SDL_SendWindowEvent(_data.window, SDL_EVENT_WINDOW_HIDDEN, 0, 0);
         }
 
@@ -955,7 +955,12 @@ static void Cocoa_SendExposedEventIfVisible(SDL_Window *window)
 
 - (void)windowDidDeminiaturize:(NSNotification *)aNotification
 {
-    SDL_SendWindowEvent(_data.window, SDL_EVENT_WINDOW_RESTORED, 0, 0);
+    /* isZoomed always returns true if the window is not resizable */
+    if ((_data.window->flags & SDL_WINDOW_RESIZABLE) && [_data.nswindow isZoomed]) {
+        SDL_SendWindowEvent(_data.window, SDL_EVENT_WINDOW_MAXIMIZED, 0, 0);
+    } else {
+        SDL_SendWindowEvent(_data.window, SDL_EVENT_WINDOW_RESTORED, 0, 0);
+    }
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)aNotification
@@ -2165,16 +2170,17 @@ void Cocoa_ShowWindow(SDL_VideoDevice *_this, SDL_Window *window)
             if (SDL_WINDOW_IS_POPUP(window)) {
                 NSWindow *nsparent = ((__bridge SDL_CocoaWindowData *)window->parent->driverdata).nswindow;
                 [nsparent addChildWindow:nswindow ordered:NSWindowAbove];
-            }
-            if (bActivate) {
-                [nswindow makeKeyAndOrderFront:nil];
             } else {
-                /* Order this window below the key window if we're not activating it */
-                if ([NSApp keyWindow]) {
-                    [nswindow orderWindow:NSWindowBelow relativeTo:[[NSApp keyWindow] windowNumber]];
+                if (bActivate) {
+                    [nswindow makeKeyAndOrderFront:nil];
+                } else {
+                    /* Order this window below the key window if we're not activating it */
+                    if ([NSApp keyWindow]) {
+                        [nswindow orderWindow:NSWindowBelow relativeTo:[[NSApp keyWindow] windowNumber]];
+                    }
                 }
-                [nswindow setIsVisible:YES];
             }
+            [nswindow setIsVisible:YES];
             [windowData.listener resumeVisibleObservation];
         }
     }
@@ -2185,7 +2191,18 @@ void Cocoa_HideWindow(SDL_VideoDevice *_this, SDL_Window *window)
     @autoreleasepool {
         NSWindow *nswindow = ((__bridge SDL_CocoaWindowData *)window->driverdata).nswindow;
 
-        [nswindow orderOut:nil];
+        /* orderOut has no effect on miniaturized windows, so close must be used to remove
+         * the window from the desktop and window list in this case.
+         *
+         * SDL holds a strong reference to the window (oneShot/releasedWhenClosed are 'NO'),
+         * and calling 'close' doesn't send a 'windowShouldClose' message, so it's safe to
+         * use for this purpose as nothing is implicitly released.
+         */
+        if (![nswindow isMiniaturized]) {
+            [nswindow orderOut:nil];
+        } else {
+            [nswindow close];
+        }
 
         /* Transfer keyboard focus back to the parent */
         if (window->flags & SDL_WINDOW_POPUP_MENU) {
@@ -2218,13 +2235,13 @@ void Cocoa_RaiseWindow(SDL_VideoDevice *_this, SDL_Window *window)
             if (SDL_WINDOW_IS_POPUP(window)) {
                 NSWindow *nsparent = ((__bridge SDL_CocoaWindowData *)window->parent->driverdata).nswindow;
                 [nsparent addChildWindow:nswindow ordered:NSWindowAbove];
-            }
-
-            if (bActivate) {
-                [NSApp activateIgnoringOtherApps:YES];
-                [nswindow makeKeyAndOrderFront:nil];
             } else {
-                [nswindow orderFront:nil];
+                if (bActivate) {
+                    [NSApp activateIgnoringOtherApps:YES];
+                    [nswindow makeKeyAndOrderFront:nil];
+                } else {
+                    [nswindow orderFront:nil];
+                }
             }
         }
         [windowData.listener resumeVisibleObservation];
@@ -2467,9 +2484,9 @@ SDL_DisplayID Cocoa_GetDisplayForWindow(SDL_VideoDevice *_this, SDL_Window *wind
             displayid = [[screen.deviceDescription objectForKey:@"NSScreenNumber"] unsignedIntValue];
 
             for (i = 0; i < _this->num_displays; i++) {
-                SDL_DisplayData *displaydata = _this->displays[i].driverdata;
+                SDL_DisplayData *displaydata = _this->displays[i]->driverdata;
                 if (displaydata != NULL && displaydata->display == displayid) {
-                    return _this->displays[i].id;
+                    return _this->displays[i]->id;
                 }
             }
         }
@@ -2660,6 +2677,11 @@ int Cocoa_FlashWindow(SDL_VideoDevice *_this, SDL_Window *window, SDL_FlashOpera
         }
         return 0;
     }
+}
+
+int Cocoa_SetWindowFocusable(SDL_VideoDevice *_this, SDL_Window *window, SDL_bool focusable)
+{
+    return 0; /* just succeed, the real work is done elsewhere. */
 }
 
 int Cocoa_SetWindowOpacity(SDL_VideoDevice *_this, SDL_Window *window, float opacity)

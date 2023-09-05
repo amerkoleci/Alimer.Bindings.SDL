@@ -46,9 +46,33 @@
 #endif
 typedef HRESULT (WINAPI *DwmSetWindowAttribute_t)(HWND hwnd, DWORD dwAttribute, LPCVOID pvAttribute, DWORD cbAttribute);
 
+/* Transparent window support */
+#ifndef DWM_BB_ENABLE
+#define DWM_BB_ENABLE 0x00000001
+#endif
+#ifndef DWM_BB_BLURREGION
+#define DWM_BB_BLURREGION 0x00000002
+#endif
+typedef struct
+{
+    DWORD flags;
+    BOOL enable;
+    HRGN blur_region;
+    BOOL transition_on_maxed;
+} DWM_BLURBEHIND;
+typedef HRESULT(WINAPI *DwmEnableBlurBehindWindow_t)(HWND hwnd, const DWM_BLURBEHIND *pBlurBehind);
+
 /* Windows CE compatibility */
 #ifndef SWP_NOCOPYBITS
 #define SWP_NOCOPYBITS 0
+#endif
+
+/* An undocumented message to create a popup system menu
+ * - wParam is always 0
+ * - lParam = MAKELONG(x, y) where x and y are the screen coordinates where the menu should be displayed
+ */
+#ifndef WM_POPUPSYSTEMMENU
+#define WM_POPUPSYSTEMMENU 0x313
 #endif
 
 /* #define HIGHDPI_DEBUG */
@@ -120,10 +144,11 @@ static DWORD GetWindowStyleEx(SDL_Window *window)
 {
     DWORD style = 0;
 
-    if (SDL_WINDOW_IS_POPUP(window)) {
-        style = WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE;
-    } else if (window->flags & SDL_WINDOW_UTILITY) {
-        style = WS_EX_TOOLWINDOW;
+    if (SDL_WINDOW_IS_POPUP(window) || (window->flags & SDL_WINDOW_UTILITY)) {
+        style |= WS_EX_TOOLWINDOW;
+    }
+    if (SDL_WINDOW_IS_POPUP(window) || (window->flags & SDL_WINDOW_NOT_FOCUSABLE)) {
+        style |= WS_EX_NOACTIVATE;
     }
     return style;
 }
@@ -575,6 +600,25 @@ int WIN_CreateWindow(SDL_VideoDevice *_this, SDL_Window *window)
         ShowWindow(hwnd, SW_SHOWMINNOACTIVE);
     }
 
+    /* FIXME: does not work on all hardware configurations with different renders (i.e. hybrid GPUs) */
+    if (window->flags & SDL_WINDOW_TRANSPARENT) {
+        void *handle = SDL_LoadObject("dwmapi.dll");
+        if (handle) {
+            DwmEnableBlurBehindWindow_t DwmEnableBlurBehindWindowFunc = (DwmEnableBlurBehindWindow_t)SDL_LoadFunction(handle, "DwmEnableBlurBehindWindow");
+            if (DwmEnableBlurBehindWindowFunc) {
+                /* The region indicates which part of the window will be blurred and rest will be transparent. This
+                   is because the alpha value of the window will be used for non-blurred areas
+                   We can use (-1, -1, 0, 0) boundary to make sure no pixels are being blurred
+                */
+                HRGN rgn = CreateRectRgn(-1, -1, 0, 0);
+                DWM_BLURBEHIND bb = {DWM_BB_ENABLE | DWM_BB_BLURREGION, TRUE, rgn, FALSE};
+                DwmEnableBlurBehindWindowFunc(hwnd, &bb);
+                DeleteObject(rgn);
+            }
+            SDL_UnloadObject(handle);
+        }
+    }
+
     if (!(window->flags & SDL_WINDOW_OPENGL)) {
         return 0;
     }
@@ -845,7 +889,6 @@ void WIN_ShowWindow(SDL_VideoDevice *_this, SDL_Window *window)
 {
     DWORD style;
     HWND hwnd;
-    int nCmdShow;
 
     SDL_bool bActivate = SDL_GetHintBoolean(SDL_HINT_WINDOW_ACTIVATE_WHEN_SHOWN, SDL_TRUE);
 
@@ -855,13 +898,16 @@ void WIN_ShowWindow(SDL_VideoDevice *_this, SDL_Window *window)
     }
 
     hwnd = window->driverdata->hwnd;
-    nCmdShow = bActivate ? SW_SHOW : SW_SHOWNA;
     style = GetWindowLong(hwnd, GWL_EXSTYLE);
     if (style & WS_EX_NOACTIVATE) {
-        nCmdShow = SW_SHOWNOACTIVATE;
         bActivate = SDL_FALSE;
     }
-    ShowWindow(hwnd, nCmdShow);
+    if (bActivate) {
+        ShowWindow(hwnd, SW_SHOW);
+    } else {
+        /* Use SetWindowPos instead of ShowWindow to avoid activating the parent window if this is a child window */
+        SetWindowPos(hwnd, NULL, 0, 0, 0, 0, window->driverdata->copybits_flag | SWP_SHOWWINDOW | SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER);
+    }
 
     if (window->flags & SDL_WINDOW_POPUP_MENU && bActivate) {
         if (window->parent == SDL_GetKeyboardFocus()) {
@@ -1480,6 +1526,42 @@ int WIN_FlashWindow(SDL_VideoDevice *_this, SDL_Window *window, SDL_FlashOperati
     }
 
     FlashWindowEx(&desc);
+
+    return 0;
+}
+
+void WIN_ShowWindowSystemMenu(SDL_Window *window, int x, int y)
+{
+    const SDL_WindowData *data = window->driverdata;
+    POINT pt;
+
+    pt.x = x;
+    pt.y = y;
+    ClientToScreen(data->hwnd, &pt);
+    SendMessage(data->hwnd, WM_POPUPSYSTEMMENU, 0, MAKELPARAM(pt.x, pt.y));
+}
+
+int WIN_SetWindowFocusable(SDL_VideoDevice *_this, SDL_Window *window, SDL_bool focusable)
+{
+    SDL_WindowData *data = window->driverdata;
+    HWND hwnd = data->hwnd;
+    const LONG style = GetWindowLong(hwnd, GWL_EXSTYLE);
+
+    SDL_assert(style != 0);
+
+    if (focusable) {
+        if (style & WS_EX_NOACTIVATE) {
+            if (SetWindowLong(hwnd, GWL_EXSTYLE, style & ~WS_EX_NOACTIVATE) == 0) {
+                return WIN_SetError("SetWindowLong()");
+            }
+        }
+    } else {
+        if (!(style & WS_EX_NOACTIVATE)) {
+            if (SetWindowLong(hwnd, GWL_EXSTYLE, style | WS_EX_NOACTIVATE) == 0) {
+                return WIN_SetError("SetWindowLong()");
+            }
+        }
+    }
 
     return 0;
 }

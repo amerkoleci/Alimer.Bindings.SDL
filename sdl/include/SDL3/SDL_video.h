@@ -118,6 +118,7 @@ typedef enum
  *  \sa SDL_SetWindowResizable()
  *  \sa SDL_SetWindowTitle()
  *  \sa SDL_ShowWindow()
+ *  \sa SDL_ShowWindowSystemMenu()
  */
 typedef struct SDL_Window SDL_Window;
 
@@ -131,7 +132,7 @@ typedef enum
     SDL_WINDOW_FULLSCREEN           = 0x00000001,   /**< window is in fullscreen mode */
     SDL_WINDOW_OPENGL               = 0x00000002,   /**< window usable with OpenGL context */
     SDL_WINDOW_OCCLUDED             = 0x00000004,   /**< window is occluded */
-    SDL_WINDOW_HIDDEN               = 0x00000008,   /**< window is not visible */
+    SDL_WINDOW_HIDDEN               = 0x00000008,   /**< window is neither mapped onto the desktop nor shown in the taskbar/dock/window list; SDL_ShowWindow() is required for it to become visible */
     SDL_WINDOW_BORDERLESS           = 0x00000010,   /**< no window decoration */
     SDL_WINDOW_RESIZABLE            = 0x00000020,   /**< window can be resized */
     SDL_WINDOW_MINIMIZED            = 0x00000040,   /**< window is minimized */
@@ -149,7 +150,8 @@ typedef enum
     SDL_WINDOW_KEYBOARD_GRABBED     = 0x00100000,   /**< window has grabbed keyboard input */
     SDL_WINDOW_VULKAN               = 0x10000000,   /**< window usable for Vulkan surface */
     SDL_WINDOW_METAL                = 0x20000000,   /**< window usable for Metal view */
-    SDL_WINDOW_TRANSPARENT          = 0x40000000    /**< window with transparent buffer */
+    SDL_WINDOW_TRANSPARENT          = 0x40000000,   /**< window with transparent buffer */
+    SDL_WINDOW_NOT_FOCUSABLE        = 0x80000000,   /**< window should not be focusable */
 
 } SDL_WindowFlags;
 
@@ -1674,6 +1676,43 @@ extern DECLSPEC int SDLCALL SDL_SetWindowModalFor(SDL_Window *modal_window, SDL_
  * \sa SDL_RaiseWindow
  */
 extern DECLSPEC int SDLCALL SDL_SetWindowInputFocus(SDL_Window *window);
+
+/**
+ * Set whether the window may have input focus.
+ *
+ * \param window the window to set focusable state
+ * \param focusable SDL_TRUE to allow input focus, SDL_FALSE to not allow
+ *                  input focus
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ */
+extern DECLSPEC int SDLCALL SDL_SetWindowFocusable(SDL_Window *window, SDL_bool focusable);
+
+
+/**
+ * Display the system-level window menu.
+ *
+ * This default window menu is provided by the system and on some platforms
+ * provides functionality for setting or changing privileged state on the
+ * window, such as moving it between workspaces or displays, or toggling the
+ * always-on-top property.
+ *
+ * On platforms or desktops where this is unsupported, this function does
+ * nothing.
+ *
+ * \param window the window for which the menu will be displayed
+ * \param x the x coordinate of the menu, relative to the origin (top-left) of
+ *          the client area
+ * \param y the y coordinate of the menu, relative to the origin (top-left) of
+ *          the client area
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ */
+extern DECLSPEC int SDLCALL SDL_ShowWindowSystemMenu(SDL_Window *window, int x, int y);
 
 /**
  * Possible return values from the SDL_HitTest callback.

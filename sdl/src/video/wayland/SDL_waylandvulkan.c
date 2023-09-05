@@ -28,9 +28,12 @@
 
 #if defined(SDL_VIDEO_VULKAN) && defined(SDL_VIDEO_DRIVER_WAYLAND)
 
+#include "../SDL_vulkan_internal.h"
+
 #include "SDL_waylandvideo.h"
 #include "SDL_waylandwindow.h"
 
+#include "../SDL_vulkan_internal.h"
 #include "SDL_waylandvulkan.h"
 
 #include <SDL3/SDL_syswm.h>

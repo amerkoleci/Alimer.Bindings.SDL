@@ -22,6 +22,9 @@
 
 #ifdef SDL_VIDEO_DRIVER_WINDOWS
 
+#ifdef SDL_VIDEO_VULKAN
+#include "../SDL_vulkan_internal.h"
+#endif
 #include "../SDL_sysvideo.h"
 #include "../SDL_pixels_c.h"
 #include "../../SDL_hints_c.h"
@@ -207,6 +210,8 @@ static SDL_VideoDevice *WIN_CreateDevice(void)
     device->SetWindowHitTest = WIN_SetWindowHitTest;
     device->AcceptDragAndDrop = WIN_AcceptDragAndDrop;
     device->FlashWindow = WIN_FlashWindow;
+    device->ShowWindowSystemMenu = WIN_ShowWindowSystemMenu;
+    device->SetWindowFocusable = WIN_SetWindowFocusable;
 
     device->shape_driver.CreateShaper = Win32_CreateShaper;
     device->shape_driver.SetWindowShape = Win32_SetWindowShape;

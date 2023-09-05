@@ -238,7 +238,7 @@ Uint32 X11_GetNetWMState(SDL_VideoDevice *_this, SDL_Window *window, Window xwin
 
         for (i = 0; i < numItems; ++i) {
             if (atoms[i] == _NET_WM_STATE_HIDDEN) {
-                flags |= SDL_WINDOW_HIDDEN;
+                flags |= SDL_WINDOW_MINIMIZED | SDL_WINDOW_OCCLUDED;
             } else if (atoms[i] == _NET_WM_STATE_FOCUSED) {
                 flags |= SDL_WINDOW_INPUT_FOCUS;
             } else if (atoms[i] == _NET_WM_STATE_MAXIMIZED_VERT) {
@@ -423,7 +423,6 @@ int X11_CreateWindow(SDL_VideoDevice *_this, SDL_Window *window)
     SDL_WindowData *windowdata;
     Display *display = data->display;
     int screen = displaydata->screen;
-    const int transparent = (window->flags & SDL_WINDOW_TRANSPARENT) ? SDL_TRUE : SDL_FALSE;
     Visual *visual;
     int depth;
     XSetWindowAttributes xattr;
@@ -443,6 +442,7 @@ int X11_CreateWindow(SDL_VideoDevice *_this, SDL_Window *window)
     SDL_bool undefined_position = SDL_FALSE;
 
 #if defined(SDL_VIDEO_OPENGL_GLX) || defined(SDL_VIDEO_OPENGL_EGL)
+    const int transparent = (window->flags & SDL_WINDOW_TRANSPARENT) ? SDL_TRUE : SDL_FALSE;
     const char *forced_visual_id = SDL_GetHint(SDL_HINT_VIDEO_X11_WINDOW_VISUALID);
 
     if (forced_visual_id != NULL && forced_visual_id[0] != '\0') {
@@ -623,7 +623,7 @@ int X11_CreateWindow(SDL_VideoDevice *_this, SDL_Window *window)
 
     /* Setup the input hints so we get keyboard input */
     wmhints = X11_XAllocWMHints();
-    wmhints->input = True;
+    wmhints->input = !(window->flags & SDL_WINDOW_NOT_FOCUSABLE) ? True : False;
     wmhints->window_group = data->window_group;
     wmhints->flags = InputHint | WindowGroupHint;
 
@@ -1954,6 +1954,51 @@ int SDL_X11_SetWindowTitle(Display *display, Window xwindow, char *title)
 #endif
 
     X11_XFlush(display);
+    return 0;
+}
+
+void X11_ShowWindowSystemMenu(SDL_Window *window, int x, int y)
+{
+    SDL_WindowData *data = window->driverdata;
+    SDL_DisplayData *displaydata = SDL_GetDisplayDriverDataForWindow(window);
+    Display *display = data->videodata->display;
+    Window root = RootWindow(display, displaydata->screen);
+    XClientMessageEvent e;
+    Window childReturn;
+    int wx, wy;
+
+    SDL_zero(e);
+    X11_XTranslateCoordinates(display, data->xwindow, root, x, y, &wx, &wy, &childReturn);
+
+    e.type = ClientMessage;
+    e.window = data->xwindow;
+    e.message_type = X11_XInternAtom(display, "_GTK_SHOW_WINDOW_MENU", 0);
+    e.data.l[0] = 0;  /* GTK device ID (unused) */
+    e.data.l[1] = wx; /* X coordinate relative to root */
+    e.data.l[2] = wy; /* Y coordinate relative to root */
+    e.format = 32;
+
+    X11_XSendEvent(display, root, False, SubstructureRedirectMask | SubstructureNotifyMask, (XEvent *)&e);
+    X11_XFlush(display);
+}
+
+int X11_SetWindowFocusable(SDL_VideoDevice *_this, SDL_Window *window, SDL_bool focusable)
+{
+    SDL_WindowData *data = window->driverdata;
+    Display *display = data->videodata->display;
+    XWMHints *wmhints;
+
+    wmhints = X11_XGetWMHints(display, data->xwindow);
+    if (wmhints == NULL) {
+        return SDL_SetError("Couldn't get WM hints");
+    }
+
+    wmhints->input = focusable ? True : False;
+    wmhints->flags |= InputHint;
+
+    X11_XSetWMHints(display, data->xwindow, wmhints);
+    X11_XFree(wmhints);
+
     return 0;
 }
 

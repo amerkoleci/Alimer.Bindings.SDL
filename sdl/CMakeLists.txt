@@ -112,8 +112,8 @@ endif()
 #  for systems without support. It's not currently enough to not use
 #  pthread functions in a pthread-build; it won't start up on unsupported
 #  browsers. As such, you have to explicitly enable it on Emscripten builds
-#  for the time being. This default with change to ON once this becomes
-#  commonly supported in browsers or the Emscripten teams makes a single
+#  for the time being. This default will change to ON once this becomes
+#  commonly supported in browsers or the Emscripten team makes a single
 #  binary work everywhere.
 if (UNIX_OR_MAC_SYS AND NOT EMSCRIPTEN)
   set(SDL_PTHREADS_DEFAULT ON)
@@ -131,18 +131,10 @@ endif()
 #  so we'll just use libusb when it's available. libusb does not support iOS,
 #  so we default to yes on iOS.
 #  TODO: Windows can support libusb, the hid.c file just depends on Unix APIs
-if((WINDOWS AND NOT WINDOWS_STORE) OR IOS OR TVOS OR ANDROID)
+if((WINDOWS AND NOT WINDOWS_STORE) OR IOS OR TVOS OR VISIONOS OR ANDROID)
   set(SDL_HIDAPI_LIBUSB_AVAILABLE FALSE)
 else()
   set(SDL_HIDAPI_LIBUSB_AVAILABLE TRUE)
-endif()
-
-# On the other hand, *BSD specifically uses libusb only, so we make a special
-#  case just for them.
-if(FREEBSD OR NETBSD OR OPENBSD OR BSDI)
-  set(SDL_HIDAPI_LIBUSB_DEFAULT TRUE)
-else()
-  set(SDL_HIDAPI_LIBUSB_DEFAULT FALSE)
 endif()
 
 set(SDL_ASSEMBLY_DEFAULT OFF)
@@ -198,6 +190,7 @@ set(SDL_SHARED_DEFAULT ON)
 set(SDL_STATIC_DEFAULT ON)
 
 set(SDL_SHARED_AVAILABLE ON)
+set(SDL_STATIC_AVAILABLE ON)
 
 # All these *_DEFAULT vars will default to ON if not specified,
 # so you only need to override them if they need to be disabled.
@@ -263,6 +256,11 @@ foreach(_SUB IN LISTS SDL_SUBSYSTEMS)
   option(SDL_${_OPT} "Enable the ${_SUB} subsystem" ${SDL_${_OPT}_DEFAULT})
 endforeach()
 
+cmake_dependent_option(SDL_FRAMEWORK "Build SDL libraries as Apple Framework" OFF "APPLE" OFF)
+if(SDL_FRAMEWORK)
+  set(SDL_STATIC_AVAILABLE FALSE)
+endif()
+
 # Allow some projects to be built conditionally.
 set_option(SDL_DISABLE_INSTALL    "Disable installation of SDL3" ${SDL3_SUBPROJECT})
 cmake_dependent_option(SDL_DISABLE_INSTALL_CPACK "Create binary SDL3 archive using CPack" ${SDL3_SUBPROJECT} "NOT SDL_DISABLE_INSTALL" ON)
@@ -297,8 +295,8 @@ set_option(SDL_DISKAUDIO           "Support the disk writer audio driver" ON)
 set_option(SDL_DUMMYAUDIO          "Support the dummy audio driver" ON)
 set_option(SDL_DUMMYVIDEO          "Use dummy video driver" ON)
 dep_option(SDL_IBUS                "Enable IBus support" ON ${UNIX_SYS} OFF)
-set_option(SDL_OPENGL              "Include OpenGL support" ON)
-set_option(SDL_OPENGLES            "Include OpenGL ES support" ON)
+dep_option(SDL_OPENGL              "Include OpenGL support" ON "NOT VISIONOS" OFF)
+dep_option(SDL_OPENGLES            "Include OpenGL ES support" ON "NOT VISIONOS" OFF)
 set_option(SDL_PTHREADS            "Use POSIX threads for multi-threading" ${SDL_PTHREADS_DEFAULT})
 dep_option(SDL_PTHREADS_SEM        "Use pthread semaphores" ON "SDL_PTHREADS" OFF)
 dep_option(SDL_OSS                 "Support the OSS audio API" ON "UNIX_SYS OR RISCOS" OFF)
@@ -342,8 +340,9 @@ dep_option(SDL_KMSDRM_SHARED       "Dynamically load KMS DRM support" ON "SDL_KM
 set_option(SDL_OFFSCREEN           "Use offscreen video driver" ON)
 option_string(SDL_BACKGROUNDING_SIGNAL "number to use for magic backgrounding signal or 'OFF'" OFF)
 option_string(SDL_FOREGROUNDING_SIGNAL "number to use for magic foregrounding signal or 'OFF'" OFF)
-set_option(SDL_HIDAPI              "Enable the HIDAPI subsystem" ON)
-dep_option(SDL_HIDAPI_LIBUSB       "Use libusb for low level joystick drivers" ${SDL_HIDAPI_LIBUSB_DEFAULT} "SDL_HIDAPI;${SDL_HIDAPI_LIBUSB_AVAILABLE}" OFF)
+dep_option(SDL_HIDAPI              "Enable the HIDAPI subsystem" ON "NOT VISIONOS" OFF)
+dep_option(SDL_HIDAPI_LIBUSB       "Use libusb for low level joystick drivers" ON SDL_HIDAPI_LIBUSB_AVAILABLE OFF)
+dep_option(SDL_HIDAPI_LIBUSB_SHARED "Dynamically load libusb support" ON SDL_HIDAPI_LIBUSB OFF)
 dep_option(SDL_HIDAPI_JOYSTICK     "Use HIDAPI for low level joystick drivers" ON SDL_HIDAPI OFF)
 dep_option(SDL_VIRTUAL_JOYSTICK    "Enable the virtual-joystick driver" ON SDL_HIDAPI OFF)
 set_option(SDL_LIBUDEV             "Enable libudev support" ON)
@@ -354,15 +353,12 @@ set_option(SDL_CLANG_TIDY          "Run clang-tidy static analysis" OFF)
 set(SDL_VENDOR_INFO "" CACHE STRING "Vendor name and/or version to add to SDL_REVISION")
 
 cmake_dependent_option(SDL_SHARED "Build a shared version of the library" ${SDL_SHARED_DEFAULT} ${SDL_SHARED_AVAILABLE} OFF)
-option(SDL_STATIC "Build a static version of the library" ${SDL_STATIC_DEFAULT})
-option(SDL_TEST   "Build the SDL3_test library" ON)
-
-# Apple Frameworks NEED a (shared) SDL3.framework for `#include <SDL3/xxx.h>` to work
-cmake_dependent_option(SDL_FRAMEWORK "Build SDL libraries as Apple Framework" OFF "SDL_SHARED;APPLE" OFF)
+cmake_dependent_option(SDL_STATIC "Build a static version of the library" ${SDL_STATIC_DEFAULT} ${SDL_STATIC_AVAILABLE} OFF)
+option(SDL_TEST_LIBRARY   "Build the SDL3_test library" ON)
 
 dep_option(SDL_STATIC_PIC      "Static version of the library should be built with Position Independent Code" "${CMAKE_POSITION_INDEPENDENT_CODE}" "SDL_STATIC" OFF)
-dep_option(SDL_TESTS           "Build the test directory" OFF SDL_TEST OFF)
-dep_option(SDL_INSTALL_TESTS   "Install test-cases" OFF "NOT SDL_DISABLE_INSTALL;NOT SDL_FRAMEWORK" OFF)
+dep_option(SDL_TESTS           "Build the test directory" OFF SDL_TEST_LIBRARY OFF)
+dep_option(SDL_INSTALL_TESTS   "Install test-cases" OFF "NOT SDL_DISABLE_INSTALL;NOT SDL_FRAMEWORK;NOT WINDOWS_STORE" OFF)
 dep_option(SDL_TESTS_LINK_SHARED "link tests to shared SDL library" "${SDL_SHARED}" "SDL_SHARED;SDL_STATIC" "${SDL_SHARED}")
 set(SDL_TESTS_TIMEOUT_MULTIPLIER "1" CACHE STRING "Timeout multiplier to account for really slow machines")
 
@@ -391,7 +387,7 @@ if(SDL_STATIC)
   target_compile_features(SDL3-static PRIVATE c_std_99)
 endif()
 
-if(SDL_TEST)
+if(SDL_TEST_LIBRARY)
   add_library(SDL3_test STATIC)
   add_library(SDL3::SDL3_test ALIAS SDL3_test)
   SDL_AddCommonCompilerFlags(SDL3_test)
@@ -2028,7 +2024,7 @@ elseif(APPLE)
   endif()
 
   if(SDL_MISC)
-    if(IOS OR TVOS)
+    if(IOS OR TVOS OR VISIONOS)
       sdl_glob_sources("${SDL3_SOURCE_DIR}/src/misc/ios/*.m")
     else()
       sdl_glob_sources("${SDL3_SOURCE_DIR}/src/misc/macos/*.m")
@@ -2051,10 +2047,10 @@ elseif(APPLE)
 
   if(SDL_JOYSTICK)
     sdl_glob_sources("${SDL3_SOURCE_DIR}/src/joystick/apple/*.m")
-    if(IOS OR TVOS)
+    if(IOS OR TVOS OR VISIONOS)
       sdl_glob_sources("${SDL3_SOURCE_DIR}/src/joystick/steam/*.c")
       set(SDL_JOYSTICK_MFI 1)
-      if(IOS)
+      if(IOS OR VISIONOS)
         set(SDL_FRAMEWORK_COREMOTION 1)
       endif()
       set(SDL_FRAMEWORK_GAMECONTROLLER 1)
@@ -2086,15 +2082,17 @@ elseif(APPLE)
         set(SDL_FRAMEWORK_GAMECONTROLLER 1)
         set(SDL_FRAMEWORK_COREHAPTICS 1)
       endif()
-      set(SDL_JOYSTICK_IOKIT 1)
-      set(SDL_FRAMEWORK_IOKIT 1)
+      if(NOT VISIONOS)
+        set(SDL_JOYSTICK_IOKIT 1)
+        set(SDL_FRAMEWORK_IOKIT 1)
+      endif()
       set(SDL_FRAMEWORK_FF 1)
     endif()
     set(HAVE_SDL_JOYSTICK TRUE)
   endif()
 
   if(SDL_HAPTIC)
-    if (IOS OR TVOS)
+    if (IOS OR TVOS OR VISIONOS)
       sdl_glob_sources("${SDL3_SOURCE_DIR}/src/haptic/dummy/*.c")
       set(SDL_HAPTIC_DUMMY 1)
     else()
@@ -2107,7 +2105,7 @@ elseif(APPLE)
   endif()
 
   if(SDL_POWER)
-    if (IOS OR TVOS)
+    if (IOS OR TVOS OR VISIONOS)
       sdl_glob_sources("${SDL3_SOURCE_DIR}/src/power/uikit/*.m")
       set(SDL_POWER_UIKIT 1)
     else()
@@ -2136,7 +2134,7 @@ elseif(APPLE)
   endif()
 
   if(SDL_SENSOR)
-    if(IOS)
+    if(IOS OR VISIONOS)
       set(SDL_SENSOR_COREMOTION 1)
       set(HAVE_SDL_SENSORS TRUE)
       sdl_glob_sources("${SDL3_SOURCE_DIR}/src/sensor/coremotion/*.m")
@@ -2145,7 +2143,7 @@ elseif(APPLE)
 
   # iOS hack needed - http://code.google.com/p/ios-cmake/ ?
   if(SDL_VIDEO)
-    if (IOS OR TVOS)
+    if (IOS OR TVOS OR VISIONOS)
       set(SDL_VIDEO_DRIVER_UIKIT 1)
       set(SDL_FRAMEWORK_COREGRAPHICS 1)
       set(SDL_FRAMEWORK_QUARTZCORE 1)
@@ -2165,7 +2163,7 @@ elseif(APPLE)
     endif()
 
     if(SDL_OPENGLES)
-      if(IOS OR TVOS)
+      if(IOS OR TVOS OR VISIONOS)
         set(SDL_FRAMEWORK_OPENGLES 1)
         set(SDL_VIDEO_OPENGL_ES 1)
       else()
@@ -2250,7 +2248,7 @@ elseif(APPLE)
     endif()
   endif()
   if(SDL_FRAMEWORK_METAL)
-    if(IOS OR TVOS)
+    if(IOS OR TVOS OR VISIONOS)
       sdl_link_dependency(metal LINK_OPTIONS "-Wl,-framework,Metal")
     else()
       sdl_link_dependency(metal LINK_OPTIONS "-Wl,-weak_framework,Metal")
@@ -2260,7 +2258,7 @@ elseif(APPLE)
     sdl_link_dependency(opengles LINK_OPTIONS "-Wl,-framework,OpenGLES")
   endif()
   if(SDL_FRAMEWORK_QUARTZCORE)
-    if(IOS OR TVOS)
+    if(IOS OR TVOS OR VISIONOS)
       sdl_link_dependency(quartz_core LINK_OPTIONS "-Wl,-framework,QuartzCore")
     else()
       sdl_link_dependency(metal LINK_OPTIONS "-Wl,-weak_framework,QuartzCore")
@@ -2796,19 +2794,22 @@ foreach(_hdr IN LISTS SDL3_INCLUDE_FILES)
   endif()
 endforeach()
 
-set(SDL_REVISION_SUFFIX "" CACHE STRING "Suffix for the SDL revision")
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/VERSION.txt")
-  # If VERSION exists, it contains the SDL version
-  file(READ "${CMAKE_CURRENT_SOURCE_DIR}/VERSION.txt" SDL_REVISION_CENTER)
-  string(STRIP "${SDL_REVISION_CENTER}" SDL_REVISION_CENTER)
-else()
-  # If VERSION does not exist, use git to calculate a version
-  git_describe(SDL_REVISION_CENTER)
-  if(NOT SDL_REVISION_CENTER)
-    set(SDL_REVISION_CENTER "${SDL3_VERSION}-no-vcs")
+set(SDL_REVISION "" CACHE STRING "Custom SDL revision (overrides SDL_REVISION_SUFFIX)")
+if(NOT SDL_REVISION)
+  set(SDL_REVISION_SUFFIX "" CACHE STRING "Suffix for the SDL revision")
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/VERSION.txt")
+    # If VERSION exists, it contains the SDL version
+    file(READ "${CMAKE_CURRENT_SOURCE_DIR}/VERSION.txt" SDL_REVISION_CENTER)
+    string(STRIP "${SDL_REVISION_CENTER}" SDL_REVISION_CENTER)
+  else()
+    # If VERSION does not exist, use git to calculate a version
+    git_describe(SDL_REVISION_CENTER)
+    if(NOT SDL_REVISION_CENTER)
+      set(SDL_REVISION_CENTER "${SDL3_VERSION}-no-vcs")
+    endif()
   endif()
+  set(SDL_REVISION "SDL-${SDL_REVISION_CENTER}${SDL_REVISION_SUFFIX}")
 endif()
-set(SDL_REVISION "SDL-${SDL_REVISION_CENTER}${SDL_REVISION_SUFFIX}")
 
 execute_process(COMMAND "${CMAKE_COMMAND}" -E make_directory "${SDL3_BINARY_DIR}/include/SDL3")
 configure_file(include/build_config/SDL_revision.h.cmake include/SDL3/SDL_revision.h @ONLY)
@@ -3094,18 +3095,6 @@ if(SDL_STATIC)
     OUTPUT_NAME "${sdl_static_libname}"
     POSITION_INDEPENDENT_CODE "${SDL_STATIC_PIC}"
   )
-  if(APPLE)
-    set_target_properties(SDL3-static PROPERTIES
-      FRAMEWORK "${SDL_FRAMEWORK}"
-    )
-    if(SDL_FRAMEWORK)
-      set_target_properties(SDL3-static PROPERTIES
-        FRAMEWORK_VERSION "${SDL_FRAMEWORK_VERSION}"
-        MACOSX_FRAMEWORK_IDENTIFIER "org.libsdl.SDL3-static"
-        RESOURCE "${SDL_FRAMEWORK_RESOURCES}"
-      )
-    endif()
-  endif()
   target_compile_definitions(SDL3-static PRIVATE SDL_STATIC_LIB)
   target_link_libraries(SDL3-static PRIVATE ${SDL_CMAKE_DEPENDS})
   target_include_directories(SDL3-static
@@ -3135,7 +3124,7 @@ sdl_compile_definitions(
 
 ##### Tests #####
 
-if(SDL_TEST)
+if(SDL_TEST_LIBRARY)
   file(GLOB TEST_SOURCES "${SDL3_SOURCE_DIR}/src/test/*.c")
   target_sources(SDL3_test PRIVATE ${TEST_SOURCES})
   if(APPLE)
@@ -3193,12 +3182,6 @@ if(SDL_FRAMEWORK)
   set(SDL_SDL_INSTALL_REAL_RESOURCEDIR "SDL3.framework/Versions/${SDL_FRAMEWORK_VERSION}/Resources")
   set(SDL_SDL_INSTALL_REAL_CMAKEDIR "${SDL_SDL_INSTALL_REAL_RESOURCEDIR}/CMake")
 
-  # - Install other SDL3*Config.cmake files in SDL3*.framework/Resources/CMake
-  # - The *_RELATIVE_CMAKEDIR variables are the symlinked folders visible from outside
-  set(SDL_SDLstatic_INSTALL_RESOURCEDIR "SDL3-static.framework/Resources")
-  set(SDL_SDLstatic_INSTALL_CMAKEDIR "${SDL_SDLstatic_INSTALL_RESOURCEDIR}/CMake")
-  set(SDL_SDLstatic_INSTALL_CMAKEFILENAME "SDL3-staticConfig.cmake")
-
   set(SDL_SDLtest_INSTALL_RESOURCEDIR "SDL3_test.framework/Resources")
   set(SDL_SDLtest_INSTALL_CMAKEDIR "${SDL_SDLtest_INSTALL_RESOURCEDIR}/CMake")
   set(SDL_SDLtest_INSTALL_CMAKEFILENAME "SDL3_testConfig.cmake")
@@ -3227,7 +3210,7 @@ if(SDL_STATIC)
   export(TARGETS SDL3-static NAMESPACE "SDL3::" FILE "SDL3staticTargets.cmake")
 endif()
 
-if(SDL_TEST)
+if(SDL_TEST_LIBRARY)
   export(TARGETS SDL3_test NAMESPACE "SDL3::" FILE "SDL3testTargets.cmake")
 endif()
 
@@ -3285,7 +3268,7 @@ if(NOT SDL_DISABLE_INSTALL)
     )
   endif()
 
-  if(SDL_TEST)
+  if(SDL_TEST_LIBRARY)
     install(TARGETS SDL3_test EXPORT SDL3testTargets
       ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
       FRAMEWORK DESTINATION "."
@@ -3317,7 +3300,7 @@ if(NOT SDL_DISABLE_INSTALL)
     )
   endif()
 
-  if(SDL_TEST)
+  if(SDL_TEST_LIBRARY)
     install(EXPORT SDL3testTargets
       FILE "${SDL_SDLtest_INSTALL_CMAKEFILENAME}"
       NAMESPACE SDL3::
@@ -3336,7 +3319,7 @@ if(NOT SDL_DISABLE_INSTALL)
     install(FILES ${SDL3_INCLUDE_FILES}
       DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/SDL3"
     )
-    if(SDL_TEST)
+    if(SDL_TEST_LIBRARY)
       install(FILES ${SDL3_TEST_INCLUDE_FILES}
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/SDL3"
       )
@@ -3377,6 +3360,7 @@ if(NOT SDL_DISABLE_INSTALL)
     SDL_generate_manpages(
       SYMBOL "SDL_Init"
       WIKIHEADERS_PL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/build-scripts/wikiheaders.pl"
+      REVISION "${SDL_REVISION}"
     )
     if(TARGET SDL3-javadoc)
       set(SDL_INSTALL_JAVADOCDIR "${CMAKE_INSTALL_DATAROOTDIR}/javadoc" CACHE PATH "Path where to install SDL3 javadoc")

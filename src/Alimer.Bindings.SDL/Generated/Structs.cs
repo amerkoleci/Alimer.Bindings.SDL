@@ -14,6 +14,92 @@ using System.Diagnostics.CodeAnalysis;
 #pragma warning disable CS0649
 namespace SDL;
 
+public partial struct SDL_Keysym
+{
+	public SDL_Scancode scancode;
+	public SDL_KeyCode sym;
+	public ushort mod;
+	public uint unused;
+}
+
+public partial struct SDL_MessageBoxButtonData
+{
+	public uint flags;
+	public int buttonid;
+	public unsafe sbyte* text;
+}
+
+public partial struct SDL_MessageBoxColor
+{
+	public byte r;
+	public byte g;
+	public byte b;
+}
+
+public partial struct SDL_MessageBoxColorScheme
+{
+	public colors__FixedBuffer colors;
+
+	public unsafe struct colors__FixedBuffer
+	{
+		public SDL_MessageBoxColor e0;
+		public SDL_MessageBoxColor e1;
+		public SDL_MessageBoxColor e2;
+		public SDL_MessageBoxColor e3;
+		public SDL_MessageBoxColor e4;
+
+		[UnscopedRef]
+		public ref SDL_MessageBoxColor this[int index]
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get
+			{
+				return ref AsSpan()[index];
+			}
+		}
+
+		[UnscopedRef]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public Span<SDL_MessageBoxColor> AsSpan()
+		{
+			return MemoryMarshal.CreateSpan(ref e0, 5);
+		}
+	}
+}
+
+public partial struct SDL_MessageBoxData
+{
+	public uint flags;
+	public SDL_Window window;
+	public unsafe sbyte* title;
+	public unsafe sbyte* message;
+	public int numbuttons;
+	public unsafe SDL_MessageBoxButtonData* buttons;
+	public unsafe SDL_MessageBoxColorScheme* colorScheme;
+}
+
+public partial struct SDL_VirtualJoystickDesc
+{
+	public ushort version;
+	public ushort type;
+	public ushort naxes;
+	public ushort nbuttons;
+	public ushort nhats;
+	public ushort vendor_id;
+	public ushort product_id;
+	public ushort padding;
+	public uint button_mask;
+	public uint axis_mask;
+	public unsafe sbyte* name;
+	public nint userdata;
+	public unsafe delegate* unmanaged<nint, void> Update;
+	public unsafe delegate* unmanaged<nint, int, void> SetPlayerIndex;
+	public unsafe delegate* unmanaged<nint, ushort, ushort, int> Rumble;
+	public unsafe delegate* unmanaged<nint, ushort, ushort, int> RumbleTriggers;
+	public unsafe delegate* unmanaged<nint, byte, byte, byte, int> SetLED;
+	public unsafe delegate* unmanaged<nint, void*, int, int> SendEffect;
+}
+
 public partial struct SDL_GamepadBinding
 {
 	public SDL_GamepadBindingType inputType;

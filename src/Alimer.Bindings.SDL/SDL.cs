@@ -355,12 +355,6 @@ public enum SDL_DisplayOrientation
     SDL_ORIENTATION_PORTRAIT_FLIPPED
 }
 
-public enum SDL_MouseWheelDirection : uint
-{
-    SDL_MOUSEWHEEL_NORMAL,
-    SDL_MOUSEWHEEL_FLIPPED
-}
-
 public enum SDL_SYSWM_TYPE
 {
     SDL_SYSWM_UNKNOWN,
@@ -855,27 +849,29 @@ public static unsafe partial class SDL
     #endregion
 
     #region SDL_error.h
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_ClearError();
+    public static readonly int SDL_OutOfMemory = SDL_Error(SDL_errorcode.Enomem);
+    public static readonly int SDL_Unsupported = SDL_Error(SDL_errorcode.Unsupported);
+    //public static string SDL_InvalidParamError(string param)
+    //{
+    //    return SDL_SetError("Parameter '%s' is invalid", param);
+    //}
 
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetError), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetError();
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_SetError), CallingConvention = CallingConvention.Cdecl)]
-    private static extern unsafe void INTERNAL_SDL_SetError(byte* fmtAndArglist);
-
-    public static string SDL_GetError()
+    public static string? SDL_GetErrorString()
     {
-        return GetString(INTERNAL_SDL_GetError());
+        return GetString(SDL_GetError());
     }
 
-    public static void SDL_SetError(string fmtAndArglist)
+    public static int SDL_SetError(ReadOnlySpan<sbyte> name)
     {
-        int utf8FmtAndArglistBufSize = Utf8Size(fmtAndArglist);
-        byte* utf8FmtAndArglist = stackalloc byte[utf8FmtAndArglistBufSize];
-        INTERNAL_SDL_SetError(
-            Utf8Encode(fmtAndArglist, utf8FmtAndArglist, utf8FmtAndArglistBufSize)
-        );
+        fixed (sbyte* pName = name)
+        {
+            return SDL_SetError(pName);
+        }
+    }
+
+    public static int SDL_SetError(string text)
+    {
+        return SDL_SetError(text.GetUtf8Span());
     }
     #endregion
 
@@ -2477,251 +2473,52 @@ public static unsafe partial class SDL
     #endregion
 
     #region SDL_keyboard.h
-    [StructLayout(LayoutKind.Sequential)]
-    public struct SDL_Keysym
+    public static string SDL_GetScancodeNameString(SDL_Scancode scancode)
     {
-        public SDL_Scancode scancode;
-        public SDL_KeyCode sym;
-        public SDL_Keymod mod; /* UInt16 */
-        public uint unicode; /* Deprecated */
-    }
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Window SDL_GetKeyboardFocus();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr SDL_GetKeyboardState(out int numkeys);
-
-    /// <summary>
-    /// Get the current key modifier state for the keyboard. 
-    /// </summary>
-    /// <returns></returns>
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Keymod SDL_GetModState();
-
-    /* Set the current key modifier state */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_SetModState(SDL_Keymod modstate);
-
-    /* Get the key code corresponding to the given scancode
-     * with the current keyboard layout.
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_KeyCode SDL_GetKeyFromScancode(SDL_Scancode scancode);
-
-    /* Get the scancode for the given keycode */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Scancode SDL_GetScancodeFromKey(SDL_KeyCode key);
-
-    /* Wrapper for SDL_GetScancodeName */
-    [DllImport(LibName, EntryPoint = "SDL_GetScancodeName", CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetScancodeName(SDL_Scancode scancode);
-    public static string SDL_GetScancodeName(SDL_Scancode scancode)
-    {
-        return GetString(
-            INTERNAL_SDL_GetScancodeName(scancode)
-        );
+        return GetStringOrEmpty(SDL_GetScancodeName(scancode));
     }
 
     /* Get a scancode from a human-readable name */
-    [DllImport(LibName, EntryPoint = "SDL_GetScancodeFromName", CallingConvention = CallingConvention.Cdecl)]
-    private static extern unsafe SDL_Scancode INTERNAL_SDL_GetScancodeFromName(
-        byte* name
-    );
-    public static unsafe SDL_Scancode SDL_GetScancodeFromName(string name)
+    public static SDL_Scancode SDL_GetScancodeFromName(ReadOnlySpan<sbyte> name)
     {
-        int utf8NameBufSize = Utf8Size(name);
-        byte* utf8Name = stackalloc byte[utf8NameBufSize];
-        return INTERNAL_SDL_GetScancodeFromName(
-            Utf8Encode(name, utf8Name, utf8NameBufSize)
-        );
+        fixed (sbyte* pName = name)
+        {
+            return SDL_GetScancodeFromName(pName);
+        }
     }
 
-    /* Wrapper for SDL_GetKeyName */
-    [DllImport(LibName, EntryPoint = "SDL_GetKeyName", CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetKeyName(SDL_KeyCode key);
-    public static string SDL_GetKeyName(SDL_KeyCode key)
+    public static SDL_Scancode SDL_GetScancodeFromName(string text)
     {
-        return GetString(INTERNAL_SDL_GetKeyName(key));
+        return SDL_GetScancodeFromName(text.GetUtf8Span());
     }
 
-    /* Get a key code from a human-readable name */
-    [DllImport(LibName, EntryPoint = "SDL_GetKeyFromName", CallingConvention = CallingConvention.Cdecl)]
-    private static extern unsafe SDL_KeyCode INTERNAL_SDL_GetKeyFromName(
-        byte* name
-    );
-    public static unsafe SDL_KeyCode SDL_GetKeyFromName(string name)
+    public static string SDL_GetKeyNameString(SDL_KeyCode key)
     {
-        int utf8NameBufSize = Utf8Size(name);
-        byte* utf8Name = stackalloc byte[utf8NameBufSize];
-        return INTERNAL_SDL_GetKeyFromName(
-            Utf8Encode(name, utf8Name, utf8NameBufSize)
-        );
+        return GetStringOrEmpty(SDL_GetKeyName(key));
     }
 
-    /* Start accepting Unicode text input events, show keyboard */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_StartTextInput();
 
-    /* Check if unicode input events are enabled */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_TextInputActive();
+    public static SDL_KeyCode SDL_GetKeyFromName(ReadOnlySpan<sbyte> name)
+    {
+        fixed (sbyte* pName = name)
+        {
+            return SDL_GetKeyFromName(pName);
+        }
+    }
 
-    /* Stop receiving any text input events, hide onscreen kbd */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_StopTextInput();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_ClearComposition();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_TextInputShown();
-
-    /* Set the rectangle used for text input, hint for IME */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_SetTextInputRect(ref Rectangle rect);
-
-    /* Does the platform support an on-screen keyboard? */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_HasScreenKeyboardSupport();
-
-    /* Is the on-screen keyboard shown for a given window? */
-    /* window is an SDL_Window pointer */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_ScreenKeyboardShown(SDL_Window window);
+    public static SDL_KeyCode SDL_GetKeyFromName(string text)
+    {
+        return SDL_GetKeyFromName(text.GetUtf8Span());
+    }
     #endregion
 
     #region SDL_mouse.c
-    /* Note: SDL_Cursor is a typedef normally. We'll treat it as
-     * an IntPtr, because C# doesn't do typedefs. Yay!
-     */
-
-    /* System cursor types */
-    public enum SDL_SystemCursor
-    {
-        SDL_SYSTEM_CURSOR_ARROW,    // Arrow
-        SDL_SYSTEM_CURSOR_IBEAM,    // I-beam
-        SDL_SYSTEM_CURSOR_WAIT,     // Wait
-        SDL_SYSTEM_CURSOR_CROSSHAIR,    // Crosshair
-        SDL_SYSTEM_CURSOR_WAITARROW,    // Small wait cursor (or Wait if not available)
-        SDL_SYSTEM_CURSOR_SIZENWSE, // Double arrow pointing northwest and southeast
-        SDL_SYSTEM_CURSOR_SIZENESW, // Double arrow pointing northeast and southwest
-        SDL_SYSTEM_CURSOR_SIZEWE,   // Double arrow pointing west and east
-        SDL_SYSTEM_CURSOR_SIZENS,   // Double arrow pointing north and south
-        SDL_SYSTEM_CURSOR_SIZEALL,  // Four pointed arrow pointing north, south, east, and west
-        SDL_SYSTEM_CURSOR_NO,       // Slashed circle or crossbones
-        SDL_SYSTEM_CURSOR_HAND,     // Hand
-        SDL_NUM_SYSTEM_CURSORS
-    }
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Window SDL_GetMouseFocus();
-
-    /// <summary>
-    /// Get the current state of the mouse
-    /// </summary>
-    /// <param name="x"></param>
-    /// <param name="y"></param>
-    /// <returns></returns>
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern uint SDL_GetMouseState(out int x, out int y);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern uint SDL_GetGlobalMouseState(out int x, out int y);
-
-    /* Get the mouse state with relative coords*/
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern uint SDL_GetRelativeMouseState(out int x, out int y);
-
-    /* Set the mouse cursor's position (within a window) */
-    /* window is an SDL_Window pointer */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_WarpMouseInWindow(SDL_Window window, int x, int y);
-
-    /* Set the mouse cursor's position in global screen space.
-     * Only available in 2.0.4 or higher.
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_WarpMouseGlobal(int x, int y);
-
-    /* Enable/Disable relative mouse mode (grabs mouse, rel coords) */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_SetRelativeMouseMode(SDL_bool enabled);
-
-    /// <summary>
-    /// Capture the mouse, to track input outside an SDL window.
-    /// </summary>
-    /// <param name="enabled"></param>
-    /// <returns></returns>
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_CaptureMouse(SDL_bool enabled);
-
-    /// <summary>
-    /// Query if the relative mouse mode is enabled
-    /// </summary>
-    /// <returns></returns>
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GetRelativeMouseMode();
-
-    /* Create a cursor from bitmap data (amd mask) in MSB format.
-     * data and mask are byte arrays, and w must be a multiple of 8.
-     * return value is an SDL_Cursor pointer.
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Cursor SDL_CreateCursor(
-        void* data,
-        void* mask,
-        int w, int h, int hot_x, int hot_y
-    );
-
-    /* Create a cursor from an SDL_Surface.
-     * IntPtr refers to an SDL_Cursor*, surface to an SDL_Surface*
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Cursor SDL_CreateColorCursor(SDL_Surface surface, int hot_x, int hot_y);
-
-    /* Create a cursor from a system cursor id.
-     * return value is an SDL_Cursor pointer
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Cursor SDL_CreateSystemCursor(SDL_SystemCursor id);
-
-    /* Set the active cursor.
-     * cursor is an SDL_Cursor pointer
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_SetCursor(SDL_Cursor cursor);
-
-    /* Return the active cursor
-     * return value is an SDL_Cursor pointer
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Cursor SDL_GetCursor();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Cursor SDL_GetDefaultCursor();
-
-    /* Frees a cursor created with one of the CreateCursor functions.
-     * cursor in an SDL_Cursor pointer
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_DestroyCursor(SDL_Cursor cursor);
-
-    /* Toggle whether or not the cursor is shown */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_ShowCursor(int toggle);
-
     public static uint SDL_BUTTON(uint X)
     {
         // If only there were a better way of doing this in C#
         return (uint)(1 << ((int)X - 1));
     }
 
-    public const uint SDL_BUTTON_LEFT = 1;
-    public const uint SDL_BUTTON_MIDDLE = 2;
-    public const uint SDL_BUTTON_RIGHT = 3;
-    public const uint SDL_BUTTON_X1 = 4;
-    public const uint SDL_BUTTON_X2 = 5;
     public static readonly uint SDL_BUTTON_LMASK = SDL_BUTTON(SDL_BUTTON_LEFT);
     public static readonly uint SDL_BUTTON_MMASK = SDL_BUTTON(SDL_BUTTON_MIDDLE);
     public static readonly uint SDL_BUTTON_RMASK = SDL_BUTTON(SDL_BUTTON_RIGHT);

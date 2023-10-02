@@ -28,7 +28,7 @@ public static unsafe class Program
         // Init SDL
         if (SDL_Init(SDL_InitFlags.Timer | SDL_InitFlags.Video | SDL_InitFlags.Gamepad) != 0)
         {
-            var error = SDL_GetError();
+            var error = SDL_GetErrorString();
             throw new Exception($"Failed to start SDL2: {error}");
         }
 

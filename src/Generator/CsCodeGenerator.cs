@@ -24,6 +24,7 @@ public static partial class CsCodeGenerator
         { "Uint32", "uint" },
         { "uint64_t", "ulong" },
         { "int8_t", "sbyte" },
+        { "Sint32", "int" },
         { "int32_t", "int" },
         { "int16_t", "short" },
         { "Sint16", "short" },
@@ -40,11 +41,17 @@ public static partial class CsCodeGenerator
         { "SDL_FPoint", "PointF" },
         { "SDL_Rect", "Rectangle" },
         { "SDL_FRect", "RectangleF" },
+        { "SDL_Keycode", "SDL_KeyCode" },
     };
 
     private static readonly HashSet<string> s_knownTypes = new(StringComparer.OrdinalIgnoreCase)
     {
-        "SDL_Gamepad"
+        "SDL_Rect",
+        "SDL_JoystickID",
+        "SDL_Joystick",
+        "SDL_Gamepad",
+        "SDL_MouseID",
+        "SDL_Window",
     };
 
     private static CsCodeGeneratorOptions s_options = new();
@@ -92,6 +99,19 @@ public static partial class CsCodeGenerator
                 continue;
             }
 
+            if(cppMacro.Name == "SDL_OutOfMemory" ||
+                cppMacro.Name == "SDL_Unsupported" ||
+                cppMacro.Name == "SDL_InvalidParamError" ||
+                cppMacro.Name == "SDL_BUTTON" ||
+                cppMacro.Name == "SDL_BUTTON_LMASK" ||
+                cppMacro.Name == "SDL_BUTTON_MMASK" ||
+                cppMacro.Name == "SDL_BUTTON_RMASK" ||
+                cppMacro.Name == "SDL_BUTTON_X1MASK" ||
+                cppMacro.Name == "SDL_BUTTON_X2MASK")
+            {
+                continue;
+            }
+
             s_collectedMacros.Add(cppMacro);
         }
     }
@@ -130,22 +150,30 @@ public static partial class CsCodeGenerator
                     csDataType = "int";
                 }
 
-                if (cppMacro.Name == "WGPU_WHOLE_MAP_SIZE")
+                if (cppMacro.Name == "SDL_OutOfMemory" || cppMacro.Name == "SDL_Unsupported")
                 {
                     modifier = "static readonly";
-                    csDataType = "nuint";
-                    macroValue = "nuint.MaxValue";
+                    csDataType = "int";
+                }
+                if (cppMacro.Name == "SDL_JOYSTICK_AXIS_MAX" || cppMacro.Name == "SDL_JOYSTICK_AXIS_MIN")
+                {
+                    csDataType = "int";
+                }
+                if (cppMacro.Name == "SDL_IPHONE_MAX_GFORCE")
+                {
+                    csDataType = "float";
+                    macroValue = "5.0f";
+                }
+                if (cppMacro.Name == "SDL_HAT_RIGHTUP"
+                    || cppMacro.Name == "SDL_HAT_RIGHTDOWN"
+                    || cppMacro.Name == "SDL_HAT_LEFTUP"
+                    || cppMacro.Name == "SDL_HAT_LEFTDOWN")
+                {
+                    csDataType = "uint";
                 }
 
                 writer.WriteLine($"/// <unmanaged>{cppMacro.Name}</unmanaged>");
-                if (cppMacro.Name == "VK_HEADER_VERSION_COMPLETE")
-                {
-                    writer.WriteLine($"public {modifier} {csDataType} {cppMacro.Name} = new VkVersion({cppMacro.Tokens[2]}, {cppMacro.Tokens[4]}, {cppMacro.Tokens[6]}, VK_HEADER_VERSION);");
-                }
-                else
-                {
-                    writer.WriteLine($"public {modifier} {csDataType} {cppMacro.Name} = {macroValue};");
-                }
+                writer.WriteLine($"public {modifier} {csDataType} {cppMacro.Name} = {macroValue};");
             }
         }
     }

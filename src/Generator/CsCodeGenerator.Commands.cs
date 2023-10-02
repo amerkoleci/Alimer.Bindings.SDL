@@ -68,7 +68,7 @@ public static partial class CsCodeGenerator
         using CodeWriter writer = new(Path.Combine(s_options.OutputPath, "Commands.cs"),
             true,
             s_options.Namespace,
-            ["System", "System.Runtime.InteropServices"]
+            ["System", "System.Runtime.InteropServices", "System.Drawing"]
             );
 
         // Generate callback

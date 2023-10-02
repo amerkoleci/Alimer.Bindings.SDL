@@ -11,6 +11,22 @@ using System;
 
 namespace SDL;
 
+public enum SDL_errorcode
+{
+	/// <unmanaged>SDL_ENOMEM</unmanaged>
+	Enomem = 0,
+	/// <unmanaged>SDL_EFREAD</unmanaged>
+	Efread = 1,
+	/// <unmanaged>SDL_EFWRITE</unmanaged>
+	Efwrite = 2,
+	/// <unmanaged>SDL_EFSEEK</unmanaged>
+	Efseek = 3,
+	/// <unmanaged>SDL_UNSUPPORTED</unmanaged>
+	Unsupported = 4,
+	/// <unmanaged>SDL_LASTERROR</unmanaged>
+	Lasterror = 5,
+}
+
 [Flags]
 public enum SDL_InitFlags
 {
@@ -1066,6 +1082,90 @@ public enum SDL_Keymod
 	Gui = LeftGui | RightGui,
 }
 
+[Flags]
+public enum SDL_MessageBoxFlags
+{
+	None = 0,
+	/// <unmanaged>SDL_MESSAGEBOX_ERROR</unmanaged>
+	Error = 0x00000010,
+	/// <unmanaged>SDL_MESSAGEBOX_WARNING</unmanaged>
+	Warning = 0x00000020,
+	/// <unmanaged>SDL_MESSAGEBOX_INFORMATION</unmanaged>
+	Information = 0x00000040,
+	/// <unmanaged>SDL_MESSAGEBOX_BUTTONS_LEFT_TO_RIGHT</unmanaged>
+	ButtonsLeftToRight = 0x00000080,
+	/// <unmanaged>SDL_MESSAGEBOX_BUTTONS_RIGHT_TO_LEFT</unmanaged>
+	ButtonsRightToLeft = 0x00000100,
+}
+
+[Flags]
+public enum SDL_MessageBoxButtonFlags
+{
+	None = 0,
+	/// <unmanaged>SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT</unmanaged>
+	ReturnKeyDefault = 0x00000001,
+	/// <unmanaged>SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT</unmanaged>
+	EscapeKeyDefault = 0x00000002,
+}
+
+public enum SDL_MessageBoxColorType
+{
+	/// <unmanaged>SDL_MESSAGEBOX_COLOR_BACKGROUND</unmanaged>
+	Background = 0,
+	/// <unmanaged>SDL_MESSAGEBOX_COLOR_TEXT</unmanaged>
+	Text = 1,
+	/// <unmanaged>SDL_MESSAGEBOX_COLOR_BUTTON_BORDER</unmanaged>
+	ButtonBorder = 2,
+	/// <unmanaged>SDL_MESSAGEBOX_COLOR_BUTTON_BACKGROUND</unmanaged>
+	ButtonBackground = 3,
+	/// <unmanaged>SDL_MESSAGEBOX_COLOR_BUTTON_SELECTED</unmanaged>
+	ButtonSelected = 4,
+	/// <unmanaged>SDL_MESSAGEBOX_COLOR_MAX</unmanaged>
+	Max = 5,
+}
+
+public enum SDL_JoystickType
+{
+	/// <unmanaged>SDL_JOYSTICK_TYPE_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_JOYSTICK_TYPE_GAMEPAD</unmanaged>
+	Gamepad = 1,
+	/// <unmanaged>SDL_JOYSTICK_TYPE_WHEEL</unmanaged>
+	Wheel = 2,
+	/// <unmanaged>SDL_JOYSTICK_TYPE_ARCADE_STICK</unmanaged>
+	ArcadeStick = 3,
+	/// <unmanaged>SDL_JOYSTICK_TYPE_FLIGHT_STICK</unmanaged>
+	FlightStick = 4,
+	/// <unmanaged>SDL_JOYSTICK_TYPE_DANCE_PAD</unmanaged>
+	DancePad = 5,
+	/// <unmanaged>SDL_JOYSTICK_TYPE_GUITAR</unmanaged>
+	Guitar = 6,
+	/// <unmanaged>SDL_JOYSTICK_TYPE_DRUM_KIT</unmanaged>
+	DrumKit = 7,
+	/// <unmanaged>SDL_JOYSTICK_TYPE_ARCADE_PAD</unmanaged>
+	ArcadePad = 8,
+	/// <unmanaged>SDL_JOYSTICK_TYPE_THROTTLE</unmanaged>
+	Throttle = 9,
+}
+
+public enum SDL_JoystickPowerLevel
+{
+	/// <unmanaged>SDL_JOYSTICK_POWER_UNKNOWN</unmanaged>
+	Unknown = -1,
+	/// <unmanaged>SDL_JOYSTICK_POWER_EMPTY</unmanaged>
+	Empty = 0,
+	/// <unmanaged>SDL_JOYSTICK_POWER_LOW</unmanaged>
+	Low = 1,
+	/// <unmanaged>SDL_JOYSTICK_POWER_MEDIUM</unmanaged>
+	Medium = 2,
+	/// <unmanaged>SDL_JOYSTICK_POWER_FULL</unmanaged>
+	Full = 3,
+	/// <unmanaged>SDL_JOYSTICK_POWER_WIRED</unmanaged>
+	Wired = 4,
+	/// <unmanaged>SDL_JOYSTICK_POWER_MAX</unmanaged>
+	Max = 5,
+}
+
 public enum SDL_GamepadType
 {
 	/// <unmanaged>SDL_GAMEPAD_TYPE_UNKNOWN</unmanaged>
@@ -1174,5 +1274,43 @@ public enum SDL_GamepadBindingType
 	Axis = 2,
 	/// <unmanaged>SDL_GAMEPAD_BINDTYPE_HAT</unmanaged>
 	Hat = 3,
+}
+
+public enum SDL_SystemCursor
+{
+	/// <unmanaged>SDL_SYSTEM_CURSOR_ARROW</unmanaged>
+	Arrow = 0,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_IBEAM</unmanaged>
+	Ibeam = 1,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_WAIT</unmanaged>
+	Wait = 2,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_CROSSHAIR</unmanaged>
+	Crosshair = 3,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_WAITARROW</unmanaged>
+	Waitarrow = 4,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_SIZENWSE</unmanaged>
+	Sizenwse = 5,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_SIZENESW</unmanaged>
+	Sizenesw = 6,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_SIZEWE</unmanaged>
+	Sizewe = 7,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_SIZENS</unmanaged>
+	Sizens = 8,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_SIZEALL</unmanaged>
+	Sizeall = 9,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_NO</unmanaged>
+	No = 10,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_HAND</unmanaged>
+	Hand = 11,
+	/// <unmanaged>SDL_NUM_SYSTEM_CURSORS</unmanaged>
+	SDL_NUM_SYSTEM_CURSORS = 12,
+}
+
+public enum SDL_MouseWheelDirection
+{
+	/// <unmanaged>SDL_MOUSEWHEEL_NORMAL</unmanaged>
+	Normal = 0,
+	/// <unmanaged>SDL_MOUSEWHEEL_FLIPPED</unmanaged>
+	Flipped = 1,
 }
 

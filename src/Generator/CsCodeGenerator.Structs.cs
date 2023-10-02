@@ -189,8 +189,7 @@ public static partial class CsCodeGenerator
         else
         {
             // VkAllocationCallbacks members
-            if (field.Type is CppTypedef typedef &&
-                typedef.ElementType is CppPointerType pointerType &&
+            if (field.Type is CppPointerType pointerType &&
                 pointerType.ElementType is CppFunctionType functionType)
             {
                 StringBuilder builder = new();

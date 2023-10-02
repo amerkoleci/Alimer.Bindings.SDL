@@ -19,12 +19,21 @@ public static partial class CsCodeGenerator
         { "SDL_GamepadButton", "SDL_GAMEPAD_BUTTON" },
         { "SDL_GamepadAxis", "SDL_GAMEPAD_AXIS" },
         { "SDL_GamepadBindingType", "SDL_GAMEPAD_BINDTYPE" },
+        { "SDL_errorcode", "SDL" },
         { "SDL_InitFlags", "SDL_INIT" },
+        { "SDL_MessageBoxFlags", "SDL_MESSAGEBOX" },
+        { "SDL_MessageBoxColorType", "SDL_MESSAGEBOX_COLOR" },
+        { "SDL_JoystickType", "SDL_JOYSTICK_TYPE" },
+        { "SDL_JoystickPowerLevel", "SDL_JOYSTICK_POWER" },
+        { "SDL_SystemCursor", "SDL_SYSTEM_CURSOR" },
+        { "SDL_MouseWheelDirection", "SDL_MOUSEWHEEL" },
     };
 
     private static readonly Dictionary<string, string> s_knownEnumValueNames = new()
     {
         { "SDL_NUM_SCANCODES", "NumScancodes" },
+        { "SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT", "ReturnKeyDefault" },
+        { "SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT", "EscapeKeyDefault" },
     };
 
     private static readonly HashSet<string> s_ignoredParts = new(StringComparer.OrdinalIgnoreCase)

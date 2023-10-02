@@ -11,8 +11,44 @@ namespace SDL;
 
 public static partial class SDL
 {
-	/// <unmanaged>SDLK_SCANCODE_MASK</unmanaged>
-	public const int SDLK_SCANCODE_MASK = 1<<30;
 	/// <unmanaged>SDL_CACHELINE_SIZE</unmanaged>
 	public const uint SDL_CACHELINE_SIZE = 128;
+	/// <unmanaged>SDLK_SCANCODE_MASK</unmanaged>
+	public const int SDLK_SCANCODE_MASK = 1<<30;
+	/// <unmanaged>SDL_JOYSTICK_AXIS_MAX</unmanaged>
+	public const int SDL_JOYSTICK_AXIS_MAX = 32767;
+	/// <unmanaged>SDL_JOYSTICK_AXIS_MIN</unmanaged>
+	public const int SDL_JOYSTICK_AXIS_MIN = -32768;
+	/// <unmanaged>SDL_IPHONE_MAX_GFORCE</unmanaged>
+	public const float SDL_IPHONE_MAX_GFORCE = 5.0f;
+	/// <unmanaged>SDL_VIRTUAL_JOYSTICK_DESC_VERSION</unmanaged>
+	public const uint SDL_VIRTUAL_JOYSTICK_DESC_VERSION = 1;
+	/// <unmanaged>SDL_HAT_CENTERED</unmanaged>
+	public const uint SDL_HAT_CENTERED = 0x00;
+	/// <unmanaged>SDL_HAT_UP</unmanaged>
+	public const uint SDL_HAT_UP = 0x01;
+	/// <unmanaged>SDL_HAT_RIGHT</unmanaged>
+	public const uint SDL_HAT_RIGHT = 0x02;
+	/// <unmanaged>SDL_HAT_DOWN</unmanaged>
+	public const uint SDL_HAT_DOWN = 0x04;
+	/// <unmanaged>SDL_HAT_LEFT</unmanaged>
+	public const uint SDL_HAT_LEFT = 0x08;
+	/// <unmanaged>SDL_HAT_RIGHTUP</unmanaged>
+	public const uint SDL_HAT_RIGHTUP = SDL_HAT_RIGHT|SDL_HAT_UP;
+	/// <unmanaged>SDL_HAT_RIGHTDOWN</unmanaged>
+	public const uint SDL_HAT_RIGHTDOWN = SDL_HAT_RIGHT|SDL_HAT_DOWN;
+	/// <unmanaged>SDL_HAT_LEFTUP</unmanaged>
+	public const uint SDL_HAT_LEFTUP = SDL_HAT_LEFT|SDL_HAT_UP;
+	/// <unmanaged>SDL_HAT_LEFTDOWN</unmanaged>
+	public const uint SDL_HAT_LEFTDOWN = SDL_HAT_LEFT|SDL_HAT_DOWN;
+	/// <unmanaged>SDL_BUTTON_LEFT</unmanaged>
+	public const uint SDL_BUTTON_LEFT = 1;
+	/// <unmanaged>SDL_BUTTON_MIDDLE</unmanaged>
+	public const uint SDL_BUTTON_MIDDLE = 2;
+	/// <unmanaged>SDL_BUTTON_RIGHT</unmanaged>
+	public const uint SDL_BUTTON_RIGHT = 3;
+	/// <unmanaged>SDL_BUTTON_X1</unmanaged>
+	public const uint SDL_BUTTON_X1 = 4;
+	/// <unmanaged>SDL_BUTTON_X2</unmanaged>
+	public const uint SDL_BUTTON_X2 = 5;
 }

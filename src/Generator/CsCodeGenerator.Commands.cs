@@ -35,18 +35,8 @@ public static partial class CsCodeGenerator
         return $"delegate* unmanaged<{builder}>";
     }
 
-    private static void GenerateCommands(CppCompilation compilation)
+    private static void CollectCommands(CppCompilation compilation)
     {
-        string visibility = _options.PublicVisiblity ? "public" : "internal";
-
-        // Generate Functions
-        using CodeWriter writer = new(Path.Combine(_options.OutputPath, "Commands.cs"),
-            true,
-            _options.Namespace,
-            new string[] { "System", "System.Runtime.InteropServices" }
-            );
-
-        // Generate callback
         foreach (CppTypedef typedef in compilation.Typedefs)
         {
             if (typedef.Name == "WGPUProc" ||
@@ -61,7 +51,30 @@ public static partial class CsCodeGenerator
             }
 
             CppFunctionType functionType = (CppFunctionType)pointerType.ElementType;
+            s_collectedCallbackTypedes.Add(typedef.Name, functionType);
+        }
 
+        foreach (CppFunction? cppFunction in compilation.Functions)
+        {
+            s_collectedFunctions.Add(cppFunction);
+        }
+    }
+
+    private static void GenerateCommands(CppCompilation compilation)
+    {
+        string visibility = _options.PublicVisiblity ? "public" : "internal";
+
+        // Generate Functions
+        using CodeWriter writer = new(Path.Combine(_options.OutputPath, "Commands.cs"),
+            true,
+            _options.Namespace,
+            ["System", "System.Runtime.InteropServices"]
+            );
+
+        // Generate callback
+        foreach (KeyValuePair<string, CppFunctionType> pair in s_collectedCallbackTypedes)
+        {
+            CppFunctionType functionType = pair.Value;
             //string functionPointerSignature = GetFunctionPointerSignature(functionType);
             //AddCsMapping(typedef.Name, functionPointerSignature);
 
@@ -69,29 +82,19 @@ public static partial class CsCodeGenerator
             string argumentsString = GetParameterSignature(functionType);
 
             writer.WriteLine($"[UnmanagedFunctionPointer(CallingConvention.Cdecl)]");
-            writer.WriteLine($"{visibility} unsafe delegate {returnCsName} {typedef.Name}({argumentsString});");
+            writer.WriteLine($"{visibility} unsafe delegate {returnCsName} {pair.Key}({argumentsString});");
             writer.WriteLine();
-        }
-
-        Dictionary<string, CppFunction> commands = new();
-        foreach (CppFunction? cppFunction in compilation.Functions)
-        {
-            string? returnType = GetCsTypeName(cppFunction.ReturnType, false);
-            string? csName = cppFunction.Name;
-
-            commands.Add(csName, cppFunction);
         }
 
         using (writer.PushBlock($"{visibility} unsafe partial class {_options.ClassName}"))
         {
-            foreach (KeyValuePair<string, CppFunction> command in commands)
+            foreach (CppFunction cppFunction in s_collectedFunctions)
             {
-                CppFunction cppFunction = command.Value;
-
+                string name = cppFunction.Name;
                 if (_options.GenerateFunctionPointers)
                 {
                     string functionPointerSignature = GetFunctionPointerSignature(cppFunction);
-                    writer.WriteLine($"private static {functionPointerSignature} {command.Key}_ptr;");
+                    writer.WriteLine($"private static {functionPointerSignature} {name}_ptr;");
                 }
 
                 WriteFunctionInvocation(writer, cppFunction, _options.GenerateFunctionPointers, _options.ClassName);
@@ -99,19 +102,19 @@ public static partial class CsCodeGenerator
 
             if (_options.GenerateFunctionPointers)
             {
-                WriteCommands(writer, "GenLoadCommands", commands);
+                WriteCommands(writer, "GenLoadCommands", s_collectedFunctions);
             }
         }
     }
 
-    private static void WriteCommands(CodeWriter writer, string name, Dictionary<string, CppFunction> commands)
+    private static void WriteCommands(CodeWriter writer, string name, List<CppFunction> commands)
     {
         using (writer.PushBlock($"private static void {name}()"))
         {
-            foreach (KeyValuePair<string, CppFunction> instanceCommand in commands)
+            foreach (CppFunction instanceCommand in commands)
             {
-                string commandName = instanceCommand.Key;
-                string functionPointerSignature = GetFunctionPointerSignature(instanceCommand.Value);
+                string commandName = instanceCommand.Name;
+                string functionPointerSignature = GetFunctionPointerSignature(instanceCommand);
 
                 if (commandName.EndsWith("Drop"))
                 {
@@ -139,13 +142,8 @@ public static partial class CsCodeGenerator
         string modifier = "public static";
         if (!useFunctionPointers)
         {
-            string dllName = "wgpu_native";
-            if (className == "VGPU")
-            {
-                dllName = "vgpu";
-            }
             modifier += " extern";
-            writer.WriteLine($"[DllImport(\"{dllName}\", CallingConvention = CallingConvention.Cdecl, EntryPoint = \"{cppFunction.Name}\")]");
+            writer.WriteLine($"[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = \"{cppFunction.Name}\")]");
         }
 
         if (useFunctionPointers)
@@ -285,10 +283,10 @@ public static partial class CsCodeGenerator
 
             argumentBuilder.Append(paramCsTypeName).Append(' ').Append(paramCsName);
 
-            if (paramCsTypeName == "nint" && paramCsName == "userdata")
-            {
-                argumentBuilder.Append(" = 0");
-            }
+            //if (paramCsTypeName == "nint" && paramCsName == "userdata")
+            //{
+            //    argumentBuilder.Append(" = 0");
+            //}
 
             if (functionName.EndsWith("SetVertexBuffer") || functionName.EndsWith("SetIndexBuffer"))
             {

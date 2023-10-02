@@ -5,61 +5,77 @@ using System.Runtime.InteropServices;
 
 namespace SDL;
 
-public delegate void SDL_ClipboardDataCallback(nint userData, string mimeType, out nuint size);
-public delegate void SDL_ClipboardCleanupCallback(nint userData);
+public delegate void ClipboardDataCallback(nint userData, string mimeType, out nuint size);
+public delegate void ClipboardCleanupCallback(nint userData);
 
 unsafe partial class SDL
 {
-    [DllImport(LibName, EntryPoint = nameof(SDL_SetClipboardText), CallingConvention = CallingConvention.Cdecl)]
-    private static extern int INTERNAL_SDL_SetClipboardText(byte* text);
+    public static int SDL_SetClipboardText(ReadOnlySpan<sbyte> name)
+    {
+        fixed (sbyte* pName = name)
+        {
+            return SDL_SetClipboardText(pName);
+        }
+    }
 
     public static int SDL_SetClipboardText(string text)
     {
-        byte* utf8Text = Utf8EncodeHeap(text);
-        int result = INTERNAL_SDL_SetClipboardText(utf8Text);
-        NativeMemory.Free(utf8Text);
-        return result;
+        return SDL_SetClipboardText(text.GetUtf8Span());
     }
 
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetClipboardText), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetClipboardText();
-
-    public static string SDL_GetClipboardText()
+    public static string? SDL_GetClipboardTextString()
     {
-        return GetString(INTERNAL_SDL_GetClipboardText(), true);
+        return GetString(SDL_GetClipboardText());
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_HasClipboardText();
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_SetPrimarySelectionText), CallingConvention = CallingConvention.Cdecl)]
-    private static extern int INTERNAL_SDL_SetPrimarySelectionText(byte* text);
+    public static int SDL_SetPrimarySelectionText(ReadOnlySpan<sbyte> name)
+    {
+        fixed (sbyte* pName = name)
+        {
+            return SDL_SetPrimarySelectionText(pName);
+        }
+    }
 
     public static int SDL_SetPrimarySelectionText(string text)
     {
-        byte* utf8Text = Utf8EncodeHeap(text);
-        int result = INTERNAL_SDL_SetPrimarySelectionText(utf8Text);
-        NativeMemory.Free(utf8Text);
-        return result;
+        return SDL_SetPrimarySelectionText(text.GetUtf8Span());
     }
 
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetPrimarySelectionText), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetPrimarySelectionText();
-
-    public static string SDL_GetPrimarySelectionText()
+    public static string? SDL_GetPrimarySelectionTextString()
     {
-        return GetString(INTERNAL_SDL_GetPrimarySelectionText(), true);
+        return GetString(SDL_GetPrimarySelectionText());
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_HasPrimarySelectionText();
+    public static nint SDL_GetClipboardData(ReadOnlySpan<sbyte> mimeType, nuint* size)
+    {
+        fixed (sbyte* pName = mimeType)
+        {
+            return SDL_GetClipboardData(pName, size);
+        }
+    }
 
-    private static SDL_ClipboardDataCallback? s_clipboardDataCallback;
-    private static SDL_ClipboardCleanupCallback? s_clipboardCleanupCallback;
+    public static nint SDL_GetClipboardData(string mimeType, nuint* size)
+    {
+        return SDL_GetClipboardData(mimeType.GetUtf8Span(), size);
+    }
+
+    [DllImport(LibName, EntryPoint = nameof(SDL_HasClipboardData), CallingConvention = CallingConvention.Cdecl)]
+    private static extern SDL_bool INTERNAL_SDL_HasClipboardData(byte* mime_type);
+
+    public static bool SDL_HasClipboardData(string mimeType)
+    {
+        byte* utf8Text = Utf8EncodeHeap(mimeType);
+        SDL_bool result = INTERNAL_SDL_HasClipboardData(utf8Text);
+        NativeMemory.Free(utf8Text);
+        return result == SDL_bool.SDL_TRUE;
+    }
+
+    private static ClipboardDataCallback? s_clipboardDataCallback;
+    private static ClipboardCleanupCallback? s_clipboardCleanupCallback;
 
     public static void SDL_SetClipboardData(
-        SDL_ClipboardDataCallback? callback,
-        SDL_ClipboardCleanupCallback? cleanup,
+        ClipboardDataCallback? callback,
+        ClipboardCleanupCallback? cleanup,
         nint userData)
     {
         s_clipboardDataCallback = callback;
@@ -74,8 +90,8 @@ unsafe partial class SDL
     }
 
     public static void SDL_SetClipboardData(
-        SDL_ClipboardDataCallback? callback,
-        SDL_ClipboardCleanupCallback? cleanup,
+        ClipboardDataCallback? callback,
+        ClipboardCleanupCallback? cleanup,
         nint userData,
         string[] mimeTypes)
     {
@@ -127,30 +143,5 @@ unsafe partial class SDL
         {
             s_clipboardCleanupCallback(userdata);
         }
-    }
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_ClearClipboardData();
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetClipboardData), CallingConvention = CallingConvention.Cdecl)]
-    private static extern void* INTERNAL_SDL_GetClipboardData(byte* mime_type, out nuint size);
-
-    public static void* SDL_GetClipboardData(string mimeType, out nuint size)
-    {
-        byte* utf8Text = Utf8EncodeHeap(mimeType);
-        void* result = INTERNAL_SDL_GetClipboardData(utf8Text, out size);
-        NativeMemory.Free(utf8Text);
-        return result;
-    }
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_HasClipboardData), CallingConvention = CallingConvention.Cdecl)]
-    private static extern SDL_bool INTERNAL_SDL_HasClipboardData(byte* mime_type);
-
-    public static bool SDL_HasClipboardData(string mimeType)
-    {
-        byte* utf8Text = Utf8EncodeHeap(mimeType);
-        SDL_bool result = INTERNAL_SDL_HasClipboardData(utf8Text);
-        NativeMemory.Free(utf8Text);
-        return result == SDL_bool.SDL_TRUE;
     }
 }

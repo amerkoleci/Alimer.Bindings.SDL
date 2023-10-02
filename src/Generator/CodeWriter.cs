@@ -49,7 +49,7 @@ public sealed class CodeWriter : IDisposable
 
         if (string.IsNullOrEmpty(codeBeforeNamespace) == false)
         {
-            _writer.WriteLine($"{codeBeforeNamespace};");
+            _writer.WriteLine($"{codeBeforeNamespace}");
         }
 
         if (string.IsNullOrEmpty(@namespace) == false)
@@ -57,7 +57,6 @@ public sealed class CodeWriter : IDisposable
             _writer.WriteLine($"namespace {@namespace};");
             _writer.WriteLine();
         }
-
     }
 
     public void Dispose()

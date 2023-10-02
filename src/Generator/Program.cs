@@ -37,13 +37,16 @@ public static class Program
             Namespace = "SDL",
             PublicVisiblity = true,
             GenerateFunctionPointers = false,
-            EnumWriteUnmanagedTag = false
+            EnumWriteUnmanagedTag = true
         };
 
-        string[] headers = new string[]
-        {
-            "SDL_video.h"
-        };
+        string[] headers =
+        [
+            "SDL_clipboard.h",
+            "SDL_scancode.h",
+            "SDL_keycode.h",
+            //"SDL_video.h",
+        ];
 
         foreach(string header in headers)
         {
@@ -77,6 +80,7 @@ public static class Program
                 return 0;
             }
 
+            CsCodeGenerator.Collect(compilation);
             CsCodeGenerator.Generate(compilation, generateOptions);
         }
 

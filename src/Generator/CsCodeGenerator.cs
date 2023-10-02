@@ -40,6 +40,18 @@ public static partial class CsCodeGenerator
 
     private static CsCodeGeneratorOptions _options = new();
 
+    private static readonly List<CppMacro> s_collectedMacros = new();
+    private static readonly List<CppEnum> s_collectedEnums = new();
+    private static readonly Dictionary<string, CppFunctionType> s_collectedCallbackTypedes = new();
+    private static readonly List<CppFunction> s_collectedFunctions = new();
+
+    public static void Collect(CppCompilation compilation)
+    {
+        CollectConstants(compilation);
+        CollectEnums(compilation);
+        CollectCommands(compilation);
+    }
+
     public static void Generate(CppCompilation compilation, CsCodeGeneratorOptions options)
     {
         _options = options;
@@ -56,26 +68,30 @@ public static partial class CsCodeGenerator
         s_csNameMappings[typeName] = csTypeName;
     }
 
+    private static void CollectConstants(CppCompilation compilation)
+    {
+        foreach (CppMacro cppMacro in compilation.Macros)
+        {
+            if (string.IsNullOrEmpty(cppMacro.Value)
+                || cppMacro.Name.EndsWith("_H_", StringComparison.OrdinalIgnoreCase)
+                || cppMacro.Name.Equals("SDL_SCANCODE_TO_KEYCODE", StringComparison.OrdinalIgnoreCase)
+                )
+            {
+                continue;
+            }
+
+            s_collectedMacros.Add(cppMacro);
+        }
+    }
+
     private static void GenerateConstants(CppCompilation compilation)
     {
         string visibility = _options.PublicVisiblity ? "public" : "internal";
         using var writer = new CodeWriter(Path.Combine(_options.OutputPath, "Constants.cs"), false, _options.Namespace, Array.Empty<string>());
         using (writer.PushBlock($"{visibility} static partial class {_options.ClassName}"))
         {
-            foreach (CppMacro cppMacro in compilation.Macros)
+            foreach (CppMacro cppMacro in s_collectedMacros)
             {
-                if (string.IsNullOrEmpty(cppMacro.Value)
-                    || cppMacro.Name.EndsWith("_H_", StringComparison.OrdinalIgnoreCase)
-                    || cppMacro.Name.Equals("WGPU_EXPORT", StringComparison.OrdinalIgnoreCase)
-                    || cppMacro.Name.Equals("WGPU_SHARED_LIBRARY", StringComparison.OrdinalIgnoreCase)
-                    || cppMacro.Name.Equals("WGPU_IMPLEMENTATION", StringComparison.OrdinalIgnoreCase)
-                    || cppMacro.Name.Equals("_VGPU_EXTERN", StringComparison.OrdinalIgnoreCase)
-                    || cppMacro.Name.Equals("VGPU_API", StringComparison.OrdinalIgnoreCase)
-                    )
-                {
-                    continue;
-                }
-
                 //string csName = GetPrettyEnumName(cppMacro.Name, "VK_");
 
                 string modifier = "const";
@@ -96,6 +112,10 @@ public static partial class CsCodeGenerator
                 else if (uint.TryParse(macroValue, out _) || macroValue.StartsWith("0x"))
                 {
                     csDataType = "uint";
+                }
+                else if (macroValue.Contains("<<"))
+                {
+                    csDataType = "int";
                 }
 
                 if (cppMacro.Name == "WGPU_WHOLE_MAP_SIZE")

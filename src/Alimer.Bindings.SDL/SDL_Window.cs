@@ -2,8 +2,31 @@
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace SDL;
+
+/// <summary>
+/// System theme
+/// </summary>
+public enum SDL_SystemTheme
+{
+    /// <summary>
+    ///  Unknown system theme
+    /// </summary>
+    /// <unmanaged>SDL_SYSTEM_THEME_UNKNOWN</unmanaged>
+    Unknown,
+    /// <summary>
+    /// Light colored system theme
+    /// </summary>
+    /// <unmanaged>SDL_SYSTEM_THEME_LIGHT</unmanaged>
+    Light,
+    /// <summary>
+    /// Dark colored system theme
+    /// </summary>
+    /// <unmanaged>SDL_SYSTEM_THEME_DARK</unmanaged>
+    Dark,
+}
 
 [Flags]
 public enum SDL_WindowFlags : uint
@@ -131,3 +154,11 @@ public readonly partial struct SDL_Window : IEquatable<SDL_Window>
     private string DebuggerDisplay => $"{nameof(SDL_Window)} [0x{Handle:X}]";
 }
 
+unsafe partial class SDL
+{
+    [LibraryImport(LibName)]
+    public static partial SDL_SystemTheme SDL_GetSystemTheme();
+
+    [LibraryImport(LibName)]
+    public static partial SDL_WindowID SDL_GetWindowID(SDL_Window window);
+}

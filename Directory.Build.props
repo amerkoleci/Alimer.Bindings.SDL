@@ -23,10 +23,6 @@
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-  </PropertyGroup>
-
   <PropertyGroup>
     <Authors>Amer Koleci and Contributors</Authors>
     <Copyright>Copyright © Amer Koleci and Contributors</Copyright>

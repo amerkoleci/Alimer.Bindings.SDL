@@ -361,26 +361,6 @@ public enum SDL_DisplayEventID : byte
     SDL_DISPLAYEVENT_DISCONNECTED   /* Requires >= 2.0.14 */
 }
 
-/// <summary>
-/// System theme
-/// </summary>
-public enum SDL_SystemTheme
-{
-    /// <summary>
-    ///  Unknown system theme
-    /// </summary>
-    SDL_SYSTEM_THEME_UNKNOWN,
-    /// <summary>
-    /// Light colored system theme
-    /// </summary>
-    SDL_SYSTEM_THEME_LIGHT,
-    /// <summary>
-    /// Dark colored system theme
-    /// </summary>
-    SDL_SYSTEM_THEME_DARK,
-}
-
-
 public enum SDL_DisplayOrientation
 {
     SDL_ORIENTATION_UNKNOWN,
@@ -1154,9 +1134,6 @@ public static unsafe partial class SDL
     }
 
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_SystemTheme SDL_GetSystemTheme();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern SDL_DisplayMode* SDL_GetDesktopDisplayMode(SDL_DisplayID displayID, out SDL_DisplayMode mode);
 
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
@@ -1284,8 +1261,7 @@ public static unsafe partial class SDL
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern SDL_WindowFlags SDL_GetWindowFlags(SDL_Window window);
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern uint SDL_GetWindowID(SDL_Window window);
+    
 
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern SDL_Window SDL_GetWindowFromID(uint id);

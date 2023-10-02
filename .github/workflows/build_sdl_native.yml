@@ -104,20 +104,20 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: libs_windows
-          path: Alimer.Bindings.SDL/runtimes
+          path: src/Alimer.Bindings.SDL/runtimes
       - name: Download ubuntu lib
         uses: actions/download-artifact@v3
         with:
           name: libs_linux
-          path: Alimer.Bindings.SDL/runtimes
+          path: src/Alimer.Bindings.SDL/runtimes
       - name: Download macos lib
         uses: actions/download-artifact@v3
         with:
           name: libs_osx
-          path: Alimer.Bindings.SDL/runtimes
+          path: src/Alimer.Bindings.SDL/runtimes
       - name: Display structure of downloaded files
         run: ls -R
-        working-directory: Alimer.Bindings.SDL/runtimes
+        working-directory: src/Alimer.Bindings.SDL/runtimes
       - name: Commit changes
         uses: EndBug/add-and-commit@v9.1.3
         with:

@@ -873,6 +873,21 @@ public static unsafe partial class SDL
     }
     #endregion
 
+    #region SDL_misc.h
+    public static int SDL_OpenURL(ReadOnlySpan<sbyte> name)
+    {
+        fixed (sbyte* pName = name)
+        {
+            return SDL_OpenURL(pName);
+        }
+    }
+
+    public static int SDL_OpenURL(string text)
+    {
+        return SDL_OpenURL(text.GetUtf8Span());
+    }
+    #endregion
+
     #region SDL_version.h, SDL_revision.h
 
     /* Similar to the headers, this is the version we're expecting to be

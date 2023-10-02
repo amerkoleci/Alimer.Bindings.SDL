@@ -770,4 +770,10 @@ public unsafe partial class SDL
 	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogMessage")]
 	public static extern void SDL_LogMessage(int category, SDL_LogPriority priority, sbyte* fmt);
 
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_OpenURL")]
+	public static extern int SDL_OpenURL(sbyte* url);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetPowerInfo")]
+	public static extern SDL_PowerState SDL_GetPowerInfo(int* seconds, int* percent);
+
 }

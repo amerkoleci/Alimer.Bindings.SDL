@@ -46,7 +46,7 @@ public static partial class CsCodeGenerator
         }
     }
 
-    private static void GenerateConstants(CppCompilation compilation)
+    private static void GenerateConstants()
     {
         string visibility = s_options.PublicVisiblity ? "public" : "internal";
         using var writer = new CodeWriter(Path.Combine(s_options.OutputPath, "Constants.cs"), false, s_options.Namespace, []);

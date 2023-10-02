@@ -74,15 +74,15 @@ public static partial class CsCodeGenerator
         CollectCommands(compilation);
     }
 
-    public static void Generate(CppCompilation compilation, CsCodeGeneratorOptions options)
+    public static void Generate(CsCodeGeneratorOptions options)
     {
         s_options = options;
 
-        GenerateConstants(compilation);
-        GenerateEnums(compilation);
-        GenerateHandles(compilation);
-        GenerateStructAndUnions(compilation);
-        GenerateCommands(compilation);
+        GenerateConstants();
+        GenerateEnums();
+        //GenerateHandles(compilation);
+        GenerateStructAndUnions();
+        GenerateCommands();
     }
 
     public static void AddCsMapping(string typeName, string csTypeName)

@@ -33,6 +33,7 @@ public static partial class CsCodeGenerator
         { "SDL_WindowFlags", "SDL_WINDOW" },
         { "SDL_LogCategory", "SDL_LOG_CATEGORY" },
         { "SDL_LogPriority", "SDL_LOG_PRIORITY" },
+        { "SDL_PowerState", "SDL_POWERSTATE" },
     };
 
     private static readonly Dictionary<string, string> s_knownEnumValueNames = new()
@@ -99,7 +100,7 @@ public static partial class CsCodeGenerator
         }
     }
 
-    public static void GenerateEnums(CppCompilation compilation)
+    public static void GenerateEnums()
     {
         string visibility = s_options.PublicVisiblity ? "public" : "internal";
         using CodeWriter writer = new(Path.Combine(s_options.OutputPath, "Enums.cs"), false, s_options.Namespace, ["System"]);

@@ -65,7 +65,7 @@ public static partial class CsCodeGenerator
         }
     }
 
-    private static void GenerateCommands(CppCompilation compilation)
+    private static void GenerateCommands()
     {
         string visibility = s_options.PublicVisiblity ? "public" : "internal";
 

@@ -33,7 +33,7 @@ public static partial class CsCodeGenerator
         }
     }
 
-    private static void GenerateStructAndUnions(CppCompilation compilation)
+    private static void GenerateStructAndUnions()
     {
         string visibility = s_options.PublicVisiblity ? "public" : "internal";
 

@@ -59,6 +59,8 @@ public static class Program
             "SDL_timer.h",
             "SDL_touch.h",
             "SDL_log.h",
+            "SDL_misc.h",
+            "SDL_power.h",
             //"SDL_video.h",
         ];
 
@@ -95,8 +97,9 @@ public static class Program
             }
 
             CsCodeGenerator.Collect(compilation);
-            CsCodeGenerator.Generate(compilation, generateOptions);
         }
+
+        CsCodeGenerator.Generate(generateOptions);
 
         return 0;
     }

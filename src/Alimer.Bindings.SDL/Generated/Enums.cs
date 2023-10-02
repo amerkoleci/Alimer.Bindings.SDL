@@ -1388,3 +1388,17 @@ public enum SDL_LogPriority
 	SDL_NUM_LOG_PRIORITIES = 7,
 }
 
+public enum SDL_PowerState
+{
+	/// <unmanaged>SDL_POWERSTATE_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_POWERSTATE_ON_BATTERY</unmanaged>
+	OnBattery = 1,
+	/// <unmanaged>SDL_POWERSTATE_NO_BATTERY</unmanaged>
+	NoBattery = 2,
+	/// <unmanaged>SDL_POWERSTATE_CHARGING</unmanaged>
+	Charging = 3,
+	/// <unmanaged>SDL_POWERSTATE_CHARGED</unmanaged>
+	Charged = 4,
+}
+

@@ -14,11 +14,19 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum OS X deployment version")
+set(CMAKE_OSX_DEPLOYMENT_TARGET "11" CACHE STRING "Minimum OS X deployment version")
 set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Build architectures for OS X")
 
-set (SDL_SHARED ON CACHE BOOL "Build shared library")
-set (SDL_STATIC OFF CACHE BOOL "")
-set (SDL_TESTS OFF CACHE BOOL "")
+# SDL3
+set(SDL_TEST_ENABLED_BY_DEFAULT OFF)
+set(SDL_SHARED_ENABLED_BY_DEFAULT ON)
+set(SDL_STATIC_ENABLED_BY_DEFAULT OFF)
 
-add_subdirectory (${CMAKE_SOURCE_DIR}/sdl)
+include(FetchContent)
+FetchContent_Declare(
+    SDL3
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL
+    GIT_TAG 3abb464f103532a0ef7a092a77c42cab32aa20f4
+    GIT_PROGRESS TRUE
+)
+FetchContent_MakeAvailable(SDL3)

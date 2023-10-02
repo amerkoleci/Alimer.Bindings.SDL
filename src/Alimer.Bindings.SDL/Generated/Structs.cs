@@ -14,3 +14,51 @@ using System.Diagnostics.CodeAnalysis;
 #pragma warning disable CS0649
 namespace SDL;
 
+public partial struct SDL_GamepadBinding
+{
+	public SDL_GamepadBindingType inputType;
+	public SDL_GamepadBinding_input input;
+	
+	[StructLayout(LayoutKind.Explicit)]
+	public partial struct SDL_GamepadBinding_input
+	{
+		[FieldOffset(0)]
+		public int button;
+		[FieldOffset(0)]
+		public SDL_GamepadBinding_axis axis;
+		
+		public partial struct SDL_GamepadBinding_axis
+		{
+			public int axis;
+			public int axis_min;
+			public int axis_max;
+		}
+		[FieldOffset(0)]
+		public SDL_GamepadBinding_hat hat;
+		
+		public partial struct SDL_GamepadBinding_hat
+		{
+			public int hat;
+			public int hat_mask;
+		}
+	}
+	public SDL_GamepadBindingType outputType;
+	public SDL_GamepadBinding_output output;
+	
+	[StructLayout(LayoutKind.Explicit)]
+	public partial struct SDL_GamepadBinding_output
+	{
+		[FieldOffset(0)]
+		public SDL_GamepadButton button;
+		[FieldOffset(0)]
+		public SDL_GamepadBinding_axis axis;
+		
+		public partial struct SDL_GamepadBinding_axis
+		{
+			public SDL_GamepadAxis axis;
+			public int axis_min;
+			public int axis_max;
+		}
+	}
+}
+

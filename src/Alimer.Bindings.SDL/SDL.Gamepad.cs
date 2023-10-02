@@ -1,348 +1,167 @@
 ﻿// Copyright © Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace SDL;
 
-public enum SDL_GamepadAxis
+public partial struct SDL_GamepadBinding
 {
-    SDL_GAMEPAD_AXIS_INVALID = -1,
-    SDL_GAMEPAD_AXIS_LEFTX,
-    SDL_GAMEPAD_AXIS_LEFTY,
-    SDL_GAMEPAD_AXIS_RIGHTX,
-    SDL_GAMEPAD_AXIS_RIGHTY,
-    SDL_GAMEPAD_AXIS_LEFT_TRIGGER,
-    SDL_GAMEPAD_AXIS_RIGHT_TRIGGER,
-    SDL_GAMEPAD_AXIS_MAX
-}
+    [UnscopedRef]
+    public ref int input_button
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            return ref input.button;
+        }
+    }
 
-public enum SDL_GamepadButton
-{
-    SDL_GAMEPAD_BUTTON_INVALID = -1,
-    SDL_GAMEPAD_BUTTON_A,
-    SDL_GAMEPAD_BUTTON_B,
-    SDL_GAMEPAD_BUTTON_X,
-    SDL_GAMEPAD_BUTTON_Y,
-    SDL_GAMEPAD_BUTTON_BACK,
-    SDL_GAMEPAD_BUTTON_GUIDE,
-    SDL_GAMEPAD_BUTTON_START,
-    SDL_GAMEPAD_BUTTON_LEFT_STICK,
-    SDL_GAMEPAD_BUTTON_RIGHT_STICK,
-    SDL_GAMEPAD_BUTTON_LEFT_SHOULDER,
-    SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER,
-    SDL_GAMEPAD_BUTTON_DPAD_UP,
-    SDL_GAMEPAD_BUTTON_DPAD_DOWN,
-    SDL_GAMEPAD_BUTTON_DPAD_LEFT,
-    SDL_GAMEPAD_BUTTON_DPAD_RIGHT,
-    SDL_GAMEPAD_BUTTON_MISC1,    /* Xbox Series X share button, PS5 microphone button, Nintendo Switch Pro capture button, Amazon Luna microphone button */
-    SDL_GAMEPAD_BUTTON_PADDLE1,  /* Xbox Elite paddle P1 (upper left, facing the back) */
-    SDL_GAMEPAD_BUTTON_PADDLE2,  /* Xbox Elite paddle P3 (upper right, facing the back) */
-    SDL_GAMEPAD_BUTTON_PADDLE3,  /* Xbox Elite paddle P2 (lower left, facing the back) */
-    SDL_GAMEPAD_BUTTON_PADDLE4,  /* Xbox Elite paddle P4 (lower right, facing the back) */
-    SDL_GAMEPAD_BUTTON_TOUCHPAD, /* PS4/PS5 touchpad button */
-    SDL_GAMEPAD_BUTTON_MAX
-}
+    [UnscopedRef]
+    public ref SDL_GamepadBinding_input.SDL_GamepadBinding_axis input_axis
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            return ref input.axis;
+        }
+    }
 
-public enum SDL_GamepadType
-{
-    SDL_GAMEPAD_TYPE_UNKNOWN = 0,
-    SDL_GAMEPAD_TYPE_STANDARD,
-    SDL_GAMEPAD_TYPE_XBOX360,
-    SDL_GAMEPAD_TYPE_XBOXONE,
-    SDL_GAMEPAD_TYPE_PS3,
-    SDL_GAMEPAD_TYPE_PS4,
-    SDL_GAMEPAD_TYPE_PS5,
-    SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_PRO,
-    SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_LEFT,
-    SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT,
-    SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_PAIR,
-    SDL_GAMEPAD_TYPE_MAX
+    [UnscopedRef]
+    public ref SDL_GamepadBinding_input.SDL_GamepadBinding_hat input_hat
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            return ref input.hat;
+        }
+    }
+
+    [UnscopedRef]
+    public ref SDL_GamepadButton output_button
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            return ref output.button;
+        }
+    }
+
+    [UnscopedRef]
+    public ref SDL_GamepadBinding_output.SDL_GamepadBinding_axis output_axis
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            return ref output.axis;
+        }
+    }
 }
 
 unsafe partial class SDL
 {
-    [DllImport(LibName, EntryPoint = nameof(SDL_AddGamepadMapping), CallingConvention = CallingConvention.Cdecl)]
-    private static extern int INTERNAL_SDL_AddGamepadMapping(byte* mappingString);
-
-    public static int SDL_AddGamepadMapping(string mappingString
-    )
+    public static int SDL_AddGamepadMapping(ReadOnlySpan<sbyte> name)
     {
-        byte* utf8MappingString = Utf8EncodeHeap(mappingString);
-        int result = INTERNAL_SDL_AddGamepadMapping(
-            utf8MappingString
-        );
-
-        NativeMemory.Free(utf8MappingString);
-        return result;
+        fixed (sbyte* pName = name)
+        {
+            return SDL_AddGamepadMapping(pName);
+        }
     }
 
-    /* Only available in 2.0.6 or higher. */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetNumGamepadMappings();
-
-    /* Only available in 2.0.6 or higher. */
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadMappingForIndex), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadMappingForIndex(int mapping_index);
-    public static string SDL_GetGamepadMappingForIndex(int mapping_index)
+    public static int SDL_AddGamepadMapping(string mappingString)
     {
-        return GetString(INTERNAL_SDL_GetGamepadMappingForIndex(mapping_index), true);
+        return SDL_AddGamepadMapping(mappingString.GetUtf8Span());
+    }
+
+    public static string? SDL_GetGamepadMappingForIndexString(int mapping_index)
+    {
+        return GetString(SDL_GetGamepadMappingForIndex(mapping_index));
     }
 
     /* THIS IS AN RWops FUNCTION! */
-    [DllImport(LibName, EntryPoint = "SDL_AddGamepadMappingsFromRW", CallingConvention = CallingConvention.Cdecl)]
-    private static extern int INTERNAL_SDL_AddGamepadMappingsFromRW(
-        IntPtr rw,
-        int freerw
-    );
     public static int SDL_AddGamepadMappingsFromFile(string file)
     {
         IntPtr rwops = SDL_RWFromFile(file, "rb");
-        return INTERNAL_SDL_AddGamepadMappingsFromRW(rwops, 1);
+        return SDL_AddGamepadMappingsFromRW(rwops, SDL_bool.SDL_TRUE);
     }
 
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadMappingForGUID), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadMappingForGUIDD(
-        Guid guid
-    );
-    public static string SDL_GetGamepadMappingForGUID(Guid guid)
+    public static string SDL_GetGamepadMappingForGUIDString(Guid guid)
     {
-        return GetString(
-            INTERNAL_SDL_GetGamepadMappingForGUIDD(guid),
-            true
-        );
+        return GetString(SDL_GetGamepadMappingForGUID(guid)) ?? string.Empty;
     }
 
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadMapping), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadMapping(SDL_Gamepad gamepad);
-
-    public static string SDL_GetGamepadMapping(SDL_Gamepad gamepad)
+    public static string SDL_GetGamepadMappingStringString(SDL_Gamepad gamepad)
     {
-        return GetString(
-            INTERNAL_SDL_GetGamepadMapping(
-                gamepad
-            ),
-            true
-        );
+        return GetStringOrEmpty(SDL_GetGamepadMapping(gamepad));
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_IsGamepad(SDL_JoystickID instance_id);
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadInstanceName), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadInstanceName(SDL_JoystickID instance_id);
-
-    public static string SDL_GetGamepadInstanceName(SDL_JoystickID instance_id)
+    public static string SDL_GetGamepadInstanceNameString(SDL_JoystickID instance_id)
     {
-        return GetString(
-            INTERNAL_SDL_GetGamepadInstanceName(instance_id)
-        );
+        return GetStringOrEmpty(SDL_GetGamepadInstanceName(instance_id));
     }
 
-    /* Only available in 2.0.9 or higher. */
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadInstanceMapping), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadInstanceMapping(SDL_JoystickID instance_id);
-
-    public static string SDL_GetGamepadInstanceMapping(SDL_JoystickID instance_id)
+    public static string SDL_GetGamepadInstanceMappingString(SDL_JoystickID instance_id)
     {
-        return GetString(
-            INTERNAL_SDL_GetGamepadInstanceMapping(instance_id),
-            true
-        );
+        return GetStringOrEmpty(SDL_GetGamepadInstanceMapping(instance_id));
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Gamepad SDL_OpenGamepad(SDL_JoystickID instance_id);
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadName), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadName(SDL_Gamepad gamepad);
-
-    public static string SDL_GetGamepadName(SDL_Gamepad gamepad)
+    public static string SDL_GetGamepadNameString(SDL_Gamepad gamepad)
     {
-        return GetString(
-            INTERNAL_SDL_GetGamepadName(gamepad)
-        );
+        return GetStringOrEmpty(SDL_GetGamepadName(gamepad));
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort SDL_GetGamepadVendor(SDL_Gamepad gamepad);
-
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort SDL_GetGamepadProduct(SDL_Gamepad gamepad);
-
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort SDL_GetGamepadProductVersion(SDL_Gamepad gamepad);
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadSerial), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadSerial(SDL_Gamepad gamepad);
-
-    public static string SDL_GetGamepadSerial(SDL_Gamepad gamepad)
+    public static string SDL_GetGamepadSerialString(SDL_Gamepad gamepad)
     {
-        return GetString(
-            INTERNAL_SDL_GetGamepadSerial(gamepad)
-        );
+        return GetStringOrEmpty(SDL_GetGamepadSerial(gamepad));
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GamepadConnected(SDL_Gamepad gamepad);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Joystick SDL_GetGamepadJoystick(SDL_Gamepad gamepad);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_SetGamepadEventsEnabled(SDL_bool enabled);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GamepadEventsEnabled();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_UpdateGamepads();
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadAxisFromString), CallingConvention = CallingConvention.Cdecl)]
-    private static extern unsafe SDL_GamepadAxis INTERNAL_SDL_GetGamepadAxisFromString(byte* str);
-
-    public static unsafe SDL_GamepadAxis SDL_GetGamepadAxisFromString(
-        string str
-    )
+    public static SDL_GamepadAxis SDL_GetGamepadAxisFromString(ReadOnlySpan<sbyte> str)
     {
-        int utf8PchStringBufSize = Utf8Size(str);
-        byte* utf8PchString = stackalloc byte[utf8PchStringBufSize];
-        return INTERNAL_SDL_GetGamepadAxisFromString(
-            Utf8Encode(str, utf8PchString, utf8PchStringBufSize)
-        );
+        fixed (sbyte* pName = str)
+        {
+            return SDL_GetGamepadAxisFromString(pName);
+        }
     }
 
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadStringForAxis), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadStringForAxis(SDL_GamepadAxis axis);
-
-    public static string SDL_GetGamepadStringForAxis(SDL_GamepadAxis axis)
+    public static SDL_GamepadAxis SDL_GetGamepadAxisFromString(string str)
     {
-        return GetString(
-            INTERNAL_SDL_GetGamepadStringForAxis(
-                axis
-            )
-        );
+        return SDL_GetGamepadAxisFromString(str.GetUtf8Span());
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern short SDL_GetGamepadAxis(SDL_Gamepad gamepad, SDL_GamepadAxis axis);
+    public static string SDL_GetGamepadStringForAxisString(SDL_GamepadAxis axis)
+    {
+        return GetStringOrEmpty(SDL_GetGamepadStringForAxis(axis));
+    }
 
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadButtonFromString), CallingConvention = CallingConvention.Cdecl)]
-    private static extern SDL_GamepadButton INTERNAL_SDL_GetGamepadButtonFromString(
-        byte* str
-    );
+    public static SDL_GamepadButton SDL_GetGamepadButtonFromString(ReadOnlySpan<sbyte> str)
+    {
+        fixed (sbyte* pName = str)
+        {
+            return SDL_GetGamepadButtonFromString(pName);
+        }
+    }
+
     public static SDL_GamepadButton SDL_GetGamepadButtonFromString(string str)
     {
-        int utf8PchStringBufSize = Utf8Size(str);
-        byte* utf8PchString = stackalloc byte[utf8PchStringBufSize];
-        return INTERNAL_SDL_GetGamepadButtonFromString(
-            Utf8Encode(str, utf8PchString, utf8PchStringBufSize)
-        );
+        return SDL_GetGamepadButtonFromString(str.GetUtf8Span());
     }
 
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadStringForButton), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadStringForButton(SDL_GamepadButton button);
-
-    public static string SDL_GetGamepadStringForButton(SDL_GamepadButton button)
+    public static string SDL_GetGamepadStringForButtonString(SDL_GamepadButton button)
     {
-        return GetString(
-            INTERNAL_SDL_GetGamepadStringForButton(button)
-        );
+        return GetStringOrEmpty(SDL_GetGamepadStringForButton(button));
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern byte SDL_GetGamepadButton(SDL_Gamepad gamepad, SDL_GamepadButton button);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_RumbleGamepad(
-        SDL_Gamepad gamepad,
-        ushort low_frequency_rumble,
-        ushort high_frequency_rumble,
-        uint duration_ms
-    );
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_RumbleGamepadTriggers(
-        SDL_Gamepad gamepad,
-        ushort left_rumble,
-        ushort right_rumble,
-        uint duration_ms
-    );
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_CloseGamepad(SDL_Gamepad gamepad);
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadAppleSFSymbolsNameForButton), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadAppleSFSymbolsNameForButton(
-        SDL_Gamepad gamepad,
-        SDL_GamepadButton button
-    );
-    public static string SDL_GetGamepadAppleSFSymbolsNameForButton(SDL_Gamepad gamepad, SDL_GamepadButton button
-    )
+    public static string SDL_GetGamepadAppleSFSymbolsNameForButtonString(SDL_Gamepad gamepad, SDL_GamepadButton button)
     {
-        return GetString(
-            INTERNAL_SDL_GetGamepadAppleSFSymbolsNameForButton(gamepad, button)
-        );
+        return GetString(SDL_GetGamepadAppleSFSymbolsNameForButton(gamepad, button)) ?? string.Empty;
     }
 
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadAppleSFSymbolsNameForAxis), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadAppleSFSymbolsNameForAxis(
-        SDL_Gamepad gamepad,
-        SDL_GamepadAxis axis
-    );
-
-    public static string SDL_GetGamepadAppleSFSymbolsNameForAxis(SDL_Gamepad gamepad, SDL_GamepadAxis axis)
+    public static string SDL_GetGamepadAppleSFSymbolsNameForAxisString(SDL_Gamepad gamepad, SDL_GamepadAxis axis)
     {
-        return GetString(
-            INTERNAL_SDL_GetGamepadAppleSFSymbolsNameForAxis(gamepad, axis)
-        );
+        return GetString(SDL_GetGamepadAppleSFSymbolsNameForAxis(gamepad, axis)) ?? string.Empty;
     }
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Gamepad SDL_GetGamepadFromInstanceID(SDL_JoystickID instance_id);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_GamepadType SDL_GetGamepadInstanceType(
-        SDL_JoystickID instance_id
-    );
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_GamepadType SDL_GetGamepadType(SDL_Gamepad gamepad);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_GamepadType SDL_GetRealGamepadType(SDL_Gamepad gamepad);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Gamepad SDL_GetGamepadFromPlayerIndex(int player_index);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_SetGamepadPlayerIndex(SDL_Gamepad gamepad, int player_index);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GamepadHasLED(SDL_Gamepad gamepad);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GamepadHasRumble(SDL_Gamepad gamepad);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GamepadHasRumbleTriggers(SDL_Gamepad gamepad);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_SetGamepadLED(SDL_Gamepad gamepad, byte red, byte green, byte blue);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GamepadHasAxis(SDL_Gamepad gamepad, SDL_GamepadAxis axis);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GamepadHasButton(SDL_Gamepad gamepad, SDL_GamepadButton button);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetNumGamepadTouchpads(SDL_Gamepad gamepad);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetNumGamepadTouchpadFingers(SDL_Gamepad gamepad, int touchpad);
 
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern int SDL_GetGamepadTouchpadFinger(
@@ -354,24 +173,6 @@ unsafe partial class SDL
         out float y,
         out float pressure
     );
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GamepadHasSensor(SDL_Gamepad gamepad, SDL_SensorType type);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_SetGamepadSensorEnabled(SDL_Gamepad gamepad, SDL_SensorType type, SDL_bool enabled);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GamepadSensorEnabled(SDL_Gamepad gamepad, SDL_SensorType type);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern float SDL_GetGamepadSensorDataRate(SDL_Gamepad gamepad, SDL_SensorType type);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetGamepadSensorData(SDL_Gamepad gamepad, SDL_SensorType type, float* data, int num_values);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_SendGamepadEffect(SDL_Gamepad gamepad, void* data, int size);
 
     public static int SDL_SendGamepadEffect<T>(SDL_Gamepad gamepad, T[] source) where T : unmanaged
     {
@@ -393,22 +194,22 @@ unsafe partial class SDL
         }
     }
 
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadTypeFromString), CallingConvention = CallingConvention.Cdecl)]
-    private static extern SDL_GamepadType INTERNAL_SDL_GetGamepadTypeFromString(byte* str);
+    public static SDL_GamepadType SDL_GetGamepadTypeFromString(ReadOnlySpan<sbyte> str)
+    {
+        fixed (sbyte* pName = str)
+        {
+            return SDL_GetGamepadTypeFromString(pName);
+        }
+    }
 
     public static SDL_GamepadType SDL_GetGamepadTypeFromString(string str)
     {
-        byte* strString = Utf8EncodeHeap(str);
-        SDL_GamepadType result = INTERNAL_SDL_GetGamepadTypeFromString(strString);
-        NativeMemory.Free(strString);
-        return result;
+        return SDL_GetGamepadTypeFromString(str.GetUtf8Span());
     }
 
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetGamepadStringForType), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetGamepadStringForType(SDL_GamepadType type);
-    public static string SDL_GetGamepadStringForType(SDL_GamepadType type)
+    public static string SDL_GetGamepadStringForTypeString(SDL_GamepadType type)
     {
-        return GetString(INTERNAL_SDL_GetGamepadStringForType(type), true);
+        return GetStringOrEmpty(SDL_GetGamepadStringForType(type));
     }
 
     public static bool SDL_IsJoystickAmazonLunaController(ushort vendor_id, ushort product_id)

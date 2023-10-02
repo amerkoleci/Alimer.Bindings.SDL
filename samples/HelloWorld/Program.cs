@@ -5,7 +5,6 @@ using static SDL.SDL;
 using static SDL.SDL_EventType;
 using static SDL.SDL_GLattr;
 using static SDL.SDL_GLprofile;
-using static SDL.SDL_InitFlags;
 using static SDL.SDL_LogPriority;
 using System.Drawing;
 using SDL;
@@ -24,8 +23,10 @@ public static unsafe class Program
 
         SDL_GetVersion(out SDL_version version);
 
+        string str = SDL_GetPlatformString();
+
         // Init SDL
-        if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO | SDL_INIT_GAMEPAD) != 0)
+        if (SDL_Init(SDL_InitFlags.Timer | SDL_InitFlags.Video | SDL_InitFlags.Gamepad) != 0)
         {
             var error = SDL_GetError();
             throw new Exception($"Failed to start SDL2: {error}");

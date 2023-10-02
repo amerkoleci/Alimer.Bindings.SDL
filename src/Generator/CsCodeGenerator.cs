@@ -17,6 +17,8 @@ public static partial class CsCodeGenerator
     {
         { "bool", "bool" },
         { "uint8_t", "byte" },
+        { "Uint8", "byte" },
+        { "Uint16", "ushort" },
         { "uint16_t", "ushort" },
         { "uint32_t", "uint" },
         { "Uint32", "uint" },
@@ -24,6 +26,7 @@ public static partial class CsCodeGenerator
         { "int8_t", "sbyte" },
         { "int32_t", "int" },
         { "int16_t", "short" },
+        { "Sint16", "short" },
         { "int64_t", "long" },
         { "int64_t*", "long*" },
         { "char", "byte" },
@@ -31,30 +34,38 @@ public static partial class CsCodeGenerator
         { "intptr_t", "nint" },
         { "uintptr_t", "nuint" },
 
-        { "WGPUSubmissionIndex", "ulong" },
-        { "WGPUProc", "nint" },
-
-        { "VGPUDeviceAddress", "ulong" },
-        { "VGPUNativeObjectType", "uint" },
+        { "SDL_FunctionPointer", "delegate* unmanaged<void>" },
+        { "SDL_GUID", "Guid" },
+        { "SDL_Point", "Point" },
+        { "SDL_FPoint", "PointF" },
+        { "SDL_Rect", "Rectangle" },
+        { "SDL_FRect", "RectangleF" },
     };
 
-    private static CsCodeGeneratorOptions _options = new();
+    private static readonly HashSet<string> s_knownTypes = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "SDL_Gamepad"
+    };
+
+    private static CsCodeGeneratorOptions s_options = new();
 
     private static readonly List<CppMacro> s_collectedMacros = new();
     private static readonly List<CppEnum> s_collectedEnums = new();
     private static readonly Dictionary<string, CppFunctionType> s_collectedCallbackTypedes = new();
+    private static readonly List<CppClass> s_collectedStructAndUnions = new();
     private static readonly List<CppFunction> s_collectedFunctions = new();
 
     public static void Collect(CppCompilation compilation)
     {
         CollectConstants(compilation);
         CollectEnums(compilation);
+        CollectStructAndUnions(compilation);
         CollectCommands(compilation);
     }
 
     public static void Generate(CppCompilation compilation, CsCodeGeneratorOptions options)
     {
-        _options = options;
+        s_options = options;
 
         GenerateConstants(compilation);
         GenerateEnums(compilation);
@@ -75,6 +86,7 @@ public static partial class CsCodeGenerator
             if (string.IsNullOrEmpty(cppMacro.Value)
                 || cppMacro.Name.EndsWith("_H_", StringComparison.OrdinalIgnoreCase)
                 || cppMacro.Name.Equals("SDL_SCANCODE_TO_KEYCODE", StringComparison.OrdinalIgnoreCase)
+                || cppMacro.Name.Equals("SDL_INIT_EVERYTHING", StringComparison.OrdinalIgnoreCase)
                 )
             {
                 continue;
@@ -86,9 +98,9 @@ public static partial class CsCodeGenerator
 
     private static void GenerateConstants(CppCompilation compilation)
     {
-        string visibility = _options.PublicVisiblity ? "public" : "internal";
-        using var writer = new CodeWriter(Path.Combine(_options.OutputPath, "Constants.cs"), false, _options.Namespace, Array.Empty<string>());
-        using (writer.PushBlock($"{visibility} static partial class {_options.ClassName}"))
+        string visibility = s_options.PublicVisiblity ? "public" : "internal";
+        using var writer = new CodeWriter(Path.Combine(s_options.OutputPath, "Constants.cs"), false, s_options.Namespace, []);
+        using (writer.PushBlock($"{visibility} static partial class {s_options.ClassName}"))
         {
             foreach (CppMacro cppMacro in s_collectedMacros)
             {
@@ -189,7 +201,7 @@ public static partial class CsCodeGenerator
             }
 
             string typeDefCsName = GetCsCleanName(typedef.Name);
-            if (isPointer)
+            if (isPointer && !s_knownTypes.Contains(typeDefCsName))
                 return typeDefCsName + "*";
 
             return typeDefCsName;
@@ -198,7 +210,10 @@ public static partial class CsCodeGenerator
         if (type is CppClass @class)
         {
             var className = GetCsCleanName(@class.Name);
-            if (isPointer)
+            if (className == "SDL_RWops")
+                return "nint";
+
+            if (isPointer && !s_knownTypes.Contains(className))
                 return className + "*";
 
             return className;

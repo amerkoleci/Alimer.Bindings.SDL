@@ -15,6 +15,11 @@ public static partial class CsCodeGenerator
         { "SDL_Scancode", "SDL_SCANCODE" },
         { "SDL_KeyCode", "SDLK" },
         { "SDL_Keymod", "SDL_KMOD" },
+        { "SDL_GamepadType", "SDL_GAMEPAD_TYPE" },
+        { "SDL_GamepadButton", "SDL_GAMEPAD_BUTTON" },
+        { "SDL_GamepadAxis", "SDL_GAMEPAD_AXIS" },
+        { "SDL_GamepadBindingType", "SDL_GAMEPAD_BINDTYPE" },
+        { "SDL_InitFlags", "SDL_INIT" },
     };
 
     private static readonly Dictionary<string, string> s_knownEnumValueNames = new()
@@ -81,19 +86,16 @@ public static partial class CsCodeGenerator
 
     public static void GenerateEnums(CppCompilation compilation)
     {
-        string visibility = _options.PublicVisiblity ? "public" : "internal";
-        using CodeWriter writer = new(Path.Combine(_options.OutputPath, "Enums.cs"), false, _options.Namespace, ["System"]);
+        string visibility = s_options.PublicVisiblity ? "public" : "internal";
+        using CodeWriter writer = new(Path.Combine(s_options.OutputPath, "Enums.cs"), false, s_options.Namespace, ["System"]);
         Dictionary<string, string> createdEnums = [];
 
         foreach (CppEnum cppEnum in s_collectedEnums)
         {
             bool isBitmask =
                 cppEnum.Name == "SDL_Keymod" ||
-                cppEnum.Name == "WGPUTextureUsage" ||
-                cppEnum.Name == "WGPUShaderStage" ||
-                cppEnum.Name == "WGPUColorWriteMask" ||
-                cppEnum.Name == "WGPUMapMode" ||
-                cppEnum.Name == "WGPUInstanceBackend";
+                cppEnum.Name == "SDL_InitFlags" ||
+                cppEnum.Name.EndsWith("Flags");
 
             if (isBitmask)
             {
@@ -139,7 +141,7 @@ public static partial class CsCodeGenerator
                         continue;
                     }
 
-                    if (enumItemName != "Count" && _options.EnumWriteUnmanagedTag)
+                    if (enumItemName != "Count" && s_options.EnumWriteUnmanagedTag)
                     {
                         writer.WriteLine($"/// <unmanaged>{enumItem.Name}</unmanaged>");
                     }
@@ -164,32 +166,19 @@ public static partial class CsCodeGenerator
                         writer.WriteLine($"{enumItemName} = {enumItem.Value},");
                     }
                 }
+
+                if (cppEnum.Name == "SDL_InitFlags")
+                {
+                    if (s_options.EnumWriteUnmanagedTag)
+                    {
+                        writer.WriteLine($"/// <unmanaged>SDL_INIT_EVERYTHING</unmanaged>");
+                    }
+
+                    writer.WriteLine($"Everything = Timer | Audio | Video | Events | Joystick | Haptic | Gamepad | Sensor,");
+                }
             }
 
             writer.WriteLine();
-
-            // Map missing flags with typedefs to VkFlags
-            foreach (CppTypedef typedef in compilation.Typedefs)
-            {
-                if (typedef.Name.EndsWith("Flags", StringComparison.OrdinalIgnoreCase) == false
-                    || typedef.Name.Equals("WGPUFlags", StringComparison.OrdinalIgnoreCase))
-                {
-                    continue;
-                }
-
-                if (typedef.ElementType is CppPointerType)
-                {
-                    continue;
-                }
-
-                if (createdEnums.ContainsKey(typedef.Name))
-                {
-                    continue;
-                }
-
-                csName = typedef.Name.Replace("Flags", "");
-                AddCsMapping(typedef.Name, csName);
-            }
         }
     }
 

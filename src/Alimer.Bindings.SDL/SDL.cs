@@ -91,22 +91,6 @@ public enum SDL_LogPriority
     SDL_NUM_LOG_PRIORITIES
 }
 
-public enum SDL_InitFlags : uint
-{
-    SDL_INIT_TIMER = 0x00000001,
-    SDL_INIT_AUDIO = 0x00000010,
-    SDL_INIT_VIDEO = 0x00000020,  /**< `SDL_INIT_VIDEO` implies `SDL_INIT_EVENTS` */
-    SDL_INIT_JOYSTICK = 0x00000200,  /**< `SDL_INIT_JOYSTICK` implies `SDL_INIT_EVENTS` */
-    SDL_INIT_HAPTIC = 0x00001000,
-    SDL_INIT_GAMEPAD = 0x00002000,  /**< `SDL_INIT_GAMEPAD` implies `SDL_INIT_JOYSTICK` */
-    SDL_INIT_EVENTS = 0x00004000,
-    SDL_INIT_SENSOR = 0x00008000,
-
-    SDL_INIT_EVERYTHING = (SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO |
-        SDL_INIT_EVENTS | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC |
-        SDL_INIT_GAMEPAD | SDL_INIT_SENSOR)
-}
-
 public enum SDL_HintPriority
 {
     SDL_HINT_DEFAULT,
@@ -516,31 +500,10 @@ public static unsafe partial class SDL
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     private static extern void SDL_free(void* memblock);
 
-    #region SDL.h
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_Init(SDL_InitFlags flags);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_InitSubSystem(SDL_InitFlags flags);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_Quit();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_QuitSubSystem(SDL_InitFlags flags);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern uint SDL_WasInit(SDL_InitFlags flags);
-    #endregion
-
     #region SDL_platform.h
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetPlatform), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetPlatform();
-
-    public static string SDL_GetPlatform()
+    public static string SDL_GetPlatformString()
     {
-        return GetString(INTERNAL_SDL_GetPlatform());
+        return GetString(SDL_GetPlatform())!;
     }
     #endregion
 
@@ -1881,66 +1844,6 @@ public static unsafe partial class SDL
     #endregion
 
     #region SDL_cpuinfo.h
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetCPUCount();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetCPUCacheLineSize();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_HasRDTSC();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_HasAltiVec();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_HasMMX();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_HasSSE();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_HasSSE2();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_HasSSE3();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_HasSSE41();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_HasSSE42();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_HasAVX();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_HasAVX2();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_HasAVX512F();
-
-    /* Only available in SDL 2.0.11 or higher. */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_HasARMSIMD();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_HasNEON();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_HasLSX();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_HasLASX();
-
-    /* Only available in 2.0.1 or higher. */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetSystemRAM();
-
-    /* Only available in SDL 2.0.10 or higher. */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern nuint SDL_SIMDGetAlignment();
-
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern void* SDL_aligned_alloc(nuint alignment, nuint size);
 
@@ -3523,11 +3426,30 @@ public static unsafe partial class SDL
         return span.GetPointer() != null ? Encoding.UTF8.GetString(span.As<sbyte, byte>()) : null;
     }
 
+
+    /// <summary>Gets a string for a given span.</summary>
+    /// <param name="span">The span for which to create the string.</param>
+    /// <returns>A string created from <paramref name="span" />.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string GetStringOrEmpty(this ReadOnlySpan<sbyte> span)
+    {
+        return span.GetPointer() != null ? Encoding.UTF8.GetString(span.As<sbyte, byte>()) : string.Empty;
+    }
+
     /// <summary>Gets a string for a given span.</summary>
     /// <param name="span">The span for which to create the string.</param>
     /// <returns>A string created from <paramref name="span" />.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? GetString(sbyte* source, int maxLength = -1)
+    {
+        return GetUtf8Span(source, maxLength).GetString();
+    }
+
+    /// <summary>Gets a string for a given span.</summary>
+    /// <param name="span">The span for which to create the string.</param>
+    /// <returns>A string created from <paramref name="span" />.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string GetStringOrEmpty(sbyte* source, int maxLength = -1)
     {
         return GetUtf8Span(source, maxLength).GetString();
     }

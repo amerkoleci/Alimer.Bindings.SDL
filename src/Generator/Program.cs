@@ -42,9 +42,14 @@ public static class Program
 
         string[] headers =
         [
+            "SDL_init.h",
             "SDL_clipboard.h",
             "SDL_scancode.h",
             "SDL_keycode.h",
+            "SDL_loadso.h",
+            "SDL_platform.h",
+            "SDL_cpuinfo.h",
+            "SDL_gamepad.h",
             //"SDL_video.h",
         ];
 

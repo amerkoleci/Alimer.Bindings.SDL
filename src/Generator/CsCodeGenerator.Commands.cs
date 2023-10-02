@@ -62,12 +62,12 @@ public static partial class CsCodeGenerator
 
     private static void GenerateCommands(CppCompilation compilation)
     {
-        string visibility = _options.PublicVisiblity ? "public" : "internal";
+        string visibility = s_options.PublicVisiblity ? "public" : "internal";
 
         // Generate Functions
-        using CodeWriter writer = new(Path.Combine(_options.OutputPath, "Commands.cs"),
+        using CodeWriter writer = new(Path.Combine(s_options.OutputPath, "Commands.cs"),
             true,
-            _options.Namespace,
+            s_options.Namespace,
             ["System", "System.Runtime.InteropServices"]
             );
 
@@ -86,21 +86,21 @@ public static partial class CsCodeGenerator
             writer.WriteLine();
         }
 
-        using (writer.PushBlock($"{visibility} unsafe partial class {_options.ClassName}"))
+        using (writer.PushBlock($"{visibility} unsafe partial class {s_options.ClassName}"))
         {
             foreach (CppFunction cppFunction in s_collectedFunctions)
             {
                 string name = cppFunction.Name;
-                if (_options.GenerateFunctionPointers)
+                if (s_options.GenerateFunctionPointers)
                 {
                     string functionPointerSignature = GetFunctionPointerSignature(cppFunction);
                     writer.WriteLine($"private static {functionPointerSignature} {name}_ptr;");
                 }
 
-                WriteFunctionInvocation(writer, cppFunction, _options.GenerateFunctionPointers, _options.ClassName);
+                WriteFunctionInvocation(writer, cppFunction, s_options.GenerateFunctionPointers);
             }
 
-            if (_options.GenerateFunctionPointers)
+            if (s_options.GenerateFunctionPointers)
             {
                 WriteCommands(writer, "GenLoadCommands", s_collectedFunctions);
             }
@@ -129,15 +129,15 @@ public static partial class CsCodeGenerator
         }
     }
 
-    private static void WriteFunctionInvocation(CodeWriter writer, CppFunction cppFunction, bool useFunctionPointers, string className)
+    private static void WriteFunctionInvocation(CodeWriter writer, CppFunction cppFunction, bool useFunctionPointers)
     {
+        if (cppFunction.Name == "SDL_AddGamepadMappingsFromRW")
+        {
+        }
+
         string returnCsName = GetCsTypeName(cppFunction.ReturnType, false);
         string argumentsString = GetParameterSignature(cppFunction);
         string functionName = cppFunction.Name;
-        if (cppFunction.Name.EndsWith("Drop"))
-        {
-            functionName = cppFunction.Name.Replace("Drop", "Release");
-        }
 
         string modifier = "public static";
         if (!useFunctionPointers)
@@ -263,18 +263,16 @@ public static partial class CsCodeGenerator
             string paramCsTypeName = GetCsTypeName(cppParameter.Type, false);
             string paramCsName = GetParameterName(cppParameter.Name);
 
-            //if (cppParameter.Name.EndsWith("Count"))
-            //{
-            //    if (functionName.StartsWith("vkEnumerate") ||
-            //        functionName.StartsWith("vkGet"))
-            //    {
-            //        paramCsTypeName = "int*";
-            //    }
-            //    else
-            //    {
-            //        paramCsTypeName = "int";
-            //    }
-            //}
+            if (paramCsName == "flags")
+            {
+                if (functionName == "SDL_Init" ||
+                    functionName == "SDL_InitSubSystem" ||
+                    functionName == "SDL_QuitSubSystem" ||
+                    functionName == "SDL_WasInit")
+                {
+                    paramCsTypeName = "SDL_InitFlags";
+                }
+            }
 
             if (paramCsName == "sbyte*" && unsafeStrings == false)
             {

@@ -13,4 +13,6 @@ public static partial class SDL
 {
 	/// <unmanaged>SDLK_SCANCODE_MASK</unmanaged>
 	public const int SDLK_SCANCODE_MASK = 1<<30;
+	/// <unmanaged>SDL_CACHELINE_SIZE</unmanaged>
+	public const uint SDL_CACHELINE_SIZE = 128;
 }

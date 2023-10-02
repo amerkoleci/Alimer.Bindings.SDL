@@ -10,23 +10,8 @@ public static partial class CsCodeGenerator
 {
     private static bool generateSizeOfStructs = false;
 
-    private static void GenerateStructAndUnions(CppCompilation compilation)
+    private static void CollectStructAndUnions(CppCompilation compilation)
     {
-        string visibility = _options.PublicVisiblity ? "public" : "internal";
-
-        // Generate Structures
-        using var writer = new CodeWriter(Path.Combine(_options.OutputPath, "Structs.cs"),
-            false,
-            _options.Namespace,
-            [
-                "System.Runtime.InteropServices",
-                "System.Runtime.CompilerServices",
-                "System.Diagnostics.CodeAnalysis"
-            ],
-            "#pragma warning disable CS0649"
-            );
-
-        // Print All classes, structs
         foreach (CppClass? cppClass in compilation.Classes)
         {
             if (cppClass.ClassKind == CppClassKind.Class ||
@@ -37,93 +22,73 @@ public static partial class CsCodeGenerator
             }
 
             // Handled manually.
-            if (cppClass.Name == "VkClearColorValue"
-                || cppClass.Name == "VkTransformMatrixKHR"
-                || cppClass.Name == "VkAccelerationStructureInstanceKHR"
-                || cppClass.Name == "VkAccelerationStructureSRTMotionInstanceNV"
-                || cppClass.Name == "VkAccelerationStructureMatrixMotionInstanceNV"
+            if (/*cppClass.Name == "SDL_GamepadBinding"
+                ||*/ cppClass.Name == "VkTransformMatrixKHR"
                 )
             {
                 continue;
             }
 
+            s_collectedStructAndUnions.Add(cppClass);
+        }
+    }
+
+    private static void GenerateStructAndUnions(CppCompilation compilation)
+    {
+        string visibility = s_options.PublicVisiblity ? "public" : "internal";
+
+        // Generate Structures
+        using var writer = new CodeWriter(Path.Combine(s_options.OutputPath, "Structs.cs"),
+            false,
+            s_options.Namespace,
+            [
+                "System.Runtime.InteropServices",
+                "System.Runtime.CompilerServices",
+                "System.Diagnostics.CodeAnalysis"
+            ],
+            "#pragma warning disable CS0649"
+            );
+
+        // Print All classes, structs
+        foreach (CppClass? cppClass in s_collectedStructAndUnions)
+        {
             bool isUnion = cppClass.ClassKind == CppClassKind.Union;
-            bool hasSType = false;
-            if (cppClass.Fields.FirstOrDefault(item => item.Name == "sType") != null)
-            {
-                hasSType = true;
-            }
 
             string csName = cppClass.Name;
-            if (isUnion)
-            {
-                writer.WriteLine("[StructLayout(LayoutKind.Explicit)]");
-            }
-
-            bool isReadOnly = false;
-            string modifier = "partial";
-            if (csName == "VkClearDepthStencilValue")
-            {
-                modifier = "readonly partial";
-                isReadOnly = true;
-            }
-
-            if (csName == "VGPUPushConstantDesc")
-            {
-
-            }
-
-            bool handleSType = false;
-            if (hasSType &&
-                csName != "VkBaseInStructure" &&
-                csName != "VkBaseOutStructure")
-            {
-                handleSType = true;
-            }
-
-            using (writer.PushBlock($"{visibility} {modifier} struct {csName}"))
-            {
-                if (generateSizeOfStructs && cppClass.SizeOf > 0)
-                {
-                    writer.WriteLine("/// <summary>");
-                    writer.WriteLine($"/// The size of the <see cref=\"{csName}\"/> type, in bytes.");
-                    writer.WriteLine("/// </summary>");
-                    writer.WriteLine($"public static readonly int SizeInBytes = {cppClass.SizeOf};");
-                    writer.WriteLine();
-                }
-
-                foreach (CppField cppField in cppClass.Fields)
-                {
-                    WriteField(writer, cppField, handleSType, isUnion, isReadOnly);
-                }
-
-                if (handleSType)
-                {
-                    string structureTypeValue = csName;
-                    if (structureTypeValue.StartsWith("Vk"))
-                    {
-                        structureTypeValue = structureTypeValue.Substring(2);
-                    }
-                    if (structureTypeValue.EndsWith("ANDROID"))
-                    {
-                        structureTypeValue = structureTypeValue.Replace("ANDROID", "Android");
-                    }
-
-                    //writer.WriteLine();
-                    //using (writer.PushBlock($"public {csName}()"))
-                    //{
-                    //    writer.WriteLine($"Unsafe.SkipInit(out this);");
-                    //    writer.WriteLine();
-                    //    writer.WriteLine($"sType = WGPUSType.{structureTypeValue};");
-                    //}
-                }
-            }
-
+            WriteStruct(writer, cppClass, cppClass.Name);
             writer.WriteLine();
         }
     }
 
-    private static void WriteField(CodeWriter writer, CppField field, bool handleSType, bool isUnion = false, bool isReadOnly = false)
+    private static void WriteStruct(CodeWriter writer, CppClass @struct, string structName)
+    {
+        string visibility = s_options.PublicVisiblity ? "public" : "internal";
+        bool isUnion = @struct.ClassKind == CppClassKind.Union;
+        bool isReadOnly = false;
+
+        if (isUnion)
+        {
+            writer.WriteLine("[StructLayout(LayoutKind.Explicit)]");
+        }
+        using (writer.PushBlock($"{visibility} partial struct {structName}"))
+        {
+            if (generateSizeOfStructs && @struct.SizeOf > 0)
+            {
+                writer.WriteLine("/// <summary>");
+                writer.WriteLine($"/// The size of the <see cref=\"{structName}\"/> type, in bytes.");
+                writer.WriteLine("/// </summary>");
+                writer.WriteLine($"public static readonly int SizeInBytes = {@struct.SizeOf};");
+                writer.WriteLine();
+            }
+
+            foreach (CppField cppField in @struct.Fields)
+            {
+                WriteField(writer, cppField, isUnion, isReadOnly);
+            }
+        }
+    }
+
+    private static void WriteField(CodeWriter writer, CppField field, bool isUnion = false, bool isReadOnly = false)
     {
         string csFieldName = NormalizeFieldName(field.Name);
 
@@ -208,6 +173,19 @@ public static partial class CsCodeGenerator
                 }
             }
         }
+        else if (field.Type is CppClass cppClass)
+        {
+            string fullParentName = field.FullParentName;
+            if (fullParentName.EndsWith("::"))
+            {
+                fullParentName = fullParentName.Substring(0, fullParentName.Length - 2);
+            }
+            string csFieldType = $"{fullParentName}_{csFieldName}";
+            writer.WriteLine($"public {csFieldType} {csFieldName};");
+            writer.WriteLine("");
+
+            WriteStruct(writer, cppClass, csFieldType);
+        }
         else
         {
             // VkAllocationCallbacks members
@@ -237,23 +215,6 @@ public static partial class CsCodeGenerator
             }
 
             string csFieldType = GetCsTypeName(field.Type, false);
-            if (csFieldName.Equals("specVersion", StringComparison.OrdinalIgnoreCase) ||
-                csFieldName.Equals("applicationVersion", StringComparison.OrdinalIgnoreCase) ||
-                csFieldName.Equals("engineVersion", StringComparison.OrdinalIgnoreCase) ||
-                csFieldName.Equals("apiVersion", StringComparison.OrdinalIgnoreCase))
-            {
-                csFieldType = "VkVersion";
-            }
-
-            if (field.Type.ToString() == "ANativeWindow*")
-            {
-                csFieldType = "IntPtr";
-            }
-            else if (field.Type.ToString() == "CAMetalLayer*"
-                || field.Type.ToString() == "const CAMetalLayer*")
-            {
-                csFieldType = "IntPtr";
-            }
 
             string fieldPrefix = isReadOnly ? "readonly " : string.Empty;
             if (csFieldType.EndsWith('*'))

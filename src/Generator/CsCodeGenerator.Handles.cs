@@ -9,12 +9,12 @@ public static partial class CsCodeGenerator
 {
     private static void GenerateHandles(CppCompilation compilation)
     {
-        string visibility = _options.PublicVisiblity ? "public" : "internal";
+        string visibility = s_options.PublicVisiblity ? "public" : "internal";
 
         // Generate Functions
-        using var writer = new CodeWriter(Path.Combine(_options.OutputPath, "Handles.cs"),
+        using var writer = new CodeWriter(Path.Combine(s_options.OutputPath, "Handles.cs"),
             true,
-            _options.Namespace, new string[] { "System.Diagnostics" }
+            s_options.Namespace, new string[] { "System.Diagnostics" }
             );
 
         foreach (CppTypedef typedef in compilation.Typedefs)

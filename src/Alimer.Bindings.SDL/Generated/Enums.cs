@@ -11,6 +11,30 @@ using System;
 
 namespace SDL;
 
+[Flags]
+public enum SDL_InitFlags
+{
+	None = 0,
+	/// <unmanaged>SDL_INIT_TIMER</unmanaged>
+	Timer = 0x00000001,
+	/// <unmanaged>SDL_INIT_AUDIO</unmanaged>
+	Audio = 0x00000010,
+	/// <unmanaged>SDL_INIT_VIDEO</unmanaged>
+	Video = 0x00000020,
+	/// <unmanaged>SDL_INIT_JOYSTICK</unmanaged>
+	Joystick = 0x00000200,
+	/// <unmanaged>SDL_INIT_HAPTIC</unmanaged>
+	Haptic = 0x00001000,
+	/// <unmanaged>SDL_INIT_GAMEPAD</unmanaged>
+	Gamepad = 0x00002000,
+	/// <unmanaged>SDL_INIT_EVENTS</unmanaged>
+	Events = 0x00004000,
+	/// <unmanaged>SDL_INIT_SENSOR</unmanaged>
+	Sensor = 0x00008000,
+	/// <unmanaged>SDL_INIT_EVERYTHING</unmanaged>
+	Everything = Timer | Audio | Video | Events | Joystick | Haptic | Gamepad | Sensor,
+}
+
 public enum SDL_Scancode
 {
 	/// <unmanaged>SDL_SCANCODE_UNKNOWN</unmanaged>
@@ -1040,5 +1064,115 @@ public enum SDL_Keymod
 	Alt = LeftAlt | RightAlt,
 	/// <unmanaged>SDL_KMOD_GUI</unmanaged>
 	Gui = LeftGui | RightGui,
+}
+
+public enum SDL_GamepadType
+{
+	/// <unmanaged>SDL_GAMEPAD_TYPE_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_STANDARD</unmanaged>
+	Standard = 1,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_XBOX360</unmanaged>
+	Xbox360 = 2,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_XBOXONE</unmanaged>
+	Xboxone = 3,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_PS3</unmanaged>
+	Ps3 = 4,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_PS4</unmanaged>
+	Ps4 = 5,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_PS5</unmanaged>
+	Ps5 = 6,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_PRO</unmanaged>
+	NintendoSwitchPro = 7,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_LEFT</unmanaged>
+	NintendoSwitchJoyconLeft = 8,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT</unmanaged>
+	NintendoSwitchJoyconRight = 9,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_PAIR</unmanaged>
+	NintendoSwitchJoyconPair = 10,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_MAX</unmanaged>
+	Max = 11,
+}
+
+public enum SDL_GamepadButton
+{
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_INVALID</unmanaged>
+	Invalid = -1,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_A</unmanaged>
+	A = 0,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_B</unmanaged>
+	B = 1,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_X</unmanaged>
+	X = 2,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_Y</unmanaged>
+	Y = 3,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_BACK</unmanaged>
+	Back = 4,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_GUIDE</unmanaged>
+	Guide = 5,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_START</unmanaged>
+	Start = 6,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LEFT_STICK</unmanaged>
+	LeftStick = 7,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_RIGHT_STICK</unmanaged>
+	RightStick = 8,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LEFT_SHOULDER</unmanaged>
+	LeftShoulder = 9,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER</unmanaged>
+	RightShoulder = 10,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_DPAD_UP</unmanaged>
+	DpadUp = 11,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_DPAD_DOWN</unmanaged>
+	DpadDown = 12,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_DPAD_LEFT</unmanaged>
+	DpadLeft = 13,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_DPAD_RIGHT</unmanaged>
+	DpadRight = 14,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC1</unmanaged>
+	Misc1 = 15,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_RIGHT_PADDLE1</unmanaged>
+	RightPaddle1 = 16,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LEFT_PADDLE1</unmanaged>
+	LeftPaddle1 = 17,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_RIGHT_PADDLE2</unmanaged>
+	RightPaddle2 = 18,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LEFT_PADDLE2</unmanaged>
+	LeftPaddle2 = 19,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_TOUCHPAD</unmanaged>
+	Touchpad = 20,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_MAX</unmanaged>
+	Max = 21,
+}
+
+public enum SDL_GamepadAxis
+{
+	/// <unmanaged>SDL_GAMEPAD_AXIS_INVALID</unmanaged>
+	Invalid = -1,
+	/// <unmanaged>SDL_GAMEPAD_AXIS_LEFTX</unmanaged>
+	Leftx = 0,
+	/// <unmanaged>SDL_GAMEPAD_AXIS_LEFTY</unmanaged>
+	Lefty = 1,
+	/// <unmanaged>SDL_GAMEPAD_AXIS_RIGHTX</unmanaged>
+	Rightx = 2,
+	/// <unmanaged>SDL_GAMEPAD_AXIS_RIGHTY</unmanaged>
+	Righty = 3,
+	/// <unmanaged>SDL_GAMEPAD_AXIS_LEFT_TRIGGER</unmanaged>
+	LeftTrigger = 4,
+	/// <unmanaged>SDL_GAMEPAD_AXIS_RIGHT_TRIGGER</unmanaged>
+	RightTrigger = 5,
+	/// <unmanaged>SDL_GAMEPAD_AXIS_MAX</unmanaged>
+	Max = 6,
+}
+
+public enum SDL_GamepadBindingType
+{
+	/// <unmanaged>SDL_GAMEPAD_BINDTYPE_NONE</unmanaged>
+	None = 0,
+	/// <unmanaged>SDL_GAMEPAD_BINDTYPE_BUTTON</unmanaged>
+	Button = 1,
+	/// <unmanaged>SDL_GAMEPAD_BINDTYPE_AXIS</unmanaged>
+	Axis = 2,
+	/// <unmanaged>SDL_GAMEPAD_BINDTYPE_HAT</unmanaged>
+	Hat = 3,
 }
 

@@ -28,6 +28,11 @@ public static partial class CsCodeGenerator
         { "SDL_SystemCursor", "SDL_SYSTEM_CURSOR" },
         { "SDL_MouseWheelDirection", "SDL_MOUSEWHEEL" },
         { "SDL_TouchDeviceType", "SDL_TOUCH_DEVICE" },
+        { "SDL_SystemTheme", "SDL_SYSTEM_THEME" },
+        { "SDL_DisplayOrientation", "SDL_ORIENTATION" },
+        { "SDL_WindowFlags", "SDL_WINDOW" },
+        { "SDL_LogCategory", "SDL_LOG_CATEGORY" },
+        { "SDL_LogPriority", "SDL_LOG_PRIORITY" },
     };
 
     private static readonly Dictionary<string, string> s_knownEnumValueNames = new()

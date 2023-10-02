@@ -20,7 +20,8 @@ public static partial class CsCodeGenerator
         foreach (CppTypedef typedef in compilation.Typedefs)
         {
             if (typedef.Name == "SDL_WindowsMessageHook" ||
-                typedef.Name == "SDL_TimerCallback")
+                typedef.Name == "SDL_TimerCallback" ||
+                typedef.Name == "SDL_LogOutputFunction")
             {
                 continue;
             }

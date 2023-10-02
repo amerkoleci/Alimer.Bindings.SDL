@@ -56,6 +56,11 @@ public static partial class CsCodeGenerator
 
         foreach (CppFunction? cppFunction in compilation.Functions)
         {
+            if (cppFunction.Name == "SDL_LogMessageV" ||
+                cppFunction.Name == "SDL_LogGetOutputFunction" ||
+                cppFunction.Name == "SDL_LogSetOutputFunction")
+                continue;
+
             s_collectedFunctions.Add(cppFunction);
         }
     }

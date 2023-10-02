@@ -45,52 +45,6 @@ public enum SDL_bool
     SDL_TRUE = 1
 }
 
-public enum SDL_LogCategory
-{
-    SDL_LOG_CATEGORY_APPLICATION,
-    SDL_LOG_CATEGORY_ERROR,
-    SDL_LOG_CATEGORY_ASSERT,
-    SDL_LOG_CATEGORY_SYSTEM,
-    SDL_LOG_CATEGORY_AUDIO,
-    SDL_LOG_CATEGORY_VIDEO,
-    SDL_LOG_CATEGORY_RENDER,
-    SDL_LOG_CATEGORY_INPUT,
-    SDL_LOG_CATEGORY_TEST,
-
-    /* Reserved for future SDL library use */
-    SDL_LOG_CATEGORY_RESERVED1,
-    SDL_LOG_CATEGORY_RESERVED2,
-    SDL_LOG_CATEGORY_RESERVED3,
-    SDL_LOG_CATEGORY_RESERVED4,
-    SDL_LOG_CATEGORY_RESERVED5,
-    SDL_LOG_CATEGORY_RESERVED6,
-    SDL_LOG_CATEGORY_RESERVED7,
-    SDL_LOG_CATEGORY_RESERVED8,
-    SDL_LOG_CATEGORY_RESERVED9,
-    SDL_LOG_CATEGORY_RESERVED10,
-
-    /* Beyond this point is reserved for application use, e.g.
-    enum {
-        MYAPP_CATEGORY_AWESOME1 = SDL_LOG_CATEGORY_CUSTOM,
-        MYAPP_CATEGORY_AWESOME2,
-        MYAPP_CATEGORY_AWESOME3,
-        ...
-    };
-    */
-    SDL_LOG_CATEGORY_CUSTOM
-}
-
-public enum SDL_LogPriority
-{
-    SDL_LOG_PRIORITY_VERBOSE = 1,
-    SDL_LOG_PRIORITY_DEBUG,
-    SDL_LOG_PRIORITY_INFO,
-    SDL_LOG_PRIORITY_WARN,
-    SDL_LOG_PRIORITY_ERROR,
-    SDL_LOG_PRIORITY_CRITICAL,
-    SDL_NUM_LOG_PRIORITIES
-}
-
 public enum SDL_HintPriority
 {
     SDL_HINT_DEFAULT,
@@ -894,18 +848,6 @@ public static unsafe partial class SDL
     #endregion
 
     #region SDL_log.h
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_LogSetAllPriority(SDL_LogPriority priority);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_LogSetPriority(int category, SDL_LogPriority priority);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_LogResetPriorities();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_LogPriority SDL_LogGetPriority(int category);
 
     private static SDL_LogOutputFunction? _logCallback;
 

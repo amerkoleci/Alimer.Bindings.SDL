@@ -734,4 +734,40 @@ public unsafe partial class SDL
 	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetTouchFinger")]
 	public static extern SDL_Finger* SDL_GetTouchFinger(SDL_TouchID touchID, int index);
 
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogSetAllPriority")]
+	public static extern void SDL_LogSetAllPriority(SDL_LogPriority priority);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogSetPriority")]
+	public static extern void SDL_LogSetPriority(int category, SDL_LogPriority priority);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogGetPriority")]
+	public static extern SDL_LogPriority SDL_LogGetPriority(int category);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogResetPriorities")]
+	public static extern void SDL_LogResetPriorities();
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Log")]
+	public static extern void SDL_Log(sbyte* fmt);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogVerbose")]
+	public static extern void SDL_LogVerbose(int category, sbyte* fmt);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogDebug")]
+	public static extern void SDL_LogDebug(int category, sbyte* fmt);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogInfo")]
+	public static extern void SDL_LogInfo(int category, sbyte* fmt);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogWarn")]
+	public static extern void SDL_LogWarn(int category, sbyte* fmt);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogError")]
+	public static extern void SDL_LogError(int category, sbyte* fmt);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogCritical")]
+	public static extern void SDL_LogCritical(int category, sbyte* fmt);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogMessage")]
+	public static extern void SDL_LogMessage(int category, SDL_LogPriority priority, sbyte* fmt);
+
 }

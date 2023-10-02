@@ -5,7 +5,6 @@ using static SDL.SDL;
 using static SDL.SDL_EventType;
 using static SDL.SDL_GLattr;
 using static SDL.SDL_GLprofile;
-using static SDL.SDL_LogPriority;
 using System.Drawing;
 using SDL;
 
@@ -16,7 +15,7 @@ public static unsafe class Program
     public static void Main()
     {
 #if DEBUG
-        SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
+        SDL_LogSetAllPriority(SDL_LogPriority.Verbose);
 #endif
 
         SDL_LogSetOutputFunction(OnLog);

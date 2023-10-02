@@ -55,10 +55,11 @@ public static class Program
             "SDL_joystick.h",
             "SDL_gamepad.h",
             "SDL_mouse.h",
-            //"SDL_video.h",
             "SDL_system.h",
             "SDL_timer.h",
             "SDL_touch.h",
+            "SDL_log.h",
+            //"SDL_video.h",
         ];
 
         foreach(string header in headers)

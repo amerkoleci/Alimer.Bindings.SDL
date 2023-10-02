@@ -1326,3 +1326,65 @@ public enum SDL_TouchDeviceType
 	IndirectRelative = 2,
 }
 
+public enum SDL_LogCategory
+{
+	/// <unmanaged>SDL_LOG_CATEGORY_APPLICATION</unmanaged>
+	Application = 0,
+	/// <unmanaged>SDL_LOG_CATEGORY_ERROR</unmanaged>
+	Error = 1,
+	/// <unmanaged>SDL_LOG_CATEGORY_ASSERT</unmanaged>
+	Assert = 2,
+	/// <unmanaged>SDL_LOG_CATEGORY_SYSTEM</unmanaged>
+	System = 3,
+	/// <unmanaged>SDL_LOG_CATEGORY_AUDIO</unmanaged>
+	Audio = 4,
+	/// <unmanaged>SDL_LOG_CATEGORY_VIDEO</unmanaged>
+	Video = 5,
+	/// <unmanaged>SDL_LOG_CATEGORY_RENDER</unmanaged>
+	Render = 6,
+	/// <unmanaged>SDL_LOG_CATEGORY_INPUT</unmanaged>
+	Input = 7,
+	/// <unmanaged>SDL_LOG_CATEGORY_TEST</unmanaged>
+	Test = 8,
+	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED1</unmanaged>
+	Reserved1 = 9,
+	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED2</unmanaged>
+	Reserved2 = 10,
+	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED3</unmanaged>
+	Reserved3 = 11,
+	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED4</unmanaged>
+	Reserved4 = 12,
+	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED5</unmanaged>
+	Reserved5 = 13,
+	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED6</unmanaged>
+	Reserved6 = 14,
+	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED7</unmanaged>
+	Reserved7 = 15,
+	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED8</unmanaged>
+	Reserved8 = 16,
+	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED9</unmanaged>
+	Reserved9 = 17,
+	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED10</unmanaged>
+	Reserved10 = 18,
+	/// <unmanaged>SDL_LOG_CATEGORY_CUSTOM</unmanaged>
+	Custom = 19,
+}
+
+public enum SDL_LogPriority
+{
+	/// <unmanaged>SDL_LOG_PRIORITY_VERBOSE</unmanaged>
+	Verbose = 1,
+	/// <unmanaged>SDL_LOG_PRIORITY_DEBUG</unmanaged>
+	Debug = 2,
+	/// <unmanaged>SDL_LOG_PRIORITY_INFO</unmanaged>
+	Info = 3,
+	/// <unmanaged>SDL_LOG_PRIORITY_WARN</unmanaged>
+	Warn = 4,
+	/// <unmanaged>SDL_LOG_PRIORITY_ERROR</unmanaged>
+	Error = 5,
+	/// <unmanaged>SDL_LOG_PRIORITY_CRITICAL</unmanaged>
+	Critical = 6,
+	/// <unmanaged>SDL_NUM_LOG_PRIORITIES</unmanaged>
+	SDL_NUM_LOG_PRIORITIES = 7,
+}
+

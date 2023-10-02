@@ -61,4 +61,6 @@ public static partial class SDL
 	public const uint SDL_NS_PER_MS = 1000000;
 	/// <unmanaged>SDL_NS_PER_US</unmanaged>
 	public const uint SDL_NS_PER_US = 1000;
+	/// <unmanaged>SDL_MAX_LOG_MESSAGE</unmanaged>
+	public const uint SDL_MAX_LOG_MESSAGE = 4096;
 }

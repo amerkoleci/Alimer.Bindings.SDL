@@ -148,3 +148,11 @@ public partial struct SDL_GamepadBinding
 	}
 }
 
+public partial struct SDL_Finger
+{
+	public SDL_FingerID id;
+	public float x;
+	public float y;
+	public float pressure;
+}
+

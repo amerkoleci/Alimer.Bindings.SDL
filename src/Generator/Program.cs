@@ -57,6 +57,8 @@ public static class Program
             "SDL_mouse.h",
             //"SDL_video.h",
             "SDL_system.h",
+            "SDL_timer.h",
+            "SDL_touch.h",
         ];
 
         foreach(string header in headers)

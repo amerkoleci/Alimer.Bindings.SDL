@@ -405,6 +405,15 @@ public enum SDL_BlendFactor
     SDL_BLENDFACTOR_ONE_MINUS_DST_ALPHA = 0xA
 }
 
+
+public enum SDL_WinRT_DeviceFamily
+{
+    Unknown,
+    Desktop,
+    Mobile,
+    Xbox
+}
+
 #endregion
 
 #region Structs
@@ -424,6 +433,15 @@ public struct SDL_DisplayMode
 #endregion
 
 public delegate void SDL_LogOutputFunction(SDL_LogCategory category, SDL_LogPriority priority, string description);
+
+[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+public delegate IntPtr SDL_WindowsMessageHook(
+    IntPtr userdata,
+    IntPtr hWnd,
+    uint message,
+    ulong wParam,
+    long lParam
+);
 
 // https://github.com/libsdl-org/SDL/blob/main/docs/README-migration.md
 
@@ -2862,95 +2880,13 @@ public static unsafe partial class SDL
     #endregion
 
     #region SDL_timer.h
-
-    /* System timers rely on different OS mechanisms depending on
-     * which operating system SDL2 is compiled against.
-     */
-
-    /* Compare tick values, return true if A has passed B. Introduced in SDL 2.0.1,
-     * but does not require it (it was a macro).
-     */
-    public static bool SDL_TICKS_PASSED(UInt32 A, UInt32 B)
-    {
-        return ((Int32)(B - A) <= 0);
-    }
-
-    /* Delays the thread's processing based on the milliseconds parameter */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_Delay(uint ms);
-
-    /// <summary>
-    /// Get the number of milliseconds since SDL library initialization.
-    /// </summary>
-    /// <returns></returns>
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern ulong SDL_GetTicks();
-
-    /// <summary>
-    /// Get the number of nanoseconds since SDL library initialization.
-    /// </summary>
-    /// <returns></returns>
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern ulong SDL_GetTicksNS();
-
-    /* Get the current value of the high resolution counter */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern ulong SDL_GetPerformanceCounter();
-
-    /* Get the count per second of the high resolution counter */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern ulong SDL_GetPerformanceFrequency();
-
-    /* param refers to a void* */
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate UInt32 SDL_TimerCallback(UInt32 interval, IntPtr param);
-
-    /* int refers to an SDL_TimerID, param to a void* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_AddTimer(
-        UInt32 interval,
-        SDL_TimerCallback callback,
-        IntPtr param
-    );
-
-    /* id refers to an SDL_TimerID */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_RemoveTimer(int id);
+    public static ulong SDL_MS_TO_NS(ulong MS) => MS * SDL_NS_PER_MS;
+    public static ulong SDL_NS_TO_MS(ulong NS) => NS / SDL_NS_PER_MS;
+    public static ulong SDL_US_TO_NS(ulong US) => US * SDL_NS_PER_US;
+    public static ulong SDL_NS_TO_US(ulong NS) => NS / SDL_NS_PER_US;
     #endregion
 
     #region SDL_system.h
-
-    /* Windows */
-
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate IntPtr SDL_WindowsMessageHook(
-        IntPtr userdata,
-        IntPtr hWnd,
-        uint message,
-        ulong wParam,
-        long lParam
-    );
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_SetWindowsMessageHook(
-        SDL_WindowsMessageHook callback,
-        IntPtr userdata
-    );
-
-    /* renderer refers to an SDL_Renderer*
-     * IntPtr refers to an IDirect3DDevice9*
-     * Only available in 2.0.1 or higher.
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr SDL_GetRenderD3D9Device(SDL_Renderer renderer);
-
-    /* renderer refers to an SDL_Renderer*
-     * IntPtr refers to an ID3D11Device*
-     * Only available in 2.0.16 or higher.
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr SDL_GetRenderD3D11Device(SDL_Renderer renderer);
-
     /* iOS */
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -3068,19 +3004,9 @@ public static unsafe partial class SDL
 
     /* WinRT */
 
-    public enum SDL_WinRT_DeviceFamily
-    {
-        SDL_WINRT_DEVICEFAMILY_UNKNOWN,
-        SDL_WINRT_DEVICEFAMILY_DESKTOP,
-        SDL_WINRT_DEVICEFAMILY_MOBILE,
-        SDL_WINRT_DEVICEFAMILY_XBOX
-    }
 
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern SDL_WinRT_DeviceFamily SDL_WinRTGetDeviceFamily();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_IsTablet();
     #endregion
 
     #region Marshal

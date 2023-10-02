@@ -27,6 +27,7 @@ public static partial class CsCodeGenerator
         { "SDL_JoystickPowerLevel", "SDL_JOYSTICK_POWER" },
         { "SDL_SystemCursor", "SDL_SYSTEM_CURSOR" },
         { "SDL_MouseWheelDirection", "SDL_MOUSEWHEEL" },
+        { "SDL_TouchDeviceType", "SDL_TOUCH_DEVICE" },
     };
 
     private static readonly Dictionary<string, string> s_knownEnumValueNames = new()
@@ -421,6 +422,6 @@ public static partial class CsCodeGenerator
             value = value.Substring(1, value.Length - 2);
         }
 
-        return value.Replace("ULL", "UL");
+        return value.Replace("ULL", "UL").Replace("LL", "L");
     }
 }

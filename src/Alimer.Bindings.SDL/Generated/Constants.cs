@@ -51,4 +51,14 @@ public static partial class SDL
 	public const uint SDL_BUTTON_X1 = 4;
 	/// <unmanaged>SDL_BUTTON_X2</unmanaged>
 	public const uint SDL_BUTTON_X2 = 5;
+	/// <unmanaged>SDL_MS_PER_SECOND</unmanaged>
+	public const uint SDL_MS_PER_SECOND = 1000;
+	/// <unmanaged>SDL_US_PER_SECOND</unmanaged>
+	public const uint SDL_US_PER_SECOND = 1000000;
+	/// <unmanaged>SDL_NS_PER_SECOND</unmanaged>
+	public const long SDL_NS_PER_SECOND = 1000000000L;
+	/// <unmanaged>SDL_NS_PER_MS</unmanaged>
+	public const uint SDL_NS_PER_MS = 1000000;
+	/// <unmanaged>SDL_NS_PER_US</unmanaged>
+	public const uint SDL_NS_PER_US = 1000;
 }

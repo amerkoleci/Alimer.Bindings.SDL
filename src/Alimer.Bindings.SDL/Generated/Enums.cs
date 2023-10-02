@@ -1314,3 +1314,15 @@ public enum SDL_MouseWheelDirection
 	Flipped = 1,
 }
 
+public enum SDL_TouchDeviceType
+{
+	/// <unmanaged>SDL_TOUCH_DEVICE_INVALID</unmanaged>
+	Invalid = -1,
+	/// <unmanaged>SDL_TOUCH_DEVICE_DIRECT</unmanaged>
+	Direct = 0,
+	/// <unmanaged>SDL_TOUCH_DEVICE_INDIRECT_ABSOLUTE</unmanaged>
+	IndirectAbsolute = 1,
+	/// <unmanaged>SDL_TOUCH_DEVICE_INDIRECT_RELATIVE</unmanaged>
+	IndirectRelative = 2,
+}
+

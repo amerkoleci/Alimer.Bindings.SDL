@@ -14,13 +14,13 @@ public static partial class CsCodeGenerator
         // Generate Functions
         using var writer = new CodeWriter(Path.Combine(s_options.OutputPath, "Handles.cs"),
             true,
-            s_options.Namespace, new string[] { "System.Diagnostics" }
+            s_options.Namespace, ["System.Diagnostics"]
             );
 
         foreach (CppTypedef typedef in compilation.Typedefs)
         {
-            if (typedef.Name.StartsWith("WGPUProc") ||
-                typedef.Name.EndsWith("Callback"))
+            if (typedef.Name == "SDL_WindowsMessageHook" ||
+                typedef.Name == "SDL_TimerCallback")
             {
                 continue;
             }

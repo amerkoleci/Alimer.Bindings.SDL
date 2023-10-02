@@ -21,6 +21,9 @@ public unsafe delegate void* SDL_ClipboardDataCallback(nint userdata, sbyte* mim
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 public unsafe delegate void SDL_ClipboardCleanupCallback(nint userdata);
 
+[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+public unsafe delegate uint SDL_TimerCallback(uint interval, nint param);
+
 public unsafe partial class SDL
 {
 	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetError")]
@@ -649,5 +652,86 @@ public unsafe partial class SDL
 
 	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_CursorVisible")]
 	public static extern SDL_bool SDL_CursorVisible();
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetWindowsMessageHook")]
+	public static extern void SDL_SetWindowsMessageHook(SDL_WindowsMessageHook callback, nint userdata);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Direct3D9GetAdapterIndex")]
+	public static extern int SDL_Direct3D9GetAdapterIndex(SDL_DisplayID displayID);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetRenderD3D9Device")]
+	public static extern nint SDL_GetRenderD3D9Device(SDL_Renderer renderer);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetRenderD3D11Device")]
+	public static extern nint SDL_GetRenderD3D11Device(SDL_Renderer renderer);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RenderGetD3D12Device")]
+	public static extern nint SDL_RenderGetD3D12Device(SDL_Renderer renderer);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_DXGIGetOutputInfo")]
+	public static extern SDL_bool SDL_DXGIGetOutputInfo(SDL_DisplayID displayID, int* adapterIndex, int* outputIndex);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_IsTablet")]
+	public static extern SDL_bool SDL_IsTablet();
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_OnApplicationWillTerminate")]
+	public static extern void SDL_OnApplicationWillTerminate();
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_OnApplicationDidReceiveMemoryWarning")]
+	public static extern void SDL_OnApplicationDidReceiveMemoryWarning();
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_OnApplicationWillResignActive")]
+	public static extern void SDL_OnApplicationWillResignActive();
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_OnApplicationDidEnterBackground")]
+	public static extern void SDL_OnApplicationDidEnterBackground();
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_OnApplicationWillEnterForeground")]
+	public static extern void SDL_OnApplicationWillEnterForeground();
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_OnApplicationDidBecomeActive")]
+	public static extern void SDL_OnApplicationDidBecomeActive();
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetTicks")]
+	public static extern ulong SDL_GetTicks();
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetTicksNS")]
+	public static extern ulong SDL_GetTicksNS();
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetPerformanceCounter")]
+	public static extern ulong SDL_GetPerformanceCounter();
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetPerformanceFrequency")]
+	public static extern ulong SDL_GetPerformanceFrequency();
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Delay")]
+	public static extern void SDL_Delay(uint ms);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_DelayNS")]
+	public static extern void SDL_DelayNS(ulong ns);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_AddTimer")]
+	public static extern SDL_TimerID SDL_AddTimer(uint interval, SDL_TimerCallback callback, nint param);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RemoveTimer")]
+	public static extern SDL_bool SDL_RemoveTimer(SDL_TimerID id);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetNumTouchDevices")]
+	public static extern int SDL_GetNumTouchDevices();
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetTouchDevice")]
+	public static extern SDL_TouchID SDL_GetTouchDevice(int index);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetTouchName")]
+	public static extern sbyte* SDL_GetTouchName(int index);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetTouchDeviceType")]
+	public static extern SDL_TouchDeviceType SDL_GetTouchDeviceType(SDL_TouchID touchID);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetNumTouchFingers")]
+	public static extern int SDL_GetNumTouchFingers(SDL_TouchID touchID);
+
+	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetTouchFinger")]
+	public static extern SDL_Finger* SDL_GetTouchFinger(SDL_TouchID touchID, int index);
 
 }

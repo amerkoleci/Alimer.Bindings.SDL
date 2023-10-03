@@ -4,7 +4,7 @@
 [![Build status](https://github.com/amerkoleci/Alimer.Bindings.SDL/workflows/Build/badge.svg)](https://github.com/amerkoleci/Alimer.Bindings.SDL/actions)
 [![NuGet](https://img.shields.io/nuget/v/Alimer.Bindings.SDL.svg)](https://www.nuget.org/packages/Alimer.Bindings.SDL)
 
-Cross platform **.net6.0** and **.net7.0** bindings for [SDL3](https://github.com/libsdl-org/SDL).
+Cross platform **.net7.0** and **.net8.0** bindings for [SDL3](https://github.com/libsdl-org/SDL).
 
 ## Sponsors
 Please consider [SPONSOR](https://github.com/sponsors/amerkoleci) me to further help development and to allow faster issue triaging and new features to be implemented.

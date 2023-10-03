@@ -22,9 +22,7 @@ public static partial class CsCodeGenerator
             }
 
             // Handled manually.
-            if (/*cppClass.Name == "SDL_GamepadBinding"
-                ||*/ cppClass.Name == "VkTransformMatrixKHR"
-                )
+            if (cppClass.Name == "SDL_SysWMinfo")
             {
                 continue;
             }
@@ -77,6 +75,10 @@ public static partial class CsCodeGenerator
         else if (structName.StartsWith("SDL_HapticDirection"))
         {
             typeName = "SDL_HapticDirectionType";
+        }
+        else if (structName.StartsWith("SDL_SysWMinfo"))
+        {
+            typeName = "SDL_SYSWM_TYPE";
         }
 
         if (isUnion)
@@ -237,7 +239,8 @@ public static partial class CsCodeGenerator
                 fieldPrefix += "unsafe ";
             }
 
-            if (csFieldName == "type")
+            if (csFieldName == "type"
+                || csFieldName == "subsystem")
             {
                 if (!string.IsNullOrEmpty(typeName))
                 {

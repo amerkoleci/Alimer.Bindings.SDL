@@ -29,6 +29,7 @@
 // Copyright © Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -600,9 +601,6 @@ public static unsafe partial class SDL
     {
         return SDL_SetWindowData(window, text.GetUtf8Span(), userdata);
     }
-
-    [LibraryImport(LibName, EntryPoint = "SDL_GetWindowSizeInPixels")]
-    public static partial int SDL_GetWindowSizeInPixels(SDL_Window window, out int w, out int h);
     #endregion
 
     #region SDL_blendmode.h
@@ -815,16 +813,16 @@ public static unsafe partial class SDL
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void SDL_iPhoneAnimationCallback(IntPtr p);
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_iPhoneSetAnimationCallback(
+    [LibraryImport(LibName)]
+    public static partial int SDL_iPhoneSetAnimationCallback(
         SDL_Window window, /* SDL_Window* */
         int interval,
         SDL_iPhoneAnimationCallback callback,
         IntPtr callbackParam
     );
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_iPhoneSetEventPump(SDL_bool enabled);
+    [LibraryImport(LibName)]
+    public static partial void SDL_iPhoneSetEventPump(SDL_bool enabled);
 
     /* Android */
 

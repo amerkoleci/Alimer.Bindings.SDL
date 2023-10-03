@@ -313,12 +313,19 @@ public static partial class CsCodeGenerator
                 paramCsName = "ReadOnlySpan<sbyte>";
             }
 
-            if (paramCsName == "count" && functionName.Contains("Get", StringComparison.OrdinalIgnoreCase))
+            if (functionName.Contains("Get", StringComparison.OrdinalIgnoreCase))
             {
-                if (paramCsTypeName == "int*")
-                    paramCsTypeName = "out int";
-                else if (paramCsTypeName == "uint*")
-                    paramCsTypeName = "out uint";
+                if (paramCsName == "count"
+                    || paramCsName == "x"
+                    || paramCsName == "y"
+                    || paramCsName == "w"
+                    || paramCsName == "h")
+                {
+                    if (paramCsTypeName == "int*")
+                        paramCsTypeName = "out int";
+                    else if (paramCsTypeName == "uint*")
+                        paramCsTypeName = "out uint";
+                }
             }
 
             if (functionName == "SDL_PeepEvents"

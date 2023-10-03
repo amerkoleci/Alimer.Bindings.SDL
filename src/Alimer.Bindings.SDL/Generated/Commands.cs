@@ -942,31 +942,31 @@ public unsafe partial class SDL
 	public static partial int SDL_SetWindowPosition(SDL_Window window, int x, int y);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowPosition")]
-	public static partial int SDL_GetWindowPosition(SDL_Window window, int* x, int* y);
+	public static partial int SDL_GetWindowPosition(SDL_Window window, out int x, out int y);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowSize")]
 	public static partial int SDL_SetWindowSize(SDL_Window window, int w, int h);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowSize")]
-	public static partial int SDL_GetWindowSize(SDL_Window window, int* w, int* h);
+	public static partial int SDL_GetWindowSize(SDL_Window window, out int w, out int h);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowBordersSize")]
 	public static partial int SDL_GetWindowBordersSize(SDL_Window window, int* top, int* left, int* bottom, int* right);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowSizeInPixels")]
-	public static partial int SDL_GetWindowSizeInPixels(SDL_Window window, int* w, int* h);
+	public static partial int SDL_GetWindowSizeInPixels(SDL_Window window, out int w, out int h);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowMinimumSize")]
 	public static partial int SDL_SetWindowMinimumSize(SDL_Window window, int min_w, int min_h);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowMinimumSize")]
-	public static partial int SDL_GetWindowMinimumSize(SDL_Window window, int* w, int* h);
+	public static partial int SDL_GetWindowMinimumSize(SDL_Window window, out int w, out int h);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowMaximumSize")]
 	public static partial int SDL_SetWindowMaximumSize(SDL_Window window, int max_w, int max_h);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowMaximumSize")]
-	public static partial int SDL_GetWindowMaximumSize(SDL_Window window, int* w, int* h);
+	public static partial int SDL_GetWindowMaximumSize(SDL_Window window, out int w, out int h);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowBordered")]
 	public static partial int SDL_SetWindowBordered(SDL_Window window, SDL_bool bordered);

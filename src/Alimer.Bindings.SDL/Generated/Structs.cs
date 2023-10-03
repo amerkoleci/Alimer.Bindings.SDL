@@ -844,67 +844,6 @@ public partial struct SDL_SysWMmsg
 	}
 }
 
-public partial struct SDL_SysWMinfo
-{
-	public uint version;
-	public uint subsystem;
-	public unsafe fixed uint padding[2];
-	public SDL_SysWMinfo_info info;
-	
-	[StructLayout(LayoutKind.Explicit)]
-	public partial struct SDL_SysWMinfo_info
-	{
-		[FieldOffset(0)]
-		public SDL_SysWMinfo_win win;
-		
-		public partial struct SDL_SysWMinfo_win
-		{
-			public nint window;
-			public nint hdc;
-			public nint hinstance;
-		}
-		[FieldOffset(0)]
-		public dummy_ptrs__FixedBuffer dummy_ptrs;
-
-		public unsafe struct dummy_ptrs__FixedBuffer
-		{
-			public nint e0;
-			public nint e1;
-			public nint e2;
-			public nint e3;
-			public nint e4;
-			public nint e5;
-			public nint e6;
-			public nint e7;
-			public nint e8;
-			public nint e9;
-			public nint e10;
-			public nint e11;
-			public nint e12;
-			public nint e13;
-
-			[UnscopedRef]
-			public ref nint this[int index]
-			{
-				[MethodImpl(MethodImplOptions.AggressiveInlining)]
-				get
-				{
-					return ref AsSpan()[index];
-				}
-			}
-
-			[UnscopedRef]
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			public Span<nint> AsSpan()
-			{
-				return MemoryMarshal.CreateSpan(ref e0, 14);
-			}
-		}
-		[FieldOffset(0)]
-		public unsafe fixed ulong dummy_ints[14];
-	}
-}
-
 public partial struct SDL_HapticDirection
 {
 	public SDL_HapticDirectionType type;

@@ -3,7 +3,6 @@
 
 using static SDL.SDL;
 using static SDL.SDL_EventType;
-using static SDL.SDL_GLattr;
 using static SDL.SDL_GLprofile;
 using System.Drawing;
 using SDL;
@@ -39,14 +38,14 @@ public static unsafe class Program
         //var vkGetInstanceProcAddr = SDL_Vulkan_GetVkGetInstanceProcAddr();
         //string[] extensions = SDL_Vulkan_GetInstanceExtensions();
 
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+        SDL_GL_SetAttribute(SDL_GLattr.ContextMajorVersion, 3);
+        SDL_GL_SetAttribute(SDL_GLattr.ContextMinorVersion, 3);
+        SDL_GL_SetAttribute(SDL_GLattr.ContextProfileMask, SDL_GLprofile.Core);
         //SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); // Always required on Mac
 
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-        SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+        SDL_GL_SetAttribute(SDL_GLattr.Doublebuffer, true);
+        SDL_GL_SetAttribute(SDL_GLattr.DepthSize, 24);
+        SDL_GL_SetAttribute(SDL_GLattr.StencilSize, 8);
 
         // Enable native IME.
         SDL_SetHint(SDL_HINT_IME_SHOW_UI, true);
@@ -70,13 +69,13 @@ public static unsafe class Program
         display = SDL_GetDisplayForPoint(Point.Empty);
 
         var primary = SDL_GetPrimaryDisplay();
-        var dispName = SDL_GetDisplayName(primary);
+        var dispName = SDL_GetDisplayNameString(primary);
         var test3 = SDL_GetNumVideoDrivers();
         //var test2 = SDL_GetCurrentVideoDriver();
         ReadOnlySpan<SDL_DisplayID> displays = SDL_GetDisplays();
         for(int i = 0; i < displays.Length; i++)
         {
-            dispName = SDL_GetDisplayName(displays[i]);
+            dispName = SDL_GetDisplayNameString(displays[i]);
         }
 
         var driversAudio = SDL_GetNumAudioDrivers();

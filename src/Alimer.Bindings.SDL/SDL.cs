@@ -200,113 +200,12 @@ public enum SDL_EventType : uint
     SDL_EVENT_LAST = 0xFFFF
 }
 
-public enum SDL_FlashOperation
-{
-    SDL_FLASH_CANCEL,
-    SDL_FLASH_BRIEFLY,
-    SDL_FLASH_UNTIL_FOCUSED
-}
-
-
-/* Only available in 2.0.4 or higher. */
-public enum SDL_HitTestResult
-{
-    /// <summary>
-    /// Region is normal. No special properties.
-    /// </summary>
-    SDL_HITTEST_NORMAL,
-    /// <summary>
-    /// Region can drag entire window.
-    /// </summary>
-    SDL_HITTEST_DRAGGABLE,
-    SDL_HITTEST_RESIZE_TOPLEFT,
-    SDL_HITTEST_RESIZE_TOP,
-    SDL_HITTEST_RESIZE_TOPRIGHT,
-    SDL_HITTEST_RESIZE_RIGHT,
-    SDL_HITTEST_RESIZE_BOTTOMRIGHT,
-    SDL_HITTEST_RESIZE_BOTTOM,
-    SDL_HITTEST_RESIZE_BOTTOMLEFT,
-    SDL_HITTEST_RESIZE_LEFT
-}
-
-public enum SDL_GLattr
-{
-    SDL_GL_RED_SIZE,
-    SDL_GL_GREEN_SIZE,
-    SDL_GL_BLUE_SIZE,
-    SDL_GL_ALPHA_SIZE,
-    SDL_GL_BUFFER_SIZE,
-    SDL_GL_DOUBLEBUFFER,
-    SDL_GL_DEPTH_SIZE,
-    SDL_GL_STENCIL_SIZE,
-    SDL_GL_ACCUM_RED_SIZE,
-    SDL_GL_ACCUM_GREEN_SIZE,
-    SDL_GL_ACCUM_BLUE_SIZE,
-    SDL_GL_ACCUM_ALPHA_SIZE,
-    SDL_GL_STEREO,
-    SDL_GL_MULTISAMPLEBUFFERS,
-    SDL_GL_MULTISAMPLESAMPLES,
-    SDL_GL_ACCELERATED_VISUAL,
-    SDL_GL_RETAINED_BACKING,
-    SDL_GL_CONTEXT_MAJOR_VERSION,
-    SDL_GL_CONTEXT_MINOR_VERSION,
-    SDL_GL_CONTEXT_FLAGS,
-    SDL_GL_CONTEXT_PROFILE_MASK,
-    SDL_GL_SHARE_WITH_CURRENT_CONTEXT,
-    SDL_GL_FRAMEBUFFER_SRGB_CAPABLE,
-    SDL_GL_CONTEXT_RELEASE_BEHAVIOR,
-    SDL_GL_CONTEXT_RESET_NOTIFICATION,
-    SDL_GL_CONTEXT_NO_ERROR,
-    SDL_GL_FLOATBUFFERS,
-    SDL_GL_EGL_PLATFORM
-}
-
-[Flags]
-public enum SDL_GLprofile
-{
-    SDL_GL_CONTEXT_PROFILE_CORE = 0x0001,
-    SDL_GL_CONTEXT_PROFILE_COMPATIBILITY = 0x0002,
-    SDL_GL_CONTEXT_PROFILE_ES = 0x0004 /**< GLX_CONTEXT_ES2_PROFILE_BIT_EXT */
-}
-
-[Flags]
-public enum SDL_GLcontext
-{
-    SDL_GL_CONTEXT_DEBUG_FLAG = 0x0001,
-    SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG = 0x0002,
-    SDL_GL_CONTEXT_ROBUST_ACCESS_FLAG = 0x0004,
-    SDL_GL_CONTEXT_RESET_ISOLATION_FLAG = 0x0008
-}
-
-[Flags]
-public enum SDL_GLcontextReleaseFlag
-{
-    SDL_GL_CONTEXT_RELEASE_BEHAVIOR_NONE = 0x0000,
-    SDL_GL_CONTEXT_RELEASE_BEHAVIOR_FLUSH = 0x0001
-}
-
-[Flags]
-public enum SDL_GLContextResetNotification
-{
-    SDL_GL_CONTEXT_RESET_NO_NOTIFICATION = 0x0000,
-    SDL_GL_CONTEXT_RESET_LOSE_CONTEXT = 0x0001
-}
-
 public enum SDL_DisplayEventID : byte
 {
     SDL_DISPLAYEVENT_NONE,
     SDL_DISPLAYEVENT_ORIENTATION,
     SDL_DISPLAYEVENT_CONNECTED, /* Requires >= 2.0.14 */
     SDL_DISPLAYEVENT_DISCONNECTED   /* Requires >= 2.0.14 */
-}
-
-public enum SDL_DisplayOrientation
-{
-    SDL_ORIENTATION_UNKNOWN,
-    SDL_ORIENTATION_LANDSCAPE,
-    SDL_ORIENTATION_LANDSCAPE_FLIPPED,
-    SDL_ORIENTATION_PORTRAIT,
-    SDL_ORIENTATION_PORTRAIT_FLIPPED
 }
 
 public enum SDL_SYSWM_TYPE
@@ -368,22 +267,6 @@ public enum SDL_WinRT_DeviceFamily
     Xbox
 }
 
-#endregion
-
-#region Structs
-[StructLayout(LayoutKind.Sequential)]
-public struct SDL_DisplayMode
-{
-    public SDL_DisplayID displayID;
-    public uint format;
-    public int pixel_w;
-    public int pixel_h;
-    public int screen_w;
-    public int screen_h;
-    public float display_scale;
-    public float refresh_rate;
-    public IntPtr driverdata;
-}
 #endregion
 
 public delegate void SDL_LogOutputFunction(SDL_LogCategory category, SDL_LogPriority priority, string description);
@@ -945,27 +828,27 @@ public static unsafe partial class SDL
 
     #region SDL_video.h
 
-    public const int SDL_WINDOWPOS_UNDEFINED_MASK = 0x1FFF0000;
-    public const int SDL_WINDOWPOS_CENTERED_MASK = 0x2FFF0000;
+    public const uint SDL_WINDOWPOS_UNDEFINED_MASK = 0x1FFF0000;
+    public const uint SDL_WINDOWPOS_CENTERED_MASK = 0x2FFF0000;
     public const int SDL_WINDOWPOS_UNDEFINED = 0x1FFF0000;
     public const int SDL_WINDOWPOS_CENTERED = 0x2FFF0000;
 
-    public static int SDL_WINDOWPOS_UNDEFINED_DISPLAY(int X)
+    public static uint SDL_WINDOWPOS_UNDEFINED_DISPLAY(uint X)
     {
         return (SDL_WINDOWPOS_UNDEFINED_MASK | X);
     }
 
-    public static bool SDL_WINDOWPOS_ISUNDEFINED(int X)
+    public static bool SDL_WINDOWPOS_ISUNDEFINED(uint X)
     {
         return (X & 0xFFFF0000) == SDL_WINDOWPOS_UNDEFINED_MASK;
     }
 
-    public static int SDL_WINDOWPOS_CENTERED_DISPLAY(int X)
+    public static uint SDL_WINDOWPOS_CENTERED_DISPLAY(uint X)
     {
         return (SDL_WINDOWPOS_CENTERED_MASK | X);
     }
 
-    public static bool SDL_WINDOWPOS_ISCENTERED(int X)
+    public static bool SDL_WINDOWPOS_ISCENTERED(uint X)
     {
         return (X & 0xFFFF0000) == SDL_WINDOWPOS_CENTERED_MASK;
     }
@@ -973,125 +856,58 @@ public static unsafe partial class SDL
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate SDL_HitTestResult SDL_HitTest(IntPtr win, IntPtr area, IntPtr data);
 
-    [DllImport(LibName, EntryPoint = "SDL_CreateWindow", CallingConvention = CallingConvention.Cdecl)]
-    private static extern SDL_Window INTERNAL_SDL_CreateWindow(byte* title, int w, int h, uint flags);
+    public static SDL_Window SDL_CreateWindow(ReadOnlySpan<sbyte> title, int width, int height, SDL_WindowFlags flags)
+    {
+        fixed (sbyte* pName = title)
+        {
+            return SDL_CreateWindow(pName, width, height, flags);
+        }
+    }
 
     public static SDL_Window SDL_CreateWindow(string title, int width, int height, SDL_WindowFlags flags)
     {
-        int utf8TitleBufSize = Utf8Size(title);
-        byte* utf8Title = stackalloc byte[utf8TitleBufSize];
-        return INTERNAL_SDL_CreateWindow(
-            Utf8Encode(title, utf8Title, utf8TitleBufSize),
-            width, height,
-            (uint)flags
-        );
+        fixed (sbyte* pName = title.GetUtf8Span())
+        {
+            return SDL_CreateWindow(pName, width, height, flags);
+        }
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_CreateWindowAndRenderer(int width, int height, SDL_WindowFlags windowFlags, out SDL_Window window, out SDL_Renderer renderer);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    private static extern SDL_Window SDL_CreatePopupWindow(SDL_Window parent, int offset_x, int offset_y, int w, int h, SDL_WindowFlags flags);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Window SDL_CreateWindowFrom(nint data);
-
-    [DllImport(LibName, EntryPoint = "SDL_CreateWindowWithPosition", CallingConvention = CallingConvention.Cdecl)]
-    private static extern SDL_Window INTERNAL_SDL_CreateWindowWithPosition(byte* title, int x, int y, int w, int h, uint flags);
+    //[DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+    //public static extern int SDL_CreateWindowAndRenderer(int width, int height, SDL_WindowFlags windowFlags, out SDL_Window window, out SDL_Renderer renderer);
 
     public static SDL_Window SDL_CreateWindowWithPosition(string title, int x, int y, int width, int height, SDL_WindowFlags flags)
     {
-        int utf8TitleBufSize = Utf8Size(title);
-        byte* utf8Title = stackalloc byte[utf8TitleBufSize];
-        return INTERNAL_SDL_CreateWindowWithPosition(
-            Utf8Encode(title, utf8Title, utf8TitleBufSize),
-            x, y,
-            width, height,
-            (uint)flags
-        );
+        fixed (sbyte* pName = title.GetUtf8Span())
+        {
+            return SDL_CreateWindowWithPosition(pName, x, y, width, height, flags);
+        }
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_DestroyWindow(SDL_Window window);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_GetWindowSize(SDL_Window window, out int width, out int height);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_SetWindowSize(SDL_Window window, int width, int height);
-
-    [LibraryImport(LibName)]
-    public static partial void SDL_GetWindowSizeInPixels(SDL_Window window, out int width, out int height);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_ShowWindow(SDL_Window window);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_HideWindow(SDL_Window window);
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_SetWindowTitle), CallingConvention = CallingConvention.Cdecl)]
-    private static extern unsafe void INTERNAL_SDL_SetWindowTitle(SDL_Window window, byte* title);
-
-    public static void SDL_SetWindowTitle(SDL_Window window, string title)
+    public static SDL_Window SDL_CreateWindowWithPosition(ReadOnlySpan<sbyte> title, int x, int y, int width, int height, SDL_WindowFlags flags)
     {
-        int utf8TitleBufSize = Utf8Size(title);
-        byte* utf8Title = stackalloc byte[utf8TitleBufSize];
-        INTERNAL_SDL_SetWindowTitle(
-            window,
-            Utf8Encode(title, utf8Title, utf8TitleBufSize)
-        );
+        fixed (sbyte* pName = title)
+        {
+            return SDL_CreateWindowWithPosition(pName, x, y, width, height, flags);
+        }
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_SetWindowFullscreenMode(SDL_Window window, SDL_DisplayMode* mode);
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_SetWindowFullscreen), CallingConvention = CallingConvention.Cdecl)]
-    private static extern unsafe int INTERNAL_SDL_SetWindowFullscreen(SDL_Window window, SDL_bool fullscreen);
-
-    public static int SDL_SetWindowFullscreen(SDL_Window window, bool fullscreen)
+    public static int SDL_SetWindowTitle(SDL_Window window, ReadOnlySpan<sbyte> name)
     {
-        return INTERNAL_SDL_SetWindowFullscreen(window, fullscreen ? SDL_TRUE : SDL_FALSE);
+        fixed (sbyte* pName = name)
+        {
+            return SDL_SetWindowTitle(window, pName);
+        }
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_DisableScreenSaver();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_EnableScreenSaver();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_DisplayMode* SDL_GetClosestFullscreenDisplayMode(SDL_DisplayID displayID, int w, int h, float refresh_rate);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_DisplayMode* SDL_GetCurrentDisplayMode(SDL_DisplayID displayIndex);
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetCurrentVideoDriver), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetCurrentVideoDriver();
-
-    public static string SDL_GetCurrentVideoDriver()
+    public static int SDL_SetWindowTitle(SDL_Window window, string text)
     {
-        return GetString(INTERNAL_SDL_GetCurrentVideoDriver());
+        return SDL_SetWindowTitle(window, text.GetUtf8Span());
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_DisplayMode* SDL_GetDesktopDisplayMode(SDL_DisplayID displayID, out SDL_DisplayMode mode);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetDisplayBounds(SDL_DisplayID displayID, out Rectangle rect);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_DisplayOrientation SDL_GetCurrentDisplayOrientation(SDL_DisplayID displayID);
-
-    /* Only available in 2.0.5 or higher. */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetDisplayUsableBounds(SDL_DisplayID displayID, out Rectangle rect);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_DisplayMode* SDL_GetFullscreenDisplayModes(SDL_DisplayID displayID, out int count);
-
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_DisplayID* SDL_GetDisplays(out int count);
+    public static string SDL_GetCurrentVideoDriverString()
+    {
+        return GetStringOrEmpty(SDL_GetCurrentVideoDriver());
+    }
 
     public static ReadOnlySpan<SDL_DisplayID> SDL_GetDisplays()
     {
@@ -1099,66 +915,18 @@ public static unsafe partial class SDL
         return new(displaysPtr, count);
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_DisplayID SDL_GetPrimaryDisplay();
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetDisplayName), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetDisplayName(SDL_DisplayID displayID);
-
-    public static string SDL_GetDisplayName(SDL_DisplayID displayID)
+    public static string SDL_GetDisplayNameString(SDL_DisplayID displayID)
     {
-        return GetString(INTERNAL_SDL_GetDisplayName(displayID));
+        return GetStringOrEmpty(SDL_GetDisplayName(displayID));
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetNumVideoDrivers();
+    public static string SDL_GetVideoDriverString(int index) => GetStringOrEmpty(SDL_GetVideoDriver(index));
 
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetVideoDriver), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetVideoDriver(int index);
+    [LibraryImport(LibName)]
+    public static partial SDL_DisplayID SDL_GetDisplayForPoint(in Point point);
 
-    public static string SDL_GetVideoDriver(int index) => GetString(INTERNAL_SDL_GetVideoDriver(index));
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_DisplayID SDL_GetDisplayForPoint(in Point point);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_DisplayID SDL_GetDisplayForRect(in Rectangle rect);
-
-    /* window refers to an SDL_Window* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern float SDL_GetWindowBrightness(
-        SDL_Window window
-    );
-
-    /* window refers to an SDL_Window*
-     * Only available in 2.0.5 or higher.
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_SetWindowOpacity(
-        SDL_Window window,
-        float opacity
-    );
-
-    /* window refers to an SDL_Window*
-     * Only available in 2.0.5 or higher.
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetWindowOpacity(
-        SDL_Window window,
-        out float out_opacity
-    );
-
-    /* modal_window and parent_window refer to an SDL_Window*s
-     * Only available in 2.0.5 or higher.
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_SetWindowModalFor(SDL_Window modal_window, SDL_Window parent_window);
-
-    /* window refers to an SDL_Window*
-     * Only available in 2.0.5 or higher.
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_SetWindowInputFocus(SDL_Window window);
+    [LibraryImport(LibName)]
+    public static partial SDL_DisplayID SDL_GetDisplayForRect(in Rectangle rect);
 
     /* window refers to an SDL_Window*, IntPtr to a void* */
     [DllImport(LibName, EntryPoint = "SDL_GetWindowData", CallingConvention = CallingConvention.Cdecl)]
@@ -1179,428 +947,83 @@ public static unsafe partial class SDL
         );
     }
 
-    /* window refers to an SDL_Window* */
-    [LibraryImport(LibName)]
-    public static partial SDL_DisplayID SDL_GetDisplayForWindow(SDL_Window window);
-
-    /* window refers to an SDL_Window* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_DisplayMode* SDL_GetWindowFullscreenMode(SDL_Window window);
-
-    /* IntPtr refers to a void*
-     * window refers to an SDL_Window*
-     * mode refers to a size_t*
-     * Only available in 2.0.18 or higher.
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr SDL_GetWindowICCProfile(
-        SDL_Window window,
-        out IntPtr mode
-    );
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_WindowFlags SDL_GetWindowFlags(SDL_Window window);
-
-
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Window SDL_GetWindowFromID(uint id);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Window SDL_GetWindowParent(SDL_Window window);
-
-    /* window refers to an SDL_Window* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetWindowGammaRamp(
-        SDL_Window window,
-        [Out()] [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.U2, SizeConst = 256)]
-                ushort[] red,
-        [Out()] [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.U2, SizeConst = 256)]
-                ushort[] green,
-        [Out()] [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.U2, SizeConst = 256)]
-                ushort[] blue
-    );
-
-    /* window refers to an SDL_Window* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GetWindowGrab(SDL_Window window);
-
-    /* window refers to an SDL_Window*
-     * Only available in 2.0.16 or higher.
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GetWindowKeyboardGrab(SDL_Window window);
-
-    /* window refers to an SDL_Window*
-     * Only available in 2.0.16 or higher.
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_GetWindowMouseGrab(SDL_Window window);
-
-    /* window refers to an SDL_Window* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern uint SDL_GetWindowPixelFormat(
-        SDL_Window window
-    );
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_GetWindowMaximumSize(SDL_Window window, out int max_w, out int max_h);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_GetWindowMinimumSize(SDL_Window window, out int min_w, out int min_h);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_GetWindowPosition(SDL_Window window, out int x, out int y);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Surface SDL_GetWindowSurface(SDL_Window window);
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetWindowTitle), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetWindowTitle(SDL_Window window);
-
-    public static string SDL_GetWindowTitle(IntPtr window)
+    public static string SDL_GetWindowTitleString(IntPtr window)
     {
-        return GetString(
-            INTERNAL_SDL_GetWindowTitle(window)
-        );
+        return GetStringOrEmpty(SDL_GetWindowTitle(window));
     }
 
-    /* texture refers to an SDL_Texture* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GL_BindTexture(
-        SDL_Window texture,
-        out float texw,
-        out float texh
-    );
-
-    /* IntPtr and window refer to an SDL_GLContext and SDL_Window* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_GLContext SDL_GL_CreateContext(SDL_Window window);
-
-    /* context refers to an SDL_GLContext */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GL_DeleteContext(SDL_GLContext context);
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GL_LoadLibrary), CallingConvention = CallingConvention.Cdecl)]
-    private static extern int INTERNAL_SDL_GL_LoadLibrary(byte* path);
-
-    public static int SDL_GL_LoadLibrary(string path)
+    public static int SDL_GL_LoadLibrary(ReadOnlySpan<sbyte> name)
     {
-        byte* utf8Path = Utf8EncodeHeap(path);
-        int result = INTERNAL_SDL_GL_LoadLibrary(
-            utf8Path
-        );
-        NativeMemory.Free(utf8Path);
-        return result;
+        fixed (sbyte* pName = name)
+        {
+            return SDL_GL_LoadLibrary(pName);
+        }
     }
 
-    /* IntPtr refers to a function pointer, proc to a const char* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr SDL_GL_GetProcAddress(IntPtr proc);
-
-    /* IntPtr refers to a function pointer */
-    public static unsafe IntPtr SDL_GL_GetProcAddress(string proc)
+    public static delegate* unmanaged<void> SDL_GL_GetProcAddress(ReadOnlySpan<sbyte> proc)
     {
-        int utf8ProcBufSize = Utf8Size(proc);
-        byte* utf8Proc = stackalloc byte[utf8ProcBufSize];
-        return SDL_GL_GetProcAddress(
-            (IntPtr)Utf8Encode(proc, utf8Proc, utf8ProcBufSize)
-        );
+        fixed (sbyte* pName = proc)
+        {
+            return SDL_GL_GetProcAddress(pName);
+        }
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr SDL_EGL_GetProcAddress(IntPtr proc);
-
-    /* IntPtr refers to a function pointer */
-    public static unsafe IntPtr SDL_EGL_GetProcAddress(string proc)
+    public static delegate* unmanaged<void> SDL_GL_GetProcAddress(string proc)
     {
-        int utf8ProcBufSize = Utf8Size(proc);
-        byte* utf8Proc = stackalloc byte[utf8ProcBufSize];
-        return SDL_EGL_GetProcAddress(
-            (IntPtr)Utf8Encode(proc, utf8Proc, utf8ProcBufSize)
-        );
+        return SDL_GL_GetProcAddress(proc.GetUtf8Span());
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_GL_UnloadLibrary();
+    public static delegate* unmanaged<void> SDL_EGL_GetProcAddress(ReadOnlySpan<sbyte> proc)
+    {
+        fixed (sbyte* pName = proc)
+        {
+            return SDL_EGL_GetProcAddress(pName);
+        }
+    }
 
-    [DllImport(LibName, EntryPoint = "SDL_GL_ExtensionSupported", CallingConvention = CallingConvention.Cdecl)]
-    private static extern SDL_bool INTERNAL_SDL_GL_ExtensionSupported(byte* extension);
+    public static delegate* unmanaged<void> SDL_EGL_GetProcAddress(string proc)
+    {
+        return SDL_EGL_GetProcAddress(proc.GetUtf8Span());
+    }
+
+    public static bool SDL_GL_ExtensionSupported(ReadOnlySpan<sbyte> extension)
+    {
+        fixed (sbyte* pName = extension)
+        {
+            return SDL_GL_ExtensionSupported(pName) == SDL_TRUE;
+        }
+    }
 
     public static bool SDL_GL_ExtensionSupported(string extension)
     {
-        int utf8ExtensionBufSize = Utf8Size(extension);
-        byte* utf8Extension = stackalloc byte[utf8ExtensionBufSize];
-        return INTERNAL_SDL_GL_ExtensionSupported(
-            Utf8Encode(extension, utf8Extension, utf8ExtensionBufSize)
-        ) == SDL_TRUE;
+        return SDL_GL_ExtensionSupported(extension.GetUtf8Span());
     }
 
-    /* Only available in SDL 2.0.2 or higher. */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_GL_ResetAttributes();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GL_GetAttribute(
-        SDL_GLattr attr,
-        out int value
-    );
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GL_GetSwapInterval(int* interval);
-
-    /* window and context refer to an SDL_Window* and SDL_GLContext */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GL_MakeCurrent(SDL_Window window, SDL_GLContext context);
-
-    /* IntPtr refers to an SDL_Window* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Window SDL_GL_GetCurrentWindow();
-
-    /* IntPtr refers to an SDL_Context */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_GLContext SDL_GL_GetCurrentContext();
-
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GL_SetAttribute(
-        SDL_GLattr attr,
-        int value
-    );
+    public static int SDL_GL_SetAttribute(SDL_GLattr attr, bool value)
+    {
+        return SDL_GL_SetAttribute(attr, value ? 1 : 0);
+    }
 
     public static int SDL_GL_SetAttribute(SDL_GLattr attr, SDL_GLprofile profile)
     {
         return SDL_GL_SetAttribute(attr, (int)profile);
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GL_SetSwapInterval(int interval);
-
-    /// <summary>
-    /// Update a window with OpenGL rendering.
-    /// </summary>
-    /// <param name="window"></param>
-    /// <returns></returns>
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GL_SwapWindow(SDL_Window window);
-
-    /* texture refers to an SDL_Texture* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GL_UnbindTexture(SDL_Window texture);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_ScreenSaverEnabled();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_RaiseWindow(SDL_Window window);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_MaximizeWindow(SDL_Window window);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_MinimizeWindow(SDL_Window window);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_RestoreWindow(SDL_Window window);
-
-    /* window refers to an SDL_Window* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_SetWindowBrightness(
-        SDL_Window window,
-        float brightness
-    );
-
-    /* IntPtr and userdata are void*, window is an SDL_Window* */
-    [DllImport(LibName, EntryPoint = "SDL_SetWindowData", CallingConvention = CallingConvention.Cdecl)]
-    private static extern unsafe IntPtr INTERNAL_SDL_SetWindowData(
-        SDL_Window window,
-        byte* name,
-        IntPtr userdata
-    );
-    public static unsafe IntPtr SDL_SetWindowData(
-        SDL_Window window,
-        string name,
-        IntPtr userdata
-    )
+    public static nint SDL_SetWindowData(SDL_Window window, ReadOnlySpan<sbyte> name, nint userdata)
     {
-        int utf8NameBufSize = Utf8Size(name);
-        byte* utf8Name = stackalloc byte[utf8NameBufSize];
-        return INTERNAL_SDL_SetWindowData(
-            window,
-            Utf8Encode(name, utf8Name, utf8NameBufSize),
-            userdata
-        );
+        fixed (sbyte* pName = name)
+        {
+            return SDL_SetWindowData(window, pName, userdata);
+        }
     }
 
-    /* window refers to an SDL_Window* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_SetWindowGammaRamp(
-        SDL_Window window,
-        [In()] [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.U2, SizeConst = 256)]
-                ushort[] red,
-        [In()] [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.U2, SizeConst = 256)]
-                ushort[] green,
-        [In()] [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.U2, SizeConst = 256)]
-                ushort[] blue
-    );
-
-    /* window refers to an SDL_Window* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_SetWindowGrab(
-        SDL_Window window,
-        SDL_bool grabbed
-    );
-
-    /* window refers to an SDL_Window*
-     * Only available in 2.0.16 or higher.
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_SetWindowKeyboardGrab(
-        SDL_Window window,
-        SDL_bool grabbed
-    );
-
-    /* window refers to an SDL_Window*
-     * Only available in 2.0.16 or higher.
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_SetWindowMouseGrab(
-        SDL_Window window,
-        SDL_bool grabbed
-    );
-
-
-    /* window refers to an SDL_Window*, icon to an SDL_Surface* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_SetWindowIcon(
-        SDL_Window window,
-        IntPtr icon
-    );
-
-    /* window refers to an SDL_Window* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_SetWindowMaximumSize(
-        SDL_Window window,
-        int max_w,
-        int max_h
-    );
-
-    /* window refers to an SDL_Window* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_SetWindowMinimumSize(
-        SDL_Window window,
-        int min_w,
-        int min_h
-    );
-
-    /* window refers to an SDL_Window* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_SetWindowPosition(SDL_Window window, int x, int y);
-
-    /* window refers to an SDL_Window* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_SetWindowBordered(
-        SDL_Window window,
-        SDL_bool bordered
-    );
-
-    /* window refers to an SDL_Window* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetWindowBordersSize(
-        SDL_Window window,
-        out int top,
-        out int left,
-        out int bottom,
-        out int right
-    );
-
-    [DllImport(LibName, EntryPoint = "SDL_SetWindowResizable", CallingConvention = CallingConvention.Cdecl)]
-    private static extern unsafe int INTERNAL_SDL_SetWindowResizable(nint window, SDL_bool resizable);
-
-    public static int SDL_SetWindowResizable(in SDL_Window window, bool resizable)
+    public static nint SDL_SetWindowData(SDL_Window window, string text, nint userdata)
     {
-        return INTERNAL_SDL_SetWindowResizable(window, resizable ? SDL_TRUE : SDL_FALSE);
+        return SDL_SetWindowData(window, text.GetUtf8Span(), userdata);
     }
 
-    /* window refers to an SDL_Window*
-     * Only available in 2.0.16 or higher.
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_SetWindowAlwaysOnTop(
-        SDL_Window window,
-        SDL_bool on_top
-    );
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_UpdateWindowSurface(SDL_Window window);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_UpdateWindowSurfaceRects(
-        SDL_Window window,
-        [In] Rectangle[] rects,
-        int numrects
-    );
-
-    [DllImport(LibName, EntryPoint = "SDL_VideoInit", CallingConvention = CallingConvention.Cdecl)]
-    private static extern unsafe int INTERNAL_SDL_VideoInit(
-        byte* driver_name
-    );
-    public static unsafe int SDL_VideoInit(string driver_name)
-    {
-        int utf8DriverNameBufSize = Utf8Size(driver_name);
-        byte* utf8DriverName = stackalloc byte[utf8DriverNameBufSize];
-        return INTERNAL_SDL_VideoInit(
-            Utf8Encode(driver_name, utf8DriverName, utf8DriverNameBufSize)
-        );
-    }
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_VideoQuit();
-
-    /* window refers to an SDL_Window*, callback_data to a void*
-     * Only available in 2.0.4 or higher.
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_SetWindowHitTest(
-        SDL_Window window,
-        SDL_HitTest callback,
-        IntPtr callback_data
-    );
-
-    /* IntPtr refers to an SDL_Window*
-     * Only available in 2.0.4 or higher.
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_Window SDL_GetGrabbedWindow();
-
-    /* window refers to an SDL_Window*
-     * rect refers to an SDL_Rect*
-     * This overload allows for IntPtr.Zero (null) to be passed for rect.
-     * Only available in 2.0.18 or higher.
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_SetWindowMouseRect(
-        SDL_Window window,
-        in Rectangle rect
-    );
-
-    /* window refers to an SDL_Window*
-     * IntPtr refers to an SDL_Rect*
-     * Only available in 2.0.18 or higher.
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr SDL_GetWindowMouseRect(
-        SDL_Window window
-    );
-
-    /* window refers to an SDL_Window*
-     * Only available in 2.0.16 or higher.
-     */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_FlashWindow(
-        SDL_Window window,
-        SDL_FlashOperation operation
-    );
+    [LibraryImport(LibName, EntryPoint = "SDL_GetWindowSizeInPixels")]
+    public static partial int SDL_GetWindowSizeInPixels(SDL_Window window, out int w, out int h);
     #endregion
 
     #region SDL_blendmode.h
@@ -1795,14 +1218,14 @@ public static unsafe partial class SDL
     public static extern int SDL_GetWindowWMInfo(SDL_Window window, SDL_SysWMinfo* info, uint version = SDL_SYSWM_CURRENT_VERSION);
     #endregion
 
-    #region SDL_cpuinfo.h
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void* SDL_aligned_alloc(nuint alignment, nuint size);
+    #region SDL_stdinc.h
+    [LibraryImport(LibName)]
+    public static partial void* SDL_aligned_alloc(nuint alignment, nuint size);
 
     public static void* SDL_aligned_alloc(nuint size) => SDL_aligned_alloc(SDL_SIMDGetAlignment(), size);
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_aligned_free(void* ptr);
+    [LibraryImport(LibName)]
+    public static partial void SDL_aligned_free(void* ptr);
 
     #endregion
 

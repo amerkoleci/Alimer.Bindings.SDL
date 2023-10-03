@@ -20,6 +20,7 @@ public static partial class CsCodeGenerator
                 || cppMacro.Name.Equals("SDL_INIT_EVERYTHING", StringComparison.OrdinalIgnoreCase) 
                 || cppMacro.Name.Equals("VK_DEFINE_HANDLE", StringComparison.OrdinalIgnoreCase)
                 || cppMacro.Name.Equals("VK_DEFINE_NON_DISPATCHABLE_HANDLE", StringComparison.OrdinalIgnoreCase)
+                || cppMacro.Name.Equals("VK_DEFINE_NON_DISPATCHABLE_HANDLE", StringComparison.OrdinalIgnoreCase)
                 )
             {
                 continue;

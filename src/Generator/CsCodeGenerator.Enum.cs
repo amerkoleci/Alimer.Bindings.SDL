@@ -35,6 +35,13 @@ public static partial class CsCodeGenerator
         { "SDL_LogPriority", "SDL_LOG_PRIORITY" },
         { "SDL_PowerState", "SDL_POWERSTATE" },
         { "SDL_SensorType", "SDL_SENSOR" },
+        { "SDL_FlashOperation", "SDL_FLASH" },
+        { "SDL_GLattr", "SDL_GL" },
+        { "SDL_GLprofile", "SDL_GL_CONTEXT_PROFILE" },
+        { "SDL_GLcontextFlag", "SDL_GL_CONTEXT" },
+        { "SDL_GLcontextReleaseFlag", "SDL_GL_CONTEXT_RELEASE_BEHAVIOR" },
+        { "SDL_GLContextResetNotification", "SDL_GL_CONTEXT_RESET" },
+        { "SDL_HitTestResult", "SDL_HITTEST" },
     };
 
     private static readonly Dictionary<string, string> s_knownEnumValueNames = new()
@@ -86,6 +93,9 @@ public static partial class CsCodeGenerator
         "AudioMute",
         "MediaSelect",
         "DisplaySwitch",
+        "MultisampleBuffers",
+        "MultisampleSamples",
+        "OpenGL",
     };
 
     public static void CollectEnums(CppCompilation compilation)
@@ -110,9 +120,13 @@ public static partial class CsCodeGenerator
         foreach (CppEnum cppEnum in s_collectedEnums)
         {
             bool isBitmask =
+                cppEnum.Name.EndsWith("Flags") ||
                 cppEnum.Name == "SDL_Keymod" ||
                 cppEnum.Name == "SDL_InitFlags" ||
-                cppEnum.Name.EndsWith("Flags");
+                cppEnum.Name == "SDL_GLprofile" ||
+                cppEnum.Name == "SDL_GLcontextFlag" ||
+                cppEnum.Name == "SDL_GLcontextReleaseFlag" ||
+                cppEnum.Name == "SDL_GLContextResetNotification";
 
             if (isBitmask)
             {
@@ -124,8 +138,14 @@ public static partial class CsCodeGenerator
 
             createdEnums.Add(csName, cppEnum.Name);
 
+            string baseTypeName = string.Empty;
+            if(csName == "SDL_WindowFlags")
+            {
+                baseTypeName = " : uint";
+            }
+
             bool noneAdded = false;
-            using (writer.PushBlock($"{visibility} enum {csName}"))
+            using (writer.PushBlock($"{visibility} enum {csName}{baseTypeName}"))
             {
                 if (isBitmask &&
                     !cppEnum.Items.Any(enumItem => GetEnumItemName(cppEnum.Name, enumItem.Name, enumNamePrefix) == "None"))

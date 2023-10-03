@@ -92,12 +92,12 @@ unsafe partial class SDL
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern int SDL_GetNumAudioDrivers();
 
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetAudioDriver), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetAudioDriver(int index);
+    [LibraryImport(LibName, EntryPoint = nameof(SDL_GetAudioDriver))]
+    private static partial sbyte* INTERNAL_SDL_GetAudioDriver(int index);
 
     public static string SDL_GetAudioDriver(int index)
     {
-        return GetString(INTERNAL_SDL_GetAudioDriver(index));
+        return GetStringOrEmpty(INTERNAL_SDL_GetAudioDriver(index));
     }
 
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]

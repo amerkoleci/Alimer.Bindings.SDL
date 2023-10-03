@@ -24,6 +24,7 @@ public unsafe delegate void SDL_ClipboardCleanupCallback(nint userdata);
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 public unsafe delegate uint SDL_TimerCallback(uint interval, nint param);
 
+
 public unsafe partial class SDL
 {
 	[LibraryImport(LibName, EntryPoint = "SDL_SetError")]
@@ -814,6 +815,306 @@ public unsafe partial class SDL
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UpdateSensors")]
 	public static partial void SDL_UpdateSensors();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetNumVideoDrivers")]
+	public static partial int SDL_GetNumVideoDrivers();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetVideoDriver")]
+	public static partial sbyte* SDL_GetVideoDriver(int index);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetCurrentVideoDriver")]
+	public static partial sbyte* SDL_GetCurrentVideoDriver();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSystemTheme")]
+	public static partial SDL_SystemTheme SDL_GetSystemTheme();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetDisplays")]
+	public static partial SDL_DisplayID* SDL_GetDisplays(out int count);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetPrimaryDisplay")]
+	public static partial SDL_DisplayID SDL_GetPrimaryDisplay();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetDisplayName")]
+	public static partial sbyte* SDL_GetDisplayName(SDL_DisplayID displayID);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetDisplayBounds")]
+	public static partial int SDL_GetDisplayBounds(SDL_DisplayID displayID, Rectangle* rect);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetDisplayUsableBounds")]
+	public static partial int SDL_GetDisplayUsableBounds(SDL_DisplayID displayID, Rectangle* rect);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetNaturalDisplayOrientation")]
+	public static partial SDL_DisplayOrientation SDL_GetNaturalDisplayOrientation(SDL_DisplayID displayID);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetCurrentDisplayOrientation")]
+	public static partial SDL_DisplayOrientation SDL_GetCurrentDisplayOrientation(SDL_DisplayID displayID);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetDisplayContentScale")]
+	public static partial float SDL_GetDisplayContentScale(SDL_DisplayID displayID);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetFullscreenDisplayModes")]
+	public static partial SDL_DisplayMode** SDL_GetFullscreenDisplayModes(SDL_DisplayID displayID, out int count);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetClosestFullscreenDisplayMode")]
+	public static partial SDL_DisplayMode* SDL_GetClosestFullscreenDisplayMode(SDL_DisplayID displayID, int w, int h, float refresh_rate, SDL_bool include_high_density_modes);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetDesktopDisplayMode")]
+	public static partial SDL_DisplayMode* SDL_GetDesktopDisplayMode(SDL_DisplayID displayID);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetCurrentDisplayMode")]
+	public static partial SDL_DisplayMode* SDL_GetCurrentDisplayMode(SDL_DisplayID displayID);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetDisplayForPoint")]
+	public static partial SDL_DisplayID SDL_GetDisplayForPoint(Point* point);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetDisplayForRect")]
+	public static partial SDL_DisplayID SDL_GetDisplayForRect(Rectangle* rect);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetDisplayForWindow")]
+	public static partial SDL_DisplayID SDL_GetDisplayForWindow(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowPixelDensity")]
+	public static partial float SDL_GetWindowPixelDensity(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowDisplayScale")]
+	public static partial float SDL_GetWindowDisplayScale(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowFullscreenMode")]
+	public static partial int SDL_SetWindowFullscreenMode(SDL_Window window, SDL_DisplayMode* mode);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowFullscreenMode")]
+	public static partial SDL_DisplayMode* SDL_GetWindowFullscreenMode(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowICCProfile")]
+	public static partial nint SDL_GetWindowICCProfile(SDL_Window window, nuint* size);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowPixelFormat")]
+	public static partial uint SDL_GetWindowPixelFormat(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateWindow")]
+	public static partial SDL_Window SDL_CreateWindow(sbyte* title, int w, int h, SDL_WindowFlags flags);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateWindowWithPosition")]
+	public static partial SDL_Window SDL_CreateWindowWithPosition(sbyte* title, int x, int y, int w, int h, SDL_WindowFlags flags);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_CreatePopupWindow")]
+	public static partial SDL_Window SDL_CreatePopupWindow(SDL_Window parent, int offset_x, int offset_y, int w, int h, SDL_WindowFlags flags);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateWindowFrom")]
+	public static partial SDL_Window SDL_CreateWindowFrom(void* data);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowID")]
+	public static partial SDL_WindowID SDL_GetWindowID(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowFromID")]
+	public static partial SDL_Window SDL_GetWindowFromID(SDL_WindowID id);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowParent")]
+	public static partial SDL_Window SDL_GetWindowParent(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowFlags")]
+	public static partial uint SDL_GetWindowFlags(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowTitle")]
+	public static partial int SDL_SetWindowTitle(SDL_Window window, sbyte* title);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowTitle")]
+	public static partial sbyte* SDL_GetWindowTitle(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowIcon")]
+	public static partial int SDL_SetWindowIcon(SDL_Window window, SDL_Surface* icon);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowData")]
+	public static partial nint SDL_SetWindowData(SDL_Window window, sbyte* name, nint userdata);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowData")]
+	public static partial nint SDL_GetWindowData(SDL_Window window, sbyte* name);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowPosition")]
+	public static partial int SDL_SetWindowPosition(SDL_Window window, int x, int y);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowPosition")]
+	public static partial int SDL_GetWindowPosition(SDL_Window window, int* x, int* y);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowSize")]
+	public static partial int SDL_SetWindowSize(SDL_Window window, int w, int h);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowSize")]
+	public static partial int SDL_GetWindowSize(SDL_Window window, int* w, int* h);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowBordersSize")]
+	public static partial int SDL_GetWindowBordersSize(SDL_Window window, int* top, int* left, int* bottom, int* right);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowSizeInPixels")]
+	public static partial int SDL_GetWindowSizeInPixels(SDL_Window window, int* w, int* h);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowMinimumSize")]
+	public static partial int SDL_SetWindowMinimumSize(SDL_Window window, int min_w, int min_h);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowMinimumSize")]
+	public static partial int SDL_GetWindowMinimumSize(SDL_Window window, int* w, int* h);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowMaximumSize")]
+	public static partial int SDL_SetWindowMaximumSize(SDL_Window window, int max_w, int max_h);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowMaximumSize")]
+	public static partial int SDL_GetWindowMaximumSize(SDL_Window window, int* w, int* h);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowBordered")]
+	public static partial int SDL_SetWindowBordered(SDL_Window window, SDL_bool bordered);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowResizable")]
+	public static partial int SDL_SetWindowResizable(SDL_Window window, SDL_bool resizable);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowAlwaysOnTop")]
+	public static partial int SDL_SetWindowAlwaysOnTop(SDL_Window window, SDL_bool on_top);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ShowWindow")]
+	public static partial int SDL_ShowWindow(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HideWindow")]
+	public static partial int SDL_HideWindow(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_RaiseWindow")]
+	public static partial int SDL_RaiseWindow(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_MaximizeWindow")]
+	public static partial int SDL_MaximizeWindow(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_MinimizeWindow")]
+	public static partial int SDL_MinimizeWindow(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_RestoreWindow")]
+	public static partial int SDL_RestoreWindow(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowFullscreen")]
+	public static partial int SDL_SetWindowFullscreen(SDL_Window window, SDL_bool fullscreen);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HasWindowSurface")]
+	public static partial SDL_bool SDL_HasWindowSurface(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowSurface")]
+	public static partial SDL_Surface* SDL_GetWindowSurface(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_UpdateWindowSurface")]
+	public static partial int SDL_UpdateWindowSurface(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_UpdateWindowSurfaceRects")]
+	public static partial int SDL_UpdateWindowSurfaceRects(SDL_Window window, Rectangle* rects, int numrects);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_DestroyWindowSurface")]
+	public static partial int SDL_DestroyWindowSurface(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowGrab")]
+	public static partial int SDL_SetWindowGrab(SDL_Window window, SDL_bool grabbed);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowKeyboardGrab")]
+	public static partial int SDL_SetWindowKeyboardGrab(SDL_Window window, SDL_bool grabbed);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowMouseGrab")]
+	public static partial int SDL_SetWindowMouseGrab(SDL_Window window, SDL_bool grabbed);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowGrab")]
+	public static partial SDL_bool SDL_GetWindowGrab(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowKeyboardGrab")]
+	public static partial SDL_bool SDL_GetWindowKeyboardGrab(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowMouseGrab")]
+	public static partial SDL_bool SDL_GetWindowMouseGrab(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGrabbedWindow")]
+	public static partial SDL_Window SDL_GetGrabbedWindow();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowMouseRect")]
+	public static partial int SDL_SetWindowMouseRect(SDL_Window window, Rectangle* rect);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowMouseRect")]
+	public static partial Rectangle* SDL_GetWindowMouseRect(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowOpacity")]
+	public static partial int SDL_SetWindowOpacity(SDL_Window window, float opacity);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowOpacity")]
+	public static partial int SDL_GetWindowOpacity(SDL_Window window, float* out_opacity);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowModalFor")]
+	public static partial int SDL_SetWindowModalFor(SDL_Window modal_window, SDL_Window parent_window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowInputFocus")]
+	public static partial int SDL_SetWindowInputFocus(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowFocusable")]
+	public static partial int SDL_SetWindowFocusable(SDL_Window window, SDL_bool focusable);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ShowWindowSystemMenu")]
+	public static partial int SDL_ShowWindowSystemMenu(SDL_Window window, int x, int y);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowHitTest")]
+	public static partial int SDL_SetWindowHitTest(SDL_Window window, SDL_HitTest callback, nint callback_data);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_FlashWindow")]
+	public static partial int SDL_FlashWindow(SDL_Window window, SDL_FlashOperation operation);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_DestroyWindow")]
+	public static partial void SDL_DestroyWindow(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ScreenSaverEnabled")]
+	public static partial SDL_bool SDL_ScreenSaverEnabled();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_EnableScreenSaver")]
+	public static partial int SDL_EnableScreenSaver();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_DisableScreenSaver")]
+	public static partial int SDL_DisableScreenSaver();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GL_LoadLibrary")]
+	public static partial int SDL_GL_LoadLibrary(sbyte* path);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GL_GetProcAddress")]
+	public static partial delegate* unmanaged<void> SDL_GL_GetProcAddress(sbyte* proc);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_EGL_GetProcAddress")]
+	public static partial delegate* unmanaged<void> SDL_EGL_GetProcAddress(sbyte* proc);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GL_UnloadLibrary")]
+	public static partial void SDL_GL_UnloadLibrary();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GL_ExtensionSupported")]
+	public static partial SDL_bool SDL_GL_ExtensionSupported(sbyte* extension);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GL_ResetAttributes")]
+	public static partial void SDL_GL_ResetAttributes();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GL_SetAttribute")]
+	public static partial int SDL_GL_SetAttribute(SDL_GLattr attr, int value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GL_GetAttribute")]
+	public static partial int SDL_GL_GetAttribute(SDL_GLattr attr, int* value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GL_CreateContext")]
+	public static partial SDL_GLContext SDL_GL_CreateContext(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GL_MakeCurrent")]
+	public static partial int SDL_GL_MakeCurrent(SDL_Window window, SDL_GLContext context);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GL_GetCurrentWindow")]
+	public static partial SDL_Window SDL_GL_GetCurrentWindow();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GL_GetCurrentContext")]
+	public static partial SDL_GLContext SDL_GL_GetCurrentContext();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GL_SetSwapInterval")]
+	public static partial int SDL_GL_SetSwapInterval(int interval);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GL_GetSwapInterval")]
+	public static partial int SDL_GL_GetSwapInterval(int* interval);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GL_SwapWindow")]
+	public static partial int SDL_GL_SwapWindow(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GL_DeleteContext")]
+	public static partial int SDL_GL_DeleteContext(SDL_GLContext context);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_LoadLibrary")]
 	public static partial int SDL_Vulkan_LoadLibrary(sbyte* path);

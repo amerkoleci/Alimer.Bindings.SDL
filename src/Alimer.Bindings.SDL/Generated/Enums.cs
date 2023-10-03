@@ -1422,3 +1422,218 @@ public enum SDL_SensorType
 	GyroR = 6,
 }
 
+public enum SDL_SystemTheme
+{
+	/// <unmanaged>SDL_SYSTEM_THEME_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_SYSTEM_THEME_LIGHT</unmanaged>
+	Light = 1,
+	/// <unmanaged>SDL_SYSTEM_THEME_DARK</unmanaged>
+	Dark = 2,
+}
+
+public enum SDL_DisplayOrientation
+{
+	/// <unmanaged>SDL_ORIENTATION_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_ORIENTATION_LANDSCAPE</unmanaged>
+	Landscape = 1,
+	/// <unmanaged>SDL_ORIENTATION_LANDSCAPE_FLIPPED</unmanaged>
+	LandscapeFlipped = 2,
+	/// <unmanaged>SDL_ORIENTATION_PORTRAIT</unmanaged>
+	Portrait = 3,
+	/// <unmanaged>SDL_ORIENTATION_PORTRAIT_FLIPPED</unmanaged>
+	PortraitFlipped = 4,
+}
+
+[Flags]
+public enum SDL_WindowFlags : uint
+{
+	None = 0,
+	/// <unmanaged>SDL_WINDOW_FULLSCREEN</unmanaged>
+	Fullscreen = 0x00000001,
+	/// <unmanaged>SDL_WINDOW_OPENGL</unmanaged>
+	OpenGL = 0x00000002,
+	/// <unmanaged>SDL_WINDOW_OCCLUDED</unmanaged>
+	Occluded = 0x00000004,
+	/// <unmanaged>SDL_WINDOW_HIDDEN</unmanaged>
+	Hidden = 0x00000008,
+	/// <unmanaged>SDL_WINDOW_BORDERLESS</unmanaged>
+	Borderless = 0x00000010,
+	/// <unmanaged>SDL_WINDOW_RESIZABLE</unmanaged>
+	Resizable = 0x00000020,
+	/// <unmanaged>SDL_WINDOW_MINIMIZED</unmanaged>
+	Minimized = 0x00000040,
+	/// <unmanaged>SDL_WINDOW_MAXIMIZED</unmanaged>
+	Maximized = 0x00000080,
+	/// <unmanaged>SDL_WINDOW_MOUSE_GRABBED</unmanaged>
+	MouseGrabbed = 0x00000100,
+	/// <unmanaged>SDL_WINDOW_INPUT_FOCUS</unmanaged>
+	InputFocus = 0x00000200,
+	/// <unmanaged>SDL_WINDOW_MOUSE_FOCUS</unmanaged>
+	MouseFocus = 0x00000400,
+	/// <unmanaged>SDL_WINDOW_FOREIGN</unmanaged>
+	Foreign = 0x00000800,
+	/// <unmanaged>SDL_WINDOW_HIGH_PIXEL_DENSITY</unmanaged>
+	HighPixelDensity = 0x00002000,
+	/// <unmanaged>SDL_WINDOW_MOUSE_CAPTURE</unmanaged>
+	MouseCapture = 0x00004000,
+	/// <unmanaged>SDL_WINDOW_ALWAYS_ON_TOP</unmanaged>
+	AlwaysOnTop = 0x00008000,
+	/// <unmanaged>SDL_WINDOW_UTILITY</unmanaged>
+	Utility = 0x00020000,
+	/// <unmanaged>SDL_WINDOW_TOOLTIP</unmanaged>
+	Tooltip = 0x00040000,
+	/// <unmanaged>SDL_WINDOW_POPUP_MENU</unmanaged>
+	PopupMenu = 0x00080000,
+	/// <unmanaged>SDL_WINDOW_KEYBOARD_GRABBED</unmanaged>
+	KeyboardGrabbed = 0x00100000,
+	/// <unmanaged>SDL_WINDOW_VULKAN</unmanaged>
+	Vulkan = 0x10000000,
+	/// <unmanaged>SDL_WINDOW_METAL</unmanaged>
+	Metal = 0x20000000,
+	/// <unmanaged>SDL_WINDOW_TRANSPARENT</unmanaged>
+	Transparent = 0x40000000,
+	/// <unmanaged>SDL_WINDOW_NOT_FOCUSABLE</unmanaged>
+	NotFocusable = 0x80000000,
+}
+
+public enum SDL_FlashOperation
+{
+	/// <unmanaged>SDL_FLASH_CANCEL</unmanaged>
+	Cancel = 0,
+	/// <unmanaged>SDL_FLASH_BRIEFLY</unmanaged>
+	Briefly = 1,
+	/// <unmanaged>SDL_FLASH_UNTIL_FOCUSED</unmanaged>
+	UntilFocused = 2,
+}
+
+public enum SDL_GLattr
+{
+	/// <unmanaged>SDL_GL_RED_SIZE</unmanaged>
+	RedSize = 0,
+	/// <unmanaged>SDL_GL_GREEN_SIZE</unmanaged>
+	GreenSize = 1,
+	/// <unmanaged>SDL_GL_BLUE_SIZE</unmanaged>
+	BlueSize = 2,
+	/// <unmanaged>SDL_GL_ALPHA_SIZE</unmanaged>
+	AlphaSize = 3,
+	/// <unmanaged>SDL_GL_BUFFER_SIZE</unmanaged>
+	BufferSize = 4,
+	/// <unmanaged>SDL_GL_DOUBLEBUFFER</unmanaged>
+	Doublebuffer = 5,
+	/// <unmanaged>SDL_GL_DEPTH_SIZE</unmanaged>
+	DepthSize = 6,
+	/// <unmanaged>SDL_GL_STENCIL_SIZE</unmanaged>
+	StencilSize = 7,
+	/// <unmanaged>SDL_GL_ACCUM_RED_SIZE</unmanaged>
+	AccumRedSize = 8,
+	/// <unmanaged>SDL_GL_ACCUM_GREEN_SIZE</unmanaged>
+	AccumGreenSize = 9,
+	/// <unmanaged>SDL_GL_ACCUM_BLUE_SIZE</unmanaged>
+	AccumBlueSize = 10,
+	/// <unmanaged>SDL_GL_ACCUM_ALPHA_SIZE</unmanaged>
+	AccumAlphaSize = 11,
+	/// <unmanaged>SDL_GL_STEREO</unmanaged>
+	Stereo = 12,
+	/// <unmanaged>SDL_GL_MULTISAMPLEBUFFERS</unmanaged>
+	MultisampleBuffers = 13,
+	/// <unmanaged>SDL_GL_MULTISAMPLESAMPLES</unmanaged>
+	MultisampleSamples = 14,
+	/// <unmanaged>SDL_GL_ACCELERATED_VISUAL</unmanaged>
+	AcceleratedVisual = 15,
+	/// <unmanaged>SDL_GL_RETAINED_BACKING</unmanaged>
+	RetainedBacking = 16,
+	/// <unmanaged>SDL_GL_CONTEXT_MAJOR_VERSION</unmanaged>
+	ContextMajorVersion = 17,
+	/// <unmanaged>SDL_GL_CONTEXT_MINOR_VERSION</unmanaged>
+	ContextMinorVersion = 18,
+	/// <unmanaged>SDL_GL_CONTEXT_FLAGS</unmanaged>
+	ContextFlags = 19,
+	/// <unmanaged>SDL_GL_CONTEXT_PROFILE_MASK</unmanaged>
+	ContextProfileMask = 20,
+	/// <unmanaged>SDL_GL_SHARE_WITH_CURRENT_CONTEXT</unmanaged>
+	ShareWithCurrentContext = 21,
+	/// <unmanaged>SDL_GL_FRAMEBUFFER_SRGB_CAPABLE</unmanaged>
+	FramebufferSrgbCapable = 22,
+	/// <unmanaged>SDL_GL_CONTEXT_RELEASE_BEHAVIOR</unmanaged>
+	ContextReleaseBehavior = 23,
+	/// <unmanaged>SDL_GL_CONTEXT_RESET_NOTIFICATION</unmanaged>
+	ContextResetNotification = 24,
+	/// <unmanaged>SDL_GL_CONTEXT_NO_ERROR</unmanaged>
+	ContextNoError = 25,
+	/// <unmanaged>SDL_GL_FLOATBUFFERS</unmanaged>
+	Floatbuffers = 26,
+	/// <unmanaged>SDL_GL_EGL_PLATFORM</unmanaged>
+	EglPlatform = 27,
+}
+
+[Flags]
+public enum SDL_GLprofile
+{
+	None = 0,
+	/// <unmanaged>SDL_GL_CONTEXT_PROFILE_CORE</unmanaged>
+	Core = 0x0001,
+	/// <unmanaged>SDL_GL_CONTEXT_PROFILE_COMPATIBILITY</unmanaged>
+	Compatibility = 0x0002,
+	/// <unmanaged>SDL_GL_CONTEXT_PROFILE_ES</unmanaged>
+	Es = 0x0004,
+}
+
+[Flags]
+public enum SDL_GLcontextFlag
+{
+	None = 0,
+	/// <unmanaged>SDL_GL_CONTEXT_DEBUG_FLAG</unmanaged>
+	DebugFlag = 0x0001,
+	/// <unmanaged>SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG</unmanaged>
+	ForwardCompatibleFlag = 0x0002,
+	/// <unmanaged>SDL_GL_CONTEXT_ROBUST_ACCESS_FLAG</unmanaged>
+	RobustAccessFlag = 0x0004,
+	/// <unmanaged>SDL_GL_CONTEXT_RESET_ISOLATION_FLAG</unmanaged>
+	ResetIsolationFlag = 0x0008,
+}
+
+[Flags]
+public enum SDL_GLcontextReleaseFlag
+{
+	/// <unmanaged>SDL_GL_CONTEXT_RELEASE_BEHAVIOR_NONE</unmanaged>
+	None = 0x0000,
+	/// <unmanaged>SDL_GL_CONTEXT_RELEASE_BEHAVIOR_FLUSH</unmanaged>
+	Flush = 0x0001,
+}
+
+[Flags]
+public enum SDL_GLContextResetNotification
+{
+	None = 0,
+	/// <unmanaged>SDL_GL_CONTEXT_RESET_NO_NOTIFICATION</unmanaged>
+	NoNotification = 0x0000,
+	/// <unmanaged>SDL_GL_CONTEXT_RESET_LOSE_CONTEXT</unmanaged>
+	LoseContext = 0x0001,
+}
+
+public enum SDL_HitTestResult
+{
+	/// <unmanaged>SDL_HITTEST_NORMAL</unmanaged>
+	Normal = 0,
+	/// <unmanaged>SDL_HITTEST_DRAGGABLE</unmanaged>
+	Draggable = 1,
+	/// <unmanaged>SDL_HITTEST_RESIZE_TOPLEFT</unmanaged>
+	ResizeTopleft = 2,
+	/// <unmanaged>SDL_HITTEST_RESIZE_TOP</unmanaged>
+	ResizeTop = 3,
+	/// <unmanaged>SDL_HITTEST_RESIZE_TOPRIGHT</unmanaged>
+	ResizeTopright = 4,
+	/// <unmanaged>SDL_HITTEST_RESIZE_RIGHT</unmanaged>
+	ResizeRight = 5,
+	/// <unmanaged>SDL_HITTEST_RESIZE_BOTTOMRIGHT</unmanaged>
+	ResizeBottomright = 6,
+	/// <unmanaged>SDL_HITTEST_RESIZE_BOTTOM</unmanaged>
+	ResizeBottom = 7,
+	/// <unmanaged>SDL_HITTEST_RESIZE_BOTTOMLEFT</unmanaged>
+	ResizeBottomleft = 8,
+	/// <unmanaged>SDL_HITTEST_RESIZE_LEFT</unmanaged>
+	ResizeLeft = 9,
+}
+

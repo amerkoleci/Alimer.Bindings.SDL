@@ -156,3 +156,14 @@ public partial struct SDL_Finger
 	public float pressure;
 }
 
+public partial struct SDL_DisplayMode
+{
+	public SDL_DisplayID displayID;
+	public uint format;
+	public int w;
+	public int h;
+	public float pixel_density;
+	public float refresh_rate;
+	public nint driverdata;
+}
+

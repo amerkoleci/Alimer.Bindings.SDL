@@ -62,7 +62,7 @@ public static class Program
             "SDL_misc.h",
             "SDL_power.h",
             "SDL_sensor.h",
-            //"SDL_video.h",
+            "SDL_video.h",
             "SDL_vulkan.h",
         ];
 

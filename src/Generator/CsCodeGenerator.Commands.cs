@@ -39,8 +39,13 @@ public static partial class CsCodeGenerator
     {
         foreach (CppTypedef typedef in compilation.Typedefs)
         {
-            if (typedef.Name == "WGPUProc" ||
-                !typedef.Name.EndsWith("Callback"))
+            if (!typedef.Name.EndsWith("Callback"))
+            {
+                continue;
+            }
+
+            if (typedef.Name == "SDL_EGLAttribArrayCallback"
+                || typedef.Name == "SDL_EGLIntArrayCallback")
             {
                 continue;
             }
@@ -56,10 +61,13 @@ public static partial class CsCodeGenerator
 
         foreach (CppFunction? cppFunction in compilation.Functions)
         {
-            if (cppFunction.Name == "SDL_LogMessageV" ||
-                cppFunction.Name == "SDL_LogGetOutputFunction" ||
-                cppFunction.Name == "SDL_LogSetOutputFunction")
+            if (cppFunction.Name == "SDL_LogMessageV"
+                || cppFunction.Name == "SDL_LogGetOutputFunction"
+                || cppFunction.Name == "SDL_LogSetOutputFunction"
+                || cppFunction.Name == "SDL_EGL_SetEGLAttributeCallbacks")
+            {
                 continue;
+            }
 
             s_collectedFunctions.Add(cppFunction);
         }
@@ -301,7 +309,7 @@ public static partial class CsCodeGenerator
 
             if (paramCsName == "count" && functionName.Contains("Get", StringComparison.OrdinalIgnoreCase))
             {
-                if(paramCsTypeName == "int*")
+                if (paramCsTypeName == "int*")
                     paramCsTypeName = "out int";
                 else if (paramCsTypeName == "uint*")
                     paramCsTypeName = "out uint";

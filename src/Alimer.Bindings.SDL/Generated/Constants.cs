@@ -65,4 +65,20 @@ public static partial class SDL
 	public const uint SDL_MAX_LOG_MESSAGE = 4096;
 	/// <unmanaged>SDL_STANDARD_GRAVITY</unmanaged>
 	public const float SDL_STANDARD_GRAVITY = 9.80665f;
+	/// <unmanaged>SDL_AUDIO_U8</unmanaged>
+	public const uint SDL_AUDIO_U8 = 0x0008;
+	/// <unmanaged>SDL_AUDIO_S8</unmanaged>
+	public const uint SDL_AUDIO_S8 = 0x8008;
+	/// <unmanaged>SDL_AUDIO_S16LE</unmanaged>
+	public const uint SDL_AUDIO_S16LE = 0x8010;
+	/// <unmanaged>SDL_AUDIO_S16BE</unmanaged>
+	public const uint SDL_AUDIO_S16BE = 0x9010;
+	/// <unmanaged>SDL_AUDIO_S32LE</unmanaged>
+	public const uint SDL_AUDIO_S32LE = 0x8020;
+	/// <unmanaged>SDL_AUDIO_S32BE</unmanaged>
+	public const uint SDL_AUDIO_S32BE = 0x9020;
+	/// <unmanaged>SDL_AUDIO_F32LE</unmanaged>
+	public const uint SDL_AUDIO_F32LE = 0x8120;
+	/// <unmanaged>SDL_AUDIO_F32BE</unmanaged>
+	public const uint SDL_AUDIO_F32BE = 0x9120;
 }

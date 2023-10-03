@@ -81,7 +81,7 @@ public static unsafe class Program
         var driversAudio = SDL_GetNumAudioDrivers();
         for (int i = 0; i < driversAudio; i++)
         {
-            dispName = SDL_GetAudioDriver(i);
+            dispName = SDL_GetAudioDriverString(i);
         }
 
         ReadOnlySpan<SDL_JoystickID> joystics = SDL_GetJoysticks();

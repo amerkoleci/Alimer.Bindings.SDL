@@ -64,6 +64,7 @@ public static class Program
             "SDL_sensor.h",
             "SDL_video.h",
             "SDL_vulkan.h",
+            "SDL_audio.h",
         ];
 
         foreach(string header in headers)

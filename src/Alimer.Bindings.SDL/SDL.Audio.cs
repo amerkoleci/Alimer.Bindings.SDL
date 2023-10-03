@@ -68,171 +68,47 @@ unsafe partial class SDL
 
     public const int SDL_MIX_MAXVOLUME = 128;
 
-    public enum SDL_AudioStatus
+    public static string SDL_GetAudioDriverString(int index)
     {
-        SDL_AUDIO_STOPPED,
-        SDL_AUDIO_PLAYING,
-        SDL_AUDIO_PAUSED
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct SDL_AudioSpec
-    {
-        public int freq;
-        public ushort format; // SDL_AudioFormat
-        public byte channels;
-        public byte silence;
-        public ushort samples;
-        private ushort padding;
-        public uint size;
-        public unsafe delegate* unmanaged<IntPtr, byte*, int, void> callback; /* SDL_AudioCallback */
-        public IntPtr userdata;
-    }
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetNumAudioDrivers();
-
-    [LibraryImport(LibName, EntryPoint = nameof(SDL_GetAudioDriver))]
-    private static partial sbyte* INTERNAL_SDL_GetAudioDriver(int index);
-
-    public static string SDL_GetAudioDriver(int index)
-    {
-        return GetStringOrEmpty(INTERNAL_SDL_GetAudioDriver(index));
-    }
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_AudioDeviceID SDL_OpenAudioDevice(SDL_AudioDeviceID deviceId, SDL_AudioSpec* spec);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_CloseAudioDevice(SDL_AudioDeviceID dev);
-
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetCurrentAudioDriver), CallingConvention = CallingConvention.Cdecl)]
-    private static extern sbyte* INTERNAL_SDL_GetCurrentAudioDriver();
-
-    public static string SDL_GetCurrentAudioDriver()
-    {
-        return new(INTERNAL_SDL_GetCurrentAudioDriver());
-    }
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_AudioDeviceID* SDL_GetAudioOutputDevices(int* count);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_AudioDeviceID* SDL_GetAudioCaptureDevices(int* count);
-
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetAudioDeviceName), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetAudioDeviceName(SDL_AudioDeviceID deviceId);
-
-    public static string SDL_GetAudioDeviceName(SDL_AudioDeviceID deviceId)
-    {
-        return GetString(INTERNAL_SDL_GetAudioDeviceName(deviceId));
-    }
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetAudioDeviceFormat(SDL_AudioDeviceID devid, SDL_AudioSpec* spec);
-
-    // TODO: int SDL_GetDefaultAudioInfo(char **name, SDL_AudioSpec* spec, int iscapture)
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_PlayAudioDevice(SDL_AudioDeviceID dev);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_PauseAudioDevice(SDL_AudioDeviceID dev);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_ResumeAudioDevice(SDL_AudioDeviceID dev);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_IsAudioDevicePaused(SDL_AudioDeviceID dev);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_MixAudioFormat(
-        byte* dst,
-        byte* src,
-        ushort format,
-        uint len,
-        int volume
-    );
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_LockAudioDevice(SDL_AudioDeviceID dev);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_UnlockAudioDevice(SDL_AudioDeviceID dev);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_QueueAudio(SDL_AudioDeviceID dev, void* data, uint len);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern uint SDL_DequeueAudio(SDL_AudioDeviceID dev, void* data, uint len);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern uint SDL_GetQueuedAudioSize(SDL_AudioDeviceID dev);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_ClearQueuedAudio(SDL_AudioDeviceID dev);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_ConvertAudioSamples(
-        ushort format,
-        uint src_channels,
-        int src_rate,
-        byte** src_data,
-        int src_len,
-        ushort dst_format,
-        byte dst_channels,
-        int dst_rate,
-        byte** dst_data,
-        int* dst_len);
-
-    [LibraryImport(LibName, EntryPoint = nameof(SDL_LoadWAV))]
-    private static partial SDL_AudioSpec* INTERNAL_SDL_LoadWAV_RW(
-        IntPtr src,
-        int freesrc,
-        SDL_AudioSpec* spec,
-        out byte* audio_buf,
-        out uint audio_len
-    );
-
-    public static SDL_AudioSpec* SDL_LoadWAV(
-        string file,
-        SDL_AudioSpec* spec,
-        out byte* audio_buf,
-        out uint audio_len
-    )
-    {
-        IntPtr rwops = SDL_RWFromFile(file, "rb");
-        return INTERNAL_SDL_LoadWAV_RW(
-            rwops,
-            1,
-            spec,
-            out audio_buf,
-            out audio_len
-        );
+        return GetStringOrEmpty(SDL_GetAudioDriver(index));
     }
 
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr SDL_CreateAudioStream(SDL_AudioSpec* src_spec, SDL_AudioSpec* dst_spec);
+    public static string SDL_GetCurrentAudioDriverString()
+    {
+        return GetStringOrEmpty(SDL_GetCurrentAudioDriver());
+    }
 
+    public static ReadOnlySpan<SDL_AudioDeviceID> SDL_GetAudioOutputDevices()
+    {
+        SDL_AudioDeviceID* ptr = SDL_GetAudioOutputDevices(out int count);
+        return new(ptr, count);
+    }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_DestroyAudioStream(IntPtr stream);
+    public static ReadOnlySpan<SDL_AudioDeviceID> SDL_GetAudioCaptureDevices()
+    {
+        SDL_AudioDeviceID* ptr = SDL_GetAudioCaptureDevices(out int count);
+        return new(ptr, count);
+    }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_ClearAudioStream(IntPtr stream);
+    public static string SDL_GetAudioDeviceNameString(SDL_AudioDeviceID deviceId)
+    {
+        return GetStringOrEmpty(SDL_GetAudioDeviceName(deviceId));
+    }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_FlushAudioStream(IntPtr stream);
+    public static int SDL_LoadWAV(ReadOnlySpan<sbyte> path, SDL_AudioSpec* spec, byte** audio_buf, uint* audio_len)
+    {
+        fixed (sbyte* pPath = path)
+        {
+            return SDL_LoadWAV(pPath, spec, audio_buf, audio_len);
+        }
+    }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetAudioStreamAvailable(IntPtr stream);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetAudioStreamData(IntPtr stream, void* buf, int len);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_PutAudioStreamData(IntPtr stream, void* buf, int len);
+    public static int SDL_LoadWAV(string path, SDL_AudioSpec* spec, byte** audio_buf, uint* audio_len)
+    {
+        fixed (sbyte* pPath = path.GetUtf8Span())
+        {
+            return SDL_LoadWAV(pPath, spec, audio_buf, audio_len);
+        }
+    }
 }

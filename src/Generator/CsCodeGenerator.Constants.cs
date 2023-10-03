@@ -40,7 +40,8 @@ public static partial class CsCodeGenerator
                 cppMacro.Name == "SDL_US_TO_NS" ||
                 cppMacro.Name == "SDL_NS_TO_US" ||
                 cppMacro.Name == "SDL_TOUCH_MOUSEID" ||
-                cppMacro.Name == "SDL_MOUSE_TOUCHID")
+                cppMacro.Name == "SDL_MOUSE_TOUCHID" ||
+                cppMacro.Name.StartsWith("SDL_WINDOWPOS_"))
             {
                 continue;
             }

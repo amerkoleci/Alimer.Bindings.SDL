@@ -45,6 +45,9 @@ public static partial class CsCodeGenerator
         { "SDL_Keycode", "SDL_KeyCode" },
         { "VkInstance", "nint" },
         { "VkSurfaceKHR", "ulong" },
+        { "SDL_EGLDisplay", "nint" },
+        { "SDL_EGLConfig", "nint" },
+        { "SDL_EGLSurface", "nint" },
     };
 
     private static readonly HashSet<string> s_knownTypes = new(StringComparer.OrdinalIgnoreCase)
@@ -61,6 +64,7 @@ public static partial class CsCodeGenerator
         //"SDL_FingerID",
         "SDL_Sensor",
         //"SDL_SensorID",
+        "SDL_AudioStream",
     };
 
     private static CsCodeGeneratorOptions s_options = new();

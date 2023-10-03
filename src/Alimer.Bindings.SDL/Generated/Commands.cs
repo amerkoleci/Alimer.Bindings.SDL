@@ -24,6 +24,11 @@ public unsafe delegate void SDL_ClipboardCleanupCallback(nint userdata);
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 public unsafe delegate uint SDL_TimerCallback(uint interval, nint param);
 
+[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+public unsafe delegate void SDL_AudioStreamCallback(nint userdata, SDL_AudioStream stream, int additional_amount, int total_amount);
+
+[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+public unsafe delegate void SDL_AudioPostmixCallback(nint userdata, SDL_AudioSpec* spec, float* buffer, int buflen);
 
 public unsafe partial class SDL
 {
@@ -1104,6 +1109,15 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_GL_GetCurrentContext")]
 	public static partial SDL_GLContext SDL_GL_GetCurrentContext();
 
+	[LibraryImport(LibName, EntryPoint = "SDL_EGL_GetCurrentEGLDisplay")]
+	public static partial nint SDL_EGL_GetCurrentEGLDisplay();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_EGL_GetCurrentEGLConfig")]
+	public static partial nint SDL_EGL_GetCurrentEGLConfig();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_EGL_GetWindowEGLSurface")]
+	public static partial nint SDL_EGL_GetWindowEGLSurface(SDL_Window window);
+
 	[LibraryImport(LibName, EntryPoint = "SDL_GL_SetSwapInterval")]
 	public static partial int SDL_GL_SetSwapInterval(int interval);
 
@@ -1130,5 +1144,125 @@ public unsafe partial class SDL
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_CreateSurface")]
 	public static partial SDL_bool SDL_Vulkan_CreateSurface(SDL_Window window, nint instance, ulong* surface);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetNumAudioDrivers")]
+	public static partial int SDL_GetNumAudioDrivers();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetAudioDriver")]
+	public static partial sbyte* SDL_GetAudioDriver(int index);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetCurrentAudioDriver")]
+	public static partial sbyte* SDL_GetCurrentAudioDriver();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetAudioOutputDevices")]
+	public static partial SDL_AudioDeviceID* SDL_GetAudioOutputDevices(out int count);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetAudioCaptureDevices")]
+	public static partial SDL_AudioDeviceID* SDL_GetAudioCaptureDevices(out int count);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetAudioDeviceName")]
+	public static partial sbyte* SDL_GetAudioDeviceName(SDL_AudioDeviceID devid);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetAudioDeviceFormat")]
+	public static partial int SDL_GetAudioDeviceFormat(SDL_AudioDeviceID devid, SDL_AudioSpec* spec, int* sample_frames);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_OpenAudioDevice")]
+	public static partial SDL_AudioDeviceID SDL_OpenAudioDevice(SDL_AudioDeviceID devid, SDL_AudioSpec* spec);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_PauseAudioDevice")]
+	public static partial int SDL_PauseAudioDevice(SDL_AudioDeviceID dev);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ResumeAudioDevice")]
+	public static partial int SDL_ResumeAudioDevice(SDL_AudioDeviceID dev);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_AudioDevicePaused")]
+	public static partial SDL_bool SDL_AudioDevicePaused(SDL_AudioDeviceID dev);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_CloseAudioDevice")]
+	public static partial void SDL_CloseAudioDevice(SDL_AudioDeviceID devid);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_BindAudioStreams")]
+	public static partial int SDL_BindAudioStreams(SDL_AudioDeviceID devid, SDL_AudioStream streams, int num_streams);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_BindAudioStream")]
+	public static partial int SDL_BindAudioStream(SDL_AudioDeviceID devid, SDL_AudioStream stream);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_UnbindAudioStreams")]
+	public static partial void SDL_UnbindAudioStreams(SDL_AudioStream streams, int num_streams);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_UnbindAudioStream")]
+	public static partial void SDL_UnbindAudioStream(SDL_AudioStream stream);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetAudioStreamDevice")]
+	public static partial SDL_AudioDeviceID SDL_GetAudioStreamDevice(SDL_AudioStream stream);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateAudioStream")]
+	public static partial SDL_AudioStream SDL_CreateAudioStream(SDL_AudioSpec* src_spec, SDL_AudioSpec* dst_spec);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetAudioStreamFormat")]
+	public static partial int SDL_GetAudioStreamFormat(SDL_AudioStream stream, SDL_AudioSpec* src_spec, SDL_AudioSpec* dst_spec);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetAudioStreamFormat")]
+	public static partial int SDL_SetAudioStreamFormat(SDL_AudioStream stream, SDL_AudioSpec* src_spec, SDL_AudioSpec* dst_spec);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetAudioStreamFrequencyRatio")]
+	public static partial float SDL_GetAudioStreamFrequencyRatio(SDL_AudioStream stream);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetAudioStreamFrequencyRatio")]
+	public static partial int SDL_SetAudioStreamFrequencyRatio(SDL_AudioStream stream, float ratio);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_PutAudioStreamData")]
+	public static partial int SDL_PutAudioStreamData(SDL_AudioStream stream, void* buf, int len);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetAudioStreamData")]
+	public static partial int SDL_GetAudioStreamData(SDL_AudioStream stream, nint buf, int len);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetAudioStreamAvailable")]
+	public static partial int SDL_GetAudioStreamAvailable(SDL_AudioStream stream);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetAudioStreamQueued")]
+	public static partial int SDL_GetAudioStreamQueued(SDL_AudioStream stream);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_FlushAudioStream")]
+	public static partial int SDL_FlushAudioStream(SDL_AudioStream stream);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ClearAudioStream")]
+	public static partial int SDL_ClearAudioStream(SDL_AudioStream stream);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_LockAudioStream")]
+	public static partial int SDL_LockAudioStream(SDL_AudioStream stream);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_UnlockAudioStream")]
+	public static partial int SDL_UnlockAudioStream(SDL_AudioStream stream);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetAudioStreamGetCallback")]
+	public static partial int SDL_SetAudioStreamGetCallback(SDL_AudioStream stream, SDL_AudioStreamCallback callback, nint userdata);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetAudioStreamPutCallback")]
+	public static partial int SDL_SetAudioStreamPutCallback(SDL_AudioStream stream, SDL_AudioStreamCallback callback, nint userdata);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_DestroyAudioStream")]
+	public static partial void SDL_DestroyAudioStream(SDL_AudioStream stream);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_OpenAudioDeviceStream")]
+	public static partial SDL_AudioStream SDL_OpenAudioDeviceStream(SDL_AudioDeviceID devid, SDL_AudioSpec* spec, SDL_AudioStreamCallback callback, nint userdata);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetAudioPostmixCallback")]
+	public static partial int SDL_SetAudioPostmixCallback(SDL_AudioDeviceID devid, SDL_AudioPostmixCallback callback, nint userdata);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_LoadWAV_RW")]
+	public static partial int SDL_LoadWAV_RW(nint src, SDL_bool freesrc, SDL_AudioSpec* spec, byte** audio_buf, uint* audio_len);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_LoadWAV")]
+	public static partial int SDL_LoadWAV(sbyte* path, SDL_AudioSpec* spec, byte** audio_buf, uint* audio_len);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_MixAudioFormat")]
+	public static partial int SDL_MixAudioFormat(byte* dst, byte* src, SDL_AudioFormat format, uint len, int volume);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ConvertAudioSamples")]
+	public static partial int SDL_ConvertAudioSamples(SDL_AudioSpec* src_spec, byte* src_data, int src_len, SDL_AudioSpec* dst_spec, byte** dst_data, int* dst_len);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSilenceValueForFormat")]
+	public static partial int SDL_GetSilenceValueForFormat(SDL_AudioFormat format);
 
 }

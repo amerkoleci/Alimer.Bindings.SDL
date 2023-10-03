@@ -30,6 +30,9 @@ public unsafe delegate void SDL_AudioStreamCallback(nint userdata, SDL_AudioStre
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 public unsafe delegate void SDL_AudioPostmixCallback(nint userdata, SDL_AudioSpec* spec, float* buffer, int buflen);
 
+[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+public unsafe delegate void SDL_HintCallback(nint userdata, sbyte* name, sbyte* oldValue, sbyte* newValue);
+
 public unsafe partial class SDL
 {
 	[LibraryImport(LibName, EntryPoint = "SDL_SetError")]
@@ -1254,19 +1257,19 @@ public unsafe partial class SDL
 	public static partial void SDL_PumpEvents();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_PeepEvents")]
-	public static partial int SDL_PeepEvents(SDL_Event* events, int numevents, SDL_eventaction action, uint minType, uint maxType);
+	public static partial int SDL_PeepEvents(SDL_Event* events, int numevents, SDL_eventaction action, SDL_EventType minType, SDL_EventType maxType);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_HasEvent")]
-	public static partial SDL_bool SDL_HasEvent(uint type);
+	public static partial SDL_bool SDL_HasEvent(SDL_EventType type);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_HasEvents")]
-	public static partial SDL_bool SDL_HasEvents(uint minType, uint maxType);
+	public static partial SDL_bool SDL_HasEvents(SDL_EventType minType, SDL_EventType maxType);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_FlushEvent")]
-	public static partial void SDL_FlushEvent(uint type);
+	public static partial void SDL_FlushEvent(SDL_EventType type);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_FlushEvents")]
-	public static partial void SDL_FlushEvents(uint minType, uint maxType);
+	public static partial void SDL_FlushEvents(SDL_EventType minType, SDL_EventType maxType);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_PollEvent")]
 	public static partial int SDL_PollEvent(SDL_Event* @event);
@@ -1283,9 +1286,6 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_SetEventFilter")]
 	public static partial void SDL_SetEventFilter(SDL_EventFilter filter, nint userdata);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_GetEventFilter")]
-	public static partial SDL_bool SDL_GetEventFilter(SDL_EventFilter* filter, nint* userdata);
-
 	[LibraryImport(LibName, EntryPoint = "SDL_AddEventWatch")]
 	public static partial void SDL_AddEventWatch(SDL_EventFilter filter, nint userdata);
 
@@ -1296,10 +1296,10 @@ public unsafe partial class SDL
 	public static partial void SDL_FilterEvents(SDL_EventFilter filter, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetEventEnabled")]
-	public static partial void SDL_SetEventEnabled(uint type, SDL_bool enabled);
+	public static partial void SDL_SetEventEnabled(SDL_EventType type, SDL_bool enabled);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_EventEnabled")]
-	public static partial SDL_bool SDL_EventEnabled(uint type);
+	public static partial SDL_bool SDL_EventEnabled(SDL_EventType type);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_RegisterEvents")]
 	public static partial uint SDL_RegisterEvents(int numevents);
@@ -1327,5 +1327,125 @@ public unsafe partial class SDL
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Metal_GetLayer")]
 	public static partial nint SDL_Metal_GetLayer(nint view);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowWMInfo")]
+	public static partial int SDL_GetWindowWMInfo(SDL_Window window, SDL_SysWMinfo* info, uint version = SDL_SYSWM_CURRENT_VERSION);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetHintWithPriority")]
+	public static partial SDL_bool SDL_SetHintWithPriority(sbyte* name, sbyte* value, SDL_HintPriority priority);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetHint")]
+	public static partial SDL_bool SDL_SetHint(sbyte* name, sbyte* value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ResetHint")]
+	public static partial SDL_bool SDL_ResetHint(sbyte* name);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ResetHints")]
+	public static partial void SDL_ResetHints();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetHint")]
+	public static partial sbyte* SDL_GetHint(sbyte* name);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetHintBoolean")]
+	public static partial SDL_bool SDL_GetHintBoolean(sbyte* name, SDL_bool default_value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_AddHintCallback")]
+	public static partial int SDL_AddHintCallback(sbyte* name, SDL_HintCallback callback, nint userdata);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_DelHintCallback")]
+	public static partial void SDL_DelHintCallback(sbyte* name, SDL_HintCallback callback, nint userdata);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ClearHints")]
+	public static partial void SDL_ClearHints();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_NumHaptics")]
+	public static partial int SDL_NumHaptics();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticName")]
+	public static partial sbyte* SDL_HapticName(int device_index);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticOpen")]
+	public static partial SDL_Haptic SDL_HapticOpen(int device_index);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticOpened")]
+	public static partial int SDL_HapticOpened(int device_index);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticIndex")]
+	public static partial int SDL_HapticIndex(SDL_Haptic haptic);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_MouseIsHaptic")]
+	public static partial int SDL_MouseIsHaptic();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticOpenFromMouse")]
+	public static partial SDL_Haptic SDL_HapticOpenFromMouse();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_JoystickIsHaptic")]
+	public static partial int SDL_JoystickIsHaptic(SDL_Joystick joystick);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticOpenFromJoystick")]
+	public static partial SDL_Haptic SDL_HapticOpenFromJoystick(SDL_Joystick joystick);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticClose")]
+	public static partial void SDL_HapticClose(SDL_Haptic haptic);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticNumEffects")]
+	public static partial int SDL_HapticNumEffects(SDL_Haptic haptic);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticNumEffectsPlaying")]
+	public static partial int SDL_HapticNumEffectsPlaying(SDL_Haptic haptic);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticQuery")]
+	public static partial uint SDL_HapticQuery(SDL_Haptic haptic);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticNumAxes")]
+	public static partial int SDL_HapticNumAxes(SDL_Haptic haptic);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticEffectSupported")]
+	public static partial int SDL_HapticEffectSupported(SDL_Haptic haptic, SDL_HapticEffect* effect);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticNewEffect")]
+	public static partial int SDL_HapticNewEffect(SDL_Haptic haptic, SDL_HapticEffect* effect);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticUpdateEffect")]
+	public static partial int SDL_HapticUpdateEffect(SDL_Haptic haptic, int effect, SDL_HapticEffect* data);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticRunEffect")]
+	public static partial int SDL_HapticRunEffect(SDL_Haptic haptic, int effect, uint iterations);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticStopEffect")]
+	public static partial int SDL_HapticStopEffect(SDL_Haptic haptic, int effect);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticDestroyEffect")]
+	public static partial void SDL_HapticDestroyEffect(SDL_Haptic haptic, int effect);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticGetEffectStatus")]
+	public static partial int SDL_HapticGetEffectStatus(SDL_Haptic haptic, int effect);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticSetGain")]
+	public static partial int SDL_HapticSetGain(SDL_Haptic haptic, int gain);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticSetAutocenter")]
+	public static partial int SDL_HapticSetAutocenter(SDL_Haptic haptic, int autocenter);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticPause")]
+	public static partial int SDL_HapticPause(SDL_Haptic haptic);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticUnpause")]
+	public static partial int SDL_HapticUnpause(SDL_Haptic haptic);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticStopAll")]
+	public static partial int SDL_HapticStopAll(SDL_Haptic haptic);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticRumbleSupported")]
+	public static partial int SDL_HapticRumbleSupported(SDL_Haptic haptic);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticRumbleInit")]
+	public static partial int SDL_HapticRumbleInit(SDL_Haptic haptic);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticRumblePlay")]
+	public static partial int SDL_HapticRumblePlay(SDL_Haptic haptic, float strength, uint length);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HapticRumbleStop")]
+	public static partial int SDL_HapticRumbleStop(SDL_Haptic haptic);
 
 }

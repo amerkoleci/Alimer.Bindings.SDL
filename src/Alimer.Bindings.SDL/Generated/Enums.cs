@@ -1827,3 +1827,39 @@ public enum SDL_eventaction
 	GetEvent = 2,
 }
 
+public enum SDL_SYSWM_TYPE
+{
+	/// <unmanaged>SDL_SYSWM_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_SYSWM_ANDROID</unmanaged>
+	Android = 1,
+	/// <unmanaged>SDL_SYSWM_COCOA</unmanaged>
+	Cocoa = 2,
+	/// <unmanaged>SDL_SYSWM_HAIKU</unmanaged>
+	Haiku = 3,
+	/// <unmanaged>SDL_SYSWM_KMSDRM</unmanaged>
+	Kmsdrm = 4,
+	/// <unmanaged>SDL_SYSWM_RISCOS</unmanaged>
+	Riscos = 5,
+	/// <unmanaged>SDL_SYSWM_UIKIT</unmanaged>
+	Uikit = 6,
+	/// <unmanaged>SDL_SYSWM_VIVANTE</unmanaged>
+	Vivante = 7,
+	/// <unmanaged>SDL_SYSWM_WAYLAND</unmanaged>
+	Wayland = 8,
+	/// <unmanaged>SDL_SYSWM_WINDOWS</unmanaged>
+	Windows = 9,
+	/// <unmanaged>SDL_SYSWM_WINRT</unmanaged>
+	Winrt = 10,
+	/// <unmanaged>SDL_SYSWM_X11</unmanaged>
+	X11 = 11,
+}
+
+public enum SDL_HintPriority
+{
+	/// <unmanaged>SDL_HINT_NORMAL</unmanaged>
+	Normal = 1,
+	/// <unmanaged>SDL_HINT_OVERRIDE</unmanaged>
+	Override = 2,
+}
+

@@ -43,6 +43,8 @@ public static partial class CsCodeGenerator
         { "SDL_GLContextResetNotification", "SDL_GL_CONTEXT_RESET" },
         { "SDL_HitTestResult", "SDL_HITTEST" },
         { "SDL_EventType", "SDL_EVENT" },
+        { "SDL_SYSWM_TYPE", "SDL_SYSWM" },
+        { "SDL_HintPriority", "SDL_HINT" },
     };
 
     private static readonly Dictionary<string, string> s_knownEnumValueNames = new()
@@ -144,7 +146,7 @@ public static partial class CsCodeGenerator
             createdEnums.Add(csName, cppEnum.Name);
 
             string baseTypeName = string.Empty;
-            if(csName == "SDL_WindowFlags")
+            if (csName == "SDL_WindowFlags")
             {
                 baseTypeName = " : uint";
             }
@@ -183,6 +185,10 @@ public static partial class CsCodeGenerator
                         continue;
                     }
 
+                    if (cppEnum.Name == "SDL_EventType" && enumItemName == "DisplayFirst")
+                    {
+                    }
+
                     if (enumItemName != "Count" && s_options.EnumWriteUnmanagedTag)
                     {
                         writer.WriteLine($"/// <unmanaged>{enumItem.Name}</unmanaged>");
@@ -190,8 +196,15 @@ public static partial class CsCodeGenerator
 
                     if (enumItem.ValueExpression is CppRawExpression rawExpression)
                     {
-                        //string enumValueName = GetEnumItemName(rawExpression.Text);
-                        writer.WriteLine($"{enumItemName} = {rawExpression.Text},");
+                        if (rawExpression.Text.Contains("0x"))
+                        {
+                            writer.WriteLine($"{enumItemName} = {rawExpression.Text},");
+                        }
+                        else
+                        {
+                            string enumValueName = GetEnumItemName(cppEnum.Name, rawExpression.Text, enumNamePrefix);
+                            writer.WriteLine($"{enumItemName} = {enumValueName},");
+                        }
                     }
                     else if (enumItem.ValueExpression is CppLiteralExpression literalExpression)
                     {

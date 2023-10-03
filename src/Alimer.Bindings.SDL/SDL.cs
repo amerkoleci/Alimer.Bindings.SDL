@@ -34,6 +34,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using static SDL.SDL;
 using static SDL.SDL_bool;
 
 namespace SDL;
@@ -43,29 +44,6 @@ public enum SDL_bool
 {
     SDL_FALSE = 0,
     SDL_TRUE = 1
-}
-
-public enum SDL_HintPriority
-{
-    SDL_HINT_DEFAULT,
-    SDL_HINT_NORMAL,
-    SDL_HINT_OVERRIDE
-}
-
-public enum SDL_SYSWM_TYPE
-{
-    SDL_SYSWM_UNKNOWN,
-    SDL_SYSWM_ANDROID,
-    SDL_SYSWM_COCOA,
-    SDL_SYSWM_HAIKU,
-    SDL_SYSWM_KMSDRM,
-    SDL_SYSWM_RISCOS,
-    SDL_SYSWM_UIKIT,
-    SDL_SYSWM_VIVANTE,
-    SDL_SYSWM_WAYLAND,
-    SDL_SYSWM_WINDOWS,
-    SDL_SYSWM_WINRT,
-    SDL_SYSWM_X11
 }
 
 [Flags]
@@ -102,6 +80,32 @@ public enum SDL_BlendFactor
     SDL_BLENDFACTOR_ONE_MINUS_DST_ALPHA = 0xA
 }
 
+public enum SDL_HapticEffectType : ushort
+{
+    Constant = SDL_HAPTIC_CONSTANT,
+    Sine = SDL_HAPTIC_SINE,
+    LeftRight = SDL_HAPTIC_LEFTRIGHT,
+    Triangle = SDL_HAPTIC_TRIANGLE,
+    SawToothUp = SDL_HAPTIC_SAWTOOTHUP,
+    SawToothDown = SDL_HAPTIC_SAWTOOTHDOWN,
+    Spring = SDL_HAPTIC_SPRING,
+    Damper = SDL_HAPTIC_DAMPER,
+    Inertia = SDL_HAPTIC_INERTIA,
+    Friction = SDL_HAPTIC_FRICTION,
+    Custom = SDL_HAPTIC_CUSTOM,
+    Gain = SDL_HAPTIC_GAIN,
+    AutoCenter = SDL_HAPTIC_AUTOCENTER,
+    Status = SDL_HAPTIC_STATUS,
+    Pause = SDL_HAPTIC_PAUSE,
+}
+
+public enum SDL_HapticDirectionType : byte
+{
+    Polar = SDL_HAPTIC_POLAR,
+    Cartesian = SDL_HAPTIC_CARTESIAN,
+    Spherical = SDL_HAPTIC_SPHERICAL,
+    SteeringAxis = SDL_HAPTIC_STEERING_AXIS,
+}
 
 public enum SDL_WinRT_DeviceFamily
 {
@@ -228,325 +232,53 @@ public static unsafe partial class SDL
     #endregion
 
     #region SDL_hints.h
-
-    public const string SDL_HINT_FRAMEBUFFER_ACCELERATION =
-        "SDL_FRAMEBUFFER_ACCELERATION";
-    public const string SDL_HINT_RENDER_DRIVER =
-        "SDL_RENDER_DRIVER";
-    public const string SDL_HINT_RENDER_OPENGL_SHADERS =
-        "SDL_RENDER_OPENGL_SHADERS";
-    public const string SDL_HINT_RENDER_DIRECT3D_THREADSAFE =
-        "SDL_RENDER_DIRECT3D_THREADSAFE";
-    public const string SDL_HINT_RENDER_VSYNC =
-        "SDL_RENDER_VSYNC";
-    public const string SDL_HINT_VIDEO_X11_XRANDR =
-        "SDL_VIDEO_X11_XRANDR";
-    public const string SDL_HINT_GRAB_KEYBOARD =
-        "SDL_GRAB_KEYBOARD";
-    public const string SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS =
-        "SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS";
-    public const string SDL_HINT_ORIENTATIONS =
-        "SDL_IOS_ORIENTATIONS";
-    public const string SDL_HINT_XINPUT_ENABLED =
-        "SDL_XINPUT_ENABLED";
-
-    public const string SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS = "SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS";
-    public const string SDL_HINT_ALLOW_TOPMOST =
-        "SDL_ALLOW_TOPMOST";
-    public const string SDL_HINT_TIMER_RESOLUTION =
-        "SDL_TIMER_RESOLUTION";
-    public const string SDL_HINT_RENDER_SCALE_QUALITY =
-        "SDL_RENDER_SCALE_QUALITY";
-
-    /* Only available in SDL 2.0.2 or higher. */
-    public const string SDL_HINT_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK =
-        "SDL_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK";
-    public const string SDL_HINT_VIDEO_WIN_D3DCOMPILER =
-        "SDL_VIDEO_WIN_D3DCOMPILER";
-    public const string SDL_HINT_MOUSE_RELATIVE_MODE_WARP =
-        "SDL_MOUSE_RELATIVE_MODE_WARP";
-    public const string SDL_HINT_VIDEO_WINDOW_SHARE_PIXEL_FORMAT =
-        "SDL_VIDEO_WINDOW_SHARE_PIXEL_FORMAT";
-    public const string SDL_HINT_VIDEO_ALLOW_SCREENSAVER =
-        "SDL_VIDEO_ALLOW_SCREENSAVER";
-    public const string SDL_HINT_ACCELEROMETER_AS_JOYSTICK =
-        "SDL_ACCELEROMETER_AS_JOYSTICK";
-    public const string SDL_HINT_VIDEO_MAC_FULLSCREEN_SPACES =
-        "SDL_VIDEO_MAC_FULLSCREEN_SPACES";
-
-    /* Only available in SDL 2.0.3 or higher. */
-    public const string SDL_HINT_WINRT_PRIVACY_POLICY_URL =
-        "SDL_WINRT_PRIVACY_POLICY_URL";
-    public const string SDL_HINT_WINRT_PRIVACY_POLICY_LABEL =
-        "SDL_WINRT_PRIVACY_POLICY_LABEL";
-    public const string SDL_HINT_WINRT_HANDLE_BACK_BUTTON =
-        "SDL_WINRT_HANDLE_BACK_BUTTON";
-
-    /* Only available in SDL 2.0.4 or higher. */
-    public const string SDL_HINT_NO_SIGNAL_HANDLERS =
-        "SDL_NO_SIGNAL_HANDLERS";
-    public const string SDL_HINT_IME_INTERNAL_EDITING =
-        "SDL_IME_INTERNAL_EDITING";
-    public const string SDL_HINT_ANDROID_SEPARATE_MOUSE_AND_TOUCH =
-        "SDL_ANDROID_SEPARATE_MOUSE_AND_TOUCH";
-    public const string SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT =
-        "SDL_EMSCRIPTEN_KEYBOARD_ELEMENT";
-    public const string SDL_HINT_THREAD_STACK_SIZE =
-        "SDL_THREAD_STACK_SIZE";
-    public const string SDL_HINT_WINDOW_FRAME_USABLE_WHILE_CURSOR_HIDDEN =
-        "SDL_WINDOW_FRAME_USABLE_WHILE_CURSOR_HIDDEN";
-    public const string SDL_HINT_WINDOWS_ENABLE_MESSAGELOOP =
-        "SDL_WINDOWS_ENABLE_MESSAGELOOP";
-    public const string SDL_HINT_WINDOWS_NO_CLOSE_ON_ALT_F4 =
-        "SDL_WINDOWS_NO_CLOSE_ON_ALT_F4";
-    public const string SDL_HINT_XINPUT_USE_OLD_JOYSTICK_MAPPING =
-        "SDL_XINPUT_USE_OLD_JOYSTICK_MAPPING";
-    public const string SDL_HINT_MAC_BACKGROUND_APP =
-        "SDL_MAC_BACKGROUND_APP";
-    public const string SDL_HINT_VIDEO_X11_NET_WM_PING =
-        "SDL_VIDEO_X11_NET_WM_PING";
-    public const string SDL_HINT_ANDROID_APK_EXPANSION_MAIN_FILE_VERSION =
-        "SDL_ANDROID_APK_EXPANSION_MAIN_FILE_VERSION";
-    public const string SDL_HINT_ANDROID_APK_EXPANSION_PATCH_FILE_VERSION =
-        "SDL_ANDROID_APK_EXPANSION_PATCH_FILE_VERSION";
-
-    /* Only available in 2.0.5 or higher. */
-    public const string SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH =
-        "SDL_MOUSE_FOCUS_CLICKTHROUGH";
-    public const string SDL_HINT_BMP_SAVE_LEGACY_FORMAT =
-        "SDL_BMP_SAVE_LEGACY_FORMAT";
-    public const string SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING =
-        "SDL_WINDOWS_DISABLE_THREAD_NAMING";
-    public const string SDL_HINT_APPLE_TV_REMOTE_ALLOW_ROTATION =
-        "SDL_APPLE_TV_REMOTE_ALLOW_ROTATION";
-
-    /* Only available in 2.0.6 or higher. */
-    public const string SDL_HINT_AUDIO_RESAMPLING_MODE =
-        "SDL_AUDIO_RESAMPLING_MODE";
-    public const string SDL_HINT_MOUSE_NORMAL_SPEED_SCALE =
-        "SDL_MOUSE_NORMAL_SPEED_SCALE";
-    public const string SDL_HINT_MOUSE_RELATIVE_SPEED_SCALE =
-        "SDL_MOUSE_RELATIVE_SPEED_SCALE";
-    public const string SDL_HINT_TOUCH_MOUSE_EVENTS =
-        "SDL_TOUCH_MOUSE_EVENTS";
-    public const string SDL_HINT_WINDOWS_INTRESOURCE_ICON =
-        "SDL_WINDOWS_INTRESOURCE_ICON";
-    public const string SDL_HINT_WINDOWS_INTRESOURCE_ICON_SMALL =
-        "SDL_WINDOWS_INTRESOURCE_ICON_SMALL";
-
-    /* Only available in 2.0.8 or higher. */
-    public const string SDL_HINT_IOS_HIDE_HOME_INDICATOR =
-        "SDL_IOS_HIDE_HOME_INDICATOR";
-    public const string SDL_HINT_TV_REMOTE_AS_JOYSTICK =
-        "SDL_TV_REMOTE_AS_JOYSTICK";
-    public const string SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR =
-        "SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR";
-
-    /* Only available in 2.0.9 or higher. */
-    public const string SDL_HINT_MOUSE_DOUBLE_CLICK_TIME =
-        "SDL_MOUSE_DOUBLE_CLICK_TIME";
-    public const string SDL_HINT_MOUSE_DOUBLE_CLICK_RADIUS =
-        "SDL_MOUSE_DOUBLE_CLICK_RADIUS";
-    public const string SDL_HINT_JOYSTICK_HIDAPI =
-        "SDL_JOYSTICK_HIDAPI";
-    public const string SDL_HINT_JOYSTICK_HIDAPI_PS4 =
-        "SDL_JOYSTICK_HIDAPI_PS4";
-    public const string SDL_HINT_JOYSTICK_HIDAPI_PS4_RUMBLE =
-        "SDL_JOYSTICK_HIDAPI_PS4_RUMBLE";
-    public const string SDL_HINT_JOYSTICK_HIDAPI_STEAM =
-        "SDL_JOYSTICK_HIDAPI_STEAM";
-    public const string SDL_HINT_JOYSTICK_HIDAPI_SWITCH =
-        "SDL_JOYSTICK_HIDAPI_SWITCH";
-    public const string SDL_HINT_JOYSTICK_HIDAPI_XBOX =
-        "SDL_JOYSTICK_HIDAPI_XBOX";
-    public const string SDL_HINT_ENABLE_STEAM_CONTROLLERS =
-        "SDL_ENABLE_STEAM_CONTROLLERS";
-    public const string SDL_HINT_ANDROID_TRAP_BACK_BUTTON =
-        "SDL_ANDROID_TRAP_BACK_BUTTON";
-
-    /* Only available in 2.0.10 or higher. */
-    public const string SDL_HINT_MOUSE_TOUCH_EVENTS =
-        "SDL_MOUSE_TOUCH_EVENTS";
-    public const string SDL_HINT_GAMECONTROLLERCONFIG_FILE =
-        "SDL_GAMECONTROLLERCONFIG_FILE";
-    public const string SDL_HINT_ANDROID_BLOCK_ON_PAUSE =
-        "SDL_ANDROID_BLOCK_ON_PAUSE";
-    public const string SDL_HINT_RENDER_BATCHING =
-        "SDL_RENDER_BATCHING";
-    public const string SDL_HINT_EVENT_LOGGING =
-        "SDL_EVENT_LOGGING";
-    public const string SDL_HINT_WAVE_RIFF_CHUNK_SIZE =
-        "SDL_WAVE_RIFF_CHUNK_SIZE";
-    public const string SDL_HINT_WAVE_TRUNCATION =
-        "SDL_WAVE_TRUNCATION";
-    public const string SDL_HINT_WAVE_FACT_CHUNK =
-        "SDL_WAVE_FACT_CHUNK";
-
-    public const string SDL_HINT_VIDO_X11_WINDOW_VISUALID = "SDL_VIDEO_X11_WINDOW_VISUALID";
-    public const string SDL_HINT_VIDEO_EXTERNAL_CONTEXT = "SDL_VIDEO_EXTERNAL_CONTEXT";
-    public const string SDL_HINT_JOYSTICK_HIDAPI_GAMECUBE = "SDL_JOYSTICK_HIDAPI_GAMECUBE";
-    public const string SDL_HINT_DISPLAY_USABLE_BOUNDS = "SDL_DISPLAY_USABLE_BOUNDS";
-    public const string SDL_HINT_VIDEO_FORCE_EGL = "SDL_VIDEO_FORCE_EGL";
-    public const string SDL_HINT_GAMECONTROLLERTYPE = "SDL_GAMECONTROLLERTYPE";
-
-    /* Only available in 2.0.14 or higher. */
-    public const string SDL_HINT_JOYSTICK_HIDAPI_CORRELATE_XINPUT =
-        "SDL_JOYSTICK_HIDAPI_CORRELATE_XINPUT"; /* NOTE: This was removed in 2.0.16. */
-    public const string SDL_HINT_JOYSTICK_RAWINPUT =
-        "SDL_JOYSTICK_RAWINPUT";
-    public const string SDL_HINT_AUDIO_DEVICE_APP_NAME =
-        "SDL_AUDIO_DEVICE_APP_NAME";
-    public const string SDL_HINT_AUDIO_DEVICE_STREAM_NAME =
-        "SDL_AUDIO_DEVICE_STREAM_NAME";
-    public const string SDL_HINT_PREFERRED_LOCALES =
-        "SDL_PREFERRED_LOCALES";
-    public const string SDL_HINT_THREAD_PRIORITY_POLICY =
-        "SDL_THREAD_PRIORITY_POLICY";
-    public const string SDL_HINT_EMSCRIPTEN_ASYNCIFY =
-        "SDL_EMSCRIPTEN_ASYNCIFY";
-    public const string SDL_HINT_LINUX_JOYSTICK_DEADZONES =
-        "SDL_LINUX_JOYSTICK_DEADZONES";
-    public const string SDL_HINT_ANDROID_BLOCK_ON_PAUSE_PAUSEAUDIO =
-        "SDL_ANDROID_BLOCK_ON_PAUSE_PAUSEAUDIO";
-    public const string SDL_HINT_JOYSTICK_HIDAPI_PS5 =
-        "SDL_JOYSTICK_HIDAPI_PS5";
-    public const string SDL_HINT_THREAD_FORCE_REALTIME_TIME_CRITICAL =
-        "SDL_THREAD_FORCE_REALTIME_TIME_CRITICAL";
-    public const string SDL_HINT_JOYSTICK_THREAD =
-        "SDL_JOYSTICK_THREAD";
-    public const string SDL_HINT_AUTO_UPDATE_JOYSTICKS =
-        "SDL_AUTO_UPDATE_JOYSTICKS";
-    public const string SDL_HINT_AUTO_UPDATE_SENSORS =
-        "SDL_AUTO_UPDATE_SENSORS";
-    public const string SDL_HINT_JOYSTICK_HIDAPI_PS5_RUMBLE =
-        "SDL_JOYSTICK_HIDAPI_PS5_RUMBLE";
-
-    /* Only available in 2.0.16 or higher. */
-    public const string SDL_HINT_WINDOWS_FORCE_MUTEX_CRITICAL_SECTIONS =
-        "SDL_WINDOWS_FORCE_MUTEX_CRITICAL_SECTIONS";
-    public const string SDL_HINT_WINDOWS_FORCE_SEMAPHORE_KERNEL =
-        "SDL_WINDOWS_FORCE_SEMAPHORE_KERNEL";
-    public const string SDL_HINT_JOYSTICK_HIDAPI_PS5_PLAYER_LED =
-        "SDL_JOYSTICK_HIDAPI_PS5_PLAYER_LED";
-    public const string SDL_HINT_WINDOWS_USE_D3D9EX =
-        "SDL_WINDOWS_USE_D3D9EX";
-    public const string SDL_HINT_JOYSTICK_HIDAPI_JOY_CONS =
-        "SDL_JOYSTICK_HIDAPI_JOY_CONS";
-    public const string SDL_HINT_JOYSTICK_HIDAPI_STADIA =
-        "SDL_JOYSTICK_HIDAPI_STADIA";
-    public const string SDL_HINT_JOYSTICK_HIDAPI_SWITCH_HOME_LED =
-        "SDL_JOYSTICK_HIDAPI_SWITCH_HOME_LED";
-    public const string SDL_HINT_ALLOW_ALT_TAB_WHILE_GRABBED =
-        "SDL_ALLOW_ALT_TAB_WHILE_GRABBED";
-    public const string SDL_HINT_KMSDRM_REQUIRE_DRM_MASTER =
-        "SDL_KMSDRM_REQUIRE_DRM_MASTER";
-    public const string SDL_HINT_AUDIO_DEVICE_STREAM_ROLE =
-        "SDL_AUDIO_DEVICE_STREAM_ROLE";
-    public const string SDL_HINT_X11_FORCE_OVERRIDE_REDIRECT =
-        "SDL_X11_FORCE_OVERRIDE_REDIRECT";
-    public const string SDL_HINT_JOYSTICK_HIDAPI_LUNA =
-        "SDL_JOYSTICK_HIDAPI_LUNA";
-    public const string SDL_HINT_JOYSTICK_RAWINPUT_CORRELATE_XINPUT =
-        "SDL_JOYSTICK_RAWINPUT_CORRELATE_XINPUT";
-    public const string SDL_HINT_AUDIO_INCLUDE_MONITORS =
-        "SDL_AUDIO_INCLUDE_MONITORS";
-    public const string SDL_HINT_VIDEO_WAYLAND_ALLOW_LIBDECOR =
-        "SDL_VIDEO_WAYLAND_ALLOW_LIBDECOR";
-
-    /* Only available in 2.0.18 or higher. */
-    public const string SDL_HINT_VIDEO_EGL_ALLOW_TRANSPARENCY = "SDL_VIDEO_EGL_ALLOW_TRANSPARENCY";
-    public const string SDL_HINT_APP_NAME = "SDL_APP_NAME";
-    public const string SDL_HINT_SCREENSAVER_INHIBIT_ACTIVITY_NAME = "SDL_SCREENSAVER_INHIBIT_ACTIVITY_NAME";
-    public const string SDL_HINT_IME_SHOW_UI = "SDL_IME_SHOW_UI";
-    public const string SDL_HINT_WINDOW_NO_ACTIVATION_WHEN_SHOWN = "SDL_WINDOW_NO_ACTIVATION_WHEN_SHOWN";
-    public const string SDL_HINT_POLL_SENTINEL = "SDL_POLL_SENTINEL";
-    public const string SDL_HINT_JOYSTICK_DEVICE = "SDL_JOYSTICK_DEVICE";
-    public const string SDL_HINT_LINUX_JOYSTICK_CLASSIC = "SDL_LINUX_JOYSTICK_CLASSIC";
-
-    /* Only available in 2.0.20 or higher. */
-    public const string SDL_HINT_RENDER_LINE_METHOD =
-        "SDL_RENDER_LINE_METHOD";
-
-    /* Only available in 2.0.22 or higher. */
-    public const string SDL_HINT_FORCE_RAISEWINDOW =
-        "SDL_HINT_FORCE_RAISEWINDOW";
-    public const string SDL_HINT_IME_SUPPORT_EXTENDED_TEXT =
-        "SDL_IME_SUPPORT_EXTENDED_TEXT";
-    public const string SDL_HINT_JOYSTICK_GAMECUBE_RUMBLE_BRAKE =
-        "SDL_JOYSTICK_GAMECUBE_RUMBLE_BRAKE";
-    public const string SDL_HINT_JOYSTICK_ROG_CHAKRAM =
-        "SDL_JOYSTICK_ROG_CHAKRAM";
-    public const string SDL_HINT_MOUSE_RELATIVE_MODE_CENTER =
-        "SDL_MOUSE_RELATIVE_MODE_CENTER";
-    public const string SDL_HINT_MOUSE_AUTO_CAPTURE =
-        "SDL_MOUSE_AUTO_CAPTURE";
-    public const string SDL_HINT_VITA_TOUCH_MOUSE_DEVICE =
-        "SDL_HINT_VITA_TOUCH_MOUSE_DEVICE";
-    public const string SDL_HINT_VIDEO_WAYLAND_PREFER_LIBDECOR =
-        "SDL_VIDEO_WAYLAND_PREFER_LIBDECOR";
-    public const string SDL_HINT_VIDEO_FOREIGN_WINDOW_OPENGL =
-        "SDL_VIDEO_FOREIGN_WINDOW_OPENGL";
-    public const string SDL_HINT_VIDEO_FOREIGN_WINDOW_VULKAN =
-        "SDL_VIDEO_FOREIGN_WINDOW_VULKAN";
-    public const string SDL_HINT_X11_WINDOW_TYPE =
-        "SDL_X11_WINDOW_TYPE";
-    public const string SDL_HINT_QUIT_ON_LAST_WINDOW_CLOSE =
-        "SDL_QUIT_ON_LAST_WINDOW_CLOSE";
-
-    public const string SDL_HINT_VIDEO_DRIVER = "SDL_VIDEO_DRIVER";
-    public const string SDL_HINT_AUDIO_DRIVER = "SDL_AUDIO_DRIVER";
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_ClearHints();
-
-    [DllImport(LibName, EntryPoint = "SDL_GetHint", CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetHint(byte* name);
-
-    [DllImport(LibName, EntryPoint = "SDL_SetHint", CallingConvention = CallingConvention.Cdecl)]
-    private static extern SDL_bool INTERNAL_SDL_SetHint(byte* name, byte* value);
-
-    [DllImport(LibName, EntryPoint = "SDL_SetHintWithPriority", CallingConvention = CallingConvention.Cdecl)]
-    private static extern SDL_bool INTERNAL_SDL_SetHintWithPriority(byte* name, byte* value, SDL_HintPriority priority);
-
-    public static string SDL_GetHint(string name)
+    public static SDL_bool SDL_SetHint(ReadOnlySpan<sbyte> name, ReadOnlySpan<sbyte> value)
     {
-        int utf8NameBufSize = Utf8Size(name);
-        byte* utf8Name = stackalloc byte[utf8NameBufSize];
-        return GetString(INTERNAL_SDL_GetHint(Utf8Encode(name, utf8Name, utf8NameBufSize)));
+        fixed (sbyte* pName = name)
+        {
+            fixed (sbyte* pValue = value)
+            {
+                return SDL_SetHint(pName, pValue);
+            }
+        }
     }
 
-    public static bool SDL_SetHint(string name, bool value)
+    public static SDL_bool SDL_SetHint(string name, string value)
     {
-        return SDL_SetHint(name, value ? "1" : "0");
+        fixed (sbyte* pName = name.GetUtf8Span())
+        {
+            fixed (sbyte* pValue = value.GetUtf8Span())
+            {
+                return SDL_SetHint(pName, pValue);
+            }
+        }
     }
 
-    public static bool SDL_SetHint(string name, string value)
+    public static SDL_bool SDL_SetHintWithPriority(ReadOnlySpan<sbyte> name, ReadOnlySpan<sbyte> value, SDL_HintPriority priority)
     {
-        int utf8NameBufSize = Utf8Size(name);
-        byte* utf8Name = stackalloc byte[utf8NameBufSize];
-
-        int utf8ValueBufSize = Utf8Size(value);
-        byte* utf8Value = stackalloc byte[utf8ValueBufSize];
-
-        return INTERNAL_SDL_SetHint(Utf8Encode(
-            name, utf8Name, utf8NameBufSize),
-            Utf8Encode(value, utf8Value, utf8ValueBufSize)
-            ) == SDL_bool.SDL_TRUE;
+        fixed (sbyte* pName = name)
+        {
+            fixed (sbyte* pValue = value)
+            {
+                return SDL_SetHintWithPriority(pName, pValue, priority);
+            }
+        }
     }
 
     public static SDL_bool SDL_SetHintWithPriority(string name, string value, SDL_HintPriority priority)
     {
-        int utf8NameBufSize = Utf8Size(name);
-        byte* utf8Name = stackalloc byte[utf8NameBufSize];
+        fixed (sbyte* pName = name.GetUtf8Span())
+        {
+            fixed (sbyte* pValue = value.GetUtf8Span())
+            {
+                return SDL_SetHintWithPriority(pName, pValue, priority);
+            }
+        }
+    }
 
-        int utf8ValueBufSize = Utf8Size(value);
-        byte* utf8Value = stackalloc byte[utf8ValueBufSize];
-
-        return INTERNAL_SDL_SetHintWithPriority(
-            Utf8Encode(name, utf8Name, utf8NameBufSize),
-            Utf8Encode(value, utf8Value, utf8ValueBufSize),
-            priority
-        );
+    public static SDL_bool SDL_SetHint(string name, bool value)
+    {
+        return SDL_SetHint(name, value ? "1" : "0");
     }
     #endregion
 
@@ -939,125 +671,8 @@ public static unsafe partial class SDL
     #endregion
 
     #region SDL_syswm.h
-
-    // FIXME: I wish these weren't public...
-    [StructLayout(LayoutKind.Sequential)]
-    public struct INTERNAL_windows_wminfo
-    {
-        public nint window; // Refers to an HWND
-        public nint hdc; // Refers to an HDC
-        public nint hinstance; // Refers to an HINSTANCE
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct INTERNAL_winrt_wminfo
-    {
-        public nint window; // Refers to an IInspectable*
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct INTERNAL_x11_wminfo
-    {
-        public nint display; // Refers to a Display*
-        public int screen;
-        public nint window; // Refers to a Window (XID, use ToInt64!)
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct INTERNAL_cocoa_wminfo
-    {
-        public IntPtr window; // Refers to an NSWindow*
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct INTERNAL_uikit_wminfo
-    {
-        public nint window; // Refers to a UIWindow*
-        public uint framebuffer;
-        public uint colorbuffer;
-        public uint resolveFramebuffer;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct INTERNAL_wayland_wminfo
-    {
-        public nint display; // Refers to a wl_display*
-        public nint surface; // Refers to a wl_surface*
-        public nint egl_window; // Refers to an egl_window*, requires >= 2.0.16
-        public nint xdg_surface; // Refers to an xdg_surface*, requires >= 2.0.16
-        public nint xdg_toplevel; // Referes to an xdg_toplevel*, requires >= 2.0.18
-        public nint xdg_popup;
-        public nint xdg_positioner;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct INTERNAL_android_wminfo
-    {
-        public nint window; // Refers to an ANativeWindow
-        public nint surface; // Refers to an EGLSurface
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct INTERNAL_vivante_wminfo
-    {
-        public IntPtr display; // Refers to an EGLNativeDisplayType
-        public IntPtr window; // Refers to an EGLNativeWindowType
-    }
-
-    /* Only available in 2.0.16 or higher. */
-    [StructLayout(LayoutKind.Sequential)]
-    public struct INTERNAL_kmsdrm_wminfo
-    {
-        int dev_index;
-        int drm_fd;
-        IntPtr gbm_dev; // Refers to a gbm_device*
-    }
-
-    [StructLayout(LayoutKind.Explicit)]
-    public struct INTERNAL_SysWMDriverUnion
-    {
-        [FieldOffset(0)]
-        public INTERNAL_windows_wminfo win;
-        [FieldOffset(0)]
-        public INTERNAL_winrt_wminfo winrt;
-        [FieldOffset(0)]
-        public INTERNAL_x11_wminfo x11;
-        [FieldOffset(0)]
-        public INTERNAL_cocoa_wminfo cocoa;
-        [FieldOffset(0)]
-        public INTERNAL_uikit_wminfo uikit;
-        [FieldOffset(0)]
-        public INTERNAL_wayland_wminfo wl;
-        [FieldOffset(0)]
-        public INTERNAL_android_wminfo android;
-        [FieldOffset(0)]
-        public INTERNAL_vivante_wminfo vivante;
-        [FieldOffset(0)]
-        public INTERNAL_kmsdrm_wminfo ksmdrm;
-
-        //[FieldOffset(0)]
-        //private fixed IntPtr* dummy_ptrs[14];
-        [FieldOffset(0)]
-        private fixed ulong dummy_ints[14];
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct SDL_SysWMinfo
-    {
-        public uint version;
-        public SDL_SYSWM_TYPE subsystem;
-
-        private fixed uint padding[2];
-
-        public INTERNAL_SysWMDriverUnion info;
-    }
-
-    public const int SDL_SYSWM_CURRENT_VERSION = 1;
-    public static readonly int SDL_SYSWM_INFO_SIZE_V1 = (16 * (sizeof(void*) >= 8 ? sizeof(void*) : sizeof(ushort)));
+    public static readonly int SDL_SYSWM_INFO_SIZE_V1 = (16 * (sizeof(void*) >= 8 ? sizeof(void*) : sizeof(ulong)));
     public static readonly int SDL_SYSWM_CURRENT_INFO_SIZE = SDL_SYSWM_INFO_SIZE_V1;
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetWindowWMInfo(SDL_Window window, SDL_SysWMinfo* info, uint version = SDL_SYSWM_CURRENT_VERSION);
     #endregion
 
     #region SDL_stdinc.h
@@ -1073,61 +688,23 @@ public static unsafe partial class SDL
 
     #region SDL_events.h
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_PeepEvents(SDL_Event* events, int numevents, SDL_eventaction action, SDL_EventType minType, SDL_EventType maxType);
+    //[DllImport(LibName, EntryPoint = nameof(SDL_GetEventFilter), CallingConvention = CallingConvention.Cdecl)]
+    //private static extern SDL_bool SDL_GetEventFilter(out nint filter, out nint userdata);
 
-    /// <summary>
-    /// Checks to see if certain events are in the event queue
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_HasEvent(SDL_EventType type);
+    //public static bool SDL_GetEventFilter(out SDL_EventFilter? filter, out nint userdata)
+    //{
+    //    bool retVal = SDL_GetEventFilter(out nint result, out userdata) == SDL_TRUE;
+    //    if (result != 0)
+    //    {
+    //        filter = Marshal.GetDelegateForFunctionPointer<SDL_EventFilter>(result);
+    //    }
+    //    else
+    //    {
+    //        filter = null;
+    //    }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_HasEvents(
-            SDL_EventType minType,
-            SDL_EventType maxType
-        );
-
-    /// <summary>
-    /// Clears events from the event queue
-    /// </summary>
-    /// <param name="type"></param>
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_FlushEvent(SDL_EventType type);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_FlushEvents(SDL_EventType min, SDL_EventType max);
-
-
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetEventFilter), CallingConvention = CallingConvention.Cdecl)]
-    private static extern SDL_bool SDL_GetEventFilter(out nint filter, out nint userdata);
-
-    public static bool SDL_GetEventFilter(out SDL_EventFilter? filter, out nint userdata)
-    {
-        bool retVal = SDL_GetEventFilter(out nint result, out userdata) == SDL_TRUE;
-        if (result != 0)
-        {
-            filter = Marshal.GetDelegateForFunctionPointer<SDL_EventFilter>(result);
-        }
-        else
-        {
-            filter = null;
-        }
-
-        return retVal;
-    }
-
-    public static void SDL_SetEventEnabled(SDL_EventType type, SDL_bool state)
-    {
-        SDL_SetEventEnabled((uint)type, state);
-    }
-
-    public static SDL_bool SDL_EventEnabled(SDL_EventType type)
-    {
-        return SDL_EventEnabled((uint)type);
-    }
+    //    return retVal;
+    //}
     #endregion
 
     #region SDL_keycode.h
@@ -1214,316 +791,15 @@ public static unsafe partial class SDL
     public const byte SDL_HAPTIC_POLAR = 0;
     public const byte SDL_HAPTIC_CARTESIAN = 1;
     public const byte SDL_HAPTIC_SPHERICAL = 2;
-    public const byte SDL_HAPTIC_STEERING_AXIS = 3; /* Requires >= 2.0.14 */
+    public const byte SDL_HAPTIC_STEERING_AXIS = 3;
 
     /* SDL_HapticRunEffect */
     public const uint SDL_HAPTIC_INFINITY = 4294967295U;
 
-    [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct SDL_HapticDirection
+    public static string SDL_HapticNameString(int device_index)
     {
-        public byte type;
-        public fixed int dir[3];
+        return GetStringOrEmpty(SDL_HapticName(device_index));
     }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct SDL_HapticConstant
-    {
-        // Header
-        public ushort type;
-        public SDL_HapticDirection direction;
-        // Replay
-        public uint length;
-        public ushort delay;
-        // Trigger
-        public ushort button;
-        public ushort interval;
-        // Constant
-        public short level;
-        // Envelope
-        public ushort attack_length;
-        public ushort attack_level;
-        public ushort fade_length;
-        public ushort fade_level;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct SDL_HapticPeriodic
-    {
-        // Header
-        public ushort type;
-        public SDL_HapticDirection direction;
-        // Replay
-        public uint length;
-        public ushort delay;
-        // Trigger
-        public ushort button;
-        public ushort interval;
-        // Periodic
-        public ushort period;
-        public short magnitude;
-        public short offset;
-        public ushort phase;
-        // Envelope
-        public ushort attack_length;
-        public ushort attack_level;
-        public ushort fade_length;
-        public ushort fade_level;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct SDL_HapticCondition
-    {
-        // Header
-        public ushort type;
-        public SDL_HapticDirection direction;
-        // Replay
-        public uint length;
-        public ushort delay;
-        // Trigger
-        public ushort button;
-        public ushort interval;
-        // Condition
-        public fixed ushort right_sat[3];
-        public fixed ushort left_sat[3];
-        public fixed short right_coeff[3];
-        public fixed short left_coeff[3];
-        public fixed ushort deadband[3];
-        public fixed short center[3];
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct SDL_HapticRamp
-    {
-        // Header
-        public ushort type;
-        public SDL_HapticDirection direction;
-        // Replay
-        public uint length;
-        public ushort delay;
-        // Trigger
-        public ushort button;
-        public ushort interval;
-        // Ramp
-        public short start;
-        public short end;
-        // Envelope
-        public ushort attack_length;
-        public ushort attack_level;
-        public ushort fade_length;
-        public ushort fade_level;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct SDL_HapticLeftRight
-    {
-        // Header
-        public ushort type;
-        // Replay
-        public uint length;
-        // Rumble
-        public ushort large_magnitude;
-        public ushort small_magnitude;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct SDL_HapticCustom
-    {
-        // Header
-        public ushort type;
-        public SDL_HapticDirection direction;
-        // Replay
-        public uint length;
-        public ushort delay;
-        // Trigger
-        public ushort button;
-        public ushort interval;
-        // Custom
-        public byte channels;
-        public ushort period;
-        public ushort samples;
-        public IntPtr data; // Uint16*
-                            // Envelope
-        public ushort attack_length;
-        public ushort attack_level;
-        public ushort fade_length;
-        public ushort fade_level;
-    }
-
-    [StructLayout(LayoutKind.Explicit)]
-    public struct SDL_HapticEffect
-    {
-        [FieldOffset(0)]
-        public ushort type;
-        [FieldOffset(0)]
-        public SDL_HapticConstant constant;
-        [FieldOffset(0)]
-        public SDL_HapticPeriodic periodic;
-        [FieldOffset(0)]
-        public SDL_HapticCondition condition;
-        [FieldOffset(0)]
-        public SDL_HapticRamp ramp;
-        [FieldOffset(0)]
-        public SDL_HapticLeftRight leftright;
-        [FieldOffset(0)]
-        public SDL_HapticCustom custom;
-    }
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_HapticClose(IntPtr haptic);
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_HapticDestroyEffect(
-        IntPtr haptic,
-        int effect
-    );
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_HapticEffectSupported(
-        IntPtr haptic,
-        ref SDL_HapticEffect effect
-    );
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_HapticGetEffectStatus(
-        IntPtr haptic,
-        int effect
-    );
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_HapticIndex(IntPtr haptic);
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, EntryPoint = "SDL_HapticName", CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_HapticName(int device_index);
-    public static string SDL_HapticName(int device_index)
-    {
-        return GetString(INTERNAL_SDL_HapticName(device_index));
-    }
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_HapticNewEffect(
-        IntPtr haptic,
-        ref SDL_HapticEffect effect
-    );
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_HapticNumAxes(IntPtr haptic);
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_HapticNumEffects(IntPtr haptic);
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_HapticNumEffectsPlaying(IntPtr haptic);
-
-    /* IntPtr refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr SDL_HapticOpen(int device_index);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_HapticOpened(int device_index);
-
-    /* IntPtr refers to an SDL_Haptic*, joystick to an SDL_Joystick* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr SDL_HapticOpenFromJoystick(
-        IntPtr joystick
-    );
-
-    /* IntPtr refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr SDL_HapticOpenFromMouse();
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_HapticPause(IntPtr haptic);
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern uint SDL_HapticQuery(IntPtr haptic);
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_HapticRumbleInit(IntPtr haptic);
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_HapticRumblePlay(
-        IntPtr haptic,
-        float strength,
-        uint length
-    );
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_HapticRumbleStop(IntPtr haptic);
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_HapticRumbleSupported(IntPtr haptic);
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_HapticRunEffect(
-        IntPtr haptic,
-        int effect,
-        uint iterations
-    );
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_HapticSetAutocenter(
-        IntPtr haptic,
-        int autocenter
-    );
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_HapticSetGain(
-        IntPtr haptic,
-        int gain
-    );
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_HapticStopAll(IntPtr haptic);
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_HapticStopEffect(
-        IntPtr haptic,
-        int effect
-    );
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_HapticUnpause(IntPtr haptic);
-
-    /* haptic refers to an SDL_Haptic* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_HapticUpdateEffect(
-        IntPtr haptic,
-        int effect,
-        ref SDL_HapticEffect data
-    );
-
-    /* joystick refers to an SDL_Joystick* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_JoystickIsHaptic(IntPtr joystick);
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_MouseIsHaptic();
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_NumHaptics();
     #endregion
 
     #region SDL_timer.h

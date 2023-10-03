@@ -464,7 +464,7 @@ public partial struct SDL_SysWMEvent
 {
 	public uint type;
 	public ulong timestamp;
-	public nint msg;
+	public unsafe SDL_SysWMmsg* msg;
 }
 
 [StructLayout(LayoutKind.Explicit)]
@@ -477,7 +477,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_common
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 	}
 	[FieldOffset(0)]
@@ -485,7 +485,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_display
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_DisplayID displayID;
 		public int data1;
@@ -495,7 +495,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_window
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_WindowID windowID;
 		public int data1;
@@ -506,7 +506,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_key
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_WindowID windowID;
 		public byte state;
@@ -528,7 +528,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_edit
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_WindowID windowID;
 		public unsafe fixed sbyte text[32];
@@ -540,7 +540,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_editExt
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_WindowID windowID;
 		public unsafe sbyte* text;
@@ -552,7 +552,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_text
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_WindowID windowID;
 		public unsafe fixed sbyte text[32];
@@ -562,7 +562,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_motion
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_WindowID windowID;
 		public SDL_MouseID which;
@@ -577,7 +577,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_button
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_WindowID windowID;
 		public SDL_MouseID which;
@@ -593,7 +593,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_wheel
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_WindowID windowID;
 		public SDL_MouseID which;
@@ -608,7 +608,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_jaxis
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_JoystickID which;
 		public byte axis;
@@ -623,7 +623,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_jhat
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_JoystickID which;
 		public byte hat;
@@ -636,7 +636,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_jbutton
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_JoystickID which;
 		public byte button;
@@ -649,7 +649,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_jdevice
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_JoystickID which;
 	}
@@ -658,7 +658,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_jbattery
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_JoystickID which;
 		public SDL_JoystickPowerLevel level;
@@ -668,7 +668,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_gaxis
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_JoystickID which;
 		public byte axis;
@@ -683,7 +683,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_gbutton
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_JoystickID which;
 		public byte button;
@@ -696,7 +696,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_gdevice
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_JoystickID which;
 	}
@@ -705,7 +705,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_gtouchpad
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_JoystickID which;
 		public int touchpad;
@@ -719,7 +719,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_gsensor
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_JoystickID which;
 		public int sensor;
@@ -731,7 +731,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_adevice
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_AudioDeviceID which;
 		public byte iscapture;
@@ -744,7 +744,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_sensor
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_SensorID which;
 		public unsafe fixed float data[6];
@@ -755,7 +755,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_quit
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 	}
 	[FieldOffset(0)]
@@ -763,7 +763,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_user
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_WindowID windowID;
 		public int code;
@@ -775,16 +775,16 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_syswm
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
-		public nint msg;
+		public unsafe SDL_SysWMmsg* msg;
 	}
 	[FieldOffset(0)]
 	public SDL_Event_tfinger tfinger;
 	
 	public partial struct SDL_Event_tfinger
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_TouchID touchId;
 		public SDL_FingerID fingerId;
@@ -800,7 +800,7 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_drop
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 		public unsafe sbyte* file;
 		public SDL_WindowID windowID;
@@ -812,10 +812,363 @@ public partial struct SDL_Event
 	
 	public partial struct SDL_Event_clipboard
 	{
-		public uint type;
+		public SDL_EventType type;
 		public ulong timestamp;
 	}
 	[FieldOffset(0)]
-    public unsafe fixed byte padding[128];
+	public unsafe fixed byte padding[128];
+}
+
+public partial struct SDL_SysWMmsg
+{
+	public uint version;
+	public uint subsystem;
+	public unsafe fixed uint padding[2];
+	public SDL_SysWMmsg_msg msg;
+	
+	[StructLayout(LayoutKind.Explicit)]
+	public partial struct SDL_SysWMmsg_msg
+	{
+		[FieldOffset(0)]
+		public SDL_SysWMmsg_win win;
+		
+		public partial struct SDL_SysWMmsg_win
+		{
+			public nint hwnd;
+			public uint msg;
+			public nuint wParam;
+			public nint lParam;
+		}
+		[FieldOffset(0)]
+		public int dummy;
+	}
+}
+
+public partial struct SDL_SysWMinfo
+{
+	public uint version;
+	public uint subsystem;
+	public unsafe fixed uint padding[2];
+	public SDL_SysWMinfo_info info;
+	
+	[StructLayout(LayoutKind.Explicit)]
+	public partial struct SDL_SysWMinfo_info
+	{
+		[FieldOffset(0)]
+		public SDL_SysWMinfo_win win;
+		
+		public partial struct SDL_SysWMinfo_win
+		{
+			public nint window;
+			public nint hdc;
+			public nint hinstance;
+		}
+		[FieldOffset(0)]
+		public dummy_ptrs__FixedBuffer dummy_ptrs;
+
+		public unsafe struct dummy_ptrs__FixedBuffer
+		{
+			public nint e0;
+			public nint e1;
+			public nint e2;
+			public nint e3;
+			public nint e4;
+			public nint e5;
+			public nint e6;
+			public nint e7;
+			public nint e8;
+			public nint e9;
+			public nint e10;
+			public nint e11;
+			public nint e12;
+			public nint e13;
+
+			[UnscopedRef]
+			public ref nint this[int index]
+			{
+				[MethodImpl(MethodImplOptions.AggressiveInlining)]
+				get
+				{
+					return ref AsSpan()[index];
+				}
+			}
+
+			[UnscopedRef]
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			public Span<nint> AsSpan()
+			{
+				return MemoryMarshal.CreateSpan(ref e0, 14);
+			}
+		}
+		[FieldOffset(0)]
+		public unsafe fixed ulong dummy_ints[14];
+	}
+}
+
+public partial struct SDL_HapticDirection
+{
+	public SDL_HapticDirectionType type;
+	public unsafe fixed int dir[3];
+}
+
+public partial struct SDL_HapticConstant
+{
+	public ushort type;
+	public SDL_HapticConstant_direction direction;
+	
+	public partial struct SDL_HapticConstant_direction
+	{
+		public byte type;
+		public unsafe fixed int dir[3];
+	}
+	public uint length;
+	public ushort delay;
+	public ushort button;
+	public ushort interval;
+	public short level;
+	public ushort attack_length;
+	public ushort attack_level;
+	public ushort fade_length;
+	public ushort fade_level;
+}
+
+public partial struct SDL_HapticPeriodic
+{
+	public ushort type;
+	public SDL_HapticPeriodic_direction direction;
+	
+	public partial struct SDL_HapticPeriodic_direction
+	{
+		public byte type;
+		public unsafe fixed int dir[3];
+	}
+	public uint length;
+	public ushort delay;
+	public ushort button;
+	public ushort interval;
+	public ushort period;
+	public short magnitude;
+	public short offset;
+	public ushort phase;
+	public ushort attack_length;
+	public ushort attack_level;
+	public ushort fade_length;
+	public ushort fade_level;
+}
+
+public partial struct SDL_HapticCondition
+{
+	public ushort type;
+	public SDL_HapticCondition_direction direction;
+	
+	public partial struct SDL_HapticCondition_direction
+	{
+		public byte type;
+		public unsafe fixed int dir[3];
+	}
+	public uint length;
+	public ushort delay;
+	public ushort button;
+	public ushort interval;
+	public unsafe fixed ushort right_sat[3];
+	public unsafe fixed ushort left_sat[3];
+	public unsafe fixed short right_coeff[3];
+	public unsafe fixed short left_coeff[3];
+	public unsafe fixed ushort deadband[3];
+	public unsafe fixed short center[3];
+}
+
+public partial struct SDL_HapticRamp
+{
+	public ushort type;
+	public SDL_HapticRamp_direction direction;
+	
+	public partial struct SDL_HapticRamp_direction
+	{
+		public byte type;
+		public unsafe fixed int dir[3];
+	}
+	public uint length;
+	public ushort delay;
+	public ushort button;
+	public ushort interval;
+	public short start;
+	public short end;
+	public ushort attack_length;
+	public ushort attack_level;
+	public ushort fade_length;
+	public ushort fade_level;
+}
+
+public partial struct SDL_HapticLeftRight
+{
+	public ushort type;
+	public uint length;
+	public ushort large_magnitude;
+	public ushort small_magnitude;
+}
+
+public partial struct SDL_HapticCustom
+{
+	public ushort type;
+	public SDL_HapticCustom_direction direction;
+	
+	public partial struct SDL_HapticCustom_direction
+	{
+		public byte type;
+		public unsafe fixed int dir[3];
+	}
+	public uint length;
+	public ushort delay;
+	public ushort button;
+	public ushort interval;
+	public byte channels;
+	public ushort period;
+	public ushort samples;
+	public unsafe ushort* data;
+	public ushort attack_length;
+	public ushort attack_level;
+	public ushort fade_length;
+	public ushort fade_level;
+}
+
+[StructLayout(LayoutKind.Explicit)]
+public partial struct SDL_HapticEffect
+{
+	[FieldOffset(0)]
+	public SDL_HapticEffectType type;
+	[FieldOffset(0)]
+	public SDL_HapticEffect_constant constant;
+	
+	public partial struct SDL_HapticEffect_constant
+	{
+		public SDL_HapticEffectType type;
+		public SDL_HapticConstant_direction direction;
+		
+		public partial struct SDL_HapticConstant_direction
+		{
+			public byte type;
+			public unsafe fixed int dir[3];
+		}
+		public uint length;
+		public ushort delay;
+		public ushort button;
+		public ushort interval;
+		public short level;
+		public ushort attack_length;
+		public ushort attack_level;
+		public ushort fade_length;
+		public ushort fade_level;
+	}
+	[FieldOffset(0)]
+	public SDL_HapticEffect_periodic periodic;
+	
+	public partial struct SDL_HapticEffect_periodic
+	{
+		public SDL_HapticEffectType type;
+		public SDL_HapticPeriodic_direction direction;
+		
+		public partial struct SDL_HapticPeriodic_direction
+		{
+			public byte type;
+			public unsafe fixed int dir[3];
+		}
+		public uint length;
+		public ushort delay;
+		public ushort button;
+		public ushort interval;
+		public ushort period;
+		public short magnitude;
+		public short offset;
+		public ushort phase;
+		public ushort attack_length;
+		public ushort attack_level;
+		public ushort fade_length;
+		public ushort fade_level;
+	}
+	[FieldOffset(0)]
+	public SDL_HapticEffect_condition condition;
+	
+	public partial struct SDL_HapticEffect_condition
+	{
+		public SDL_HapticEffectType type;
+		public SDL_HapticCondition_direction direction;
+		
+		public partial struct SDL_HapticCondition_direction
+		{
+			public byte type;
+			public unsafe fixed int dir[3];
+		}
+		public uint length;
+		public ushort delay;
+		public ushort button;
+		public ushort interval;
+		public unsafe fixed ushort right_sat[3];
+		public unsafe fixed ushort left_sat[3];
+		public unsafe fixed short right_coeff[3];
+		public unsafe fixed short left_coeff[3];
+		public unsafe fixed ushort deadband[3];
+		public unsafe fixed short center[3];
+	}
+	[FieldOffset(0)]
+	public SDL_HapticEffect_ramp ramp;
+	
+	public partial struct SDL_HapticEffect_ramp
+	{
+		public SDL_HapticEffectType type;
+		public SDL_HapticRamp_direction direction;
+		
+		public partial struct SDL_HapticRamp_direction
+		{
+			public byte type;
+			public unsafe fixed int dir[3];
+		}
+		public uint length;
+		public ushort delay;
+		public ushort button;
+		public ushort interval;
+		public short start;
+		public short end;
+		public ushort attack_length;
+		public ushort attack_level;
+		public ushort fade_length;
+		public ushort fade_level;
+	}
+	[FieldOffset(0)]
+	public SDL_HapticEffect_leftright leftright;
+	
+	public partial struct SDL_HapticEffect_leftright
+	{
+		public SDL_HapticEffectType type;
+		public uint length;
+		public ushort large_magnitude;
+		public ushort small_magnitude;
+	}
+	[FieldOffset(0)]
+	public SDL_HapticEffect_custom custom;
+	
+	public partial struct SDL_HapticEffect_custom
+	{
+		public SDL_HapticEffectType type;
+		public SDL_HapticCustom_direction direction;
+		
+		public partial struct SDL_HapticCustom_direction
+		{
+			public byte type;
+			public unsafe fixed int dir[3];
+		}
+		public uint length;
+		public ushort delay;
+		public ushort button;
+		public ushort interval;
+		public byte channels;
+		public ushort period;
+		public ushort samples;
+		public unsafe ushort* data;
+		public ushort attack_length;
+		public ushort attack_level;
+		public ushort fade_length;
+		public ushort fade_level;
+	}
 }
 

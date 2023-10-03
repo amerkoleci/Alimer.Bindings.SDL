@@ -49,7 +49,12 @@ public static partial class CsCodeGenerator
         { "SDL_EGLConfig", "nint" },
         { "SDL_EGLSurface", "nint" },
         { "SDL_MetalView", "nint" },
-        { "SDL_SysWMmsg", "nint" },
+        { "HWND", "nint" },
+        { "HDC", "nint" },
+        { "HINSTANCE", "nint" },
+        { "UINT", "uint" },
+        { "WPARAM", "nuint" },
+        { "LPARAM", "nint" },
     };
 
     private static readonly HashSet<string> s_knownTypes = new(StringComparer.OrdinalIgnoreCase)
@@ -61,6 +66,7 @@ public static partial class CsCodeGenerator
         "SDL_Renderer",
         "SDL_Sensor",
         "SDL_AudioStream",
+        "SDL_Haptic",
     };
 
     private static CsCodeGeneratorOptions s_options = new();

@@ -65,11 +65,25 @@ public static partial class CsCodeGenerator
         string visibility = s_options.PublicVisiblity ? "public" : "internal";
         bool isUnion = @struct.ClassKind == CppClassKind.Union;
         bool isReadOnly = false;
+        string typeName = string.Empty; ;
+        if (structName.StartsWith("SDL_Event"))
+        {
+            typeName = "SDL_EventType";
+        }
+        else if (structName.StartsWith("SDL_HapticEffect"))
+        {
+            typeName = "SDL_HapticEffectType";
+        }
+        else if (structName.StartsWith("SDL_HapticDirection"))
+        {
+            typeName = "SDL_HapticDirectionType";
+        }
 
         if (isUnion)
         {
             writer.WriteLine("[StructLayout(LayoutKind.Explicit)]");
         }
+
         using (writer.PushBlock($"{visibility} partial struct {structName}"))
         {
             if (generateSizeOfStructs && @struct.SizeOf > 0)
@@ -83,12 +97,15 @@ public static partial class CsCodeGenerator
 
             foreach (CppField cppField in @struct.Fields)
             {
-                WriteField(writer, cppField, isUnion, isReadOnly);
+                WriteField(writer, cppField, isUnion, isReadOnly, typeName);
             }
         }
     }
 
-    private static void WriteField(CodeWriter writer, CppField field, bool isUnion = false, bool isReadOnly = false)
+    private static void WriteField(CodeWriter writer, CppField field,
+        bool isUnion = false,
+        bool isReadOnly = false,
+        string typeName = "")
     {
         string csFieldName = NormalizeFieldName(field.Name);
 
@@ -120,9 +137,13 @@ public static partial class CsCodeGenerator
                 string csFieldType;
                 if (arrayType.ElementType is CppArrayType elementArrayType)
                 {
-                    // vk-video madness
                     csFieldType = GetCsTypeName(elementArrayType.ElementType, false);
                     writer.WriteLine($"public unsafe fixed {csFieldType} {csFieldName}[{arrayType.Size} * {elementArrayType.Size}];");
+                }
+                else if (arrayType.ElementType is CppTypedef cppTypedef)
+                {
+                    csFieldType = GetCsTypeName(cppTypedef.ElementType, false);
+                    writer.WriteLine($"public unsafe fixed {csFieldType} {csFieldName}[{arrayType.Size}];");
                 }
                 else
                 {
@@ -203,12 +224,7 @@ public static partial class CsCodeGenerator
                 }
 
                 string returnCsName = GetCsTypeName(functionType.ReturnType, false);
-                // Otherwise we get interop issues with non blittable types
-                if (returnCsName == "VkBool32")
-                    returnCsName = "uint";
-
                 builder.Append(returnCsName);
-
                 writer.WriteLine($"public unsafe delegate* unmanaged<{builder}> {csFieldName};");
                 return;
             }
@@ -219,6 +235,14 @@ public static partial class CsCodeGenerator
             if (csFieldType.EndsWith('*'))
             {
                 fieldPrefix += "unsafe ";
+            }
+
+            if (csFieldName == "type")
+            {
+                if (!string.IsNullOrEmpty(typeName))
+                {
+                    csFieldType = typeName;
+                }
             }
 
             //if (field.Comment is not null && string.IsNullOrEmpty(field.Comment.ToString()) == false)

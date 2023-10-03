@@ -69,6 +69,12 @@ public static partial class CsCodeGenerator
                 continue;
             }
 
+            // TODO: Handle marshal
+            if (cppFunction.Name == "SDL_GetEventFilter")
+            {
+                continue;
+            }
+
             s_collectedFunctions.Add(cppFunction);
         }
     }
@@ -315,6 +321,27 @@ public static partial class CsCodeGenerator
                     paramCsTypeName = "out uint";
             }
 
+            if (functionName == "SDL_PeepEvents"
+                || functionName == "SDL_HasEvents"
+                || functionName == "SDL_FlushEvents")
+            {
+                if(cppParameter.Name == "minType" || cppParameter.Name == "maxType")
+                {
+                    paramCsTypeName = "SDL_EventType";
+                }
+            }
+
+            if (functionName == "SDL_HasEvent"
+                || functionName == "SDL_FlushEvent"
+                || functionName == "SDL_SetEventEnabled"
+                || functionName == "SDL_EventEnabled")
+            {
+                if (cppParameter.Name == "type")
+                {
+                    paramCsTypeName = "SDL_EventType";
+                }
+            }
+
             argumentBuilder.Append(paramCsTypeName).Append(' ').Append(paramCsName);
 
             //if (paramCsTypeName == "nint" && paramCsName == "userdata")
@@ -322,15 +349,11 @@ public static partial class CsCodeGenerator
             //    argumentBuilder.Append(" = 0");
             //}
 
-            if (functionName.EndsWith("SetVertexBuffer") || functionName.EndsWith("SetIndexBuffer"))
+            if (functionName == "SDL_GetWindowWMInfo")
             {
-                if (paramCsName == "offset")
+                if (paramCsName == "version")
                 {
-                    argumentBuilder.Append(" = 0");
-                }
-                else if (paramCsName == "size")
-                {
-                    argumentBuilder.Append(" = WGPU_WHOLE_SIZE");
+                    argumentBuilder.Append(" = SDL_SYSWM_CURRENT_VERSION");
                 }
             }
 

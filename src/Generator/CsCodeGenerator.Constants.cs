@@ -45,7 +45,10 @@ public static partial class CsCodeGenerator
                 cppMacro.Name == "SDL_AUDIO_BITSIZE" ||
                 cppMacro.Name == "SDL_AUDIO_BYTESIZE" ||
                 cppMacro.Name.StartsWith("SDL_AUDIO_IS")
-                || cppMacro.Name == "SDL_AUDIO_FRAMESIZE")
+                || cppMacro.Name == "SDL_AUDIO_FRAMESIZE"
+                || cppMacro.Name == "SDL_SYSWM_INFO_SIZE_V1"
+                || cppMacro.Name == "SDL_SYSWM_CURRENT_INFO_SIZE"
+                || cppMacro.Name.StartsWith("SDL_HAPTIC_"))
             {
                 continue;
             }
@@ -99,7 +102,9 @@ public static partial class CsCodeGenerator
                 }
                 if (cppMacro.Name == "SDL_JOYSTICK_AXIS_MAX"
                     || cppMacro.Name == "SDL_JOYSTICK_AXIS_MIN"
-                    || cppMacro.Name == "SDL_MIX_MAXVOLUME")
+                    || cppMacro.Name == "SDL_MIX_MAXVOLUME"
+                    || cppMacro.Name == "SDL_TEXTEDITINGEVENT_TEXT_SIZE"
+                    || cppMacro.Name == "SDL_TEXTINPUTEVENT_TEXT_SIZE")
                 {
                     csDataType = "int";
                 }
@@ -124,8 +129,9 @@ public static partial class CsCodeGenerator
                     cppMacro.Name == "SDL_AUDIO_MASK_BIG_ENDIAN" ||
                     cppMacro.Name == "SDL_AUDIO_MASK_SIGNED" ||
                     cppMacro.Name == "SDL_AUDIO_S16" ||
-                    cppMacro.Name == "SDL_AUDIO_S32" ||
-                    cppMacro.Name == "SDL_AUDIO_F32")
+                    cppMacro.Name == "SDL_AUDIO_S32"
+                    || cppMacro.Name == "SDL_AUDIO_F32"
+                    || cppMacro.Name.StartsWith("SDL_HAPTIC_"))
                 {
                     csDataType = "ushort";
                 }

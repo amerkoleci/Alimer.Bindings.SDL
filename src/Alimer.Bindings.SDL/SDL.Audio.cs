@@ -7,15 +7,12 @@ namespace SDL;
 
 unsafe partial class SDL
 {
-    public const ushort SDL_AUDIO_MASK_BITSIZE = 0xFF;
-    public const ushort SDL_AUDIO_MASK_FLOAT = 1 << 8;
-    public const ushort SDL_AUDIO_MASK_BIG_ENDIAN = (1 << 12);
-    public const ushort SDL_AUDIO_MASK_SIGNED = (1 << 15);
-
     public static ushort SDL_AUDIO_BITSIZE(ushort x)
     {
         return (ushort)(x & SDL_AUDIO_MASK_BITSIZE);
     }
+
+    public static ushort SDL_AUDIO_BYTESIZE(ushort x) => (ushort)(SDL_AUDIO_BITSIZE(x) / 8);
 
     public static bool SDL_AUDIO_ISFLOAT(ushort x)
     {
@@ -36,37 +33,7 @@ unsafe partial class SDL
     public static bool SDL_AUDIO_ISLITTLEENDIAN(ushort x) => !SDL_AUDIO_ISBIGENDIAN(x);
     public static bool SDL_AUDIO_ISUNSIGNED(ushort x) => !SDL_AUDIO_ISSIGNED(x);
 
-    public const ushort AUDIO_U8 = 0x0008;
-    public const ushort AUDIO_S8 = 0x8008;
-    public const ushort AUDIO_S16LSB = 0x8010;
-    public const ushort AUDIO_S16MSB = 0x9010;
-    public const ushort AUDIO_S16 = AUDIO_S16LSB;
-    public const ushort AUDIO_S32LSB = 0x8020;
-    public const ushort AUDIO_S32MSB = 0x9020;
-    public const ushort AUDIO_S32 = AUDIO_S32LSB;
-    public const ushort AUDIO_F32LSB = 0x8120;
-    public const ushort AUDIO_F32MSB = 0x9120;
-    public const ushort AUDIO_F32 = AUDIO_F32LSB;
-
-    public static readonly ushort AUDIO_S16SYS =
-        BitConverter.IsLittleEndian ? AUDIO_S16LSB : AUDIO_S16MSB;
-    public static readonly ushort AUDIO_S32SYS =
-        BitConverter.IsLittleEndian ? AUDIO_S32LSB : AUDIO_S32MSB;
-    public static readonly ushort AUDIO_F32SYS =
-        BitConverter.IsLittleEndian ? AUDIO_F32LSB : AUDIO_F32MSB;
-
-    public const uint SDL_AUDIO_ALLOW_FREQUENCY_CHANGE = 0x00000001;
-    public const uint SDL_AUDIO_ALLOW_FORMAT_CHANGE = 0x00000002;
-    public const uint SDL_AUDIO_ALLOW_CHANNELS_CHANGE = 0x00000004;
-    public const uint SDL_AUDIO_ALLOW_SAMPLES_CHANGE = 0x00000008;
-    public const uint SDL_AUDIO_ALLOW_ANY_CHANGE = (
-        SDL_AUDIO_ALLOW_FREQUENCY_CHANGE |
-        SDL_AUDIO_ALLOW_FORMAT_CHANGE |
-        SDL_AUDIO_ALLOW_CHANNELS_CHANGE |
-        SDL_AUDIO_ALLOW_SAMPLES_CHANGE
-    );
-
-    public const int SDL_MIX_MAXVOLUME = 128;
+    public static ushort SDL_AUDIO_FRAMESIZE(in SDL_AudioSpec spec) => (ushort)(SDL_AUDIO_BYTESIZE(spec.format) * spec.channels);
 
     public static string SDL_GetAudioDriverString(int index)
     {

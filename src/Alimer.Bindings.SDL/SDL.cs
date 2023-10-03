@@ -1087,13 +1087,8 @@ public static unsafe partial class SDL
         return names;
     }
 
-    [DllImport(LibName, EntryPoint = "SDL_Vulkan_CreateSurface", CallingConvention = CallingConvention.Cdecl)]
-    private static extern SDL_bool Internal_SDL_Vulkan_CreateSurface(nint window, nint instance, out ulong surface);
-
-    public static bool SDL_Vulkan_CreateSurface(SDL_Window window, nint instance, out ulong surface)
-    {
-        return Internal_SDL_Vulkan_CreateSurface(window, instance, out surface) == SDL_TRUE;
-    }
+    [LibraryImport(LibName, EntryPoint = "SDL_Vulkan_CreateSurface")]
+    public static partial SDL_bool SDL_Vulkan_CreateSurface(SDL_Window window, nint instance, out ulong surface);
     #endregion
 
     #region SDL_syswm.h

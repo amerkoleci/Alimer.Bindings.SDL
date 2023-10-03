@@ -41,7 +41,11 @@ public static partial class CsCodeGenerator
                 cppMacro.Name == "SDL_NS_TO_US" ||
                 cppMacro.Name == "SDL_TOUCH_MOUSEID" ||
                 cppMacro.Name == "SDL_MOUSE_TOUCHID" ||
-                cppMacro.Name.StartsWith("SDL_WINDOWPOS_"))
+                cppMacro.Name.StartsWith("SDL_WINDOWPOS_") ||
+                cppMacro.Name == "SDL_AUDIO_BITSIZE" ||
+                cppMacro.Name == "SDL_AUDIO_BYTESIZE" ||
+                cppMacro.Name.StartsWith("SDL_AUDIO_IS")
+                || cppMacro.Name == "SDL_AUDIO_FRAMESIZE")
             {
                 continue;
             }
@@ -93,7 +97,9 @@ public static partial class CsCodeGenerator
                     modifier = "static readonly";
                     csDataType = "int";
                 }
-                if (cppMacro.Name == "SDL_JOYSTICK_AXIS_MAX" || cppMacro.Name == "SDL_JOYSTICK_AXIS_MIN")
+                if (cppMacro.Name == "SDL_JOYSTICK_AXIS_MAX"
+                    || cppMacro.Name == "SDL_JOYSTICK_AXIS_MIN"
+                    || cppMacro.Name == "SDL_MIX_MAXVOLUME")
                 {
                     csDataType = "int";
                 }
@@ -112,6 +118,29 @@ public static partial class CsCodeGenerator
                 if (cppMacro.Name == "SDL_NS_PER_SECOND")
                 {
                     csDataType = "long";
+                }
+                if (cppMacro.Name == "SDL_AUDIO_MASK_BITSIZE" ||
+                    cppMacro.Name == "SDL_AUDIO_MASK_FLOAT" ||
+                    cppMacro.Name == "SDL_AUDIO_MASK_BIG_ENDIAN" ||
+                    cppMacro.Name == "SDL_AUDIO_MASK_SIGNED" ||
+                    cppMacro.Name == "SDL_AUDIO_S16" ||
+                    cppMacro.Name == "SDL_AUDIO_S32" ||
+                    cppMacro.Name == "SDL_AUDIO_F32")
+                {
+                    csDataType = "ushort";
+                }
+
+                if (cppMacro.Name.StartsWith("SDL_AUDIO_S")
+                    || cppMacro.Name.StartsWith("SDL_AUDIO_F"))
+                {
+                    csDataType = "ushort";
+                }
+
+                if (cppMacro.Name == "SDL_AUDIO_DEVICE_DEFAULT_OUTPUT"
+                    || cppMacro.Name == "SDL_AUDIO_DEVICE_DEFAULT_CAPTURE")
+                {
+                    modifier = "static readonly";
+                    csDataType = "SDL_AudioDeviceID";
                 }
 
                 writer.WriteLine($"/// <unmanaged>{cppMacro.Name}</unmanaged>");

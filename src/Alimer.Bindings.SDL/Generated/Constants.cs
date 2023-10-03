@@ -65,20 +65,40 @@ public static partial class SDL
 	public const uint SDL_MAX_LOG_MESSAGE = 4096;
 	/// <unmanaged>SDL_STANDARD_GRAVITY</unmanaged>
 	public const float SDL_STANDARD_GRAVITY = 9.80665f;
+	/// <unmanaged>SDL_AUDIO_MASK_BITSIZE</unmanaged>
+	public const ushort SDL_AUDIO_MASK_BITSIZE = 0xFF;
+	/// <unmanaged>SDL_AUDIO_MASK_FLOAT</unmanaged>
+	public const ushort SDL_AUDIO_MASK_FLOAT = 1<<8;
+	/// <unmanaged>SDL_AUDIO_MASK_BIG_ENDIAN</unmanaged>
+	public const ushort SDL_AUDIO_MASK_BIG_ENDIAN = 1<<12;
+	/// <unmanaged>SDL_AUDIO_MASK_SIGNED</unmanaged>
+	public const ushort SDL_AUDIO_MASK_SIGNED = 1<<15;
 	/// <unmanaged>SDL_AUDIO_U8</unmanaged>
 	public const uint SDL_AUDIO_U8 = 0x0008;
 	/// <unmanaged>SDL_AUDIO_S8</unmanaged>
-	public const uint SDL_AUDIO_S8 = 0x8008;
+	public const ushort SDL_AUDIO_S8 = 0x8008;
 	/// <unmanaged>SDL_AUDIO_S16LE</unmanaged>
-	public const uint SDL_AUDIO_S16LE = 0x8010;
+	public const ushort SDL_AUDIO_S16LE = 0x8010;
 	/// <unmanaged>SDL_AUDIO_S16BE</unmanaged>
-	public const uint SDL_AUDIO_S16BE = 0x9010;
+	public const ushort SDL_AUDIO_S16BE = 0x9010;
 	/// <unmanaged>SDL_AUDIO_S32LE</unmanaged>
-	public const uint SDL_AUDIO_S32LE = 0x8020;
+	public const ushort SDL_AUDIO_S32LE = 0x8020;
 	/// <unmanaged>SDL_AUDIO_S32BE</unmanaged>
-	public const uint SDL_AUDIO_S32BE = 0x9020;
+	public const ushort SDL_AUDIO_S32BE = 0x9020;
 	/// <unmanaged>SDL_AUDIO_F32LE</unmanaged>
-	public const uint SDL_AUDIO_F32LE = 0x8120;
+	public const ushort SDL_AUDIO_F32LE = 0x8120;
 	/// <unmanaged>SDL_AUDIO_F32BE</unmanaged>
-	public const uint SDL_AUDIO_F32BE = 0x9120;
+	public const ushort SDL_AUDIO_F32BE = 0x9120;
+	/// <unmanaged>SDL_AUDIO_S16</unmanaged>
+	public const ushort SDL_AUDIO_S16 = SDL_AUDIO_S16LE;
+	/// <unmanaged>SDL_AUDIO_S32</unmanaged>
+	public const ushort SDL_AUDIO_S32 = SDL_AUDIO_S32LE;
+	/// <unmanaged>SDL_AUDIO_F32</unmanaged>
+	public const ushort SDL_AUDIO_F32 = SDL_AUDIO_F32LE;
+	/// <unmanaged>SDL_AUDIO_DEVICE_DEFAULT_OUTPUT</unmanaged>
+	public static readonly SDL_AudioDeviceID SDL_AUDIO_DEVICE_DEFAULT_OUTPUT = (SDL_AudioDeviceID)0xFFFFFFFF;
+	/// <unmanaged>SDL_AUDIO_DEVICE_DEFAULT_CAPTURE</unmanaged>
+	public static readonly SDL_AudioDeviceID SDL_AUDIO_DEVICE_DEFAULT_CAPTURE = (SDL_AudioDeviceID)0xFFFFFFFE;
+	/// <unmanaged>SDL_MIX_MAXVOLUME</unmanaged>
+	public const int SDL_MIX_MAXVOLUME = 128;
 }

@@ -1402,3 +1402,23 @@ public enum SDL_PowerState
 	Charged = 4,
 }
 
+public enum SDL_SensorType
+{
+	/// <unmanaged>SDL_SENSOR_INVALID</unmanaged>
+	Invalid = -1,
+	/// <unmanaged>SDL_SENSOR_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_SENSOR_ACCEL</unmanaged>
+	Accel = 1,
+	/// <unmanaged>SDL_SENSOR_GYRO</unmanaged>
+	Gyro = 2,
+	/// <unmanaged>SDL_SENSOR_ACCEL_L</unmanaged>
+	AccelL = 3,
+	/// <unmanaged>SDL_SENSOR_GYRO_L</unmanaged>
+	GyroL = 4,
+	/// <unmanaged>SDL_SENSOR_ACCEL_R</unmanaged>
+	AccelR = 5,
+	/// <unmanaged>SDL_SENSOR_GYRO_R</unmanaged>
+	GyroR = 6,
+}
+

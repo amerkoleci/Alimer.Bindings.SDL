@@ -59,15 +59,17 @@ unsafe partial class SDL
         return SDL_GetClipboardData(mimeType.GetUtf8Span(), size);
     }
 
-    [DllImport(LibName, EntryPoint = nameof(SDL_HasClipboardData), CallingConvention = CallingConvention.Cdecl)]
-    private static extern SDL_bool INTERNAL_SDL_HasClipboardData(byte* mime_type);
+    public static bool SDL_HasClipboardData(ReadOnlySpan<sbyte> mimeType)
+    {
+        fixed (sbyte* pName = mimeType)
+        {
+            return SDL_HasClipboardData(pName) == SDL_bool.SDL_TRUE;
+        }
+    }
 
     public static bool SDL_HasClipboardData(string mimeType)
     {
-        byte* utf8Text = Utf8EncodeHeap(mimeType);
-        SDL_bool result = INTERNAL_SDL_HasClipboardData(utf8Text);
-        NativeMemory.Free(utf8Text);
-        return result == SDL_bool.SDL_TRUE;
+        return SDL_HasClipboardData(mimeType.GetUtf8Span());
     }
 
     private static ClipboardDataCallback? s_clipboardDataCallback;
@@ -117,8 +119,8 @@ unsafe partial class SDL
         }
     }
 
-    [DllImport(LibName, EntryPoint = nameof(SDL_SetClipboardData), CallingConvention = CallingConvention.Cdecl)]
-    private static extern void Internal_SDL_SetClipboardData(
+    [LibraryImport(LibName, EntryPoint = nameof(SDL_SetClipboardData))]
+    private static partial void Internal_SDL_SetClipboardData(
         delegate* unmanaged<nint, sbyte*, nuint*, void> callback,
         delegate* unmanaged<nint, void> cleanup,
         nint userdata,

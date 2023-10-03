@@ -463,8 +463,8 @@ public static unsafe partial class SDL
         return false;
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    private static extern void SDL_free(void* memblock);
+    [LibraryImport(LibName)]
+    private static partial void SDL_free(void* memblock);
 
     #region SDL_platform.h
     public static string SDL_GetPlatformString()
@@ -851,6 +851,11 @@ public static unsafe partial class SDL
 
     private static SDL_LogOutputFunction? _logCallback;
 
+    public static void SDL_LogSetPriority(SDL_LogCategory category, SDL_LogPriority priority)
+    {
+        SDL_LogSetPriority((int)category, priority);
+    }
+
     public static void SDL_LogSetOutputFunction(SDL_LogOutputFunction? callback)
     {
         _logCallback = callback;
@@ -929,13 +934,13 @@ public static unsafe partial class SDL
         return (SDL_COMPILEDVERSION >= SDL_VERSIONNUM(X, Y, Z));
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetVersion(out SDL_version ver);
+    [LibraryImport(LibName)]
+    public static partial int SDL_GetVersion(out SDL_version ver);
 
-    [DllImport(LibName, EntryPoint = nameof(SDL_GetRevision), CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_GetRevision();
+    [LibraryImport(LibName, EntryPoint = nameof(SDL_GetRevision))]
+    private static partial sbyte* SDL_GetRevision();
 
-    public static string SDL_GetRevision() => GetString(INTERNAL_SDL_GetRevision());
+    public static string SDL_GetRevisionString() => GetStringOrEmpty(SDL_GetRevision());
     #endregion
 
     #region SDL_video.h
@@ -1015,8 +1020,8 @@ public static unsafe partial class SDL
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern void SDL_SetWindowSize(SDL_Window window, int width, int height);
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_GetWindowSizeInPixels(SDL_Window window, out int width, out int height);
+    [LibraryImport(LibName)]
+    public static partial void SDL_GetWindowSizeInPixels(SDL_Window window, out int width, out int height);
 
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     public static extern void SDL_ShowWindow(SDL_Window window);
@@ -1175,8 +1180,8 @@ public static unsafe partial class SDL
     }
 
     /* window refers to an SDL_Window* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_DisplayID SDL_GetDisplayForWindow(SDL_Window window);
+    [LibraryImport(LibName)]
+    public static partial SDL_DisplayID SDL_GetDisplayForWindow(SDL_Window window);
 
     /* window refers to an SDL_Window* */
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
@@ -1639,44 +1644,20 @@ public static unsafe partial class SDL
         return result;
     }
 
-    [DllImport(LibName, EntryPoint = "SDL_Vulkan_GetVkGetInstanceProcAddr", CallingConvention = CallingConvention.Cdecl)]
-    private static extern IntPtr Internal_SDL_Vulkan_GetVkGetInstanceProcAddr();
-
-    public static delegate* unmanaged<nint, sbyte*, delegate* unmanaged<void>> SDL_Vulkan_GetVkGetInstanceProcAddr()
-    {
-        return (delegate* unmanaged<nint, sbyte*, delegate* unmanaged<void>>)Internal_SDL_Vulkan_GetVkGetInstanceProcAddr();
-    }
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_Vulkan_UnloadLibrary();
-
-    [DllImport(LibName, EntryPoint = "SDL_Vulkan_GetInstanceExtensions", CallingConvention = CallingConvention.Cdecl)]
-    private static extern SDL_bool Internal_SDL_Vulkan_GetInstanceExtensions(uint* pCount, byte** pNames);
-
-    /* window refers to an SDL_Window*, pNames to a const char**.
-     * Only available in 2.0.6 or higher.
-     * This overload allows for IntPtr.Zero (null) to be passed for pNames.
-     */
-    public static bool SDL_Vulkan_GetInstanceExtensions(uint* count, byte** pNames)
-    {
-        return Internal_SDL_Vulkan_GetInstanceExtensions(count, pNames) == SDL_TRUE;
-    }
-
     public static string[] SDL_Vulkan_GetInstanceExtensions()
     {
         string[] names = Array.Empty<string>();
 
-        uint count;
-        bool result = Internal_SDL_Vulkan_GetInstanceExtensions(&count, null) == SDL_TRUE;
+        bool result = SDL_Vulkan_GetInstanceExtensions(out uint count, null) == SDL_TRUE;
         if (result == true)
         {
-            byte** strings = stackalloc byte*[(int)count];
+            sbyte** strings = stackalloc sbyte*[(int)count];
             names = new string[count];
-            Internal_SDL_Vulkan_GetInstanceExtensions(&count, strings);
+            SDL_Vulkan_GetInstanceExtensions(out count, strings);
 
             for (uint i = 0; i < count; i++)
             {
-                names[i] = GetString(strings[i]);
+                names[i] = GetString(strings[i])!;
             }
         }
 
@@ -3131,7 +3112,7 @@ public static unsafe partial class SDL
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string GetStringOrEmpty(sbyte* source, int maxLength = -1)
     {
-        return GetUtf8Span(source, maxLength).GetString();
+        return GetUtf8Span(source, maxLength).GetStringOrEmpty();
     }
 
     /// <summary>Gets a string for a given span.</summary>

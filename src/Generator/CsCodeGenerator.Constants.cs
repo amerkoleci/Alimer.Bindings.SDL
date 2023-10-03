@@ -17,7 +17,9 @@ public static partial class CsCodeGenerator
             if (string.IsNullOrEmpty(cppMacro.Value)
                 || cppMacro.Name.EndsWith("_H_", StringComparison.OrdinalIgnoreCase)
                 || cppMacro.Name.Equals("SDL_SCANCODE_TO_KEYCODE", StringComparison.OrdinalIgnoreCase)
-                || cppMacro.Name.Equals("SDL_INIT_EVERYTHING", StringComparison.OrdinalIgnoreCase)
+                || cppMacro.Name.Equals("SDL_INIT_EVERYTHING", StringComparison.OrdinalIgnoreCase) 
+                || cppMacro.Name.Equals("VK_DEFINE_HANDLE", StringComparison.OrdinalIgnoreCase)
+                || cppMacro.Name.Equals("VK_DEFINE_NON_DISPATCHABLE_HANDLE", StringComparison.OrdinalIgnoreCase)
                 )
             {
                 continue;

@@ -187,8 +187,8 @@ unsafe partial class SDL
         byte** dst_data,
         int* dst_len);
 
-    [DllImport(LibName, EntryPoint = nameof(SDL_LoadWAV), CallingConvention = CallingConvention.Cdecl)]
-    private static extern SDL_AudioSpec* INTERNAL_SDL_LoadWAV_RW(
+    [LibraryImport(LibName, EntryPoint = nameof(SDL_LoadWAV))]
+    private static partial SDL_AudioSpec* INTERNAL_SDL_LoadWAV_RW(
         IntPtr src,
         int freesrc,
         SDL_AudioSpec* spec,

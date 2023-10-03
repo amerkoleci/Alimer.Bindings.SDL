@@ -11,4 +11,5 @@ public sealed class CsCodeGeneratorOptions
     public bool PublicVisiblity { get; set; } = true;
     public bool GenerateFunctionPointers { get; set; } = false;
     public bool EnumWriteUnmanagedTag { get; set; } = true;
+    public bool UseDllImport { get; set; }
 }

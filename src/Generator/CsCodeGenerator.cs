@@ -43,20 +43,24 @@ public static partial class CsCodeGenerator
         { "SDL_Rect", "Rectangle" },
         { "SDL_FRect", "RectangleF" },
         { "SDL_Keycode", "SDL_KeyCode" },
+        { "VkInstance", "nint" },
+        { "VkSurfaceKHR", "ulong" },
     };
 
     private static readonly HashSet<string> s_knownTypes = new(StringComparer.OrdinalIgnoreCase)
     {
         "SDL_Rect",
-        "SDL_JoystickID",
+        //"SDL_JoystickID",
         "SDL_Joystick",
         "SDL_Gamepad",
-        "SDL_MouseID",
+        //"SDL_MouseID",
         "SDL_Window",
         "SDL_Renderer",
-        "SDL_TimerID",
-        "SDL_TouchID",
-        "SDL_FingerID",
+        //"SDL_TimerID",
+        //"SDL_TouchID",
+        //"SDL_FingerID",
+        "SDL_Sensor",
+        //"SDL_SensorID",
     };
 
     private static CsCodeGeneratorOptions s_options = new();
@@ -149,7 +153,7 @@ public static partial class CsCodeGenerator
 
         if (type is CppClass @class)
         {
-            var className = GetCsCleanName(@class.Name);
+            string className = GetCsCleanName(@class.Name);
             if (className == "SDL_RWops"
                 || className == "IDirect3DDevice9"
                 || className == "ID3D11Device"
@@ -164,7 +168,11 @@ public static partial class CsCodeGenerator
 
         if (type is CppPointerType pointerType)
         {
-            return GetCsTypeName(pointerType);
+            string className = GetCsTypeName(pointerType);
+            if (isPointer && !s_knownTypes.Contains(className))
+                return className + "*";
+
+            return className;
         }
 
         if (type is CppArrayType arrayType)

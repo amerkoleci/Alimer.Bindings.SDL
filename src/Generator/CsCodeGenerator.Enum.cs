@@ -34,6 +34,7 @@ public static partial class CsCodeGenerator
         { "SDL_LogCategory", "SDL_LOG_CATEGORY" },
         { "SDL_LogPriority", "SDL_LOG_PRIORITY" },
         { "SDL_PowerState", "SDL_POWERSTATE" },
+        { "SDL_SensorType", "SDL_SENSOR" },
     };
 
     private static readonly Dictionary<string, string> s_knownEnumValueNames = new()

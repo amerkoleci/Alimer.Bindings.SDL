@@ -102,7 +102,7 @@ public static partial class CsCodeGenerator
                     writer.WriteLine($"private static {functionPointerSignature} {name}_ptr;");
                 }
 
-                WriteFunctionInvocation(writer, cppFunction, s_options.GenerateFunctionPointers);
+                WriteFunctionInvocation(writer, cppFunction);
             }
 
             if (s_options.GenerateFunctionPointers)
@@ -134,9 +134,9 @@ public static partial class CsCodeGenerator
         }
     }
 
-    private static void WriteFunctionInvocation(CodeWriter writer, CppFunction cppFunction, bool useFunctionPointers)
+    private static void WriteFunctionInvocation(CodeWriter writer, CppFunction cppFunction)
     {
-        if (cppFunction.Name == "SDL_AddGamepadMappingsFromRW")
+        if (cppFunction.Name == "SDL_Vulkan_GetInstanceExtensions")
         {
         }
 
@@ -145,13 +145,21 @@ public static partial class CsCodeGenerator
         string functionName = cppFunction.Name;
 
         string modifier = "public static";
-        if (!useFunctionPointers)
+        if (!s_options.GenerateFunctionPointers)
         {
-            modifier += " extern";
-            writer.WriteLine($"[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = \"{cppFunction.Name}\")]");
+            if (s_options.UseDllImport)
+            {
+                modifier += " extern";
+                writer.WriteLine($"[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = \"{cppFunction.Name}\")]");
+            }
+            else
+            {
+                modifier += " partial";
+                writer.WriteLine($"[LibraryImport(LibName, EntryPoint = \"{cppFunction.Name}\")]");
+            }
         }
 
-        if (useFunctionPointers)
+        if (s_options.GenerateFunctionPointers)
         {
             using (writer.PushBlock($"{modifier} {returnCsName} {functionName}({argumentsString})"))
             {
@@ -207,7 +215,7 @@ public static partial class CsCodeGenerator
                 string pointerName = "p" + char.ToUpperInvariant(paramCsName[0]) + paramCsName.Substring(1);
                 using (writer.PushBlock($"fixed (sbyte* {pointerName} = {paramCsName})"))
                 {
-                    if (useFunctionPointers)
+                    if (s_options.GenerateFunctionPointers)
                     {
                         writer.Write($"{cppFunction.Name}_ptr(");
                     }
@@ -279,9 +287,17 @@ public static partial class CsCodeGenerator
                 }
             }
 
-            if (paramCsName == "sbyte*" && unsafeStrings == false)
+            if (paramCsTypeName == "sbyte*" && unsafeStrings == false)
             {
                 paramCsName = "ReadOnlySpan<sbyte>";
+            }
+
+            if (paramCsName == "count" && functionName.Contains("Get", StringComparison.OrdinalIgnoreCase))
+            {
+                if(paramCsTypeName == "int*")
+                    paramCsTypeName = "out int";
+                else if (paramCsTypeName == "uint*")
+                    paramCsTypeName = "out uint";
             }
 
             argumentBuilder.Append(paramCsTypeName).Append(' ').Append(paramCsName);
@@ -300,22 +316,6 @@ public static partial class CsCodeGenerator
                 else if (paramCsName == "size")
                 {
                     argumentBuilder.Append(" = WGPU_WHOLE_SIZE");
-                }
-            }
-
-            if (functionName.EndsWith("Draw") ||
-                functionName.EndsWith("DrawIndexed"))
-            {
-                if (paramCsName == "instanceCount")
-                {
-                    argumentBuilder.Append(" = 1");
-                }
-                else if (paramCsName == "firstVertex" ||
-                    paramCsName == "firstIndex" ||
-                    paramCsName == "baseVertex" ||
-                    paramCsName == "firstInstance")
-                {
-                    argumentBuilder.Append(" = 0");
                 }
             }
 

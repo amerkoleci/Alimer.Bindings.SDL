@@ -62,6 +62,18 @@ public partial struct SDL_GamepadBinding
 
 unsafe partial class SDL
 {
+    public static ReadOnlySpan<SDL_JoystickID> SDL_GetGamepads()
+    {
+        SDL_JoystickID* ptr = SDL_GetGamepads(out int count);
+        return new(ptr, count);
+    }
+
+    //public static ReadOnlySpan<SDL_GamepadBinding> SDL_GetGamepadBindings(SDL_Gamepad gamepad)
+    //{
+    //    SDL_GamepadBinding* ptr = SDL_GetGamepadBindings(gamepad, out int count);
+    //    return new(ptr, count);
+    //}
+
     public static int SDL_AddGamepadMapping(ReadOnlySpan<sbyte> name)
     {
         fixed (sbyte* pName = name)
@@ -162,17 +174,6 @@ unsafe partial class SDL
     {
         return GetString(SDL_GetGamepadAppleSFSymbolsNameForAxis(gamepad, axis)) ?? string.Empty;
     }
-
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_GetGamepadTouchpadFinger(
-        SDL_Gamepad gamepad,
-        int touchpad,
-        int finger,
-        out byte state,
-        out float x,
-        out float y,
-        out float pressure
-    );
 
     public static int SDL_SendGamepadEffect<T>(SDL_Gamepad gamepad, T[] source) where T : unmanaged
     {

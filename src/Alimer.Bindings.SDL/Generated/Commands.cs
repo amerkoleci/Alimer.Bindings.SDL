@@ -26,754 +26,808 @@ public unsafe delegate uint SDL_TimerCallback(uint interval, nint param);
 
 public unsafe partial class SDL
 {
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetError")]
-	public static extern int SDL_SetError(sbyte* fmt);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetError")]
+	public static partial int SDL_SetError(sbyte* fmt);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetError")]
-	public static extern sbyte* SDL_GetError();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetError")]
+	public static partial sbyte* SDL_GetError();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetErrorMsg")]
-	public static extern sbyte* SDL_GetErrorMsg(sbyte* errstr, int maxlen);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetErrorMsg")]
+	public static partial sbyte* SDL_GetErrorMsg(sbyte* errstr, int maxlen);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_ClearError")]
-	public static extern void SDL_ClearError();
+	[LibraryImport(LibName, EntryPoint = "SDL_ClearError")]
+	public static partial void SDL_ClearError();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Error")]
-	public static extern int SDL_Error(SDL_errorcode code);
+	[LibraryImport(LibName, EntryPoint = "SDL_Error")]
+	public static partial int SDL_Error(SDL_errorcode code);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Init")]
-	public static extern int SDL_Init(SDL_InitFlags flags);
+	[LibraryImport(LibName, EntryPoint = "SDL_Init")]
+	public static partial int SDL_Init(SDL_InitFlags flags);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_InitSubSystem")]
-	public static extern int SDL_InitSubSystem(SDL_InitFlags flags);
+	[LibraryImport(LibName, EntryPoint = "SDL_InitSubSystem")]
+	public static partial int SDL_InitSubSystem(SDL_InitFlags flags);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_QuitSubSystem")]
-	public static extern void SDL_QuitSubSystem(SDL_InitFlags flags);
+	[LibraryImport(LibName, EntryPoint = "SDL_QuitSubSystem")]
+	public static partial void SDL_QuitSubSystem(SDL_InitFlags flags);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WasInit")]
-	public static extern uint SDL_WasInit(SDL_InitFlags flags);
+	[LibraryImport(LibName, EntryPoint = "SDL_WasInit")]
+	public static partial uint SDL_WasInit(SDL_InitFlags flags);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Quit")]
-	public static extern void SDL_Quit();
+	[LibraryImport(LibName, EntryPoint = "SDL_Quit")]
+	public static partial void SDL_Quit();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetPlatform")]
-	public static extern sbyte* SDL_GetPlatform();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetPlatform")]
+	public static partial sbyte* SDL_GetPlatform();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetClipboardText")]
-	public static extern int SDL_SetClipboardText(sbyte* text);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetClipboardText")]
+	public static partial int SDL_SetClipboardText(sbyte* text);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetClipboardText")]
-	public static extern sbyte* SDL_GetClipboardText();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetClipboardText")]
+	public static partial sbyte* SDL_GetClipboardText();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasClipboardText")]
-	public static extern SDL_bool SDL_HasClipboardText();
+	[LibraryImport(LibName, EntryPoint = "SDL_HasClipboardText")]
+	public static partial SDL_bool SDL_HasClipboardText();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetPrimarySelectionText")]
-	public static extern int SDL_SetPrimarySelectionText(sbyte* text);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetPrimarySelectionText")]
+	public static partial int SDL_SetPrimarySelectionText(sbyte* text);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetPrimarySelectionText")]
-	public static extern sbyte* SDL_GetPrimarySelectionText();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetPrimarySelectionText")]
+	public static partial sbyte* SDL_GetPrimarySelectionText();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasPrimarySelectionText")]
-	public static extern SDL_bool SDL_HasPrimarySelectionText();
+	[LibraryImport(LibName, EntryPoint = "SDL_HasPrimarySelectionText")]
+	public static partial SDL_bool SDL_HasPrimarySelectionText();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetClipboardData")]
-	public static extern int SDL_SetClipboardData(SDL_ClipboardDataCallback callback, SDL_ClipboardCleanupCallback cleanup, nint userdata, sbyte* mime_types, nuint num_mime_types);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetClipboardData")]
+	public static partial int SDL_SetClipboardData(SDL_ClipboardDataCallback callback, SDL_ClipboardCleanupCallback cleanup, nint userdata, sbyte** mime_types, nuint num_mime_types);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_ClearClipboardData")]
-	public static extern int SDL_ClearClipboardData();
+	[LibraryImport(LibName, EntryPoint = "SDL_ClearClipboardData")]
+	public static partial int SDL_ClearClipboardData();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetClipboardData")]
-	public static extern nint SDL_GetClipboardData(sbyte* mime_type, nuint* size);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetClipboardData")]
+	public static partial nint SDL_GetClipboardData(sbyte* mime_type, nuint* size);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasClipboardData")]
-	public static extern SDL_bool SDL_HasClipboardData(sbyte* mime_type);
+	[LibraryImport(LibName, EntryPoint = "SDL_HasClipboardData")]
+	public static partial SDL_bool SDL_HasClipboardData(sbyte* mime_type);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetCPUCount")]
-	public static extern int SDL_GetCPUCount();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetCPUCount")]
+	public static partial int SDL_GetCPUCount();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetCPUCacheLineSize")]
-	public static extern int SDL_GetCPUCacheLineSize();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetCPUCacheLineSize")]
+	public static partial int SDL_GetCPUCacheLineSize();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasAltiVec")]
-	public static extern SDL_bool SDL_HasAltiVec();
+	[LibraryImport(LibName, EntryPoint = "SDL_HasAltiVec")]
+	public static partial SDL_bool SDL_HasAltiVec();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasMMX")]
-	public static extern SDL_bool SDL_HasMMX();
+	[LibraryImport(LibName, EntryPoint = "SDL_HasMMX")]
+	public static partial SDL_bool SDL_HasMMX();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasSSE")]
-	public static extern SDL_bool SDL_HasSSE();
+	[LibraryImport(LibName, EntryPoint = "SDL_HasSSE")]
+	public static partial SDL_bool SDL_HasSSE();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasSSE2")]
-	public static extern SDL_bool SDL_HasSSE2();
+	[LibraryImport(LibName, EntryPoint = "SDL_HasSSE2")]
+	public static partial SDL_bool SDL_HasSSE2();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasSSE3")]
-	public static extern SDL_bool SDL_HasSSE3();
+	[LibraryImport(LibName, EntryPoint = "SDL_HasSSE3")]
+	public static partial SDL_bool SDL_HasSSE3();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasSSE41")]
-	public static extern SDL_bool SDL_HasSSE41();
+	[LibraryImport(LibName, EntryPoint = "SDL_HasSSE41")]
+	public static partial SDL_bool SDL_HasSSE41();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasSSE42")]
-	public static extern SDL_bool SDL_HasSSE42();
+	[LibraryImport(LibName, EntryPoint = "SDL_HasSSE42")]
+	public static partial SDL_bool SDL_HasSSE42();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasAVX")]
-	public static extern SDL_bool SDL_HasAVX();
+	[LibraryImport(LibName, EntryPoint = "SDL_HasAVX")]
+	public static partial SDL_bool SDL_HasAVX();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasAVX2")]
-	public static extern SDL_bool SDL_HasAVX2();
+	[LibraryImport(LibName, EntryPoint = "SDL_HasAVX2")]
+	public static partial SDL_bool SDL_HasAVX2();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasAVX512F")]
-	public static extern SDL_bool SDL_HasAVX512F();
+	[LibraryImport(LibName, EntryPoint = "SDL_HasAVX512F")]
+	public static partial SDL_bool SDL_HasAVX512F();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasARMSIMD")]
-	public static extern SDL_bool SDL_HasARMSIMD();
+	[LibraryImport(LibName, EntryPoint = "SDL_HasARMSIMD")]
+	public static partial SDL_bool SDL_HasARMSIMD();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasNEON")]
-	public static extern SDL_bool SDL_HasNEON();
+	[LibraryImport(LibName, EntryPoint = "SDL_HasNEON")]
+	public static partial SDL_bool SDL_HasNEON();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasLSX")]
-	public static extern SDL_bool SDL_HasLSX();
+	[LibraryImport(LibName, EntryPoint = "SDL_HasLSX")]
+	public static partial SDL_bool SDL_HasLSX();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasLASX")]
-	public static extern SDL_bool SDL_HasLASX();
+	[LibraryImport(LibName, EntryPoint = "SDL_HasLASX")]
+	public static partial SDL_bool SDL_HasLASX();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetSystemRAM")]
-	public static extern int SDL_GetSystemRAM();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSystemRAM")]
+	public static partial int SDL_GetSystemRAM();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SIMDGetAlignment")]
-	public static extern nuint SDL_SIMDGetAlignment();
+	[LibraryImport(LibName, EntryPoint = "SDL_SIMDGetAlignment")]
+	public static partial nuint SDL_SIMDGetAlignment();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LoadObject")]
-	public static extern nint SDL_LoadObject(sbyte* sofile);
+	[LibraryImport(LibName, EntryPoint = "SDL_LoadObject")]
+	public static partial nint SDL_LoadObject(sbyte* sofile);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LoadFunction")]
-	public static extern delegate* unmanaged<void> SDL_LoadFunction(nint handle, sbyte* name);
+	[LibraryImport(LibName, EntryPoint = "SDL_LoadFunction")]
+	public static partial delegate* unmanaged<void> SDL_LoadFunction(nint handle, sbyte* name);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_UnloadObject")]
-	public static extern void SDL_UnloadObject(nint handle);
+	[LibraryImport(LibName, EntryPoint = "SDL_UnloadObject")]
+	public static partial void SDL_UnloadObject(nint handle);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetKeyboardFocus")]
-	public static extern SDL_Window SDL_GetKeyboardFocus();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetKeyboardFocus")]
+	public static partial SDL_Window SDL_GetKeyboardFocus();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetKeyboardState")]
-	public static extern byte* SDL_GetKeyboardState(int* numkeys);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetKeyboardState")]
+	public static partial byte* SDL_GetKeyboardState(int* numkeys);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_ResetKeyboard")]
-	public static extern void SDL_ResetKeyboard();
+	[LibraryImport(LibName, EntryPoint = "SDL_ResetKeyboard")]
+	public static partial void SDL_ResetKeyboard();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetModState")]
-	public static extern SDL_Keymod SDL_GetModState();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetModState")]
+	public static partial SDL_Keymod SDL_GetModState();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetModState")]
-	public static extern void SDL_SetModState(SDL_Keymod modstate);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetModState")]
+	public static partial void SDL_SetModState(SDL_Keymod modstate);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetKeyFromScancode")]
-	public static extern SDL_KeyCode SDL_GetKeyFromScancode(SDL_Scancode scancode);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetKeyFromScancode")]
+	public static partial SDL_KeyCode SDL_GetKeyFromScancode(SDL_Scancode scancode);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetScancodeFromKey")]
-	public static extern SDL_Scancode SDL_GetScancodeFromKey(SDL_KeyCode key);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetScancodeFromKey")]
+	public static partial SDL_Scancode SDL_GetScancodeFromKey(SDL_KeyCode key);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetScancodeName")]
-	public static extern sbyte* SDL_GetScancodeName(SDL_Scancode scancode);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetScancodeName")]
+	public static partial sbyte* SDL_GetScancodeName(SDL_Scancode scancode);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetScancodeFromName")]
-	public static extern SDL_Scancode SDL_GetScancodeFromName(sbyte* name);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetScancodeFromName")]
+	public static partial SDL_Scancode SDL_GetScancodeFromName(sbyte* name);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetKeyName")]
-	public static extern sbyte* SDL_GetKeyName(SDL_KeyCode key);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetKeyName")]
+	public static partial sbyte* SDL_GetKeyName(SDL_KeyCode key);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetKeyFromName")]
-	public static extern SDL_KeyCode SDL_GetKeyFromName(sbyte* name);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetKeyFromName")]
+	public static partial SDL_KeyCode SDL_GetKeyFromName(sbyte* name);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_StartTextInput")]
-	public static extern void SDL_StartTextInput();
+	[LibraryImport(LibName, EntryPoint = "SDL_StartTextInput")]
+	public static partial void SDL_StartTextInput();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_TextInputActive")]
-	public static extern SDL_bool SDL_TextInputActive();
+	[LibraryImport(LibName, EntryPoint = "SDL_TextInputActive")]
+	public static partial SDL_bool SDL_TextInputActive();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_StopTextInput")]
-	public static extern void SDL_StopTextInput();
+	[LibraryImport(LibName, EntryPoint = "SDL_StopTextInput")]
+	public static partial void SDL_StopTextInput();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_ClearComposition")]
-	public static extern void SDL_ClearComposition();
+	[LibraryImport(LibName, EntryPoint = "SDL_ClearComposition")]
+	public static partial void SDL_ClearComposition();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_TextInputShown")]
-	public static extern SDL_bool SDL_TextInputShown();
+	[LibraryImport(LibName, EntryPoint = "SDL_TextInputShown")]
+	public static partial SDL_bool SDL_TextInputShown();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetTextInputRect")]
-	public static extern int SDL_SetTextInputRect(Rectangle* rect);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTextInputRect")]
+	public static partial int SDL_SetTextInputRect(Rectangle* rect);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasScreenKeyboardSupport")]
-	public static extern SDL_bool SDL_HasScreenKeyboardSupport();
+	[LibraryImport(LibName, EntryPoint = "SDL_HasScreenKeyboardSupport")]
+	public static partial SDL_bool SDL_HasScreenKeyboardSupport();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_ScreenKeyboardShown")]
-	public static extern SDL_bool SDL_ScreenKeyboardShown(SDL_Window window);
+	[LibraryImport(LibName, EntryPoint = "SDL_ScreenKeyboardShown")]
+	public static partial SDL_bool SDL_ScreenKeyboardShown(SDL_Window window);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_ShowMessageBox")]
-	public static extern int SDL_ShowMessageBox(SDL_MessageBoxData* messageboxdata, int* buttonid);
+	[LibraryImport(LibName, EntryPoint = "SDL_ShowMessageBox")]
+	public static partial int SDL_ShowMessageBox(SDL_MessageBoxData* messageboxdata, int* buttonid);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_ShowSimpleMessageBox")]
-	public static extern int SDL_ShowSimpleMessageBox(uint flags, sbyte* title, sbyte* message, SDL_Window window);
+	[LibraryImport(LibName, EntryPoint = "SDL_ShowSimpleMessageBox")]
+	public static partial int SDL_ShowSimpleMessageBox(uint flags, sbyte* title, sbyte* message, SDL_Window window);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LockJoysticks")]
-	public static extern void SDL_LockJoysticks();
+	[LibraryImport(LibName, EntryPoint = "SDL_LockJoysticks")]
+	public static partial void SDL_LockJoysticks();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_UnlockJoysticks")]
-	public static extern void SDL_UnlockJoysticks();
+	[LibraryImport(LibName, EntryPoint = "SDL_UnlockJoysticks")]
+	public static partial void SDL_UnlockJoysticks();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoysticks")]
-	public static extern SDL_JoystickID SDL_GetJoysticks(int* count);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoysticks")]
+	public static partial SDL_JoystickID* SDL_GetJoysticks(out int count);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickInstanceName")]
-	public static extern sbyte* SDL_GetJoystickInstanceName(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickInstanceName")]
+	public static partial sbyte* SDL_GetJoystickInstanceName(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickInstancePath")]
-	public static extern sbyte* SDL_GetJoystickInstancePath(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickInstancePath")]
+	public static partial sbyte* SDL_GetJoystickInstancePath(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickInstancePlayerIndex")]
-	public static extern int SDL_GetJoystickInstancePlayerIndex(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickInstancePlayerIndex")]
+	public static partial int SDL_GetJoystickInstancePlayerIndex(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickInstanceGUID")]
-	public static extern Guid SDL_GetJoystickInstanceGUID(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickInstanceGUID")]
+	public static partial Guid SDL_GetJoystickInstanceGUID(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickInstanceVendor")]
-	public static extern ushort SDL_GetJoystickInstanceVendor(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickInstanceVendor")]
+	public static partial ushort SDL_GetJoystickInstanceVendor(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickInstanceProduct")]
-	public static extern ushort SDL_GetJoystickInstanceProduct(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickInstanceProduct")]
+	public static partial ushort SDL_GetJoystickInstanceProduct(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickInstanceProductVersion")]
-	public static extern ushort SDL_GetJoystickInstanceProductVersion(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickInstanceProductVersion")]
+	public static partial ushort SDL_GetJoystickInstanceProductVersion(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickInstanceType")]
-	public static extern SDL_JoystickType SDL_GetJoystickInstanceType(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickInstanceType")]
+	public static partial SDL_JoystickType SDL_GetJoystickInstanceType(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_OpenJoystick")]
-	public static extern SDL_Joystick SDL_OpenJoystick(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_OpenJoystick")]
+	public static partial SDL_Joystick SDL_OpenJoystick(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickFromInstanceID")]
-	public static extern SDL_Joystick SDL_GetJoystickFromInstanceID(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickFromInstanceID")]
+	public static partial SDL_Joystick SDL_GetJoystickFromInstanceID(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickFromPlayerIndex")]
-	public static extern SDL_Joystick SDL_GetJoystickFromPlayerIndex(int player_index);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickFromPlayerIndex")]
+	public static partial SDL_Joystick SDL_GetJoystickFromPlayerIndex(int player_index);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_AttachVirtualJoystick")]
-	public static extern SDL_JoystickID SDL_AttachVirtualJoystick(SDL_JoystickType type, int naxes, int nbuttons, int nhats);
+	[LibraryImport(LibName, EntryPoint = "SDL_AttachVirtualJoystick")]
+	public static partial SDL_JoystickID SDL_AttachVirtualJoystick(SDL_JoystickType type, int naxes, int nbuttons, int nhats);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_AttachVirtualJoystickEx")]
-	public static extern SDL_JoystickID SDL_AttachVirtualJoystickEx(SDL_VirtualJoystickDesc* desc);
+	[LibraryImport(LibName, EntryPoint = "SDL_AttachVirtualJoystickEx")]
+	public static partial SDL_JoystickID SDL_AttachVirtualJoystickEx(SDL_VirtualJoystickDesc* desc);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_DetachVirtualJoystick")]
-	public static extern int SDL_DetachVirtualJoystick(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_DetachVirtualJoystick")]
+	public static partial int SDL_DetachVirtualJoystick(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_IsJoystickVirtual")]
-	public static extern SDL_bool SDL_IsJoystickVirtual(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_IsJoystickVirtual")]
+	public static partial SDL_bool SDL_IsJoystickVirtual(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetJoystickVirtualAxis")]
-	public static extern int SDL_SetJoystickVirtualAxis(SDL_Joystick joystick, int axis, short value);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetJoystickVirtualAxis")]
+	public static partial int SDL_SetJoystickVirtualAxis(SDL_Joystick joystick, int axis, short value);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetJoystickVirtualButton")]
-	public static extern int SDL_SetJoystickVirtualButton(SDL_Joystick joystick, int button, byte value);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetJoystickVirtualButton")]
+	public static partial int SDL_SetJoystickVirtualButton(SDL_Joystick joystick, int button, byte value);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetJoystickVirtualHat")]
-	public static extern int SDL_SetJoystickVirtualHat(SDL_Joystick joystick, int hat, byte value);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetJoystickVirtualHat")]
+	public static partial int SDL_SetJoystickVirtualHat(SDL_Joystick joystick, int hat, byte value);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickName")]
-	public static extern sbyte* SDL_GetJoystickName(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickName")]
+	public static partial sbyte* SDL_GetJoystickName(SDL_Joystick joystick);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickPath")]
-	public static extern sbyte* SDL_GetJoystickPath(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickPath")]
+	public static partial sbyte* SDL_GetJoystickPath(SDL_Joystick joystick);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickPlayerIndex")]
-	public static extern int SDL_GetJoystickPlayerIndex(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickPlayerIndex")]
+	public static partial int SDL_GetJoystickPlayerIndex(SDL_Joystick joystick);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetJoystickPlayerIndex")]
-	public static extern int SDL_SetJoystickPlayerIndex(SDL_Joystick joystick, int player_index);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetJoystickPlayerIndex")]
+	public static partial int SDL_SetJoystickPlayerIndex(SDL_Joystick joystick, int player_index);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickGUID")]
-	public static extern Guid SDL_GetJoystickGUID(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickGUID")]
+	public static partial Guid SDL_GetJoystickGUID(SDL_Joystick joystick);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickVendor")]
-	public static extern ushort SDL_GetJoystickVendor(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickVendor")]
+	public static partial ushort SDL_GetJoystickVendor(SDL_Joystick joystick);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickProduct")]
-	public static extern ushort SDL_GetJoystickProduct(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickProduct")]
+	public static partial ushort SDL_GetJoystickProduct(SDL_Joystick joystick);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickProductVersion")]
-	public static extern ushort SDL_GetJoystickProductVersion(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickProductVersion")]
+	public static partial ushort SDL_GetJoystickProductVersion(SDL_Joystick joystick);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickFirmwareVersion")]
-	public static extern ushort SDL_GetJoystickFirmwareVersion(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickFirmwareVersion")]
+	public static partial ushort SDL_GetJoystickFirmwareVersion(SDL_Joystick joystick);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickSerial")]
-	public static extern sbyte* SDL_GetJoystickSerial(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickSerial")]
+	public static partial sbyte* SDL_GetJoystickSerial(SDL_Joystick joystick);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickType")]
-	public static extern SDL_JoystickType SDL_GetJoystickType(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickType")]
+	public static partial SDL_JoystickType SDL_GetJoystickType(SDL_Joystick joystick);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickGUIDString")]
-	public static extern int SDL_GetJoystickGUIDString(Guid guid, sbyte* pszGUID, int cbGUID);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickGUIDString")]
+	public static partial int SDL_GetJoystickGUIDString(Guid guid, sbyte* pszGUID, int cbGUID);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickGUIDFromString")]
-	public static extern Guid SDL_GetJoystickGUIDFromString(sbyte* pchGUID);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickGUIDFromString")]
+	public static partial Guid SDL_GetJoystickGUIDFromString(sbyte* pchGUID);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickGUIDInfo")]
-	public static extern void SDL_GetJoystickGUIDInfo(Guid guid, ushort* vendor, ushort* product, ushort* version, ushort* crc16);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickGUIDInfo")]
+	public static partial void SDL_GetJoystickGUIDInfo(Guid guid, ushort* vendor, ushort* product, ushort* version, ushort* crc16);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_JoystickConnected")]
-	public static extern SDL_bool SDL_JoystickConnected(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_JoystickConnected")]
+	public static partial SDL_bool SDL_JoystickConnected(SDL_Joystick joystick);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickInstanceID")]
-	public static extern SDL_JoystickID SDL_GetJoystickInstanceID(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickInstanceID")]
+	public static partial SDL_JoystickID SDL_GetJoystickInstanceID(SDL_Joystick joystick);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetNumJoystickAxes")]
-	public static extern int SDL_GetNumJoystickAxes(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetNumJoystickAxes")]
+	public static partial int SDL_GetNumJoystickAxes(SDL_Joystick joystick);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetNumJoystickHats")]
-	public static extern int SDL_GetNumJoystickHats(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetNumJoystickHats")]
+	public static partial int SDL_GetNumJoystickHats(SDL_Joystick joystick);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetNumJoystickButtons")]
-	public static extern int SDL_GetNumJoystickButtons(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetNumJoystickButtons")]
+	public static partial int SDL_GetNumJoystickButtons(SDL_Joystick joystick);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetJoystickEventsEnabled")]
-	public static extern void SDL_SetJoystickEventsEnabled(SDL_bool enabled);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetJoystickEventsEnabled")]
+	public static partial void SDL_SetJoystickEventsEnabled(SDL_bool enabled);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_JoystickEventsEnabled")]
-	public static extern SDL_bool SDL_JoystickEventsEnabled();
+	[LibraryImport(LibName, EntryPoint = "SDL_JoystickEventsEnabled")]
+	public static partial SDL_bool SDL_JoystickEventsEnabled();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_UpdateJoysticks")]
-	public static extern void SDL_UpdateJoysticks();
+	[LibraryImport(LibName, EntryPoint = "SDL_UpdateJoysticks")]
+	public static partial void SDL_UpdateJoysticks();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickAxis")]
-	public static extern short SDL_GetJoystickAxis(SDL_Joystick joystick, int axis);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickAxis")]
+	public static partial short SDL_GetJoystickAxis(SDL_Joystick joystick, int axis);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickAxisInitialState")]
-	public static extern SDL_bool SDL_GetJoystickAxisInitialState(SDL_Joystick joystick, int axis, short* state);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickAxisInitialState")]
+	public static partial SDL_bool SDL_GetJoystickAxisInitialState(SDL_Joystick joystick, int axis, short* state);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickHat")]
-	public static extern byte SDL_GetJoystickHat(SDL_Joystick joystick, int hat);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickHat")]
+	public static partial byte SDL_GetJoystickHat(SDL_Joystick joystick, int hat);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickButton")]
-	public static extern byte SDL_GetJoystickButton(SDL_Joystick joystick, int button);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickButton")]
+	public static partial byte SDL_GetJoystickButton(SDL_Joystick joystick, int button);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RumbleJoystick")]
-	public static extern int SDL_RumbleJoystick(SDL_Joystick joystick, ushort low_frequency_rumble, ushort high_frequency_rumble, uint duration_ms);
+	[LibraryImport(LibName, EntryPoint = "SDL_RumbleJoystick")]
+	public static partial int SDL_RumbleJoystick(SDL_Joystick joystick, ushort low_frequency_rumble, ushort high_frequency_rumble, uint duration_ms);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RumbleJoystickTriggers")]
-	public static extern int SDL_RumbleJoystickTriggers(SDL_Joystick joystick, ushort left_rumble, ushort right_rumble, uint duration_ms);
+	[LibraryImport(LibName, EntryPoint = "SDL_RumbleJoystickTriggers")]
+	public static partial int SDL_RumbleJoystickTriggers(SDL_Joystick joystick, ushort left_rumble, ushort right_rumble, uint duration_ms);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_JoystickHasLED")]
-	public static extern SDL_bool SDL_JoystickHasLED(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_JoystickHasLED")]
+	public static partial SDL_bool SDL_JoystickHasLED(SDL_Joystick joystick);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_JoystickHasRumble")]
-	public static extern SDL_bool SDL_JoystickHasRumble(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_JoystickHasRumble")]
+	public static partial SDL_bool SDL_JoystickHasRumble(SDL_Joystick joystick);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_JoystickHasRumbleTriggers")]
-	public static extern SDL_bool SDL_JoystickHasRumbleTriggers(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_JoystickHasRumbleTriggers")]
+	public static partial SDL_bool SDL_JoystickHasRumbleTriggers(SDL_Joystick joystick);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetJoystickLED")]
-	public static extern int SDL_SetJoystickLED(SDL_Joystick joystick, byte red, byte green, byte blue);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetJoystickLED")]
+	public static partial int SDL_SetJoystickLED(SDL_Joystick joystick, byte red, byte green, byte blue);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SendJoystickEffect")]
-	public static extern int SDL_SendJoystickEffect(SDL_Joystick joystick, void* data, int size);
+	[LibraryImport(LibName, EntryPoint = "SDL_SendJoystickEffect")]
+	public static partial int SDL_SendJoystickEffect(SDL_Joystick joystick, void* data, int size);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_CloseJoystick")]
-	public static extern void SDL_CloseJoystick(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_CloseJoystick")]
+	public static partial void SDL_CloseJoystick(SDL_Joystick joystick);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetJoystickPowerLevel")]
-	public static extern SDL_JoystickPowerLevel SDL_GetJoystickPowerLevel(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickPowerLevel")]
+	public static partial SDL_JoystickPowerLevel SDL_GetJoystickPowerLevel(SDL_Joystick joystick);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_AddGamepadMapping")]
-	public static extern int SDL_AddGamepadMapping(sbyte* mapping);
+	[LibraryImport(LibName, EntryPoint = "SDL_AddGamepadMapping")]
+	public static partial int SDL_AddGamepadMapping(sbyte* mapping);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_AddGamepadMappingsFromRW")]
-	public static extern int SDL_AddGamepadMappingsFromRW(nint src, SDL_bool freesrc);
+	[LibraryImport(LibName, EntryPoint = "SDL_AddGamepadMappingsFromRW")]
+	public static partial int SDL_AddGamepadMappingsFromRW(nint src, SDL_bool freesrc);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_AddGamepadMappingsFromFile")]
-	public static extern int SDL_AddGamepadMappingsFromFile(sbyte* file);
+	[LibraryImport(LibName, EntryPoint = "SDL_AddGamepadMappingsFromFile")]
+	public static partial int SDL_AddGamepadMappingsFromFile(sbyte* file);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_ReloadGamepadMappings")]
-	public static extern int SDL_ReloadGamepadMappings();
+	[LibraryImport(LibName, EntryPoint = "SDL_ReloadGamepadMappings")]
+	public static partial int SDL_ReloadGamepadMappings();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetNumGamepadMappings")]
-	public static extern int SDL_GetNumGamepadMappings();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetNumGamepadMappings")]
+	public static partial int SDL_GetNumGamepadMappings();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadMappingForIndex")]
-	public static extern sbyte* SDL_GetGamepadMappingForIndex(int mapping_index);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadMappingForIndex")]
+	public static partial sbyte* SDL_GetGamepadMappingForIndex(int mapping_index);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadMappingForGUID")]
-	public static extern sbyte* SDL_GetGamepadMappingForGUID(Guid guid);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadMappingForGUID")]
+	public static partial sbyte* SDL_GetGamepadMappingForGUID(Guid guid);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadMapping")]
-	public static extern sbyte* SDL_GetGamepadMapping(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadMapping")]
+	public static partial sbyte* SDL_GetGamepadMapping(SDL_Gamepad gamepad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetGamepadMapping")]
-	public static extern int SDL_SetGamepadMapping(SDL_JoystickID instance_id, sbyte* mapping);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetGamepadMapping")]
+	public static partial int SDL_SetGamepadMapping(SDL_JoystickID instance_id, sbyte* mapping);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepads")]
-	public static extern SDL_JoystickID SDL_GetGamepads(int* count);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepads")]
+	public static partial SDL_JoystickID* SDL_GetGamepads(out int count);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_IsGamepad")]
-	public static extern SDL_bool SDL_IsGamepad(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_IsGamepad")]
+	public static partial SDL_bool SDL_IsGamepad(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadInstanceName")]
-	public static extern sbyte* SDL_GetGamepadInstanceName(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadInstanceName")]
+	public static partial sbyte* SDL_GetGamepadInstanceName(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadInstancePath")]
-	public static extern sbyte* SDL_GetGamepadInstancePath(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadInstancePath")]
+	public static partial sbyte* SDL_GetGamepadInstancePath(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadInstancePlayerIndex")]
-	public static extern int SDL_GetGamepadInstancePlayerIndex(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadInstancePlayerIndex")]
+	public static partial int SDL_GetGamepadInstancePlayerIndex(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadInstanceGUID")]
-	public static extern Guid SDL_GetGamepadInstanceGUID(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadInstanceGUID")]
+	public static partial Guid SDL_GetGamepadInstanceGUID(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadInstanceVendor")]
-	public static extern ushort SDL_GetGamepadInstanceVendor(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadInstanceVendor")]
+	public static partial ushort SDL_GetGamepadInstanceVendor(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadInstanceProduct")]
-	public static extern ushort SDL_GetGamepadInstanceProduct(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadInstanceProduct")]
+	public static partial ushort SDL_GetGamepadInstanceProduct(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadInstanceProductVersion")]
-	public static extern ushort SDL_GetGamepadInstanceProductVersion(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadInstanceProductVersion")]
+	public static partial ushort SDL_GetGamepadInstanceProductVersion(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadInstanceType")]
-	public static extern SDL_GamepadType SDL_GetGamepadInstanceType(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadInstanceType")]
+	public static partial SDL_GamepadType SDL_GetGamepadInstanceType(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetRealGamepadInstanceType")]
-	public static extern SDL_GamepadType SDL_GetRealGamepadInstanceType(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetRealGamepadInstanceType")]
+	public static partial SDL_GamepadType SDL_GetRealGamepadInstanceType(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadInstanceMapping")]
-	public static extern sbyte* SDL_GetGamepadInstanceMapping(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadInstanceMapping")]
+	public static partial sbyte* SDL_GetGamepadInstanceMapping(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_OpenGamepad")]
-	public static extern SDL_Gamepad SDL_OpenGamepad(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_OpenGamepad")]
+	public static partial SDL_Gamepad SDL_OpenGamepad(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadFromInstanceID")]
-	public static extern SDL_Gamepad SDL_GetGamepadFromInstanceID(SDL_JoystickID instance_id);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadFromInstanceID")]
+	public static partial SDL_Gamepad SDL_GetGamepadFromInstanceID(SDL_JoystickID instance_id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadFromPlayerIndex")]
-	public static extern SDL_Gamepad SDL_GetGamepadFromPlayerIndex(int player_index);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadFromPlayerIndex")]
+	public static partial SDL_Gamepad SDL_GetGamepadFromPlayerIndex(int player_index);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadInstanceID")]
-	public static extern SDL_JoystickID SDL_GetGamepadInstanceID(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadInstanceID")]
+	public static partial SDL_JoystickID SDL_GetGamepadInstanceID(SDL_Gamepad gamepad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadName")]
-	public static extern sbyte* SDL_GetGamepadName(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadName")]
+	public static partial sbyte* SDL_GetGamepadName(SDL_Gamepad gamepad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadPath")]
-	public static extern sbyte* SDL_GetGamepadPath(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadPath")]
+	public static partial sbyte* SDL_GetGamepadPath(SDL_Gamepad gamepad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadType")]
-	public static extern SDL_GamepadType SDL_GetGamepadType(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadType")]
+	public static partial SDL_GamepadType SDL_GetGamepadType(SDL_Gamepad gamepad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetRealGamepadType")]
-	public static extern SDL_GamepadType SDL_GetRealGamepadType(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetRealGamepadType")]
+	public static partial SDL_GamepadType SDL_GetRealGamepadType(SDL_Gamepad gamepad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadPlayerIndex")]
-	public static extern int SDL_GetGamepadPlayerIndex(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadPlayerIndex")]
+	public static partial int SDL_GetGamepadPlayerIndex(SDL_Gamepad gamepad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetGamepadPlayerIndex")]
-	public static extern int SDL_SetGamepadPlayerIndex(SDL_Gamepad gamepad, int player_index);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetGamepadPlayerIndex")]
+	public static partial int SDL_SetGamepadPlayerIndex(SDL_Gamepad gamepad, int player_index);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadVendor")]
-	public static extern ushort SDL_GetGamepadVendor(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadVendor")]
+	public static partial ushort SDL_GetGamepadVendor(SDL_Gamepad gamepad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadProduct")]
-	public static extern ushort SDL_GetGamepadProduct(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadProduct")]
+	public static partial ushort SDL_GetGamepadProduct(SDL_Gamepad gamepad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadProductVersion")]
-	public static extern ushort SDL_GetGamepadProductVersion(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadProductVersion")]
+	public static partial ushort SDL_GetGamepadProductVersion(SDL_Gamepad gamepad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadFirmwareVersion")]
-	public static extern ushort SDL_GetGamepadFirmwareVersion(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadFirmwareVersion")]
+	public static partial ushort SDL_GetGamepadFirmwareVersion(SDL_Gamepad gamepad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadSerial")]
-	public static extern sbyte* SDL_GetGamepadSerial(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadSerial")]
+	public static partial sbyte* SDL_GetGamepadSerial(SDL_Gamepad gamepad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadPowerLevel")]
-	public static extern SDL_JoystickPowerLevel SDL_GetGamepadPowerLevel(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadPowerLevel")]
+	public static partial SDL_JoystickPowerLevel SDL_GetGamepadPowerLevel(SDL_Gamepad gamepad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GamepadConnected")]
-	public static extern SDL_bool SDL_GamepadConnected(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GamepadConnected")]
+	public static partial SDL_bool SDL_GamepadConnected(SDL_Gamepad gamepad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadJoystick")]
-	public static extern SDL_Joystick SDL_GetGamepadJoystick(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadJoystick")]
+	public static partial SDL_Joystick SDL_GetGamepadJoystick(SDL_Gamepad gamepad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetGamepadEventsEnabled")]
-	public static extern void SDL_SetGamepadEventsEnabled(SDL_bool enabled);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetGamepadEventsEnabled")]
+	public static partial void SDL_SetGamepadEventsEnabled(SDL_bool enabled);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GamepadEventsEnabled")]
-	public static extern SDL_bool SDL_GamepadEventsEnabled();
+	[LibraryImport(LibName, EntryPoint = "SDL_GamepadEventsEnabled")]
+	public static partial SDL_bool SDL_GamepadEventsEnabled();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadBindings")]
-	public static extern SDL_GamepadBinding* SDL_GetGamepadBindings(SDL_Gamepad gamepad, int* count);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadBindings")]
+	public static partial SDL_GamepadBinding** SDL_GetGamepadBindings(SDL_Gamepad gamepad, out int count);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_UpdateGamepads")]
-	public static extern void SDL_UpdateGamepads();
+	[LibraryImport(LibName, EntryPoint = "SDL_UpdateGamepads")]
+	public static partial void SDL_UpdateGamepads();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadTypeFromString")]
-	public static extern SDL_GamepadType SDL_GetGamepadTypeFromString(sbyte* str);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadTypeFromString")]
+	public static partial SDL_GamepadType SDL_GetGamepadTypeFromString(sbyte* str);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadStringForType")]
-	public static extern sbyte* SDL_GetGamepadStringForType(SDL_GamepadType type);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadStringForType")]
+	public static partial sbyte* SDL_GetGamepadStringForType(SDL_GamepadType type);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadAxisFromString")]
-	public static extern SDL_GamepadAxis SDL_GetGamepadAxisFromString(sbyte* str);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadAxisFromString")]
+	public static partial SDL_GamepadAxis SDL_GetGamepadAxisFromString(sbyte* str);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadStringForAxis")]
-	public static extern sbyte* SDL_GetGamepadStringForAxis(SDL_GamepadAxis axis);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadStringForAxis")]
+	public static partial sbyte* SDL_GetGamepadStringForAxis(SDL_GamepadAxis axis);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GamepadHasAxis")]
-	public static extern SDL_bool SDL_GamepadHasAxis(SDL_Gamepad gamepad, SDL_GamepadAxis axis);
+	[LibraryImport(LibName, EntryPoint = "SDL_GamepadHasAxis")]
+	public static partial SDL_bool SDL_GamepadHasAxis(SDL_Gamepad gamepad, SDL_GamepadAxis axis);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadAxis")]
-	public static extern short SDL_GetGamepadAxis(SDL_Gamepad gamepad, SDL_GamepadAxis axis);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadAxis")]
+	public static partial short SDL_GetGamepadAxis(SDL_Gamepad gamepad, SDL_GamepadAxis axis);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadButtonFromString")]
-	public static extern SDL_GamepadButton SDL_GetGamepadButtonFromString(sbyte* str);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadButtonFromString")]
+	public static partial SDL_GamepadButton SDL_GetGamepadButtonFromString(sbyte* str);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadStringForButton")]
-	public static extern sbyte* SDL_GetGamepadStringForButton(SDL_GamepadButton button);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadStringForButton")]
+	public static partial sbyte* SDL_GetGamepadStringForButton(SDL_GamepadButton button);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GamepadHasButton")]
-	public static extern SDL_bool SDL_GamepadHasButton(SDL_Gamepad gamepad, SDL_GamepadButton button);
+	[LibraryImport(LibName, EntryPoint = "SDL_GamepadHasButton")]
+	public static partial SDL_bool SDL_GamepadHasButton(SDL_Gamepad gamepad, SDL_GamepadButton button);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadButton")]
-	public static extern byte SDL_GetGamepadButton(SDL_Gamepad gamepad, SDL_GamepadButton button);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadButton")]
+	public static partial byte SDL_GetGamepadButton(SDL_Gamepad gamepad, SDL_GamepadButton button);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetNumGamepadTouchpads")]
-	public static extern int SDL_GetNumGamepadTouchpads(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetNumGamepadTouchpads")]
+	public static partial int SDL_GetNumGamepadTouchpads(SDL_Gamepad gamepad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetNumGamepadTouchpadFingers")]
-	public static extern int SDL_GetNumGamepadTouchpadFingers(SDL_Gamepad gamepad, int touchpad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetNumGamepadTouchpadFingers")]
+	public static partial int SDL_GetNumGamepadTouchpadFingers(SDL_Gamepad gamepad, int touchpad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadTouchpadFinger")]
-	public static extern int SDL_GetGamepadTouchpadFinger(SDL_Gamepad gamepad, int touchpad, int finger, byte* state, float* x, float* y, float* pressure);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadTouchpadFinger")]
+	public static partial int SDL_GetGamepadTouchpadFinger(SDL_Gamepad gamepad, int touchpad, int finger, byte* state, float* x, float* y, float* pressure);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GamepadHasSensor")]
-	public static extern SDL_bool SDL_GamepadHasSensor(SDL_Gamepad gamepad, SDL_SensorType type);
+	[LibraryImport(LibName, EntryPoint = "SDL_GamepadHasSensor")]
+	public static partial SDL_bool SDL_GamepadHasSensor(SDL_Gamepad gamepad, SDL_SensorType type);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetGamepadSensorEnabled")]
-	public static extern int SDL_SetGamepadSensorEnabled(SDL_Gamepad gamepad, SDL_SensorType type, SDL_bool enabled);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetGamepadSensorEnabled")]
+	public static partial int SDL_SetGamepadSensorEnabled(SDL_Gamepad gamepad, SDL_SensorType type, SDL_bool enabled);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GamepadSensorEnabled")]
-	public static extern SDL_bool SDL_GamepadSensorEnabled(SDL_Gamepad gamepad, SDL_SensorType type);
+	[LibraryImport(LibName, EntryPoint = "SDL_GamepadSensorEnabled")]
+	public static partial SDL_bool SDL_GamepadSensorEnabled(SDL_Gamepad gamepad, SDL_SensorType type);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadSensorDataRate")]
-	public static extern float SDL_GetGamepadSensorDataRate(SDL_Gamepad gamepad, SDL_SensorType type);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadSensorDataRate")]
+	public static partial float SDL_GetGamepadSensorDataRate(SDL_Gamepad gamepad, SDL_SensorType type);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadSensorData")]
-	public static extern int SDL_GetGamepadSensorData(SDL_Gamepad gamepad, SDL_SensorType type, float* data, int num_values);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadSensorData")]
+	public static partial int SDL_GetGamepadSensorData(SDL_Gamepad gamepad, SDL_SensorType type, float* data, int num_values);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RumbleGamepad")]
-	public static extern int SDL_RumbleGamepad(SDL_Gamepad gamepad, ushort low_frequency_rumble, ushort high_frequency_rumble, uint duration_ms);
+	[LibraryImport(LibName, EntryPoint = "SDL_RumbleGamepad")]
+	public static partial int SDL_RumbleGamepad(SDL_Gamepad gamepad, ushort low_frequency_rumble, ushort high_frequency_rumble, uint duration_ms);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RumbleGamepadTriggers")]
-	public static extern int SDL_RumbleGamepadTriggers(SDL_Gamepad gamepad, ushort left_rumble, ushort right_rumble, uint duration_ms);
+	[LibraryImport(LibName, EntryPoint = "SDL_RumbleGamepadTriggers")]
+	public static partial int SDL_RumbleGamepadTriggers(SDL_Gamepad gamepad, ushort left_rumble, ushort right_rumble, uint duration_ms);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GamepadHasLED")]
-	public static extern SDL_bool SDL_GamepadHasLED(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GamepadHasLED")]
+	public static partial SDL_bool SDL_GamepadHasLED(SDL_Gamepad gamepad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GamepadHasRumble")]
-	public static extern SDL_bool SDL_GamepadHasRumble(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GamepadHasRumble")]
+	public static partial SDL_bool SDL_GamepadHasRumble(SDL_Gamepad gamepad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GamepadHasRumbleTriggers")]
-	public static extern SDL_bool SDL_GamepadHasRumbleTriggers(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GamepadHasRumbleTriggers")]
+	public static partial SDL_bool SDL_GamepadHasRumbleTriggers(SDL_Gamepad gamepad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetGamepadLED")]
-	public static extern int SDL_SetGamepadLED(SDL_Gamepad gamepad, byte red, byte green, byte blue);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetGamepadLED")]
+	public static partial int SDL_SetGamepadLED(SDL_Gamepad gamepad, byte red, byte green, byte blue);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SendGamepadEffect")]
-	public static extern int SDL_SendGamepadEffect(SDL_Gamepad gamepad, void* data, int size);
+	[LibraryImport(LibName, EntryPoint = "SDL_SendGamepadEffect")]
+	public static partial int SDL_SendGamepadEffect(SDL_Gamepad gamepad, void* data, int size);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_CloseGamepad")]
-	public static extern void SDL_CloseGamepad(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_CloseGamepad")]
+	public static partial void SDL_CloseGamepad(SDL_Gamepad gamepad);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadAppleSFSymbolsNameForButton")]
-	public static extern sbyte* SDL_GetGamepadAppleSFSymbolsNameForButton(SDL_Gamepad gamepad, SDL_GamepadButton button);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadAppleSFSymbolsNameForButton")]
+	public static partial sbyte* SDL_GetGamepadAppleSFSymbolsNameForButton(SDL_Gamepad gamepad, SDL_GamepadButton button);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGamepadAppleSFSymbolsNameForAxis")]
-	public static extern sbyte* SDL_GetGamepadAppleSFSymbolsNameForAxis(SDL_Gamepad gamepad, SDL_GamepadAxis axis);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadAppleSFSymbolsNameForAxis")]
+	public static partial sbyte* SDL_GetGamepadAppleSFSymbolsNameForAxis(SDL_Gamepad gamepad, SDL_GamepadAxis axis);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetMouseFocus")]
-	public static extern SDL_Window SDL_GetMouseFocus();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetMouseFocus")]
+	public static partial SDL_Window SDL_GetMouseFocus();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetMouseState")]
-	public static extern uint SDL_GetMouseState(float* x, float* y);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetMouseState")]
+	public static partial uint SDL_GetMouseState(float* x, float* y);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGlobalMouseState")]
-	public static extern uint SDL_GetGlobalMouseState(float* x, float* y);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGlobalMouseState")]
+	public static partial uint SDL_GetGlobalMouseState(float* x, float* y);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetRelativeMouseState")]
-	public static extern uint SDL_GetRelativeMouseState(float* x, float* y);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetRelativeMouseState")]
+	public static partial uint SDL_GetRelativeMouseState(float* x, float* y);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WarpMouseInWindow")]
-	public static extern void SDL_WarpMouseInWindow(SDL_Window window, float x, float y);
+	[LibraryImport(LibName, EntryPoint = "SDL_WarpMouseInWindow")]
+	public static partial void SDL_WarpMouseInWindow(SDL_Window window, float x, float y);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WarpMouseGlobal")]
-	public static extern int SDL_WarpMouseGlobal(float x, float y);
+	[LibraryImport(LibName, EntryPoint = "SDL_WarpMouseGlobal")]
+	public static partial int SDL_WarpMouseGlobal(float x, float y);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetRelativeMouseMode")]
-	public static extern int SDL_SetRelativeMouseMode(SDL_bool enabled);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetRelativeMouseMode")]
+	public static partial int SDL_SetRelativeMouseMode(SDL_bool enabled);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_CaptureMouse")]
-	public static extern int SDL_CaptureMouse(SDL_bool enabled);
+	[LibraryImport(LibName, EntryPoint = "SDL_CaptureMouse")]
+	public static partial int SDL_CaptureMouse(SDL_bool enabled);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetRelativeMouseMode")]
-	public static extern SDL_bool SDL_GetRelativeMouseMode();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetRelativeMouseMode")]
+	public static partial SDL_bool SDL_GetRelativeMouseMode();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_CreateCursor")]
-	public static extern SDL_Cursor* SDL_CreateCursor(byte* data, byte* mask, int w, int h, int hot_x, int hot_y);
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateCursor")]
+	public static partial SDL_Cursor* SDL_CreateCursor(byte* data, byte* mask, int w, int h, int hot_x, int hot_y);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_CreateColorCursor")]
-	public static extern SDL_Cursor* SDL_CreateColorCursor(SDL_Surface* surface, int hot_x, int hot_y);
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateColorCursor")]
+	public static partial SDL_Cursor* SDL_CreateColorCursor(SDL_Surface* surface, int hot_x, int hot_y);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_CreateSystemCursor")]
-	public static extern SDL_Cursor* SDL_CreateSystemCursor(SDL_SystemCursor id);
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateSystemCursor")]
+	public static partial SDL_Cursor* SDL_CreateSystemCursor(SDL_SystemCursor id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetCursor")]
-	public static extern int SDL_SetCursor(SDL_Cursor* cursor);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetCursor")]
+	public static partial int SDL_SetCursor(SDL_Cursor* cursor);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetCursor")]
-	public static extern SDL_Cursor* SDL_GetCursor();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetCursor")]
+	public static partial SDL_Cursor* SDL_GetCursor();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetDefaultCursor")]
-	public static extern SDL_Cursor* SDL_GetDefaultCursor();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetDefaultCursor")]
+	public static partial SDL_Cursor* SDL_GetDefaultCursor();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_DestroyCursor")]
-	public static extern void SDL_DestroyCursor(SDL_Cursor* cursor);
+	[LibraryImport(LibName, EntryPoint = "SDL_DestroyCursor")]
+	public static partial void SDL_DestroyCursor(SDL_Cursor* cursor);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_ShowCursor")]
-	public static extern int SDL_ShowCursor();
+	[LibraryImport(LibName, EntryPoint = "SDL_ShowCursor")]
+	public static partial int SDL_ShowCursor();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HideCursor")]
-	public static extern int SDL_HideCursor();
+	[LibraryImport(LibName, EntryPoint = "SDL_HideCursor")]
+	public static partial int SDL_HideCursor();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_CursorVisible")]
-	public static extern SDL_bool SDL_CursorVisible();
+	[LibraryImport(LibName, EntryPoint = "SDL_CursorVisible")]
+	public static partial SDL_bool SDL_CursorVisible();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetWindowsMessageHook")]
-	public static extern void SDL_SetWindowsMessageHook(SDL_WindowsMessageHook callback, nint userdata);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowsMessageHook")]
+	public static partial void SDL_SetWindowsMessageHook(SDL_WindowsMessageHook callback, nint userdata);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Direct3D9GetAdapterIndex")]
-	public static extern int SDL_Direct3D9GetAdapterIndex(SDL_DisplayID displayID);
+	[LibraryImport(LibName, EntryPoint = "SDL_Direct3D9GetAdapterIndex")]
+	public static partial int SDL_Direct3D9GetAdapterIndex(SDL_DisplayID displayID);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetRenderD3D9Device")]
-	public static extern nint SDL_GetRenderD3D9Device(SDL_Renderer renderer);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetRenderD3D9Device")]
+	public static partial nint SDL_GetRenderD3D9Device(SDL_Renderer renderer);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetRenderD3D11Device")]
-	public static extern nint SDL_GetRenderD3D11Device(SDL_Renderer renderer);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetRenderD3D11Device")]
+	public static partial nint SDL_GetRenderD3D11Device(SDL_Renderer renderer);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RenderGetD3D12Device")]
-	public static extern nint SDL_RenderGetD3D12Device(SDL_Renderer renderer);
+	[LibraryImport(LibName, EntryPoint = "SDL_RenderGetD3D12Device")]
+	public static partial nint SDL_RenderGetD3D12Device(SDL_Renderer renderer);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_DXGIGetOutputInfo")]
-	public static extern SDL_bool SDL_DXGIGetOutputInfo(SDL_DisplayID displayID, int* adapterIndex, int* outputIndex);
+	[LibraryImport(LibName, EntryPoint = "SDL_DXGIGetOutputInfo")]
+	public static partial SDL_bool SDL_DXGIGetOutputInfo(SDL_DisplayID displayID, int* adapterIndex, int* outputIndex);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_IsTablet")]
-	public static extern SDL_bool SDL_IsTablet();
+	[LibraryImport(LibName, EntryPoint = "SDL_IsTablet")]
+	public static partial SDL_bool SDL_IsTablet();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_OnApplicationWillTerminate")]
-	public static extern void SDL_OnApplicationWillTerminate();
+	[LibraryImport(LibName, EntryPoint = "SDL_OnApplicationWillTerminate")]
+	public static partial void SDL_OnApplicationWillTerminate();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_OnApplicationDidReceiveMemoryWarning")]
-	public static extern void SDL_OnApplicationDidReceiveMemoryWarning();
+	[LibraryImport(LibName, EntryPoint = "SDL_OnApplicationDidReceiveMemoryWarning")]
+	public static partial void SDL_OnApplicationDidReceiveMemoryWarning();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_OnApplicationWillResignActive")]
-	public static extern void SDL_OnApplicationWillResignActive();
+	[LibraryImport(LibName, EntryPoint = "SDL_OnApplicationWillResignActive")]
+	public static partial void SDL_OnApplicationWillResignActive();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_OnApplicationDidEnterBackground")]
-	public static extern void SDL_OnApplicationDidEnterBackground();
+	[LibraryImport(LibName, EntryPoint = "SDL_OnApplicationDidEnterBackground")]
+	public static partial void SDL_OnApplicationDidEnterBackground();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_OnApplicationWillEnterForeground")]
-	public static extern void SDL_OnApplicationWillEnterForeground();
+	[LibraryImport(LibName, EntryPoint = "SDL_OnApplicationWillEnterForeground")]
+	public static partial void SDL_OnApplicationWillEnterForeground();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_OnApplicationDidBecomeActive")]
-	public static extern void SDL_OnApplicationDidBecomeActive();
+	[LibraryImport(LibName, EntryPoint = "SDL_OnApplicationDidBecomeActive")]
+	public static partial void SDL_OnApplicationDidBecomeActive();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetTicks")]
-	public static extern ulong SDL_GetTicks();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTicks")]
+	public static partial ulong SDL_GetTicks();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetTicksNS")]
-	public static extern ulong SDL_GetTicksNS();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTicksNS")]
+	public static partial ulong SDL_GetTicksNS();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetPerformanceCounter")]
-	public static extern ulong SDL_GetPerformanceCounter();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetPerformanceCounter")]
+	public static partial ulong SDL_GetPerformanceCounter();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetPerformanceFrequency")]
-	public static extern ulong SDL_GetPerformanceFrequency();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetPerformanceFrequency")]
+	public static partial ulong SDL_GetPerformanceFrequency();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Delay")]
-	public static extern void SDL_Delay(uint ms);
+	[LibraryImport(LibName, EntryPoint = "SDL_Delay")]
+	public static partial void SDL_Delay(uint ms);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_DelayNS")]
-	public static extern void SDL_DelayNS(ulong ns);
+	[LibraryImport(LibName, EntryPoint = "SDL_DelayNS")]
+	public static partial void SDL_DelayNS(ulong ns);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_AddTimer")]
-	public static extern SDL_TimerID SDL_AddTimer(uint interval, SDL_TimerCallback callback, nint param);
+	[LibraryImport(LibName, EntryPoint = "SDL_AddTimer")]
+	public static partial SDL_TimerID SDL_AddTimer(uint interval, SDL_TimerCallback callback, nint param);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RemoveTimer")]
-	public static extern SDL_bool SDL_RemoveTimer(SDL_TimerID id);
+	[LibraryImport(LibName, EntryPoint = "SDL_RemoveTimer")]
+	public static partial SDL_bool SDL_RemoveTimer(SDL_TimerID id);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetNumTouchDevices")]
-	public static extern int SDL_GetNumTouchDevices();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetNumTouchDevices")]
+	public static partial int SDL_GetNumTouchDevices();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetTouchDevice")]
-	public static extern SDL_TouchID SDL_GetTouchDevice(int index);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTouchDevice")]
+	public static partial SDL_TouchID SDL_GetTouchDevice(int index);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetTouchName")]
-	public static extern sbyte* SDL_GetTouchName(int index);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTouchName")]
+	public static partial sbyte* SDL_GetTouchName(int index);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetTouchDeviceType")]
-	public static extern SDL_TouchDeviceType SDL_GetTouchDeviceType(SDL_TouchID touchID);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTouchDeviceType")]
+	public static partial SDL_TouchDeviceType SDL_GetTouchDeviceType(SDL_TouchID touchID);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetNumTouchFingers")]
-	public static extern int SDL_GetNumTouchFingers(SDL_TouchID touchID);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetNumTouchFingers")]
+	public static partial int SDL_GetNumTouchFingers(SDL_TouchID touchID);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetTouchFinger")]
-	public static extern SDL_Finger* SDL_GetTouchFinger(SDL_TouchID touchID, int index);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTouchFinger")]
+	public static partial SDL_Finger* SDL_GetTouchFinger(SDL_TouchID touchID, int index);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogSetAllPriority")]
-	public static extern void SDL_LogSetAllPriority(SDL_LogPriority priority);
+	[LibraryImport(LibName, EntryPoint = "SDL_LogSetAllPriority")]
+	public static partial void SDL_LogSetAllPriority(SDL_LogPriority priority);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogSetPriority")]
-	public static extern void SDL_LogSetPriority(int category, SDL_LogPriority priority);
+	[LibraryImport(LibName, EntryPoint = "SDL_LogSetPriority")]
+	public static partial void SDL_LogSetPriority(int category, SDL_LogPriority priority);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogGetPriority")]
-	public static extern SDL_LogPriority SDL_LogGetPriority(int category);
+	[LibraryImport(LibName, EntryPoint = "SDL_LogGetPriority")]
+	public static partial SDL_LogPriority SDL_LogGetPriority(int category);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogResetPriorities")]
-	public static extern void SDL_LogResetPriorities();
+	[LibraryImport(LibName, EntryPoint = "SDL_LogResetPriorities")]
+	public static partial void SDL_LogResetPriorities();
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Log")]
-	public static extern void SDL_Log(sbyte* fmt);
+	[LibraryImport(LibName, EntryPoint = "SDL_Log")]
+	public static partial void SDL_Log(sbyte* fmt);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogVerbose")]
-	public static extern void SDL_LogVerbose(int category, sbyte* fmt);
+	[LibraryImport(LibName, EntryPoint = "SDL_LogVerbose")]
+	public static partial void SDL_LogVerbose(int category, sbyte* fmt);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogDebug")]
-	public static extern void SDL_LogDebug(int category, sbyte* fmt);
+	[LibraryImport(LibName, EntryPoint = "SDL_LogDebug")]
+	public static partial void SDL_LogDebug(int category, sbyte* fmt);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogInfo")]
-	public static extern void SDL_LogInfo(int category, sbyte* fmt);
+	[LibraryImport(LibName, EntryPoint = "SDL_LogInfo")]
+	public static partial void SDL_LogInfo(int category, sbyte* fmt);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogWarn")]
-	public static extern void SDL_LogWarn(int category, sbyte* fmt);
+	[LibraryImport(LibName, EntryPoint = "SDL_LogWarn")]
+	public static partial void SDL_LogWarn(int category, sbyte* fmt);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogError")]
-	public static extern void SDL_LogError(int category, sbyte* fmt);
+	[LibraryImport(LibName, EntryPoint = "SDL_LogError")]
+	public static partial void SDL_LogError(int category, sbyte* fmt);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogCritical")]
-	public static extern void SDL_LogCritical(int category, sbyte* fmt);
+	[LibraryImport(LibName, EntryPoint = "SDL_LogCritical")]
+	public static partial void SDL_LogCritical(int category, sbyte* fmt);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogMessage")]
-	public static extern void SDL_LogMessage(int category, SDL_LogPriority priority, sbyte* fmt);
+	[LibraryImport(LibName, EntryPoint = "SDL_LogMessage")]
+	public static partial void SDL_LogMessage(int category, SDL_LogPriority priority, sbyte* fmt);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_OpenURL")]
-	public static extern int SDL_OpenURL(sbyte* url);
+	[LibraryImport(LibName, EntryPoint = "SDL_OpenURL")]
+	public static partial int SDL_OpenURL(sbyte* url);
 
-	[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetPowerInfo")]
-	public static extern SDL_PowerState SDL_GetPowerInfo(int* seconds, int* percent);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetPowerInfo")]
+	public static partial SDL_PowerState SDL_GetPowerInfo(int* seconds, int* percent);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSensors")]
+	public static partial SDL_SensorID* SDL_GetSensors(out int count);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSensorInstanceName")]
+	public static partial sbyte* SDL_GetSensorInstanceName(SDL_SensorID instance_id);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSensorInstanceType")]
+	public static partial SDL_SensorType SDL_GetSensorInstanceType(SDL_SensorID instance_id);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSensorInstanceNonPortableType")]
+	public static partial int SDL_GetSensorInstanceNonPortableType(SDL_SensorID instance_id);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_OpenSensor")]
+	public static partial SDL_Sensor SDL_OpenSensor(SDL_SensorID instance_id);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSensorFromInstanceID")]
+	public static partial SDL_Sensor SDL_GetSensorFromInstanceID(SDL_SensorID instance_id);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSensorName")]
+	public static partial sbyte* SDL_GetSensorName(SDL_Sensor sensor);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSensorType")]
+	public static partial SDL_SensorType SDL_GetSensorType(SDL_Sensor sensor);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSensorNonPortableType")]
+	public static partial int SDL_GetSensorNonPortableType(SDL_Sensor sensor);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSensorInstanceID")]
+	public static partial SDL_SensorID SDL_GetSensorInstanceID(SDL_Sensor sensor);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSensorData")]
+	public static partial int SDL_GetSensorData(SDL_Sensor sensor, float* data, int num_values);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_CloseSensor")]
+	public static partial void SDL_CloseSensor(SDL_Sensor sensor);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_UpdateSensors")]
+	public static partial void SDL_UpdateSensors();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_LoadLibrary")]
+	public static partial int SDL_Vulkan_LoadLibrary(sbyte* path);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_GetVkGetInstanceProcAddr")]
+	public static partial delegate* unmanaged<void> SDL_Vulkan_GetVkGetInstanceProcAddr();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_UnloadLibrary")]
+	public static partial void SDL_Vulkan_UnloadLibrary();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_GetInstanceExtensions")]
+	public static partial SDL_bool SDL_Vulkan_GetInstanceExtensions(out uint count, sbyte** names);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_CreateSurface")]
+	public static partial SDL_bool SDL_Vulkan_CreateSurface(SDL_Window window, nint instance, ulong* surface);
 
 }

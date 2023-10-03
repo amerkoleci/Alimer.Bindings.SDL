@@ -17,9 +17,6 @@ unsafe partial class SDL
         return GetStringOrEmpty(SDL_GetJoystickInstanceName(instance_id));
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_JoystickID* SDL_GetJoysticks(out int count);
-
     public static ReadOnlySpan<SDL_JoystickID> SDL_GetJoysticks()
     {
         SDL_JoystickID* ptr = SDL_GetJoysticks(out int count);

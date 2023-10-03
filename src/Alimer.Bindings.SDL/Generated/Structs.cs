@@ -174,3 +174,648 @@ public partial struct SDL_AudioSpec
 	public int freq;
 }
 
+public partial struct SDL_CommonEvent
+{
+	public uint type;
+	public ulong timestamp;
+}
+
+public partial struct SDL_DisplayEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_DisplayID displayID;
+	public int data1;
+}
+
+public partial struct SDL_WindowEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_WindowID windowID;
+	public int data1;
+	public int data2;
+}
+
+public partial struct SDL_KeyboardEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_WindowID windowID;
+	public byte state;
+	public byte repeat;
+	public byte padding2;
+	public byte padding3;
+	public SDL_KeyboardEvent_keysym keysym;
+	
+	public partial struct SDL_KeyboardEvent_keysym
+	{
+		public SDL_Scancode scancode;
+		public SDL_KeyCode sym;
+		public ushort mod;
+		public uint unused;
+	}
+}
+
+public partial struct SDL_TextEditingEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_WindowID windowID;
+	public unsafe fixed sbyte text[32];
+	public int start;
+	public int length;
+}
+
+public partial struct SDL_TextEditingExtEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_WindowID windowID;
+	public unsafe sbyte* text;
+	public int start;
+	public int length;
+}
+
+public partial struct SDL_TextInputEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_WindowID windowID;
+	public unsafe fixed sbyte text[32];
+}
+
+public partial struct SDL_MouseMotionEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_WindowID windowID;
+	public SDL_MouseID which;
+	public uint state;
+	public float x;
+	public float y;
+	public float xrel;
+	public float yrel;
+}
+
+public partial struct SDL_MouseButtonEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_WindowID windowID;
+	public SDL_MouseID which;
+	public byte button;
+	public byte state;
+	public byte clicks;
+	public byte padding;
+	public float x;
+	public float y;
+}
+
+public partial struct SDL_MouseWheelEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_WindowID windowID;
+	public SDL_MouseID which;
+	public float x;
+	public float y;
+	public uint direction;
+	public float mouseX;
+	public float mouseY;
+}
+
+public partial struct SDL_JoyAxisEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_JoystickID which;
+	public byte axis;
+	public byte padding1;
+	public byte padding2;
+	public byte padding3;
+	public short value;
+	public ushort padding4;
+}
+
+public partial struct SDL_JoyHatEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_JoystickID which;
+	public byte hat;
+	public byte value;
+	public byte padding1;
+	public byte padding2;
+}
+
+public partial struct SDL_JoyButtonEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_JoystickID which;
+	public byte button;
+	public byte state;
+	public byte padding1;
+	public byte padding2;
+}
+
+public partial struct SDL_JoyDeviceEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_JoystickID which;
+}
+
+public partial struct SDL_JoyBatteryEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_JoystickID which;
+	public SDL_JoystickPowerLevel level;
+}
+
+public partial struct SDL_GamepadAxisEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_JoystickID which;
+	public byte axis;
+	public byte padding1;
+	public byte padding2;
+	public byte padding3;
+	public short value;
+	public ushort padding4;
+}
+
+public partial struct SDL_GamepadButtonEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_JoystickID which;
+	public byte button;
+	public byte state;
+	public byte padding1;
+	public byte padding2;
+}
+
+public partial struct SDL_GamepadDeviceEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_JoystickID which;
+}
+
+public partial struct SDL_GamepadTouchpadEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_JoystickID which;
+	public int touchpad;
+	public int finger;
+	public float x;
+	public float y;
+	public float pressure;
+}
+
+public partial struct SDL_GamepadSensorEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_JoystickID which;
+	public int sensor;
+	public unsafe fixed float data[3];
+	public ulong sensor_timestamp;
+}
+
+public partial struct SDL_AudioDeviceEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_AudioDeviceID which;
+	public byte iscapture;
+	public byte padding1;
+	public byte padding2;
+	public byte padding3;
+}
+
+public partial struct SDL_TouchFingerEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_TouchID touchId;
+	public SDL_FingerID fingerId;
+	public float x;
+	public float y;
+	public float dx;
+	public float dy;
+	public float pressure;
+	public SDL_WindowID windowID;
+}
+
+public partial struct SDL_DropEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public unsafe sbyte* file;
+	public SDL_WindowID windowID;
+	public float x;
+	public float y;
+}
+
+public partial struct SDL_ClipboardEvent
+{
+	public uint type;
+	public ulong timestamp;
+}
+
+public partial struct SDL_SensorEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_SensorID which;
+	public unsafe fixed float data[6];
+	public ulong sensor_timestamp;
+}
+
+public partial struct SDL_QuitEvent
+{
+	public uint type;
+	public ulong timestamp;
+}
+
+public partial struct SDL_OSEvent
+{
+	public uint type;
+	public ulong timestamp;
+}
+
+public partial struct SDL_UserEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public SDL_WindowID windowID;
+	public int code;
+	public nint data1;
+	public nint data2;
+}
+
+public partial struct SDL_SysWMEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public nint msg;
+}
+
+[StructLayout(LayoutKind.Explicit)]
+public partial struct SDL_Event
+{
+	[FieldOffset(0)]
+	public SDL_EventType type;
+	[FieldOffset(0)]
+	public SDL_Event_common common;
+	
+	public partial struct SDL_Event_common
+	{
+		public uint type;
+		public ulong timestamp;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_display display;
+	
+	public partial struct SDL_Event_display
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_DisplayID displayID;
+		public int data1;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_window window;
+	
+	public partial struct SDL_Event_window
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_WindowID windowID;
+		public int data1;
+		public int data2;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_key key;
+	
+	public partial struct SDL_Event_key
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_WindowID windowID;
+		public byte state;
+		public byte repeat;
+		public byte padding2;
+		public byte padding3;
+		public SDL_KeyboardEvent_keysym keysym;
+		
+		public partial struct SDL_KeyboardEvent_keysym
+		{
+			public SDL_Scancode scancode;
+			public SDL_KeyCode sym;
+			public ushort mod;
+			public uint unused;
+		}
+	}
+	[FieldOffset(0)]
+	public SDL_Event_edit edit;
+	
+	public partial struct SDL_Event_edit
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_WindowID windowID;
+		public unsafe fixed sbyte text[32];
+		public int start;
+		public int length;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_editExt editExt;
+	
+	public partial struct SDL_Event_editExt
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_WindowID windowID;
+		public unsafe sbyte* text;
+		public int start;
+		public int length;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_text text;
+	
+	public partial struct SDL_Event_text
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_WindowID windowID;
+		public unsafe fixed sbyte text[32];
+	}
+	[FieldOffset(0)]
+	public SDL_Event_motion motion;
+	
+	public partial struct SDL_Event_motion
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_WindowID windowID;
+		public SDL_MouseID which;
+		public uint state;
+		public float x;
+		public float y;
+		public float xrel;
+		public float yrel;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_button button;
+	
+	public partial struct SDL_Event_button
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_WindowID windowID;
+		public SDL_MouseID which;
+		public byte button;
+		public byte state;
+		public byte clicks;
+		public byte padding;
+		public float x;
+		public float y;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_wheel wheel;
+	
+	public partial struct SDL_Event_wheel
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_WindowID windowID;
+		public SDL_MouseID which;
+		public float x;
+		public float y;
+		public uint direction;
+		public float mouseX;
+		public float mouseY;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_jaxis jaxis;
+	
+	public partial struct SDL_Event_jaxis
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_JoystickID which;
+		public byte axis;
+		public byte padding1;
+		public byte padding2;
+		public byte padding3;
+		public short value;
+		public ushort padding4;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_jhat jhat;
+	
+	public partial struct SDL_Event_jhat
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_JoystickID which;
+		public byte hat;
+		public byte value;
+		public byte padding1;
+		public byte padding2;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_jbutton jbutton;
+	
+	public partial struct SDL_Event_jbutton
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_JoystickID which;
+		public byte button;
+		public byte state;
+		public byte padding1;
+		public byte padding2;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_jdevice jdevice;
+	
+	public partial struct SDL_Event_jdevice
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_JoystickID which;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_jbattery jbattery;
+	
+	public partial struct SDL_Event_jbattery
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_JoystickID which;
+		public SDL_JoystickPowerLevel level;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_gaxis gaxis;
+	
+	public partial struct SDL_Event_gaxis
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_JoystickID which;
+		public byte axis;
+		public byte padding1;
+		public byte padding2;
+		public byte padding3;
+		public short value;
+		public ushort padding4;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_gbutton gbutton;
+	
+	public partial struct SDL_Event_gbutton
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_JoystickID which;
+		public byte button;
+		public byte state;
+		public byte padding1;
+		public byte padding2;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_gdevice gdevice;
+	
+	public partial struct SDL_Event_gdevice
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_JoystickID which;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_gtouchpad gtouchpad;
+	
+	public partial struct SDL_Event_gtouchpad
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_JoystickID which;
+		public int touchpad;
+		public int finger;
+		public float x;
+		public float y;
+		public float pressure;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_gsensor gsensor;
+	
+	public partial struct SDL_Event_gsensor
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_JoystickID which;
+		public int sensor;
+		public unsafe fixed float data[3];
+		public ulong sensor_timestamp;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_adevice adevice;
+	
+	public partial struct SDL_Event_adevice
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_AudioDeviceID which;
+		public byte iscapture;
+		public byte padding1;
+		public byte padding2;
+		public byte padding3;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_sensor sensor;
+	
+	public partial struct SDL_Event_sensor
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_SensorID which;
+		public unsafe fixed float data[6];
+		public ulong sensor_timestamp;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_quit quit;
+	
+	public partial struct SDL_Event_quit
+	{
+		public uint type;
+		public ulong timestamp;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_user user;
+	
+	public partial struct SDL_Event_user
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_WindowID windowID;
+		public int code;
+		public nint data1;
+		public nint data2;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_syswm syswm;
+	
+	public partial struct SDL_Event_syswm
+	{
+		public uint type;
+		public ulong timestamp;
+		public nint msg;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_tfinger tfinger;
+	
+	public partial struct SDL_Event_tfinger
+	{
+		public uint type;
+		public ulong timestamp;
+		public SDL_TouchID touchId;
+		public SDL_FingerID fingerId;
+		public float x;
+		public float y;
+		public float dx;
+		public float dy;
+		public float pressure;
+		public SDL_WindowID windowID;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_drop drop;
+	
+	public partial struct SDL_Event_drop
+	{
+		public uint type;
+		public ulong timestamp;
+		public unsafe sbyte* file;
+		public SDL_WindowID windowID;
+		public float x;
+		public float y;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_clipboard clipboard;
+	
+	public partial struct SDL_Event_clipboard
+	{
+		public uint type;
+		public ulong timestamp;
+	}
+	[FieldOffset(0)]
+    public unsafe fixed byte padding[128];
+}
+

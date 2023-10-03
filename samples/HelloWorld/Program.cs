@@ -2,8 +2,6 @@
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 using static SDL.SDL;
-using static SDL.SDL_EventType;
-using static SDL.SDL_GLprofile;
 using System.Drawing;
 using SDL;
 
@@ -92,12 +90,12 @@ public static unsafe class Program
             SDL_Event evt;
             while (SDL_PollEvent(&evt) == 1)
             {
-                if (evt.type == SDL_QUIT)
+                if (evt.type == SDL_EventType.Quit)
                 {
                     done = true;
                 }
 
-                if (evt.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED && evt.window.windowID == SDL_GetWindowID(window))
+                if (evt.type == SDL_EventType.WindowCloseRequested && evt.window.windowID == SDL_GetWindowID(window))
                 {
                     done = true;
                 }

@@ -48,22 +48,18 @@ public static partial class CsCodeGenerator
         { "SDL_EGLDisplay", "nint" },
         { "SDL_EGLConfig", "nint" },
         { "SDL_EGLSurface", "nint" },
+        { "SDL_MetalView", "nint" },
+        { "SDL_SysWMmsg", "nint" },
     };
 
     private static readonly HashSet<string> s_knownTypes = new(StringComparer.OrdinalIgnoreCase)
     {
         "SDL_Rect",
-        //"SDL_JoystickID",
         "SDL_Joystick",
         "SDL_Gamepad",
-        //"SDL_MouseID",
         "SDL_Window",
         "SDL_Renderer",
-        //"SDL_TimerID",
-        //"SDL_TouchID",
-        //"SDL_FingerID",
         "SDL_Sensor",
-        //"SDL_SensorID",
         "SDL_AudioStream",
     };
 

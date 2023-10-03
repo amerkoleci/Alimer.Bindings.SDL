@@ -1637,3 +1637,193 @@ public enum SDL_HitTestResult
 	ResizeLeft = 9,
 }
 
+public enum SDL_EventType
+{
+	/// <unmanaged>SDL_EVENT_FIRST</unmanaged>
+	First = 0,
+	/// <unmanaged>SDL_EVENT_QUIT</unmanaged>
+	Quit = 0x100,
+	/// <unmanaged>SDL_EVENT_TERMINATING</unmanaged>
+	Terminating = 257,
+	/// <unmanaged>SDL_EVENT_LOW_MEMORY</unmanaged>
+	LowMemory = 258,
+	/// <unmanaged>SDL_EVENT_WILL_ENTER_BACKGROUND</unmanaged>
+	WillEnterBackground = 259,
+	/// <unmanaged>SDL_EVENT_DID_ENTER_BACKGROUND</unmanaged>
+	DidEnterBackground = 260,
+	/// <unmanaged>SDL_EVENT_WILL_ENTER_FOREGROUND</unmanaged>
+	WillEnterForeground = 261,
+	/// <unmanaged>SDL_EVENT_DID_ENTER_FOREGROUND</unmanaged>
+	DidEnterForeground = 262,
+	/// <unmanaged>SDL_EVENT_LOCALE_CHANGED</unmanaged>
+	LocaleChanged = 263,
+	/// <unmanaged>SDL_EVENT_SYSTEM_THEME_CHANGED</unmanaged>
+	SystemThemeChanged = 264,
+	/// <unmanaged>SDL_EVENT_DISPLAY_ORIENTATION</unmanaged>
+	DisplayOrientation = 0x151,
+	/// <unmanaged>SDL_EVENT_DISPLAY_CONNECTED</unmanaged>
+	DisplayConnected = 338,
+	/// <unmanaged>SDL_EVENT_DISPLAY_DISCONNECTED</unmanaged>
+	DisplayDisconnected = 339,
+	/// <unmanaged>SDL_EVENT_DISPLAY_MOVED</unmanaged>
+	DisplayMoved = 340,
+	/// <unmanaged>SDL_EVENT_DISPLAY_CONTENT_SCALE_CHANGED</unmanaged>
+	DisplayContentScaleChanged = 341,
+	/// <unmanaged>SDL_EVENT_DISPLAY_FIRST</unmanaged>
+	DisplayFirst = DisplayOrientation,
+	/// <unmanaged>SDL_EVENT_DISPLAY_LAST</unmanaged>
+	DisplayLast = DisplayContentScaleChanged,
+	/// <unmanaged>SDL_EVENT_SYSWM</unmanaged>
+	Syswm = 0x201,
+	/// <unmanaged>SDL_EVENT_WINDOW_SHOWN</unmanaged>
+	WindowShown = 514,
+	/// <unmanaged>SDL_EVENT_WINDOW_HIDDEN</unmanaged>
+	WindowHidden = 515,
+	/// <unmanaged>SDL_EVENT_WINDOW_EXPOSED</unmanaged>
+	WindowExposed = 516,
+	/// <unmanaged>SDL_EVENT_WINDOW_MOVED</unmanaged>
+	WindowMoved = 517,
+	/// <unmanaged>SDL_EVENT_WINDOW_RESIZED</unmanaged>
+	WindowResized = 518,
+	/// <unmanaged>SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED</unmanaged>
+	WindowPixelSizeChanged = 519,
+	/// <unmanaged>SDL_EVENT_WINDOW_MINIMIZED</unmanaged>
+	WindowMinimized = 520,
+	/// <unmanaged>SDL_EVENT_WINDOW_MAXIMIZED</unmanaged>
+	WindowMaximized = 521,
+	/// <unmanaged>SDL_EVENT_WINDOW_RESTORED</unmanaged>
+	WindowRestored = 522,
+	/// <unmanaged>SDL_EVENT_WINDOW_MOUSE_ENTER</unmanaged>
+	WindowMouseEnter = 523,
+	/// <unmanaged>SDL_EVENT_WINDOW_MOUSE_LEAVE</unmanaged>
+	WindowMouseLeave = 524,
+	/// <unmanaged>SDL_EVENT_WINDOW_FOCUS_GAINED</unmanaged>
+	WindowFocusGained = 525,
+	/// <unmanaged>SDL_EVENT_WINDOW_FOCUS_LOST</unmanaged>
+	WindowFocusLost = 526,
+	/// <unmanaged>SDL_EVENT_WINDOW_CLOSE_REQUESTED</unmanaged>
+	WindowCloseRequested = 527,
+	/// <unmanaged>SDL_EVENT_WINDOW_TAKE_FOCUS</unmanaged>
+	WindowTakeFocus = 528,
+	/// <unmanaged>SDL_EVENT_WINDOW_HIT_TEST</unmanaged>
+	WindowHitTest = 529,
+	/// <unmanaged>SDL_EVENT_WINDOW_ICCPROF_CHANGED</unmanaged>
+	WindowIccprofChanged = 530,
+	/// <unmanaged>SDL_EVENT_WINDOW_DISPLAY_CHANGED</unmanaged>
+	WindowDisplayChanged = 531,
+	/// <unmanaged>SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED</unmanaged>
+	WindowDisplayScaleChanged = 532,
+	/// <unmanaged>SDL_EVENT_WINDOW_OCCLUDED</unmanaged>
+	WindowOccluded = 533,
+	/// <unmanaged>SDL_EVENT_WINDOW_DESTROYED</unmanaged>
+	WindowDestroyed = 534,
+	/// <unmanaged>SDL_EVENT_WINDOW_FIRST</unmanaged>
+	WindowFirst = WindowShown,
+	/// <unmanaged>SDL_EVENT_WINDOW_LAST</unmanaged>
+	WindowLast = WindowDestroyed,
+	/// <unmanaged>SDL_EVENT_KEY_DOWN</unmanaged>
+	KeyDown = 0x300,
+	/// <unmanaged>SDL_EVENT_KEY_UP</unmanaged>
+	KeyUp = 769,
+	/// <unmanaged>SDL_EVENT_TEXT_EDITING</unmanaged>
+	TextEditing = 770,
+	/// <unmanaged>SDL_EVENT_TEXT_INPUT</unmanaged>
+	TextInput = 771,
+	/// <unmanaged>SDL_EVENT_KEYMAP_CHANGED</unmanaged>
+	KeymapChanged = 772,
+	/// <unmanaged>SDL_EVENT_TEXT_EDITING_EXT</unmanaged>
+	TextEditingExt = 773,
+	/// <unmanaged>SDL_EVENT_MOUSE_MOTION</unmanaged>
+	MouseMotion = 0x400,
+	/// <unmanaged>SDL_EVENT_MOUSE_BUTTON_DOWN</unmanaged>
+	MouseButtonDown = 1025,
+	/// <unmanaged>SDL_EVENT_MOUSE_BUTTON_UP</unmanaged>
+	MouseButtonUp = 1026,
+	/// <unmanaged>SDL_EVENT_MOUSE_WHEEL</unmanaged>
+	MouseWheel = 1027,
+	/// <unmanaged>SDL_EVENT_JOYSTICK_AXIS_MOTION</unmanaged>
+	JoystickAxisMotion = 0x600,
+	/// <unmanaged>SDL_EVENT_JOYSTICK_HAT_MOTION</unmanaged>
+	JoystickHatMotion = 0x602,
+	/// <unmanaged>SDL_EVENT_JOYSTICK_BUTTON_DOWN</unmanaged>
+	JoystickButtonDown = 1539,
+	/// <unmanaged>SDL_EVENT_JOYSTICK_BUTTON_UP</unmanaged>
+	JoystickButtonUp = 1540,
+	/// <unmanaged>SDL_EVENT_JOYSTICK_ADDED</unmanaged>
+	JoystickAdded = 1541,
+	/// <unmanaged>SDL_EVENT_JOYSTICK_REMOVED</unmanaged>
+	JoystickRemoved = 1542,
+	/// <unmanaged>SDL_EVENT_JOYSTICK_BATTERY_UPDATED</unmanaged>
+	JoystickBatteryUpdated = 1543,
+	/// <unmanaged>SDL_EVENT_JOYSTICK_UPDATE_COMPLETE</unmanaged>
+	JoystickUpdateComplete = 1544,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_AXIS_MOTION</unmanaged>
+	GamepadAxisMotion = 0x650,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_BUTTON_DOWN</unmanaged>
+	GamepadButtonDown = 1617,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_BUTTON_UP</unmanaged>
+	GamepadButtonUp = 1618,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_ADDED</unmanaged>
+	GamepadAdded = 1619,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_REMOVED</unmanaged>
+	GamepadRemoved = 1620,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_REMAPPED</unmanaged>
+	GamepadRemapped = 1621,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_TOUCHPAD_DOWN</unmanaged>
+	GamepadTouchpadDown = 1622,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_TOUCHPAD_MOTION</unmanaged>
+	GamepadTouchpadMotion = 1623,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_TOUCHPAD_UP</unmanaged>
+	GamepadTouchpadUp = 1624,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_SENSOR_UPDATE</unmanaged>
+	GamepadSensorUpdate = 1625,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_UPDATE_COMPLETE</unmanaged>
+	GamepadUpdateComplete = 1626,
+	/// <unmanaged>SDL_EVENT_FINGER_DOWN</unmanaged>
+	FingerDown = 0x700,
+	/// <unmanaged>SDL_EVENT_FINGER_UP</unmanaged>
+	FingerUp = 1793,
+	/// <unmanaged>SDL_EVENT_FINGER_MOTION</unmanaged>
+	FingerMotion = 1794,
+	/// <unmanaged>SDL_EVENT_CLIPBOARD_UPDATE</unmanaged>
+	ClipboardUpdate = 0x900,
+	/// <unmanaged>SDL_EVENT_DROP_FILE</unmanaged>
+	DropFile = 0x1000,
+	/// <unmanaged>SDL_EVENT_DROP_TEXT</unmanaged>
+	DropText = 4097,
+	/// <unmanaged>SDL_EVENT_DROP_BEGIN</unmanaged>
+	DropBegin = 4098,
+	/// <unmanaged>SDL_EVENT_DROP_COMPLETE</unmanaged>
+	DropComplete = 4099,
+	/// <unmanaged>SDL_EVENT_DROP_POSITION</unmanaged>
+	DropPosition = 4100,
+	/// <unmanaged>SDL_EVENT_AUDIO_DEVICE_ADDED</unmanaged>
+	AudioDeviceAdded = 0x1100,
+	/// <unmanaged>SDL_EVENT_AUDIO_DEVICE_REMOVED</unmanaged>
+	AudioDeviceRemoved = 4353,
+	/// <unmanaged>SDL_EVENT_AUDIO_DEVICE_FORMAT_CHANGED</unmanaged>
+	AudioDeviceFormatChanged = 4354,
+	/// <unmanaged>SDL_EVENT_SENSOR_UPDATE</unmanaged>
+	SensorUpdate = 0x1200,
+	/// <unmanaged>SDL_EVENT_RENDER_TARGETS_RESET</unmanaged>
+	RenderTargetsReset = 0x2000,
+	/// <unmanaged>SDL_EVENT_RENDER_DEVICE_RESET</unmanaged>
+	RenderDeviceReset = 8193,
+	/// <unmanaged>SDL_EVENT_POLL_SENTINEL</unmanaged>
+	PollSentinel = 0x7F00,
+	/// <unmanaged>SDL_EVENT_USER</unmanaged>
+	User = 0x8000,
+	/// <unmanaged>SDL_EVENT_LAST</unmanaged>
+	Last = 0xFFFF,
+}
+
+public enum SDL_eventaction
+{
+	/// <unmanaged>SDL_ADDEVENT</unmanaged>
+	AddEvent = 0,
+	/// <unmanaged>SDL_PEEKEVENT</unmanaged>
+	PeekEvent = 1,
+	/// <unmanaged>SDL_GETEVENT</unmanaged>
+	GetEvent = 2,
+}
+

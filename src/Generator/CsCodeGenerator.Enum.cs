@@ -42,6 +42,7 @@ public static partial class CsCodeGenerator
         { "SDL_GLcontextReleaseFlag", "SDL_GL_CONTEXT_RELEASE_BEHAVIOR" },
         { "SDL_GLContextResetNotification", "SDL_GL_CONTEXT_RESET" },
         { "SDL_HitTestResult", "SDL_HITTEST" },
+        { "SDL_EventType", "SDL_EVENT" },
     };
 
     private static readonly Dictionary<string, string> s_knownEnumValueNames = new()
@@ -49,6 +50,10 @@ public static partial class CsCodeGenerator
         { "SDL_NUM_SCANCODES", "NumScancodes" },
         { "SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT", "ReturnKeyDefault" },
         { "SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT", "EscapeKeyDefault" },
+        //
+        { "SDL_ADDEVENT", "AddEvent" },
+        { "SDL_PEEKEVENT", "PeekEvent" },
+        { "SDL_GETEVENT", "GetEvent" },
     };
 
     private static readonly HashSet<string> s_ignoredParts = new(StringComparer.OrdinalIgnoreCase)

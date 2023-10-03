@@ -1130,21 +1130,6 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_GL_DeleteContext")]
 	public static partial int SDL_GL_DeleteContext(SDL_GLContext context);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_LoadLibrary")]
-	public static partial int SDL_Vulkan_LoadLibrary(sbyte* path);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_GetVkGetInstanceProcAddr")]
-	public static partial delegate* unmanaged<void> SDL_Vulkan_GetVkGetInstanceProcAddr();
-
-	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_UnloadLibrary")]
-	public static partial void SDL_Vulkan_UnloadLibrary();
-
-	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_GetInstanceExtensions")]
-	public static partial SDL_bool SDL_Vulkan_GetInstanceExtensions(out uint count, sbyte** names);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_CreateSurface")]
-	public static partial SDL_bool SDL_Vulkan_CreateSurface(SDL_Window window, nint instance, ulong* surface);
-
 	[LibraryImport(LibName, EntryPoint = "SDL_GetNumAudioDrivers")]
 	public static partial int SDL_GetNumAudioDrivers();
 
@@ -1264,5 +1249,83 @@ public unsafe partial class SDL
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetSilenceValueForFormat")]
 	public static partial int SDL_GetSilenceValueForFormat(SDL_AudioFormat format);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_PumpEvents")]
+	public static partial void SDL_PumpEvents();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_PeepEvents")]
+	public static partial int SDL_PeepEvents(SDL_Event* events, int numevents, SDL_eventaction action, uint minType, uint maxType);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HasEvent")]
+	public static partial SDL_bool SDL_HasEvent(uint type);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HasEvents")]
+	public static partial SDL_bool SDL_HasEvents(uint minType, uint maxType);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_FlushEvent")]
+	public static partial void SDL_FlushEvent(uint type);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_FlushEvents")]
+	public static partial void SDL_FlushEvents(uint minType, uint maxType);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_PollEvent")]
+	public static partial int SDL_PollEvent(SDL_Event* @event);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_WaitEvent")]
+	public static partial int SDL_WaitEvent(SDL_Event* @event);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_WaitEventTimeout")]
+	public static partial int SDL_WaitEventTimeout(SDL_Event* @event, int timeoutMS);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_PushEvent")]
+	public static partial int SDL_PushEvent(SDL_Event* @event);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetEventFilter")]
+	public static partial void SDL_SetEventFilter(SDL_EventFilter filter, nint userdata);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetEventFilter")]
+	public static partial SDL_bool SDL_GetEventFilter(SDL_EventFilter* filter, nint* userdata);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_AddEventWatch")]
+	public static partial void SDL_AddEventWatch(SDL_EventFilter filter, nint userdata);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_DelEventWatch")]
+	public static partial void SDL_DelEventWatch(SDL_EventFilter filter, nint userdata);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_FilterEvents")]
+	public static partial void SDL_FilterEvents(SDL_EventFilter filter, nint userdata);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetEventEnabled")]
+	public static partial void SDL_SetEventEnabled(uint type, SDL_bool enabled);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_EventEnabled")]
+	public static partial SDL_bool SDL_EventEnabled(uint type);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_RegisterEvents")]
+	public static partial uint SDL_RegisterEvents(int numevents);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_LoadLibrary")]
+	public static partial int SDL_Vulkan_LoadLibrary(sbyte* path);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_GetVkGetInstanceProcAddr")]
+	public static partial delegate* unmanaged<void> SDL_Vulkan_GetVkGetInstanceProcAddr();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_UnloadLibrary")]
+	public static partial void SDL_Vulkan_UnloadLibrary();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_GetInstanceExtensions")]
+	public static partial SDL_bool SDL_Vulkan_GetInstanceExtensions(out uint count, sbyte** names);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_CreateSurface")]
+	public static partial SDL_bool SDL_Vulkan_CreateSurface(SDL_Window window, nint instance, ulong* surface);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_Metal_CreateView")]
+	public static partial nint SDL_Metal_CreateView(SDL_Window window);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_Metal_DestroyView")]
+	public static partial void SDL_Metal_DestroyView(nint view);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_Metal_GetLayer")]
+	public static partial nint SDL_Metal_GetLayer(nint view);
 
 }

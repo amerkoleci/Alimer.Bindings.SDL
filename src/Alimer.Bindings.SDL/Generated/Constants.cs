@@ -101,4 +101,12 @@ public static partial class SDL
 	public static readonly SDL_AudioDeviceID SDL_AUDIO_DEVICE_DEFAULT_CAPTURE = (SDL_AudioDeviceID)0xFFFFFFFE;
 	/// <unmanaged>SDL_MIX_MAXVOLUME</unmanaged>
 	public const int SDL_MIX_MAXVOLUME = 128;
+	/// <unmanaged>SDL_RELEASED</unmanaged>
+	public const uint SDL_RELEASED = 0;
+	/// <unmanaged>SDL_PRESSED</unmanaged>
+	public const uint SDL_PRESSED = 1;
+	/// <unmanaged>SDL_TEXTEDITINGEVENT_TEXT_SIZE</unmanaged>
+	public const int SDL_TEXTEDITINGEVENT_TEXT_SIZE = 32;
+	/// <unmanaged>SDL_TEXTINPUTEVENT_TEXT_SIZE</unmanaged>
+	public const int SDL_TEXTINPUTEVENT_TEXT_SIZE = 32;
 }

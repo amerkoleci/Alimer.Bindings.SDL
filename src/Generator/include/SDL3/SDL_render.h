@@ -50,6 +50,7 @@
 
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_events.h>
+#include <SDL3/SDL_properties.h>
 #include <SDL3/SDL_rect.h>
 #include <SDL3/SDL_video.h>
 
@@ -316,6 +317,20 @@ extern DECLSPEC SDL_Window *SDLCALL SDL_GetRenderWindow(SDL_Renderer *renderer);
 extern DECLSPEC int SDLCALL SDL_GetRendererInfo(SDL_Renderer *renderer, SDL_RendererInfo *info);
 
 /**
+ * Get the properties associated with a renderer.
+ *
+ * \param renderer the rendering context
+ * \returns a valid property ID on success or 0 on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_GetProperty
+ * \sa SDL_SetProperty
+ */
+extern DECLSPEC SDL_PropertiesID SDLCALL SDL_GetRendererProperties(SDL_Renderer *renderer);
+
+/**
  * Get the output size in pixels of a rendering context.
  *
  * This returns the true output size in pixels, ignoring any render targets or
@@ -403,6 +418,38 @@ extern DECLSPEC SDL_Texture *SDLCALL SDL_CreateTexture(SDL_Renderer *renderer, U
  * \sa SDL_QueryTexture
  */
 extern DECLSPEC SDL_Texture *SDLCALL SDL_CreateTextureFromSurface(SDL_Renderer *renderer, SDL_Surface *surface);
+
+typedef struct IDXGIResource IDXGIResource;
+
+/**
+ * Get the DXGI resource associated with a texture.
+ *
+ * This is available when using the direct3d11 and direct3d12 renderers.
+ *
+ * Once you are done using the resource, you should release it to avoid a
+ * resource leak.
+ *
+ * \param texture the texture from which to get the associated resource
+ * \returns the DXGI resource associated with given texture or NULL if it is
+ *          not available; call SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ */
+extern DECLSPEC IDXGIResource* SDLCALL SDL_GetTextureDXGIResource(SDL_Texture *texture);
+
+/**
+ * Get the properties associated with a texture.
+ *
+ * \param texture the texture to query
+ * \returns a valid property ID on success or 0 on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_GetProperty
+ * \sa SDL_SetProperty
+ */
+extern DECLSPEC SDL_PropertiesID SDLCALL SDL_GetTextureProperties(SDL_Texture *texture);
 
 /**
  * Query the attributes of a texture.
@@ -571,33 +618,6 @@ extern DECLSPEC int SDLCALL SDL_SetTextureScaleMode(SDL_Texture *texture, SDL_Sc
  * \sa SDL_SetTextureScaleMode
  */
 extern DECLSPEC int SDLCALL SDL_GetTextureScaleMode(SDL_Texture *texture, SDL_ScaleMode *scaleMode);
-
-/**
- * Associate a user-specified pointer with a texture.
- *
- * \param texture the texture to update.
- * \param userdata the pointer to associate with the texture.
- * \returns 0 on success or a negative error code on failure; call
- *          SDL_GetError() for more information.
- *
- * \since This function is available since SDL 3.0.0.
- *
- * \sa SDL_GetTextureUserData
- */
-extern DECLSPEC int SDLCALL SDL_SetTextureUserData(SDL_Texture *texture, void *userdata);
-
-/**
- * Get the user-specified pointer associated with a texture
- *
- * \param texture the texture to query.
- * \returns the pointer associated with the texture, or NULL if the texture is
- *          not valid.
- *
- * \since This function is available since SDL 3.0.0.
- *
- * \sa SDL_SetTextureUserData
- */
-extern DECLSPEC void *SDLCALL SDL_GetTextureUserData(SDL_Texture *texture);
 
 /**
  * Update the given texture rectangle with new pixel data.

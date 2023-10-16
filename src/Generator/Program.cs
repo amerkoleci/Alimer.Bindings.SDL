@@ -40,7 +40,7 @@ public static class Program
             EnumWriteUnmanagedTag = true
         };
 
-        string[] headers =
+        List<string> headers =
         [
             "SDL_error.h",
             "SDL_init.h",
@@ -61,6 +61,7 @@ public static class Program
             "SDL_log.h",
             "SDL_misc.h",
             "SDL_power.h",
+            //"SDL_properties.h",
             "SDL_sensor.h",
             "SDL_video.h",
             "SDL_audio.h",
@@ -70,11 +71,11 @@ public static class Program
             "SDL_syswm.h",
             "SDL_hints.h",
             "SDL_haptic.h",
+            "SDL_blendmode.h",
         ];
 
         foreach(string header in headers)
         {
-
             string? headerFile = Path.Combine(AppContext.BaseDirectory, "include", $"SDL3/{header}");
             var options = new CppParserOptions
             {

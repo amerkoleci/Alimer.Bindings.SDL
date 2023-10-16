@@ -1863,3 +1863,58 @@ public enum SDL_HintPriority
 	Override = 2,
 }
 
+[Flags]
+public enum SDL_BlendMode
+{
+	/// <unmanaged>SDL_BLENDMODE_NONE</unmanaged>
+	None = 0x00000000,
+	/// <unmanaged>SDL_BLENDMODE_BLEND</unmanaged>
+	Blend = 0x00000001,
+	/// <unmanaged>SDL_BLENDMODE_ADD</unmanaged>
+	Add = 0x00000002,
+	/// <unmanaged>SDL_BLENDMODE_MOD</unmanaged>
+	Mod = 0x00000004,
+	/// <unmanaged>SDL_BLENDMODE_MUL</unmanaged>
+	Mul = 0x00000008,
+	/// <unmanaged>SDL_BLENDMODE_INVALID</unmanaged>
+	Invalid = 0x7FFFFFFF,
+}
+
+public enum SDL_BlendOperation
+{
+	/// <unmanaged>SDL_BLENDOPERATION_ADD</unmanaged>
+	Add = 0x1,
+	/// <unmanaged>SDL_BLENDOPERATION_SUBTRACT</unmanaged>
+	Subtract = 0x2,
+	/// <unmanaged>SDL_BLENDOPERATION_REV_SUBTRACT</unmanaged>
+	RevSubtract = 0x3,
+	/// <unmanaged>SDL_BLENDOPERATION_MINIMUM</unmanaged>
+	Minimum = 0x4,
+	/// <unmanaged>SDL_BLENDOPERATION_MAXIMUM</unmanaged>
+	Maximum = 0x5,
+}
+
+public enum SDL_BlendFactor
+{
+	/// <unmanaged>SDL_BLENDFACTOR_ZERO</unmanaged>
+	Zero = 0x1,
+	/// <unmanaged>SDL_BLENDFACTOR_ONE</unmanaged>
+	One = 0x2,
+	/// <unmanaged>SDL_BLENDFACTOR_SRC_COLOR</unmanaged>
+	SrcColor = 0x3,
+	/// <unmanaged>SDL_BLENDFACTOR_ONE_MINUS_SRC_COLOR</unmanaged>
+	OneMinusSrcColor = 0x4,
+	/// <unmanaged>SDL_BLENDFACTOR_SRC_ALPHA</unmanaged>
+	SrcAlpha = 0x5,
+	/// <unmanaged>SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA</unmanaged>
+	OneMinusSrcAlpha = 0x6,
+	/// <unmanaged>SDL_BLENDFACTOR_DST_COLOR</unmanaged>
+	DstColor = 0x7,
+	/// <unmanaged>SDL_BLENDFACTOR_ONE_MINUS_DST_COLOR</unmanaged>
+	OneMinusDstColor = 0x8,
+	/// <unmanaged>SDL_BLENDFACTOR_DST_ALPHA</unmanaged>
+	DstAlpha = 0x9,
+	/// <unmanaged>SDL_BLENDFACTOR_ONE_MINUS_DST_ALPHA</unmanaged>
+	OneMinusDstAlpha = 0xA,
+}
+

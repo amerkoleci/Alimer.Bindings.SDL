@@ -287,6 +287,9 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_SetJoystickVirtualHat")]
 	public static partial int SDL_SetJoystickVirtualHat(SDL_Joystick joystick, int hat, byte value);
 
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickProperties")]
+	public static partial SDL_PropertiesID SDL_GetJoystickProperties(SDL_Joystick joystick);
+
 	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickName")]
 	public static partial sbyte* SDL_GetJoystickName(SDL_Joystick joystick);
 
@@ -463,6 +466,9 @@ public unsafe partial class SDL
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadFromPlayerIndex")]
 	public static partial SDL_Gamepad SDL_GetGamepadFromPlayerIndex(int player_index);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadProperties")]
+	public static partial SDL_PropertiesID SDL_GetGamepadProperties(SDL_Gamepad gamepad);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadInstanceID")]
 	public static partial SDL_JoystickID SDL_GetGamepadInstanceID(SDL_Gamepad gamepad);
@@ -803,6 +809,9 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_GetSensorFromInstanceID")]
 	public static partial SDL_Sensor SDL_GetSensorFromInstanceID(SDL_SensorID instance_id);
 
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSensorProperties")]
+	public static partial SDL_PropertiesID SDL_GetSensorProperties(SDL_Sensor sensor);
+
 	[LibraryImport(LibName, EntryPoint = "SDL_GetSensorName")]
 	public static partial sbyte* SDL_GetSensorName(SDL_Sensor sensor);
 
@@ -920,6 +929,9 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowParent")]
 	public static partial SDL_Window SDL_GetWindowParent(SDL_Window window);
 
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowProperties")]
+	public static partial SDL_PropertiesID SDL_GetWindowProperties(SDL_Window window);
+
 	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowFlags")]
 	public static partial uint SDL_GetWindowFlags(SDL_Window window);
 
@@ -931,12 +943,6 @@ public unsafe partial class SDL
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowIcon")]
 	public static partial int SDL_SetWindowIcon(SDL_Window window, SDL_Surface* icon);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowData")]
-	public static partial nint SDL_SetWindowData(SDL_Window window, sbyte* name, nint userdata);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowData")]
-	public static partial nint SDL_GetWindowData(SDL_Window window, sbyte* name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowPosition")]
 	public static partial int SDL_SetWindowPosition(SDL_Window window, int x, int y);
@@ -1186,6 +1192,9 @@ public unsafe partial class SDL
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateAudioStream")]
 	public static partial SDL_AudioStream SDL_CreateAudioStream(SDL_AudioSpec* src_spec, SDL_AudioSpec* dst_spec);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetAudioStreamProperties")]
+	public static partial SDL_PropertiesID SDL_GetAudioStreamProperties(SDL_AudioStream stream);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetAudioStreamFormat")]
 	public static partial int SDL_GetAudioStreamFormat(SDL_AudioStream stream, SDL_AudioSpec* src_spec, SDL_AudioSpec* dst_spec);
@@ -1447,5 +1456,8 @@ public unsafe partial class SDL
 
 	[LibraryImport(LibName, EntryPoint = "SDL_HapticRumbleStop")]
 	public static partial int SDL_HapticRumbleStop(SDL_Haptic haptic);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ComposeCustomBlendMode")]
+	public static partial SDL_BlendMode SDL_ComposeCustomBlendMode(SDL_BlendFactor srcColorFactor, SDL_BlendFactor dstColorFactor, SDL_BlendOperation colorOperation, SDL_BlendFactor srcAlphaFactor, SDL_BlendFactor dstAlphaFactor, SDL_BlendOperation alphaOperation);
 
 }

@@ -47,40 +47,6 @@ public enum SDL_bool
     SDL_TRUE = 1
 }
 
-[Flags]
-public enum SDL_BlendMode
-{
-    SDL_BLENDMODE_NONE = 0x00000000,
-    SDL_BLENDMODE_BLEND = 0x00000001,
-    SDL_BLENDMODE_ADD = 0x00000002,
-    SDL_BLENDMODE_MOD = 0x00000004,
-    SDL_BLENDMODE_MUL = 0x00000008, /* >= 2.0.11 */
-    SDL_BLENDMODE_INVALID = 0x7FFFFFFF
-}
-
-public enum SDL_BlendOperation
-{
-    SDL_BLENDOPERATION_ADD = 0x1,
-    SDL_BLENDOPERATION_SUBTRACT = 0x2,
-    SDL_BLENDOPERATION_REV_SUBTRACT = 0x3,
-    SDL_BLENDOPERATION_MINIMUM = 0x4,
-    SDL_BLENDOPERATION_MAXIMUM = 0x5
-}
-
-public enum SDL_BlendFactor
-{
-    SDL_BLENDFACTOR_ZERO = 0x1,
-    SDL_BLENDFACTOR_ONE = 0x2,
-    SDL_BLENDFACTOR_SRC_COLOR = 0x3,
-    SDL_BLENDFACTOR_ONE_MINUS_SRC_COLOR = 0x4,
-    SDL_BLENDFACTOR_SRC_ALPHA = 0x5,
-    SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA = 0x6,
-    SDL_BLENDFACTOR_DST_COLOR = 0x7,
-    SDL_BLENDFACTOR_ONE_MINUS_DST_COLOR = 0x8,
-    SDL_BLENDFACTOR_DST_ALPHA = 0x9,
-    SDL_BLENDFACTOR_ONE_MINUS_DST_ALPHA = 0xA
-}
-
 public enum SDL_HapticEffectType : ushort
 {
     Constant = SDL_HAPTIC_CONSTANT,
@@ -588,38 +554,29 @@ public static unsafe partial class SDL
     {
         return SDL_GL_SetAttribute(attr, (int)profile);
     }
-
-    public static nint SDL_SetWindowData(SDL_Window window, ReadOnlySpan<sbyte> name, nint userdata)
-    {
-        fixed (sbyte* pName = name)
-        {
-            return SDL_SetWindowData(window, pName, userdata);
-        }
-    }
-
-    public static nint SDL_SetWindowData(SDL_Window window, string text, nint userdata)
-    {
-        return SDL_SetWindowData(window, text.GetUtf8Span(), userdata);
-    }
     #endregion
 
-    #region SDL_blendmode.h
+    #region SDL_properties.h
+    [LibraryImport(LibName)]
+    public static partial SDL_PropertiesID SDL_CreateProperties();
 
-    /* Only available in 2.0.6 or higher. */
-    public static SDL_BlendMode SDL_ComposeCustomBlendMode(
-        SDL_BlendFactor srcColorFactor,
-        SDL_BlendFactor dstColorFactor,
-        SDL_BlendOperation colorOperation,
-        SDL_BlendFactor srcAlphaFactor,
-        SDL_BlendFactor dstAlphaFactor,
-        SDL_BlendOperation alphaOperation
-    )
-    {
-        return SDL_ComposeCustomBlendMode(
-            srcColorFactor, dstColorFactor, colorOperation,
-            srcAlphaFactor, dstAlphaFactor, alphaOperation
-            );
-    }
+    [LibraryImport(LibName)]
+    public static partial void SDL_DestroyProperties(SDL_PropertiesID propertiesID);
+
+    [LibraryImport(LibName)]
+    public static partial int SDL_LockProperties(SDL_PropertiesID propertiesID);
+
+    [LibraryImport(LibName)]
+    public static partial void SDL_UnlockProperties(SDL_PropertiesID propertiesID);
+
+    [LibraryImport(LibName)]
+    public static partial int SDL_SetProperty(SDL_PropertiesID properties, sbyte* name, nint value, delegate* unmanaged<nint, nint, void> cleanup, nint userdata);
+
+    [LibraryImport(LibName)]
+    public static partial nint SDL_GetProperty(SDL_PropertiesID properties, sbyte* name);
+
+    [LibraryImport(LibName)]
+    public static partial int SDL_ClearProperty(SDL_PropertiesID properties, sbyte* name);
     #endregion
 
     #region SDL_vulkan.h

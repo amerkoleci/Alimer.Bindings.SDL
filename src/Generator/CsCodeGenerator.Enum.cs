@@ -45,6 +45,9 @@ public static partial class CsCodeGenerator
         { "SDL_EventType", "SDL_EVENT" },
         { "SDL_SYSWM_TYPE", "SDL_SYSWM" },
         { "SDL_HintPriority", "SDL_HINT" },
+        { "SDL_BlendMode", "SDL_BLENDMODE" },
+        { "SDL_BlendOperation", "SDL_BLENDOPERATION" },
+        { "SDL_BlendFactor", "SDL_BLENDFACTOR" },
     };
 
     private static readonly Dictionary<string, string> s_knownEnumValueNames = new()
@@ -133,7 +136,8 @@ public static partial class CsCodeGenerator
                 cppEnum.Name == "SDL_GLprofile" ||
                 cppEnum.Name == "SDL_GLcontextFlag" ||
                 cppEnum.Name == "SDL_GLcontextReleaseFlag" ||
-                cppEnum.Name == "SDL_GLContextResetNotification";
+                cppEnum.Name == "SDL_GLContextResetNotification" ||
+                cppEnum.Name == "SDL_BlendMode";
 
             if (isBitmask)
             {

@@ -29,7 +29,6 @@
 // Copyright © Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -448,6 +447,11 @@ public static unsafe partial class SDL
     public static int SDL_SetWindowTitle(SDL_Window window, string text)
     {
         return SDL_SetWindowTitle(window, text.GetUtf8Span());
+    }
+
+    public static int SDL_SetWindowFullscreen(SDL_Window window, bool fullscreen)
+    {
+        return SDL_SetWindowFullscreen(window, fullscreen ? SDL_TRUE : SDL_FALSE);
     }
 
     public static string SDL_GetCurrentVideoDriverString()

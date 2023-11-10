@@ -22,7 +22,7 @@
 /**
  *  \file SDL_properties.h
  *
- *  \brief Header file for SDL properties.
+ *  Header file for SDL properties.
  */
 
 #ifndef SDL_properties_h_
@@ -40,10 +40,27 @@ extern "C" {
 typedef Uint32 SDL_PropertiesID;
 
 /**
+ * Get the global SDL properties
+ *
+ * \returns a valid property ID on success or 0 on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_GetProperty
+ * \sa SDL_SetProperty
+ */
+extern DECLSPEC SDL_PropertiesID SDLCALL SDL_GetGlobalProperties(void);
+
+/**
  * Create a set of properties
+ *
+ * All properties are automatically destroyed when SDL_Quit() is called.
  *
  * \returns an ID for a new set of properties, or 0 on failure; call
  *          SDL_GetError() for more information.
+ *
+ * \threadsafety It is safe to call this function from any thread.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -67,6 +84,8 @@ extern DECLSPEC SDL_PropertiesID SDLCALL SDL_CreateProperties(void);
  * \returns 0 on success or a negative error code on failure; call
  *          SDL_GetError() for more information.
  *
+ * \threadsafety It is safe to call this function from any thread.
+ *
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_UnlockProperties
@@ -77,6 +96,8 @@ extern DECLSPEC int SDLCALL SDL_LockProperties(SDL_PropertiesID props);
  * Unlock a set of properties
  *
  * \param props the properties to unlock
+ *
+ * \threadsafety It is safe to call this function from any thread.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -90,24 +111,57 @@ extern DECLSPEC void SDLCALL SDL_UnlockProperties(SDL_PropertiesID props);
  * \param props the properties to modify
  * \param name the name of the property to modify
  * \param value the new value of the property, or NULL to delete the property
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \threadsafety It is safe to call this function from any thread.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_GetProperty
+ * \sa SDL_SetPropertyWithCleanup
+ */
+extern DECLSPEC int SDLCALL SDL_SetProperty(SDL_PropertiesID props, const char *name, void *value);
+
+/**
+ * Set a property on a set of properties with a cleanup function that is
+ * called when the property is deleted
+ *
+ * \param props the properties to modify
+ * \param name the name of the property to modify
+ * \param value the new value of the property, or NULL to delete the property
  * \param cleanup the function to call when this property is deleted, or NULL
  *                if no cleanup is necessary
  * \param userdata a pointer that is passed to the cleanup function
  * \returns 0 on success or a negative error code on failure; call
  *          SDL_GetError() for more information.
  *
+ * \threadsafety It is safe to call this function from any thread.
+ *
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_GetProperty
+ * \sa SDL_SetProperty
  */
-extern DECLSPEC int SDLCALL SDL_SetProperty(SDL_PropertiesID props, const char *name, void *value, void (SDLCALL *cleanup)(void *userdata, void *value), void *userdata);
+extern DECLSPEC int SDLCALL SDL_SetPropertyWithCleanup(SDL_PropertiesID props, const char *name, void *value, void (SDLCALL *cleanup)(void *userdata, void *value), void *userdata);
 
 /**
  * Get a property on a set of properties
  *
+ * By convention, the names of properties that SDL exposes on objects will
+ * start with "SDL.", and properties that SDL uses internally will start with
+ * "SDL.internal.". These should be considered read-only and should not be
+ * modified by applications.
+ *
  * \param props the properties to query
  * \param name the name of the property to query
  * \returns the value of the property, or NULL if it is not set.
+ *
+ * \threadsafety It is safe to call this function from any thread, although
+ *               the data returned is not protected and could potentially be
+ *               freed if you call SDL_SetProperty() or SDL_ClearProperty() on
+ *               these properties from another thread. If you need to avoid
+ *               this, use SDL_LockProperties() and SDL_UnlockProperties().
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -123,6 +177,8 @@ extern DECLSPEC void *SDLCALL SDL_GetProperty(SDL_PropertiesID props, const char
  * \returns 0 on success or a negative error code on failure; call
  *          SDL_GetError() for more information.
  *
+ * \threadsafety It is safe to call this function from any thread.
+ *
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_GetProperty
@@ -133,9 +189,13 @@ extern DECLSPEC int SDLCALL SDL_ClearProperty(SDL_PropertiesID props, const char
  * Destroy a set of properties
  *
  * All properties are deleted and their cleanup functions will be called, if
- * any. The set of properties must be unlocked when it is destroyed.
+ * any.
  *
  * \param props the properties to destroy
+ *
+ * \threadsafety This function should not be called while these properties are
+ *               locked or other threads might be setting or getting values
+ *               from these properties.
  *
  * \since This function is available since SDL 3.0.0.
  *

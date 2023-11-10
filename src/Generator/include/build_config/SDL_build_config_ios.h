@@ -49,7 +49,6 @@
 #define HAVE_CALLOC 1
 #define HAVE_REALLOC    1
 #define HAVE_FREE   1
-#define HAVE_ALLOCA 1
 #define HAVE_GETENV 1
 #define HAVE_SETENV 1
 #define HAVE_PUTENV 1
@@ -197,6 +196,8 @@
 #if SDL_PLATFORM_SUPPORTS_METAL
 #define SDL_VIDEO_METAL 1
 #endif
+
+#define HAVE_COREMEDIA  1
 
 /* Enable system power support */
 #define SDL_POWER_UIKIT 1

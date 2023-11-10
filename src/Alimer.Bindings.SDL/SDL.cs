@@ -97,6 +97,9 @@ public delegate IntPtr SDL_WindowsMessageHook(
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 public unsafe delegate int SDL_EventFilter(nint userdata, nint @event);
 
+[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+public unsafe delegate SDL_bool SDL_X11EventHook(nint userdata, nint xevent);
+
 // https://github.com/libsdl-org/SDL/blob/main/docs/README-migration.md
 
 public static unsafe partial class SDL
@@ -581,52 +584,62 @@ public static unsafe partial class SDL
 
     [LibraryImport(LibName)]
     public static partial int SDL_ClearProperty(SDL_PropertiesID properties, sbyte* name);
+
+
+    public static nint SDL_GetProperty(SDL_PropertiesID properties, ReadOnlySpan<sbyte> name)
+    {
+        fixed (sbyte* pName = name)
+        {
+            return SDL_GetProperty(properties, pName);
+        }
+    }
+
+    public static nint SDL_GetProperty(SDL_PropertiesID properties, string name)
+    {
+        return SDL_GetProperty(properties, name.GetUtf8Span());
+    }
+
     #endregion
 
-    #region SDL_vulkan.h
-    [DllImport(LibName, EntryPoint = "SDL_Vulkan_LoadLibrary", CallingConvention = CallingConvention.Cdecl)]
-    private static extern unsafe int INTERNAL_SDL_Vulkan_LoadLibrary(
-            byte* path
-        );
+    public static bool SDL_PollEvent(SDL_Event* @event) => SDL_PollEventPrivate(@event) == SDL_TRUE;
 
+    #region SDL_vulkan.h
     public static int SDL_Vulkan_LoadLibrary()
     {
-        int result = INTERNAL_SDL_Vulkan_LoadLibrary(null);
-        return result;
+        return SDL_Vulkan_LoadLibrary((sbyte*)null);
     }
 
-    public static int SDL_Vulkan_LoadLibrary(string path)
+    public static int SDL_Vulkan_LoadLibrary(ReadOnlySpan<sbyte> path)
     {
-        byte* utf8Path = Utf8EncodeHeap(path);
-        int result = INTERNAL_SDL_Vulkan_LoadLibrary(
-            utf8Path
-        );
-        NativeMemory.Free(utf8Path);
-        return result;
+        fixed (sbyte* pPath = path)
+        {
+            return SDL_Vulkan_LoadLibrary(pPath);
+        }
     }
+
+    public static nint SDL_Vulkan_LoadLibrary(string path)
+    {
+        return SDL_Vulkan_LoadLibrary(path.GetUtf8Span());
+    }
+
+    [LibraryImport(LibName, EntryPoint = "SDL_Vulkan_GetInstanceExtensions")]
+    public static partial sbyte** SDL_Vulkan_GetInstanceExtensions(out int count);
 
     public static string[] SDL_Vulkan_GetInstanceExtensions()
     {
-        string[] names = Array.Empty<string>();
-
-        bool result = SDL_Vulkan_GetInstanceExtensions(out uint count, null) == SDL_TRUE;
-        if (result == true)
+        sbyte** strings = SDL_Vulkan_GetInstanceExtensions(out int count);
+        string[] names = new string[count];
+        for (int i = 0; i < count; i++)
         {
-            sbyte** strings = stackalloc sbyte*[(int)count];
-            names = new string[count];
-            SDL_Vulkan_GetInstanceExtensions(out count, strings);
-
-            for (uint i = 0; i < count; i++)
-            {
-                names[i] = GetString(strings[i])!;
-            }
+            names[i] = GetString(strings[i])!;
         }
+        SDL_free(strings);
 
         return names;
     }
 
     [LibraryImport(LibName, EntryPoint = "SDL_Vulkan_CreateSurface")]
-    public static partial SDL_bool SDL_Vulkan_CreateSurface(SDL_Window window, nint instance, out ulong surface);
+    public static partial SDL_bool SDL_Vulkan_CreateSurface(SDL_Window window, nint instance, nint* allocator, ulong* surface);
     #endregion
 
     #region SDL_syswm.h

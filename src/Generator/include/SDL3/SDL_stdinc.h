@@ -22,7 +22,7 @@
 /**
  *  \file SDL_stdinc.h
  *
- *  \brief This is a general header that includes C language support.
+ *  This is a general header that includes C language support.
  */
 
 #ifndef SDL_stdinc_h_
@@ -37,26 +37,28 @@
 #include <stdint.h>
 #include <wchar.h>
 
-#ifndef alloca
-# ifdef HAVE_ALLOCA_H
-#  include <alloca.h>
-# elif defined(__GNUC__)
-#  define alloca __builtin_alloca
-# elif defined(_MSC_VER)
-#  include <malloc.h>
-#  define alloca _alloca
-# elif defined(__WATCOMC__)
-#  include <malloc.h>
-# elif defined(__BORLANDC__)
-#  include <malloc.h>
-# elif defined(__DMC__)
-#  include <stdlib.h>
-# elif defined(__AIX__)
-#pragma alloca
-# elif defined(__MRC__)
+#ifndef SDL_DISABLE_ALLOCA
+# ifndef alloca
+#  ifdef HAVE_ALLOCA_H
+#   include <alloca.h>
+#  elif defined(__GNUC__)
+#   define alloca __builtin_alloca
+#  elif defined(_MSC_VER)
+#   include <malloc.h>
+#   define alloca _alloca
+#  elif defined(__WATCOMC__)
+#   include <malloc.h>
+#  elif defined(__BORLANDC__)
+#   include <malloc.h>
+#  elif defined(__DMC__)
+#   include <stdlib.h>
+#  elif defined(__AIX__)
+# pragma alloca
+#  elif defined(__MRC__)
 void *alloca(unsigned);
-# else
+#  else
 char *alloca();
+#  endif
 # endif
 #endif
 
@@ -120,64 +122,58 @@ char *alloca();
  */
 /* @{ */
 
-#ifdef __CC_ARM
-/* ARM's compiler throws warnings if we use an enum: like "SDL_bool x = a < b;" */
+/**
+ * A boolean type.
+ */
 #define SDL_FALSE 0
 #define SDL_TRUE 1
-typedef int SDL_bool;
-#else
-typedef enum
-{
-    SDL_FALSE = 0,
-    SDL_TRUE = 1
-} SDL_bool;
-#endif
+typedef unsigned int SDL_bool;
 
 /**
- * \brief A signed 8-bit integer type.
+ * A signed 8-bit integer type.
  */
 #define SDL_MAX_SINT8   ((Sint8)0x7F)           /* 127 */
 #define SDL_MIN_SINT8   ((Sint8)(~0x7F))        /* -128 */
 typedef int8_t Sint8;
 /**
- * \brief An unsigned 8-bit integer type.
+ * An unsigned 8-bit integer type.
  */
 #define SDL_MAX_UINT8   ((Uint8)0xFF)           /* 255 */
 #define SDL_MIN_UINT8   ((Uint8)0x00)           /* 0 */
 typedef uint8_t Uint8;
 /**
- * \brief A signed 16-bit integer type.
+ * A signed 16-bit integer type.
  */
 #define SDL_MAX_SINT16  ((Sint16)0x7FFF)        /* 32767 */
 #define SDL_MIN_SINT16  ((Sint16)(~0x7FFF))     /* -32768 */
 typedef int16_t Sint16;
 /**
- * \brief An unsigned 16-bit integer type.
+ * An unsigned 16-bit integer type.
  */
 #define SDL_MAX_UINT16  ((Uint16)0xFFFF)        /* 65535 */
 #define SDL_MIN_UINT16  ((Uint16)0x0000)        /* 0 */
 typedef uint16_t Uint16;
 /**
- * \brief A signed 32-bit integer type.
+ * A signed 32-bit integer type.
  */
 #define SDL_MAX_SINT32  ((Sint32)0x7FFFFFFF)    /* 2147483647 */
 #define SDL_MIN_SINT32  ((Sint32)(~0x7FFFFFFF)) /* -2147483648 */
 typedef int32_t Sint32;
 /**
- * \brief An unsigned 32-bit integer type.
+ * An unsigned 32-bit integer type.
  */
 #define SDL_MAX_UINT32  ((Uint32)0xFFFFFFFFu)   /* 4294967295 */
 #define SDL_MIN_UINT32  ((Uint32)0x00000000)    /* 0 */
 typedef uint32_t Uint32;
 
 /**
- * \brief A signed 64-bit integer type.
+ * A signed 64-bit integer type.
  */
 #define SDL_MAX_SINT64  ((Sint64)0x7FFFFFFFFFFFFFFFll)      /* 9223372036854775807 */
 #define SDL_MIN_SINT64  ((Sint64)(~0x7FFFFFFFFFFFFFFFll))   /* -9223372036854775808 */
 typedef int64_t Sint64;
 /**
- * \brief An unsigned 64-bit integer type.
+ * An unsigned 64-bit integer type.
  */
 #define SDL_MAX_UINT64  ((Uint64)0xFFFFFFFFFFFFFFFFull)     /* 18446744073709551615 */
 #define SDL_MIN_UINT64  ((Uint64)(0x0000000000000000ull))   /* 0 */
@@ -379,7 +375,7 @@ SDL_COMPILE_TIME_ASSERT(enum, sizeof(SDL_DUMMY_ENUM) == sizeof(int));
 extern "C" {
 #endif
 
-#ifdef HAVE_ALLOCA
+#ifndef SDL_DISABLE_ALLOCA
 #define SDL_stack_alloc(type, count)    (type*)alloca(sizeof(type)*(count))
 #define SDL_stack_free(data)
 #else
@@ -684,8 +680,8 @@ extern DECLSPEC char *SDLCALL SDL_iconv_string(const char *tocode,
                                                const char *inbuf,
                                                size_t inbytesleft);
 #define SDL_iconv_utf8_locale(S)    SDL_iconv_string("", "UTF-8", S, SDL_strlen(S)+1)
-#define SDL_iconv_utf8_ucs2(S)      (Uint16 *)SDL_iconv_string("UCS-2-INTERNAL", "UTF-8", S, SDL_strlen(S)+1)
-#define SDL_iconv_utf8_ucs4(S)      (Uint32 *)SDL_iconv_string("UCS-4-INTERNAL", "UTF-8", S, SDL_strlen(S)+1)
+#define SDL_iconv_utf8_ucs2(S)      (Uint16 *)SDL_iconv_string("UCS-2", "UTF-8", S, SDL_strlen(S)+1)
+#define SDL_iconv_utf8_ucs4(S)      (Uint32 *)SDL_iconv_string("UCS-4", "UTF-8", S, SDL_strlen(S)+1)
 #define SDL_iconv_wchar_utf8(S)     SDL_iconv_string("UTF-8", "WCHAR_T", (char *)S, (SDL_wcslen(S)+1)*sizeof(wchar_t))
 
 /* force builds using Clang's static analysis tools to use literal C runtime

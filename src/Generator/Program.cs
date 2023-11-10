@@ -68,7 +68,6 @@ public static class Program
             "SDL_events.h",
             "SDL_vulkan.h",
             "SDL_metal.h",
-            "SDL_syswm.h",
             "SDL_hints.h",
             "SDL_haptic.h",
             "SDL_blendmode.h",

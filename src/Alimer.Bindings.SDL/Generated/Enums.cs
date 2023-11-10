@@ -1661,10 +1661,10 @@ public enum SDL_EventType
 	SystemThemeChanged = 264,
 	/// <unmanaged>SDL_EVENT_DISPLAY_ORIENTATION</unmanaged>
 	DisplayOrientation = 0x151,
-	/// <unmanaged>SDL_EVENT_DISPLAY_CONNECTED</unmanaged>
-	DisplayConnected = 338,
-	/// <unmanaged>SDL_EVENT_DISPLAY_DISCONNECTED</unmanaged>
-	DisplayDisconnected = 339,
+	/// <unmanaged>SDL_EVENT_DISPLAY_ADDED</unmanaged>
+	DisplayAdded = 338,
+	/// <unmanaged>SDL_EVENT_DISPLAY_REMOVED</unmanaged>
+	DisplayRemoved = 339,
 	/// <unmanaged>SDL_EVENT_DISPLAY_MOVED</unmanaged>
 	DisplayMoved = 340,
 	/// <unmanaged>SDL_EVENT_DISPLAY_CONTENT_SCALE_CHANGED</unmanaged>
@@ -1673,10 +1673,8 @@ public enum SDL_EventType
 	DisplayFirst = DisplayOrientation,
 	/// <unmanaged>SDL_EVENT_DISPLAY_LAST</unmanaged>
 	DisplayLast = DisplayContentScaleChanged,
-	/// <unmanaged>SDL_EVENT_SYSWM</unmanaged>
-	Syswm = 0x201,
 	/// <unmanaged>SDL_EVENT_WINDOW_SHOWN</unmanaged>
-	WindowShown = 514,
+	WindowShown = 0x202,
 	/// <unmanaged>SDL_EVENT_WINDOW_HIDDEN</unmanaged>
 	WindowHidden = 515,
 	/// <unmanaged>SDL_EVENT_WINDOW_EXPOSED</unmanaged>
@@ -1731,8 +1729,6 @@ public enum SDL_EventType
 	TextInput = 771,
 	/// <unmanaged>SDL_EVENT_KEYMAP_CHANGED</unmanaged>
 	KeymapChanged = 772,
-	/// <unmanaged>SDL_EVENT_TEXT_EDITING_EXT</unmanaged>
-	TextEditingExt = 773,
 	/// <unmanaged>SDL_EVENT_MOUSE_MOTION</unmanaged>
 	MouseMotion = 0x400,
 	/// <unmanaged>SDL_EVENT_MOUSE_BUTTON_DOWN</unmanaged>
@@ -1825,34 +1821,6 @@ public enum SDL_eventaction
 	PeekEvent = 1,
 	/// <unmanaged>SDL_GETEVENT</unmanaged>
 	GetEvent = 2,
-}
-
-public enum SDL_SYSWM_TYPE
-{
-	/// <unmanaged>SDL_SYSWM_UNKNOWN</unmanaged>
-	Unknown = 0,
-	/// <unmanaged>SDL_SYSWM_ANDROID</unmanaged>
-	Android = 1,
-	/// <unmanaged>SDL_SYSWM_COCOA</unmanaged>
-	Cocoa = 2,
-	/// <unmanaged>SDL_SYSWM_HAIKU</unmanaged>
-	Haiku = 3,
-	/// <unmanaged>SDL_SYSWM_KMSDRM</unmanaged>
-	Kmsdrm = 4,
-	/// <unmanaged>SDL_SYSWM_RISCOS</unmanaged>
-	Riscos = 5,
-	/// <unmanaged>SDL_SYSWM_UIKIT</unmanaged>
-	Uikit = 6,
-	/// <unmanaged>SDL_SYSWM_VIVANTE</unmanaged>
-	Vivante = 7,
-	/// <unmanaged>SDL_SYSWM_WAYLAND</unmanaged>
-	Wayland = 8,
-	/// <unmanaged>SDL_SYSWM_WINDOWS</unmanaged>
-	Windows = 9,
-	/// <unmanaged>SDL_SYSWM_WINRT</unmanaged>
-	Winrt = 10,
-	/// <unmanaged>SDL_SYSWM_X11</unmanaged>
-	X11 = 11,
 }
 
 public enum SDL_HintPriority

@@ -22,7 +22,7 @@
 /**
  *  \file SDL_video.h
  *
- *  \brief Header file for SDL video functions.
+ *  Header file for SDL video functions.
  */
 
 #ifndef SDL_video_h_
@@ -45,7 +45,7 @@ typedef Uint32 SDL_DisplayID;
 typedef Uint32 SDL_WindowID;
 
 /**
- *  \brief System theme
+ *  System theme
  */
 typedef enum
 {
@@ -55,7 +55,7 @@ typedef enum
 } SDL_SystemTheme;
 
 /**
- *  \brief  The structure that defines a display mode
+ *  The structure that defines a display mode
  *
  *  \sa SDL_GetFullscreenDisplayModes()
  *  \sa SDL_GetDesktopDisplayMode()
@@ -75,7 +75,7 @@ typedef struct
 } SDL_DisplayMode;
 
 /**
- *  \brief Display orientation
+ *  Display orientation
  */
 typedef enum
 {
@@ -87,7 +87,7 @@ typedef enum
 } SDL_DisplayOrientation;
 
 /**
- *  \brief The type used to identify a window
+ *  The type used to identify a window
  *
  *  \sa SDL_CreateWindow()
  *  \sa SDL_CreateWindowFrom()
@@ -122,7 +122,7 @@ typedef enum
 typedef struct SDL_Window SDL_Window;
 
 /**
- *  \brief The flags on a window
+ *  The flags on a window
  *
  *  \sa SDL_GetWindowFlags()
  */
@@ -155,7 +155,7 @@ typedef enum
 } SDL_WindowFlags;
 
 /**
- *  \brief Used to indicate that you don't care what the window position is.
+ *  Used to indicate that you don't care what the window position is.
  */
 #define SDL_WINDOWPOS_UNDEFINED_MASK    0x1FFF0000u
 #define SDL_WINDOWPOS_UNDEFINED_DISPLAY(X)  (SDL_WINDOWPOS_UNDEFINED_MASK|(X))
@@ -164,7 +164,7 @@ typedef enum
             (((X)&0xFFFF0000) == SDL_WINDOWPOS_UNDEFINED_MASK)
 
 /**
- *  \brief Used to indicate that the window position should be centered.
+ *  Used to indicate that the window position should be centered.
  */
 #define SDL_WINDOWPOS_CENTERED_MASK    0x2FFF0000u
 #define SDL_WINDOWPOS_CENTERED_DISPLAY(X)  (SDL_WINDOWPOS_CENTERED_MASK|(X))
@@ -173,7 +173,7 @@ typedef enum
             (((X)&0xFFFF0000) == SDL_WINDOWPOS_CENTERED_MASK)
 
 /**
- *  \brief Window flash operation
+ *  Window flash operation
  */
 typedef enum
 {
@@ -183,12 +183,12 @@ typedef enum
 } SDL_FlashOperation;
 
 /**
- *  \brief An opaque handle to an OpenGL context.
+ *  An opaque handle to an OpenGL context.
  */
 typedef void *SDL_GLContext;
 
 /**
- *  \brief Opaque EGL types.
+ *  Opaque EGL types.
  */
 typedef void *SDL_EGLDisplay;
 typedef void *SDL_EGLConfig;
@@ -197,13 +197,13 @@ typedef intptr_t SDL_EGLAttrib;
 typedef int SDL_EGLint;
 
 /**
- *  \brief EGL attribute initialization callback types.
+ *  EGL attribute initialization callback types.
  */
 typedef SDL_EGLAttrib *(SDLCALL *SDL_EGLAttribArrayCallback)(void);
 typedef SDL_EGLint *(SDLCALL *SDL_EGLIntArrayCallback)(void);
 
 /**
- *  \brief OpenGL configuration attributes
+ *  OpenGL configuration attributes
  */
 typedef enum
 {
@@ -338,6 +338,20 @@ extern DECLSPEC SDL_DisplayID *SDLCALL SDL_GetDisplays(int *count);
  * \sa SDL_GetDisplays
  */
 extern DECLSPEC SDL_DisplayID SDLCALL SDL_GetPrimaryDisplay(void);
+
+/**
+ * Get the properties associated with a display.
+ *
+ * \param displayID the instance ID of the display to query
+ * \returns a valid property ID on success or 0 on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_GetProperty
+ * \sa SDL_SetProperty
+ */
+extern DECLSPEC SDL_PropertiesID SDLCALL SDL_GetDisplayProperties(SDL_DisplayID displayID);
 
 /**
  * Get the name of a display in UTF-8 encoding.
@@ -919,6 +933,56 @@ extern DECLSPEC SDL_Window *SDLCALL SDL_GetWindowParent(SDL_Window *window);
 
 /**
  * Get the properties associated with a window.
+ *
+ * The following properties are provided by SDL:
+ *
+ * On Android: "SDL.window.android.window" - the ANativeWindow associated with
+ * the window "SDL.window.android.surface" - the EGLSurface associated with
+ * the window
+ *
+ * On iOS: "SDL.window.uikit.window" - the (__unsafe_unretained) UIWindow
+ * associated with the window "SDL.window.uikit.metal_view_tag" - the
+ * NSInteger tag assocated with metal views on the window
+ *
+ * On KMS/DRM: "SDL.window.kmsdrm.dev_index" - the device index associated
+ * with the window (e.g. the X in /dev/dri/cardX) "SDL.window.kmsdrm.drm_fd" -
+ * the DRM FD associated with the window "SDL.window.kmsdrm.gbm_dev" - the GBM
+ * device associated with the window
+ *
+ * On macOS: "SDL.window.cocoa.window" - the (__unsafe_unretained) NSWindow
+ * associated with the window "SDL.window.cocoa.metal_view_tag" - the
+ * NSInteger tag assocated with metal views on the window
+ *
+ * On Vivante: "SDL.window.vivante.display" - the EGLNativeDisplayType
+ * associated with the window "SDL.window.vivante.window" - the
+ * EGLNativeWindowType associated with the window "SDL.window.vivante.surface"
+ * - the EGLSurface associated with the window
+ *
+ * On UWP: "SDL.window.winrt.window" - the IInspectable CoreWindow associated
+ * with the window
+ *
+ * On Windows: "SDL.window.win32.hwnd" - the HWND associated with the window
+ * "SDL.window.win32.hdc" - the HDC associated with the window
+ * "SDL.window.win32.instance" - the HINSTANCE associated with the window
+ *
+ * On Wayland: "SDL.window.wayland.registry" - the wl_registry associated with
+ * the window "SDL.window.wayland.display" - the wl_display associated with
+ * the window "SDL.window.wayland.surface" - the wl_surface associated with
+ * the window "SDL.window.wayland.egl_window" - the wl_egl_window associated
+ * with the window "SDL.window.wayland.xdg_surface" - the xdg_surface
+ * associated with the window "SDL.window.wayland.xdg_toplevel" - the
+ * xdg_toplevel role associated with the window "SDL.window.wayland.xdg_popup"
+ * - the xdg_popup role associated with the window
+ * "SDL.window.wayland.xdg_positioner" - the xdg_positioner associated with
+ * the window, in popup mode
+ *
+ * Note: The xdg_* window objects do not internally persist across window
+ * show/hide calls. They will be null if the window is hidden and must be
+ * queried each time it is shown.
+ *
+ * On X11: "SDL.window.x11.display" - the X11 Display associated with the
+ * window "SDL.window.x11.screen" - the screen number associated with the
+ * window "SDL.window.x11.window" - the X11 Window associated with the window
  *
  * \param window the window to query
  * \returns a valid property ID on success or 0 on failure; call

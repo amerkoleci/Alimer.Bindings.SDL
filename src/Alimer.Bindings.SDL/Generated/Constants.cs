@@ -106,13 +106,11 @@ public static partial class SDL
 	/// <unmanaged>SDL_PRESSED</unmanaged>
 	public const uint SDL_PRESSED = 1;
 	/// <unmanaged>SDL_TEXTEDITINGEVENT_TEXT_SIZE</unmanaged>
-	public const int SDL_TEXTEDITINGEVENT_TEXT_SIZE = 32;
+	public const int SDL_TEXTEDITINGEVENT_TEXT_SIZE = 64;
 	/// <unmanaged>SDL_TEXTINPUTEVENT_TEXT_SIZE</unmanaged>
-	public const int SDL_TEXTINPUTEVENT_TEXT_SIZE = 32;
-	/// <unmanaged>SDL_SYSWM_CURRENT_VERSION</unmanaged>
-	public const uint SDL_SYSWM_CURRENT_VERSION = 1;
-	/// <unmanaged>SDL_METALVIEW_TAG</unmanaged>
-	public const uint SDL_METALVIEW_TAG = 255;
+	public const int SDL_TEXTINPUTEVENT_TEXT_SIZE = 64;
+	/// <unmanaged>SDL_DROPEVENT_DATA_SIZE</unmanaged>
+	public const uint SDL_DROPEVENT_DATA_SIZE = 64;
 	/// <unmanaged>SDL_HINT_ACCELEROMETER_AS_JOYSTICK</unmanaged>
 	public const string SDL_HINT_ACCELEROMETER_AS_JOYSTICK = "SDL_ACCELEROMETER_AS_JOYSTICK";
 	/// <unmanaged>SDL_HINT_ALLOW_ALT_TAB_WHILE_GRABBED</unmanaged>
@@ -191,8 +189,6 @@ public static partial class SDL
 	public const string SDL_HINT_IME_INTERNAL_EDITING = "SDL_IME_INTERNAL_EDITING";
 	/// <unmanaged>SDL_HINT_IME_SHOW_UI</unmanaged>
 	public const string SDL_HINT_IME_SHOW_UI = "SDL_IME_SHOW_UI";
-	/// <unmanaged>SDL_HINT_IME_SUPPORT_EXTENDED_TEXT</unmanaged>
-	public const string SDL_HINT_IME_SUPPORT_EXTENDED_TEXT = "SDL_IME_SUPPORT_EXTENDED_TEXT";
 	/// <unmanaged>SDL_HINT_IOS_HIDE_HOME_INDICATOR</unmanaged>
 	public const string SDL_HINT_IOS_HIDE_HOME_INDICATOR = "SDL_IOS_HIDE_HOME_INDICATOR";
 	/// <unmanaged>SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS</unmanaged>
@@ -469,4 +465,6 @@ public static partial class SDL
 	public const string SDL_HINT_GDK_TEXTINPUT_MAX_LENGTH = "SDL_GDK_TEXTINPUT_MAX_LENGTH";
 	/// <unmanaged>SDL_HINT_AUDIO_DEVICE_SAMPLE_FRAMES</unmanaged>
 	public const string SDL_HINT_AUDIO_DEVICE_SAMPLE_FRAMES = "SDL_AUDIO_DEVICE_SAMPLE_FRAMES";
+	/// <unmanaged>SDL_HINT_MAIN_CALLBACK_RATE</unmanaged>
+	public const string SDL_HINT_MAIN_CALLBACK_RATE = "SDL_MAIN_CALBACK_RATE";
 }

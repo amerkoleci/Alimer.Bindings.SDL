@@ -64,7 +64,9 @@ public static partial class CsCodeGenerator
             if (cppFunction.Name == "SDL_LogMessageV"
                 || cppFunction.Name == "SDL_LogGetOutputFunction"
                 || cppFunction.Name == "SDL_LogSetOutputFunction"
-                || cppFunction.Name == "SDL_EGL_SetEGLAttributeCallbacks")
+                || cppFunction.Name == "SDL_EGL_SetEGLAttributeCallbacks"
+                || cppFunction.Name == "SDL_Vulkan_GetInstanceExtensions"
+                || cppFunction.Name == "SDL_Vulkan_CreateSurface")
             {
                 continue;
             }
@@ -150,15 +152,20 @@ public static partial class CsCodeGenerator
 
     private static void WriteFunctionInvocation(CodeWriter writer, CppFunction cppFunction)
     {
-        if (cppFunction.Name == "SDL_Vulkan_GetInstanceExtensions")
-        {
-        }
-
         string returnCsName = GetCsTypeName(cppFunction.ReturnType, false);
         string argumentsString = GetParameterSignature(cppFunction);
         string functionName = cppFunction.Name;
 
-        string modifier = "public static";
+        string modifier = "public";
+        bool isPrivate = false;
+        if (cppFunction.Name == "SDL_PollEvent")
+        {
+            modifier = "private";
+            isPrivate = true;
+            functionName += "Private";
+        }
+
+        modifier += " static";
         if (!s_options.GenerateFunctionPointers)
         {
             if (s_options.UseDllImport)

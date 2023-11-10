@@ -28,13 +28,13 @@ public static unsafe class Program
             throw new Exception($"Failed to start SDL2: {error}");
         }
 
-        //if (SDL_Vulkan_LoadLibrary() < 0)
-        //{
-        //    return;
-        //}
-        //
-        //var vkGetInstanceProcAddr = SDL_Vulkan_GetVkGetInstanceProcAddr();
-        //string[] extensions = SDL_Vulkan_GetInstanceExtensions();
+        if (SDL_Vulkan_LoadLibrary() < 0)
+        {
+            return;
+        }
+
+        var vkGetInstanceProcAddr = SDL_Vulkan_GetVkGetInstanceProcAddr();
+        string[] extensions = SDL_Vulkan_GetInstanceExtensions();
 
         SDL_GL_SetAttribute(SDL_GLattr.ContextMajorVersion, 3);
         SDL_GL_SetAttribute(SDL_GLattr.ContextMinorVersion, 3);
@@ -60,8 +60,7 @@ public static unsafe class Program
         var id = SDL_GetWindowID(window);
         SDL_GetWindowSizeInPixels(window, out int width, out int height);
 
-        SDL_SysWMinfo info = new();
-        SDL_GetWindowWMInfo(window, &info);
+        nint hwnd = (nint)SDL_GetProperty(SDL_GetWindowProperties(window), "SDL.window.win32.hwnd");
 
         var display = SDL_GetDisplayForWindow(window);
         display = SDL_GetDisplayForPoint(Point.Empty);
@@ -88,7 +87,7 @@ public static unsafe class Program
         while (!done)
         {
             SDL_Event evt;
-            while (SDL_PollEvent(&evt) == 1)
+            while (SDL_PollEvent(&evt))
             {
                 if (evt.type == SDL_EventType.Quit)
                 {

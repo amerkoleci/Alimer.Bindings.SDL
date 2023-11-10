@@ -222,16 +222,6 @@ public partial struct SDL_TextEditingEvent
 	public uint type;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
-	public unsafe fixed sbyte text[32];
-	public int start;
-	public int length;
-}
-
-public partial struct SDL_TextEditingExtEvent
-{
-	public uint type;
-	public ulong timestamp;
-	public SDL_WindowID windowID;
 	public unsafe sbyte* text;
 	public int start;
 	public int length;
@@ -242,7 +232,7 @@ public partial struct SDL_TextInputEvent
 	public uint type;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
-	public unsafe fixed sbyte text[32];
+	public unsafe sbyte* text;
 }
 
 public partial struct SDL_MouseMotionEvent
@@ -417,10 +407,11 @@ public partial struct SDL_DropEvent
 {
 	public uint type;
 	public ulong timestamp;
-	public unsafe sbyte* file;
 	public SDL_WindowID windowID;
 	public float x;
 	public float y;
+	public unsafe sbyte* source;
+	public unsafe sbyte* data;
 }
 
 public partial struct SDL_ClipboardEvent
@@ -444,12 +435,6 @@ public partial struct SDL_QuitEvent
 	public ulong timestamp;
 }
 
-public partial struct SDL_OSEvent
-{
-	public uint type;
-	public ulong timestamp;
-}
-
 public partial struct SDL_UserEvent
 {
 	public uint type;
@@ -458,13 +443,6 @@ public partial struct SDL_UserEvent
 	public int code;
 	public nint data1;
 	public nint data2;
-}
-
-public partial struct SDL_SysWMEvent
-{
-	public uint type;
-	public ulong timestamp;
-	public unsafe SDL_SysWMmsg* msg;
 }
 
 [StructLayout(LayoutKind.Explicit)]
@@ -531,18 +509,6 @@ public partial struct SDL_Event
 		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_WindowID windowID;
-		public unsafe fixed sbyte text[32];
-		public int start;
-		public int length;
-	}
-	[FieldOffset(0)]
-	public SDL_Event_editExt editExt;
-	
-	public partial struct SDL_Event_editExt
-	{
-		public SDL_EventType type;
-		public ulong timestamp;
-		public SDL_WindowID windowID;
 		public unsafe sbyte* text;
 		public int start;
 		public int length;
@@ -555,7 +521,7 @@ public partial struct SDL_Event
 		public SDL_EventType type;
 		public ulong timestamp;
 		public SDL_WindowID windowID;
-		public unsafe fixed sbyte text[32];
+		public unsafe sbyte* text;
 	}
 	[FieldOffset(0)]
 	public SDL_Event_motion motion;
@@ -771,15 +737,6 @@ public partial struct SDL_Event
 		public nint data2;
 	}
 	[FieldOffset(0)]
-	public SDL_Event_syswm syswm;
-	
-	public partial struct SDL_Event_syswm
-	{
-		public SDL_EventType type;
-		public ulong timestamp;
-		public unsafe SDL_SysWMmsg* msg;
-	}
-	[FieldOffset(0)]
 	public SDL_Event_tfinger tfinger;
 	
 	public partial struct SDL_Event_tfinger
@@ -802,10 +759,11 @@ public partial struct SDL_Event
 	{
 		public SDL_EventType type;
 		public ulong timestamp;
-		public unsafe sbyte* file;
 		public SDL_WindowID windowID;
 		public float x;
 		public float y;
+		public unsafe sbyte* source;
+		public unsafe sbyte* data;
 	}
 	[FieldOffset(0)]
 	public SDL_Event_clipboard clipboard;
@@ -817,31 +775,6 @@ public partial struct SDL_Event
 	}
 	[FieldOffset(0)]
 	public unsafe fixed byte padding[128];
-}
-
-public partial struct SDL_SysWMmsg
-{
-	public uint version;
-	public uint subsystem;
-	public unsafe fixed uint padding[2];
-	public SDL_SysWMmsg_msg msg;
-	
-	[StructLayout(LayoutKind.Explicit)]
-	public partial struct SDL_SysWMmsg_msg
-	{
-		[FieldOffset(0)]
-		public SDL_SysWMmsg_win win;
-		
-		public partial struct SDL_SysWMmsg_win
-		{
-			public nint hwnd;
-			public uint msg;
-			public nuint wParam;
-			public nint lParam;
-		}
-		[FieldOffset(0)]
-		public int dummy;
-	}
 }
 
 public partial struct SDL_HapticDirection

@@ -22,7 +22,7 @@
 /**
  *  \file SDL_render.h
  *
- *  \brief Header file for SDL 2D rendering functions.
+ *  Header file for SDL 2D rendering functions.
  *
  *  This API supports the following features:
  *      * single pixel points
@@ -114,16 +114,6 @@ typedef enum
     SDL_TEXTUREACCESS_STREAMING, /**< Changes frequently, lockable */
     SDL_TEXTUREACCESS_TARGET     /**< Texture can be used as a render target */
 } SDL_TextureAccess;
-
-/**
- * The texture channel modulation used in SDL_RenderTexture().
- */
-typedef enum
-{
-    SDL_TEXTUREMODULATE_NONE = 0x00000000,     /**< No modulation */
-    SDL_TEXTUREMODULATE_COLOR = 0x00000001,    /**< srcC = srcC * color */
-    SDL_TEXTUREMODULATE_ALPHA = 0x00000002     /**< srcA = srcA * alpha */
-} SDL_TextureModulate;
 
 /**
  * Flip constants for SDL_RenderTextureRotated
@@ -318,6 +308,13 @@ extern DECLSPEC int SDLCALL SDL_GetRendererInfo(SDL_Renderer *renderer, SDL_Rend
 
 /**
  * Get the properties associated with a renderer.
+ *
+ * The following properties are provided by SDL: "SDL.renderer.d3d9.device" -
+ * the IDirect3DDevice9 associated with the renderer
+ * "SDL.renderer.d3d11.device" - the ID3D11Device associated with the renderer
+ * "SDL.renderer.d3d12.device" - the ID3D12Device associated with the renderer
+ * "SDL.renderer.d3d12.command_queue" - the ID3D12CommandQueue associated with
+ * the renderer
  *
  * \param renderer the rendering context
  * \returns a valid property ID on success or 0 on failure; call

@@ -674,17 +674,11 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_Direct3D9GetAdapterIndex")]
 	public static partial int SDL_Direct3D9GetAdapterIndex(SDL_DisplayID displayID);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_GetRenderD3D9Device")]
-	public static partial nint SDL_GetRenderD3D9Device(SDL_Renderer renderer);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_GetRenderD3D11Device")]
-	public static partial nint SDL_GetRenderD3D11Device(SDL_Renderer renderer);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_RenderGetD3D12Device")]
-	public static partial nint SDL_RenderGetD3D12Device(SDL_Renderer renderer);
-
 	[LibraryImport(LibName, EntryPoint = "SDL_DXGIGetOutputInfo")]
 	public static partial SDL_bool SDL_DXGIGetOutputInfo(SDL_DisplayID displayID, int* adapterIndex, int* outputIndex);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetX11EventHook")]
+	public static partial void SDL_SetX11EventHook(SDL_X11EventHook callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_IsTablet")]
 	public static partial SDL_bool SDL_IsTablet();
@@ -850,6 +844,9 @@ public unsafe partial class SDL
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetPrimaryDisplay")]
 	public static partial SDL_DisplayID SDL_GetPrimaryDisplay();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetDisplayProperties")]
+	public static partial SDL_PropertiesID SDL_GetDisplayProperties(SDL_DisplayID displayID);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetDisplayName")]
 	public static partial sbyte* SDL_GetDisplayName(SDL_DisplayID displayID);
@@ -1281,13 +1278,13 @@ public unsafe partial class SDL
 	public static partial void SDL_FlushEvents(SDL_EventType minType, SDL_EventType maxType);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_PollEvent")]
-	public static partial int SDL_PollEvent(SDL_Event* @event);
+	private static partial SDL_bool SDL_PollEventPrivate(SDL_Event* @event);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_WaitEvent")]
-	public static partial int SDL_WaitEvent(SDL_Event* @event);
+	public static partial SDL_bool SDL_WaitEvent(SDL_Event* @event);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_WaitEventTimeout")]
-	public static partial int SDL_WaitEventTimeout(SDL_Event* @event, int timeoutMS);
+	public static partial SDL_bool SDL_WaitEventTimeout(SDL_Event* @event, int timeoutMS);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_PushEvent")]
 	public static partial int SDL_PushEvent(SDL_Event* @event);
@@ -1296,7 +1293,7 @@ public unsafe partial class SDL
 	public static partial void SDL_SetEventFilter(SDL_EventFilter filter, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_AddEventWatch")]
-	public static partial void SDL_AddEventWatch(SDL_EventFilter filter, nint userdata);
+	public static partial int SDL_AddEventWatch(SDL_EventFilter filter, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DelEventWatch")]
 	public static partial void SDL_DelEventWatch(SDL_EventFilter filter, nint userdata);
@@ -1313,6 +1310,9 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_RegisterEvents")]
 	public static partial uint SDL_RegisterEvents(int numevents);
 
+	[LibraryImport(LibName, EntryPoint = "SDL_AllocateEventMemory")]
+	public static partial nint SDL_AllocateEventMemory(nuint size);
+
 	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_LoadLibrary")]
 	public static partial int SDL_Vulkan_LoadLibrary(sbyte* path);
 
@@ -1322,12 +1322,6 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_UnloadLibrary")]
 	public static partial void SDL_Vulkan_UnloadLibrary();
 
-	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_GetInstanceExtensions")]
-	public static partial SDL_bool SDL_Vulkan_GetInstanceExtensions(out uint count, sbyte** names);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_CreateSurface")]
-	public static partial SDL_bool SDL_Vulkan_CreateSurface(SDL_Window window, nint instance, ulong* surface);
-
 	[LibraryImport(LibName, EntryPoint = "SDL_Metal_CreateView")]
 	public static partial nint SDL_Metal_CreateView(SDL_Window window);
 
@@ -1336,9 +1330,6 @@ public unsafe partial class SDL
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Metal_GetLayer")]
 	public static partial nint SDL_Metal_GetLayer(nint view);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowWMInfo")]
-	public static partial int SDL_GetWindowWMInfo(SDL_Window window, SDL_SysWMinfo* info, uint version = SDL_SYSWM_CURRENT_VERSION);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetHintWithPriority")]
 	public static partial SDL_bool SDL_SetHintWithPriority(sbyte* name, sbyte* value, SDL_HintPriority priority);

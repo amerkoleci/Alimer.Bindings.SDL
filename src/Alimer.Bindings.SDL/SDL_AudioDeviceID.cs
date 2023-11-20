@@ -1,16 +1,11 @@
-﻿// Copyright © Amer Koleci and Contributors.
+﻿// Copyright (c) Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 namespace SDL;
 
-public readonly partial struct SDL_AudioDeviceID : IComparable, IComparable<SDL_AudioDeviceID>, IEquatable<SDL_AudioDeviceID>, IFormattable
+public readonly partial struct SDL_AudioDeviceID(uint value) : IComparable, IComparable<SDL_AudioDeviceID>, IEquatable<SDL_AudioDeviceID>, IFormattable
 {
-    public readonly uint Value;
-
-    public SDL_AudioDeviceID(uint value)
-    {
-        Value = value;
-    }
+    public readonly uint Value = value;
 
     public static bool operator ==(SDL_AudioDeviceID left, SDL_AudioDeviceID right) => left.Value == right.Value;
 

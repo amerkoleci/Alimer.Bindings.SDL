@@ -1,16 +1,11 @@
-﻿// Copyright © Amer Koleci and Contributors.
+﻿// Copyright (c) Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 namespace SDL;
 
-public readonly partial struct SDL_TimerID : IComparable, IComparable<SDL_TimerID>, IEquatable<SDL_TimerID>, IFormattable
+public readonly partial struct SDL_TimerID(int value) : IComparable, IComparable<SDL_TimerID>, IEquatable<SDL_TimerID>, IFormattable
 {
-    public readonly int Value;
-
-    public SDL_TimerID(int value)
-    {
-        Value = value;
-    }
+    public readonly int Value = value;
 
     public static bool operator ==(SDL_TimerID left, SDL_TimerID right) => left.Value == right.Value;
 

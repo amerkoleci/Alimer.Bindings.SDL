@@ -1,16 +1,11 @@
-﻿// Copyright © Amer Koleci and Contributors.
+﻿// Copyright (c) Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 namespace SDL;
 
-public readonly partial struct SDL_WindowID : IComparable, IComparable<SDL_WindowID>, IEquatable<SDL_WindowID>, IFormattable
+public readonly partial struct SDL_WindowID(uint value) : IComparable, IComparable<SDL_WindowID>, IEquatable<SDL_WindowID>, IFormattable
 {
-    public readonly uint Value;
-
-    public SDL_WindowID(uint value)
-    {
-        Value = value;
-    }
+    public readonly uint Value = value;
 
     public static bool operator ==(SDL_WindowID left, SDL_WindowID right) => left.Value == right.Value;
 

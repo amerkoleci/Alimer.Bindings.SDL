@@ -1,16 +1,11 @@
-﻿// Copyright © Amer Koleci and Contributors.
+﻿// Copyright (c) Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 namespace SDL;
 
-public readonly unsafe partial struct SDL_GLContext : IComparable, IComparable<SDL_GLContext>, IEquatable<SDL_GLContext>, IFormattable
+public readonly unsafe partial struct SDL_GLContext(void* value) : IComparable, IComparable<SDL_GLContext>, IEquatable<SDL_GLContext>, IFormattable
 {
-    public readonly void* Value;
-
-    public SDL_GLContext(void* value)
-    {
-        Value = value;
-    }
+    public readonly void* Value = value;
 
     public static SDL_GLContext NULL => new(null);
 

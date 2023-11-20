@@ -1,16 +1,11 @@
-﻿// Copyright © Amer Koleci and Contributors.
+﻿// Copyright (c) Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 namespace SDL;
 
-public readonly partial struct SDL_MouseID : IComparable, IComparable<SDL_MouseID>, IEquatable<SDL_MouseID>, IFormattable
+public readonly partial struct SDL_MouseID(uint value) : IComparable, IComparable<SDL_MouseID>, IEquatable<SDL_MouseID>, IFormattable
 {
-    public readonly uint Value;
-
-    public SDL_MouseID(uint value)
-    {
-        Value = value;
-    }
+    public readonly uint Value = value;
 
     public static bool operator ==(SDL_MouseID left, SDL_MouseID right) => left.Value == right.Value;
 

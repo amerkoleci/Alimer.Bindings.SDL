@@ -1,20 +1,14 @@
-﻿// Copyright © Amer Koleci and Contributors.
+﻿// Copyright (c) Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 
 namespace SDL;
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly partial struct SDL_AudioStream : IEquatable<SDL_AudioStream>
+public readonly partial struct SDL_AudioStream(nint handle) : IEquatable<SDL_AudioStream>
 {
-    public readonly nint Handle;
-
-    public SDL_AudioStream(nint handle)
-    {
-        Handle = handle;
-    }
+    public readonly nint Handle = handle;
 
     public bool IsNull => Handle == 0;
     public bool IsNotNull => Handle != 0;

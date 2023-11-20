@@ -1,4 +1,4 @@
-﻿// Copyright © Amer Koleci and Contributors.
+﻿// Copyright (c) Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 using System.Diagnostics;
@@ -6,11 +6,9 @@ using System.Diagnostics;
 namespace SDL;
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly partial struct SDL_Cursor : IEquatable<SDL_Cursor>
+public readonly partial struct SDL_Cursor(nint handle) : IEquatable<SDL_Cursor>
 {
-    public SDL_Cursor(nint handle) { Handle = handle; }
-    public nint Handle { get; }
-    public bool IsNull => Handle == 0;
+    public nint Handle { get; } = handle; public bool IsNull => Handle == 0;
     public bool IsNotNull => Handle != 0;
     public static SDL_Cursor Null => new(0);
     public static implicit operator SDL_Cursor(nint handle) => new(handle);

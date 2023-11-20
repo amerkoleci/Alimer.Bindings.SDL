@@ -1,4 +1,4 @@
-﻿// Copyright © Amer Koleci and Contributors.
+﻿// Copyright (c) Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 using System.Diagnostics;
@@ -6,11 +6,9 @@ using System.Diagnostics;
 namespace SDL;
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly partial struct SDL_Surface : IEquatable<SDL_Surface>
+public readonly partial struct SDL_Surface(IntPtr handle) : IEquatable<SDL_Surface>
 {
-    public SDL_Surface(IntPtr handle) { Handle = handle; }
-    public IntPtr Handle { get; }
-    public bool IsNull => Handle == IntPtr.Zero;
+    public IntPtr Handle { get; } = handle; public bool IsNull => Handle == IntPtr.Zero;
     public bool IsNotNull => Handle != IntPtr.Zero;
     public static SDL_Surface Null => new(IntPtr.Zero);
     public static implicit operator SDL_Surface(IntPtr handle) => new(handle);

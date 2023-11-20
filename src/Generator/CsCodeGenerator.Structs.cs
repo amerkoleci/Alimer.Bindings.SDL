@@ -22,7 +22,7 @@ public static partial class CsCodeGenerator
             }
 
             // Handled manually.
-            if (cppClass.Name == "SDL_SysWMinfo")
+            if (cppClass.Name == "SDL_SysWMinfo" || cppClass.Name == "SDL_GUID")
             {
                 continue;
             }

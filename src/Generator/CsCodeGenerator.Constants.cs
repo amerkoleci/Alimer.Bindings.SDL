@@ -16,7 +16,7 @@ public static partial class CsCodeGenerator
             if (string.IsNullOrEmpty(cppMacro.Value)
                 || cppMacro.Name.EndsWith("_H_", StringComparison.OrdinalIgnoreCase)
                 || cppMacro.Name.Equals("SDL_SCANCODE_TO_KEYCODE", StringComparison.OrdinalIgnoreCase)
-                || cppMacro.Name.Equals("SDL_INIT_EVERYTHING", StringComparison.OrdinalIgnoreCase) 
+                || cppMacro.Name.Equals("SDL_INIT_EVERYTHING", StringComparison.OrdinalIgnoreCase)
                 || cppMacro.Name.Equals("VK_DEFINE_HANDLE", StringComparison.OrdinalIgnoreCase)
                 || cppMacro.Name.Equals("VK_DEFINE_NON_DISPATCHABLE_HANDLE", StringComparison.OrdinalIgnoreCase)
                 || cppMacro.Name.Equals("VK_DEFINE_NON_DISPATCHABLE_HANDLE", StringComparison.OrdinalIgnoreCase)
@@ -47,7 +47,18 @@ public static partial class CsCodeGenerator
                 || cppMacro.Name == "SDL_AUDIO_FRAMESIZE"
                 || cppMacro.Name == "SDL_SYSWM_INFO_SIZE_V1"
                 || cppMacro.Name == "SDL_SYSWM_CURRENT_INFO_SIZE"
-                || cppMacro.Name.StartsWith("SDL_HAPTIC_"))
+                || cppMacro.Name.StartsWith("SDL_HAPTIC_")
+                || cppMacro.Name == "SDL_PEN_INVALID"
+                || cppMacro.Name == "SDL_PEN_MOUSEID"
+                || cppMacro.Name == "SDL_PEN_INFO_UNKNOWN"
+                || cppMacro.Name == "SDL_PEN_CAPABILITY"
+                || cppMacro.Name == "SDL_PEN_AXIS_CAPABILITY"
+                || cppMacro.Name == "SDL_PEN_AXIS_BIDIRECTIONAL_MASKS")
+            {
+                continue;
+            }
+
+            if (cppMacro.Name.StartsWith("SDL_PEN_") && cppMacro.Name.EndsWith("_MASK"))
             {
                 continue;
             }
@@ -115,7 +126,8 @@ public static partial class CsCodeGenerator
                 if (cppMacro.Name == "SDL_HAT_RIGHTUP"
                     || cppMacro.Name == "SDL_HAT_RIGHTDOWN"
                     || cppMacro.Name == "SDL_HAT_LEFTUP"
-                    || cppMacro.Name == "SDL_HAT_LEFTDOWN")
+                    || cppMacro.Name == "SDL_HAT_LEFTDOWN"
+                    || cppMacro.Name.StartsWith("SDL_PEN_"))
                 {
                     csDataType = "uint";
                 }
@@ -148,7 +160,7 @@ public static partial class CsCodeGenerator
                     csDataType = "SDL_AudioDeviceID";
                 }
 
-                writer.WriteLine($"/// <unmanaged>{cppMacro.Name}</unmanaged>");
+                //writer.WriteLine($"/// <unmanaged>{cppMacro.Name}</unmanaged>");
                 writer.WriteLine($"public {modifier} {csDataType} {cppMacro.Name} = {macroValue};");
             }
         }

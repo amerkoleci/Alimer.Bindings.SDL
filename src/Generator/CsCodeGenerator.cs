@@ -16,6 +16,7 @@ public static partial class CsCodeGenerator
     private static readonly Dictionary<string, string> s_csNameMappings = new()
     {
         { "bool", "bool" },
+        { "Sint8", "sbyte" },
         { "uint8_t", "byte" },
         { "Uint8", "byte" },
         { "Uint16", "ushort" },

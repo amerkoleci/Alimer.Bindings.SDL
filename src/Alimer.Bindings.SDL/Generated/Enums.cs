@@ -27,6 +27,42 @@ public enum SDL_errorcode
 	Lasterror = 5,
 }
 
+public enum SDL_PenAxis
+{
+	/// <unmanaged>SDL_PEN_AXIS_PRESSURE</unmanaged>
+	Pressure = 0,
+	/// <unmanaged>SDL_PEN_AXIS_XTILT</unmanaged>
+	Xtilt = 1,
+	/// <unmanaged>SDL_PEN_AXIS_YTILT</unmanaged>
+	Ytilt = 2,
+	/// <unmanaged>SDL_PEN_AXIS_DISTANCE</unmanaged>
+	Distance = 3,
+	/// <unmanaged>SDL_PEN_AXIS_ROTATION</unmanaged>
+	Rotation = 4,
+	/// <unmanaged>SDL_PEN_AXIS_SLIDER</unmanaged>
+	Slider = 5,
+	/// <unmanaged>SDL_PEN_NUM_AXES</unmanaged>
+	NumAxes = 6,
+	/// <unmanaged>SDL_PEN_AXIS_LAST</unmanaged>
+	Last = NumAxes - 1,
+}
+
+public enum SDL_PenSubtype
+{
+	/// <unmanaged>SDL_PEN_TYPE_ERASER</unmanaged>
+	Eraser = 1,
+	/// <unmanaged>SDL_PEN_TYPE_PEN</unmanaged>
+	Pen = 2,
+	/// <unmanaged>SDL_PEN_TYPE_PENCIL</unmanaged>
+	Pencil = 3,
+	/// <unmanaged>SDL_PEN_TYPE_BRUSH</unmanaged>
+	Brush = 4,
+	/// <unmanaged>SDL_PEN_TYPE_AIRBRUSH</unmanaged>
+	Airbrush = 5,
+	/// <unmanaged>SDL_PEN_TYPE_LAST</unmanaged>
+	Last = Airbrush,
+}
+
 [Flags]
 public enum SDL_InitFlags
 {
@@ -1198,14 +1234,14 @@ public enum SDL_GamepadButton
 {
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_INVALID</unmanaged>
 	Invalid = -1,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_A</unmanaged>
-	A = 0,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_B</unmanaged>
-	B = 1,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_X</unmanaged>
-	X = 2,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_Y</unmanaged>
-	Y = 3,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_SOUTH</unmanaged>
+	South = 0,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_EAST</unmanaged>
+	East = 1,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_WEST</unmanaged>
+	West = 2,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_NORTH</unmanaged>
+	North = 3,
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_BACK</unmanaged>
 	Back = 4,
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_GUIDE</unmanaged>
@@ -1242,6 +1278,28 @@ public enum SDL_GamepadButton
 	Touchpad = 20,
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_MAX</unmanaged>
 	Max = 21,
+}
+
+public enum SDL_GamepadButtonLabel
+{
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_A</unmanaged>
+	A = 1,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_B</unmanaged>
+	B = 2,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_X</unmanaged>
+	X = 3,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_Y</unmanaged>
+	Y = 4,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_CROSS</unmanaged>
+	Cross = 5,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_CIRCLE</unmanaged>
+	Circle = 6,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_SQUARE</unmanaged>
+	Square = 7,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_TRIANGLE</unmanaged>
+	Triangle = 8,
 }
 
 public enum SDL_GamepadAxis
@@ -1472,8 +1530,8 @@ public enum SDL_WindowFlags : uint
 	InputFocus = 0x00000200,
 	/// <unmanaged>SDL_WINDOW_MOUSE_FOCUS</unmanaged>
 	MouseFocus = 0x00000400,
-	/// <unmanaged>SDL_WINDOW_FOREIGN</unmanaged>
-	Foreign = 0x00000800,
+	/// <unmanaged>SDL_WINDOW_EXTERNAL</unmanaged>
+	External = 0x00000800,
 	/// <unmanaged>SDL_WINDOW_HIGH_PIXEL_DENSITY</unmanaged>
 	HighPixelDensity = 0x00002000,
 	/// <unmanaged>SDL_WINDOW_MOUSE_CAPTURE</unmanaged>
@@ -1715,10 +1773,14 @@ public enum SDL_EventType
 	WindowOccluded = 533,
 	/// <unmanaged>SDL_EVENT_WINDOW_DESTROYED</unmanaged>
 	WindowDestroyed = 534,
+	/// <unmanaged>SDL_EVENT_WINDOW_PEN_ENTER</unmanaged>
+	WindowPenEnter = 535,
+	/// <unmanaged>SDL_EVENT_WINDOW_PEN_LEAVE</unmanaged>
+	WindowPenLeave = 536,
 	/// <unmanaged>SDL_EVENT_WINDOW_FIRST</unmanaged>
 	WindowFirst = WindowShown,
 	/// <unmanaged>SDL_EVENT_WINDOW_LAST</unmanaged>
-	WindowLast = WindowDestroyed,
+	WindowLast = WindowPenLeave,
 	/// <unmanaged>SDL_EVENT_KEY_DOWN</unmanaged>
 	KeyDown = 0x300,
 	/// <unmanaged>SDL_EVENT_KEY_UP</unmanaged>
@@ -1801,6 +1863,16 @@ public enum SDL_EventType
 	AudioDeviceFormatChanged = 4354,
 	/// <unmanaged>SDL_EVENT_SENSOR_UPDATE</unmanaged>
 	SensorUpdate = 0x1200,
+	/// <unmanaged>SDL_EVENT_PEN_DOWN</unmanaged>
+	PenDown = 0x1300,
+	/// <unmanaged>SDL_EVENT_PEN_UP</unmanaged>
+	PenUp = 4865,
+	/// <unmanaged>SDL_EVENT_PEN_MOTION</unmanaged>
+	PenMotion = 4866,
+	/// <unmanaged>SDL_EVENT_PEN_BUTTON_DOWN</unmanaged>
+	PenButtonDown = 4867,
+	/// <unmanaged>SDL_EVENT_PEN_BUTTON_UP</unmanaged>
+	PenButtonUp = 4868,
 	/// <unmanaged>SDL_EVENT_RENDER_TARGETS_RESET</unmanaged>
 	RenderTargetsReset = 0x2000,
 	/// <unmanaged>SDL_EVENT_RENDER_DEVICE_RESET</unmanaged>

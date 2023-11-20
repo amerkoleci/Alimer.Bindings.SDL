@@ -50,6 +50,30 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_Error")]
 	public static partial int SDL_Error(SDL_errorcode code);
 
+	[LibraryImport(LibName, EntryPoint = "SDL_GetPens")]
+	public static partial SDL_PenID* SDL_GetPens(out int count);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetPenStatus")]
+	public static partial uint SDL_GetPenStatus(SDL_PenID instance_id, float* x, float* y, float* axes, nuint num_axes);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetPenFromGUID")]
+	public static partial SDL_PenID SDL_GetPenFromGUID(Guid guid);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetPenGUID")]
+	public static partial Guid SDL_GetPenGUID(SDL_PenID instance_id);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_PenConnected")]
+	public static partial SDL_bool SDL_PenConnected(SDL_PenID instance_id);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetPenName")]
+	public static partial sbyte* SDL_GetPenName(SDL_PenID instance_id);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetPenCapabilities")]
+	public static partial uint SDL_GetPenCapabilities(SDL_PenID instance_id, SDL_PenCapabilityInfo* capabilities);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetPenType")]
+	public static partial SDL_PenSubtype SDL_GetPenType(SDL_PenID instance_id);
+
 	[LibraryImport(LibName, EntryPoint = "SDL_Init")]
 	public static partial int SDL_Init(SDL_InitFlags flags);
 
@@ -557,6 +581,12 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadButton")]
 	public static partial byte SDL_GetGamepadButton(SDL_Gamepad gamepad, SDL_GamepadButton button);
 
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadButtonLabelForType")]
+	public static partial SDL_GamepadButtonLabel SDL_GetGamepadButtonLabelForType(SDL_GamepadType type, SDL_GamepadButton button);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadButtonLabel")]
+	public static partial SDL_GamepadButtonLabel SDL_GetGamepadButtonLabel(SDL_Gamepad gamepad, SDL_GamepadButton button);
+
 	[LibraryImport(LibName, EntryPoint = "SDL_GetNumGamepadTouchpads")]
 	public static partial int SDL_GetNumGamepadTouchpads(SDL_Gamepad gamepad);
 
@@ -908,14 +938,11 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateWindow")]
 	public static partial SDL_Window SDL_CreateWindow(sbyte* title, int w, int h, SDL_WindowFlags flags);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_CreateWindowWithPosition")]
-	public static partial SDL_Window SDL_CreateWindowWithPosition(sbyte* title, int x, int y, int w, int h, SDL_WindowFlags flags);
-
 	[LibraryImport(LibName, EntryPoint = "SDL_CreatePopupWindow")]
 	public static partial SDL_Window SDL_CreatePopupWindow(SDL_Window parent, int offset_x, int offset_y, int w, int h, SDL_WindowFlags flags);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_CreateWindowFrom")]
-	public static partial SDL_Window SDL_CreateWindowFrom(void* data);
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateWindowWithProperties")]
+	public static partial SDL_Window SDL_CreateWindowWithProperties(SDL_PropertiesID props);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowID")]
 	public static partial SDL_WindowID SDL_GetWindowID(SDL_Window window);

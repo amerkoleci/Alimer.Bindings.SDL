@@ -42,7 +42,7 @@ public static class Program
 
         List<string> headers =
         [
-            "SDL_error.h",
+            "SDL_pen.h",
             "SDL_init.h",
             "SDL_platform.h",
             "SDL_clipboard.h",

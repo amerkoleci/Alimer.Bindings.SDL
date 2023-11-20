@@ -1,4 +1,4 @@
-﻿// Copyright © Amer Koleci and Contributors.
+﻿// Copyright (c) Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 using static SDL.SDL;
@@ -49,8 +49,9 @@ public static unsafe class Program
         SDL_SetHint(SDL_HINT_IME_SHOW_UI, true);
 
         // create the window
-        SDL_WindowFlags flags = SDL_WindowFlags.Resizable | SDL_WindowFlags.OpenGL;
-        SDL_Window window = SDL_CreateWindowWithPosition("Hello World", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, flags);
+        SDL_WindowFlags flags = SDL_WindowFlags.Resizable | SDL_WindowFlags.OpenGL | SDL_WindowFlags.Hidden;
+        SDL_Window window = SDL_CreateWindow("Hello World", 800, 600, flags);
+        SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
         SDL_GLContext gl_context = SDL_GL_CreateContext(window);
         SDL_GL_MakeCurrent(window, gl_context);

@@ -48,6 +48,9 @@ public static partial class CsCodeGenerator
         { "SDL_BlendMode", "SDL_BLENDMODE" },
         { "SDL_BlendOperation", "SDL_BLENDOPERATION" },
         { "SDL_BlendFactor", "SDL_BLENDFACTOR" },
+        { "SDL_GamepadButtonLabel", "SDL_GAMEPAD_BUTTON_LABEL" },
+        { "SDL_PenAxis", "SDL_PEN_AXIS" },
+        { "SDL_PenSubtype", "SDL_PEN_TYPE" },
     };
 
     private static readonly Dictionary<string, string> s_knownEnumValueNames = new()
@@ -59,6 +62,7 @@ public static partial class CsCodeGenerator
         { "SDL_ADDEVENT", "AddEvent" },
         { "SDL_PEEKEVENT", "PeekEvent" },
         { "SDL_GETEVENT", "GetEvent" },
+        { "SDL_PEN_NUM_AXES", "NumAxes" },
     };
 
     private static readonly HashSet<string> s_ignoredParts = new(StringComparer.OrdinalIgnoreCase)

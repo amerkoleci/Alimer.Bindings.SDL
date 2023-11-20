@@ -14,6 +14,13 @@ using System.Diagnostics.CodeAnalysis;
 #pragma warning disable CS0649
 namespace SDL;
 
+public partial struct SDL_PenCapabilityInfo
+{
+	public float max_tilt;
+	public uint wacom_id;
+	public sbyte num_buttons;
+}
+
 public partial struct SDL_Keysym
 {
 	public SDL_Scancode scancode;
@@ -403,6 +410,48 @@ public partial struct SDL_TouchFingerEvent
 	public SDL_WindowID windowID;
 }
 
+public partial struct SDL_PenTipEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public uint windowID;
+	public SDL_PenID which;
+	public byte tip;
+	public byte state;
+	public ushort pen_state;
+	public float x;
+	public float y;
+	public unsafe fixed float axes[6];
+}
+
+public partial struct SDL_PenMotionEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public uint windowID;
+	public SDL_PenID which;
+	public byte padding1;
+	public byte padding2;
+	public ushort pen_state;
+	public float x;
+	public float y;
+	public unsafe fixed float axes[6];
+}
+
+public partial struct SDL_PenButtonEvent
+{
+	public uint type;
+	public ulong timestamp;
+	public uint windowID;
+	public SDL_PenID which;
+	public byte button;
+	public byte state;
+	public ushort pen_state;
+	public float x;
+	public float y;
+	public unsafe fixed float axes[6];
+}
+
 public partial struct SDL_DropEvent
 {
 	public uint type;
@@ -751,6 +800,54 @@ public partial struct SDL_Event
 		public float dy;
 		public float pressure;
 		public SDL_WindowID windowID;
+	}
+	[FieldOffset(0)]
+	public SDL_Event_ptip ptip;
+	
+	public partial struct SDL_Event_ptip
+	{
+		public SDL_EventType type;
+		public ulong timestamp;
+		public uint windowID;
+		public SDL_PenID which;
+		public byte tip;
+		public byte state;
+		public ushort pen_state;
+		public float x;
+		public float y;
+		public unsafe fixed float axes[6];
+	}
+	[FieldOffset(0)]
+	public SDL_Event_pmotion pmotion;
+	
+	public partial struct SDL_Event_pmotion
+	{
+		public SDL_EventType type;
+		public ulong timestamp;
+		public uint windowID;
+		public SDL_PenID which;
+		public byte padding1;
+		public byte padding2;
+		public ushort pen_state;
+		public float x;
+		public float y;
+		public unsafe fixed float axes[6];
+	}
+	[FieldOffset(0)]
+	public SDL_Event_pbutton pbutton;
+	
+	public partial struct SDL_Event_pbutton
+	{
+		public SDL_EventType type;
+		public ulong timestamp;
+		public uint windowID;
+		public SDL_PenID which;
+		public byte button;
+		public byte state;
+		public ushort pen_state;
+		public float x;
+		public float y;
+		public unsafe fixed float axes[6];
 	}
 	[FieldOffset(0)]
 	public SDL_Event_drop drop;

@@ -395,22 +395,6 @@ public static unsafe partial class SDL
     //[DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     //public static extern int SDL_CreateWindowAndRenderer(int width, int height, SDL_WindowFlags windowFlags, out SDL_Window window, out SDL_Renderer renderer);
 
-    public static SDL_Window SDL_CreateWindowWithPosition(string title, int x, int y, int width, int height, SDL_WindowFlags flags)
-    {
-        fixed (sbyte* pName = title.GetUtf8Span())
-        {
-            return SDL_CreateWindowWithPosition(pName, x, y, width, height, flags);
-        }
-    }
-
-    public static SDL_Window SDL_CreateWindowWithPosition(ReadOnlySpan<sbyte> title, int x, int y, int width, int height, SDL_WindowFlags flags)
-    {
-        fixed (sbyte* pName = title)
-        {
-            return SDL_CreateWindowWithPosition(pName, x, y, width, height, flags);
-        }
-    }
-
     public static int SDL_SetWindowTitle(SDL_Window window, ReadOnlySpan<sbyte> name)
     {
         fixed (sbyte* pName = name)

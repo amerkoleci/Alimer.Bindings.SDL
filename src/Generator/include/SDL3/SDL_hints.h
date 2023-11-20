@@ -538,29 +538,6 @@ extern "C" {
 #define SDL_HINT_GAMECONTROLLER_IGNORE_DEVICES_EXCEPT "SDL_GAMECONTROLLER_IGNORE_DEVICES_EXCEPT"
 
 /**
- *  If set, game controller face buttons report their values according to their labels instead of their positional layout.
- *
- *  For example, on Nintendo Switch controllers, normally you'd get:
- *
- *      (Y)
- *  (X)     (B)
- *      (A)
- *
- *  but if this hint is set, you'll get:
- *
- *      (X)
- *  (Y)     (A)
- *      (B)
- *
- *  The variable can be set to the following values:
- *    "0"       - Report the face buttons by position, as though they were on an Xbox controller.
- *    "1"       - Report the face buttons by label instead of position
- *
- *  The default value is "1".  This hint may be set at any time.
- */
-#define SDL_HINT_GAMECONTROLLER_USE_BUTTON_LABELS "SDL_GAMECONTROLLER_USE_BUTTON_LABELS"
-
-/**
  *  Controls whether the device's built-in accelerometer and gyro should be used as sensors for gamepads.
  *
  *  The variable can be set to the following values:
@@ -989,6 +966,24 @@ extern "C" {
 #define SDL_HINT_JOYSTICK_HIDAPI_XBOX_ONE_HOME_LED "SDL_JOYSTICK_HIDAPI_XBOX_ONE_HOME_LED"
 
 /**
+  *  A variable controlling whether IOKit should be used for controller handling.
+  *
+  *  This variable can be set to the following values:
+  *    "0"       - IOKit is not used
+  *    "1"       - IOKit is used (the default)
+  */
+#define SDL_HINT_JOYSTICK_IOKIT "SDL_JOYSTICK_IOKIT"
+
+/**
+  *  A variable controlling whether GCController should be used for controller handling.
+  *
+  *  This variable can be set to the following values:
+  *    "0"       - GCController is not used
+  *    "1"       - GCController is used (the default)
+  */
+#define SDL_HINT_JOYSTICK_MFI "SDL_JOYSTICK_MFI"
+
+/**
   *  A variable controlling whether the RAWINPUT joystick drivers should be used for better handling XInput-capable devices.
   *
   *  This variable can be set to the following values:
@@ -1242,6 +1237,40 @@ extern "C" {
  *  released.
  */
 #define SDL_HINT_MOUSE_AUTO_CAPTURE    "SDL_MOUSE_AUTO_CAPTURE"
+
+/**
+ *  Treat pen movement as separate from mouse movement
+ *
+ *  By default, pens report both ::SDL_MouseMotionEvent and ::SDL_PenMotionEvent updates
+ *  (analogously for button presses).  This hint allows decoupling mouse and pen updates.
+ *
+ *  This variable toggles between the following behaviour:
+ *    "0"       - (Default) Pen acts as a mouse with mouse ID ::SDL_PEN_MOUSEID.
+ *                Use case: client application is not pen aware, user wants to
+ *                use pen instead of mouse to interact.
+ *    "1"       - Pen reports mouse clicks and movement events but does not update
+ *                SDL-internal mouse state (buttons pressed, current mouse location).
+ *                Use case: client application is not pen aware, user frequently
+ *                alternates between pen and "real" mouse.
+ *    "2"       - Pen reports no mouse events.
+ *                Use case: pen-aware client application uses this hint to allow user to
+ *                toggle between pen+mouse mode ("2") and pen-only mode ("1" or "0").
+ */
+#define SDL_HINT_PEN_NOT_MOUSE    "SDL_HINT_PEN_NOT_MOUSE"
+
+/**
+ *  Pen mouse button emulation triggers only when the pen touches the tablet surface
+ *
+ *    "0"       - The pen reports mouse button press/release immediately when the pen
+ *                button is pressed/released, and the pen tip touching the surface counts
+ *                as left mouse button press.
+ *    "1"       - (Default) Mouse button presses are sent when the pen first touches
+ *                the tablet (analogously for releases).  Not pressing a pen button
+ *                simulates mouse button 1, pressing the first pen button simulates
+ *                mouse button 2 etc.;  it is not possible to report multiple buttons
+ *                as pressed at the same time.
+ */
+#define SDL_HINT_PEN_DELAY_MOUSE_BUTTON    "SDL_HINT_PEN_DELAY_MOUSE_BUTTON"
 
 /**
  *  Tell SDL not to catch the SIGINT or SIGTERM signals.
@@ -1789,47 +1818,6 @@ extern "C" {
  *  mode directly.
  */
 #define SDL_HINT_VIDEO_WAYLAND_EMULATE_MOUSE_WARP "SDL_VIDEO_WAYLAND_EMULATE_MOUSE_WARP"
-
-/**
-*  A variable that is the address of another SDL_Window* (as a hex string formatted with "%p").
-*
-*  If this hint is set before SDL_CreateWindowFrom() and the SDL_Window* it is set to has
-*  SDL_WINDOW_OPENGL set (and running on WGL only, currently), then two things will occur on the newly
-*  created SDL_Window:
-*
-*  1. Its pixel format will be set to the same pixel format as this SDL_Window.  This is
-*  needed for example when sharing an OpenGL context across multiple windows.
-*
-*  2. The flag SDL_WINDOW_OPENGL will be set on the new window so it can be used for
-*  OpenGL rendering.
-*
-*  This variable can be set to the following values:
-*    The address (as a string "%p") of the SDL_Window* that new windows created with SDL_CreateWindowFrom() should
-*    share a pixel format with.
-*/
-#define SDL_HINT_VIDEO_WINDOW_SHARE_PIXEL_FORMAT    "SDL_VIDEO_WINDOW_SHARE_PIXEL_FORMAT"
-
-/**
- *  When calling SDL_CreateWindowFrom(), make the window compatible with OpenGL.
- *
- * This variable can be set to the following values:
- * "0" - Don't add any graphics flags to the SDL_WindowFlags
- * "1" - Add SDL_WINDOW_OPENGL to the SDL_WindowFlags
- *
- * By default SDL will not make the foreign window compatible with OpenGL.
- */
-#define SDL_HINT_VIDEO_FOREIGN_WINDOW_OPENGL "SDL_VIDEO_FOREIGN_WINDOW_OPENGL"
-
-/**
- *  When calling SDL_CreateWindowFrom(), make the window compatible with Vulkan.
- *
- * This variable can be set to the following values:
- * "0" - Don't add any graphics flags to the SDL_WindowFlags
- * "1" - Add SDL_WINDOW_VULKAN to the SDL_WindowFlags
- *
- * By default SDL will not make the foreign window compatible with Vulkan.
- */
-#define SDL_HINT_VIDEO_FOREIGN_WINDOW_VULKAN "SDL_VIDEO_FOREIGN_WINDOW_VULKAN"
 
 /**
 *  A variable specifying which shader compiler to preload when using the Chrome ANGLE binaries

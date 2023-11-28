@@ -27,7 +27,7 @@ include(FetchContent)
 FetchContent_Declare(
     SDL3
     GIT_REPOSITORY https://github.com/libsdl-org/SDL
-    GIT_TAG 49d58bc73af79bc893c861d84abf256b79ec9fbe
+    GIT_TAG ed3fad18808714f9fab3111a45d06264ea6fb0c5
     GIT_PROGRESS TRUE
 )
 FetchContent_MakeAvailable(SDL3)

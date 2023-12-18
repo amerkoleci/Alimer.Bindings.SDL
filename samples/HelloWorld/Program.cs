@@ -33,6 +33,8 @@ public static unsafe class Program
             return;
         }
 
+        var test = SDL_GetGamepadMappings();
+
         var vkGetInstanceProcAddr = SDL_Vulkan_GetVkGetInstanceProcAddr();
         string[] extensions = SDL_Vulkan_GetInstanceExtensions();
 

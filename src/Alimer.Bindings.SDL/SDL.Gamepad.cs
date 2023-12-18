@@ -87,9 +87,16 @@ unsafe partial class SDL
         return SDL_AddGamepadMapping(mappingString.GetUtf8Span());
     }
 
-    public static string? SDL_GetGamepadMappingForIndexString(int mapping_index)
+    public static string[] SDL_GetGamepadMappings()
     {
-        return GetString(SDL_GetGamepadMappingForIndex(mapping_index));
+        sbyte** strings = SDL_GetGamepadMappings(out int count);
+        string[] names = new string[count];
+        for (int i = 0; i < count; i++)
+        {
+            names[i] = GetString(strings[i])!;
+        }
+
+        return names;
     }
 
     /* THIS IS AN RWops FUNCTION! */

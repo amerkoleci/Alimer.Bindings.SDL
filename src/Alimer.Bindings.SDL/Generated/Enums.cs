@@ -1360,8 +1360,24 @@ public enum SDL_SystemCursor
 	No = 10,
 	/// <unmanaged>SDL_SYSTEM_CURSOR_HAND</unmanaged>
 	Hand = 11,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_WINDOW_TOPLEFT</unmanaged>
+	WindowTopleft = 12,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_WINDOW_TOP</unmanaged>
+	WindowTop = 13,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_WINDOW_TOPRIGHT</unmanaged>
+	WindowTopright = 14,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_WINDOW_RIGHT</unmanaged>
+	WindowRight = 15,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_WINDOW_BOTTOMRIGHT</unmanaged>
+	WindowBottomright = 16,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_WINDOW_BOTTOM</unmanaged>
+	WindowBottom = 17,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_WINDOW_BOTTOMLEFT</unmanaged>
+	WindowBottomleft = 18,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_WINDOW_LEFT</unmanaged>
+	WindowLeft = 19,
 	/// <unmanaged>SDL_NUM_SYSTEM_CURSORS</unmanaged>
-	SDL_NUM_SYSTEM_CURSORS = 12,
+	SDL_NUM_SYSTEM_CURSORS = 20,
 }
 
 public enum SDL_MouseWheelDirection
@@ -1771,12 +1787,16 @@ public enum SDL_EventType
 	WindowDisplayScaleChanged = 532,
 	/// <unmanaged>SDL_EVENT_WINDOW_OCCLUDED</unmanaged>
 	WindowOccluded = 533,
+	/// <unmanaged>SDL_EVENT_WINDOW_ENTER_FULLSCREEN</unmanaged>
+	WindowEnterFullscreen = 534,
+	/// <unmanaged>SDL_EVENT_WINDOW_LEAVE_FULLSCREEN</unmanaged>
+	WindowLeaveFullscreen = 535,
 	/// <unmanaged>SDL_EVENT_WINDOW_DESTROYED</unmanaged>
-	WindowDestroyed = 534,
+	WindowDestroyed = 536,
 	/// <unmanaged>SDL_EVENT_WINDOW_PEN_ENTER</unmanaged>
-	WindowPenEnter = 535,
+	WindowPenEnter = 537,
 	/// <unmanaged>SDL_EVENT_WINDOW_PEN_LEAVE</unmanaged>
-	WindowPenLeave = 536,
+	WindowPenLeave = 538,
 	/// <unmanaged>SDL_EVENT_WINDOW_FIRST</unmanaged>
 	WindowFirst = WindowShown,
 	/// <unmanaged>SDL_EVENT_WINDOW_LAST</unmanaged>

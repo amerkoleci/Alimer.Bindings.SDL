@@ -96,16 +96,6 @@ typedef struct SDL_Vertex
 } SDL_Vertex;
 
 /**
- * The scaling mode for a texture.
- */
-typedef enum
-{
-    SDL_SCALEMODE_NEAREST, /**< nearest pixel sampling */
-    SDL_SCALEMODE_LINEAR,  /**< linear filtering */
-    SDL_SCALEMODE_BEST     /**< anisotropic filtering */
-} SDL_ScaleMode;
-
-/**
  * The access pattern allowed for a texture.
  */
 typedef enum
@@ -251,9 +241,12 @@ extern DECLSPEC SDL_Renderer * SDLCALL SDL_CreateRenderer(SDL_Window *window, co
  * These are the supported properties:
  *
  * - "window" (pointer) - the window where rendering is displayed
- * - "surface" (pointer) - the surface where rendering is displayed, if you want a software renderer without a window
- * - "name" (string) - the name of the rendering driver to use, if a specific one is desired
- * - "present_vsync" (boolean) - true if you want present synchronized with the refresh rate
+ * - "surface" (pointer) - the surface where rendering is displayed, if you
+ *   want a software renderer without a window
+ * - "name" (string) - the name of the rendering driver to use, if a specific
+ *   one is desired
+ * - "present_vsync" (boolean) - true if you want present synchronized with
+ *   the refresh rate
  *
  * \param props the properties to use
  * \returns a valid rendering context or NULL if there was an error; call
@@ -447,36 +440,52 @@ extern DECLSPEC SDL_Texture *SDLCALL SDL_CreateTextureFromSurface(SDL_Renderer *
  *
  * These are the supported properties:
  *
- * - "format" (number) - one of the enumerated values in SDL_PixelFormatEnum, defaults to the best RGBA format for the renderer
- * - "access" (number) - one of the enumerated values in SDL_TextureAccess, defaults to SDL_TEXTUREACCESS_STATIC
+ * - "format" (number) - one of the enumerated values in SDL_PixelFormatEnum,
+ *   defaults to the best RGBA format for the renderer
+ * - "access" (number) - one of the enumerated values in SDL_TextureAccess,
+ *   defaults to SDL_TEXTUREACCESS_STATIC
  * - "width" (number) - the width of the texture in pixels, required
  * - "height" (number) - the height of the texture in pixels, required
  *
  * With the direct3d11 renderer:
  *
- * - "d3d11.texture" (pointer) - the ID3D11Texture2D associated with the texture, if you want to wrap an existing texture.
- * - "d3d11.texture_u" (pointer) - the ID3D11Texture2D associated with the U plane of a YUV texture, if you want to wrap an existing texture.
- * - "d3d11.texture_v" (pointer) - the ID3D11Texture2D associated with the V plane of a YUV texture, if you want to wrap an existing texture.
+ * - "d3d11.texture" (pointer) - the ID3D11Texture2D associated with the
+ *   texture, if you want to wrap an existing texture.
+ * - "d3d11.texture_u" (pointer) - the ID3D11Texture2D associated with the U
+ *   plane of a YUV texture, if you want to wrap an existing texture.
+ * - "d3d11.texture_v" (pointer) - the ID3D11Texture2D associated with the V
+ *   plane of a YUV texture, if you want to wrap an existing texture.
  *
  * With the direct3d12 renderer:
  *
- * - "d3d12.texture" (pointer) - the ID3D12Resource associated with the texture, if you want to wrap an existing texture.
- * - "d3d12.texture_u" (pointer) - the ID3D12Resource associated with the U plane of a YUV texture, if you want to wrap an existing texture.
- * - "d3d12.texture_v" (pointer) - the ID3D12Resource associated with the V plane of a YUV texture, if you want to wrap an existing texture.
+ * - "d3d12.texture" (pointer) - the ID3D12Resource associated with the
+ *   texture, if you want to wrap an existing texture.
+ * - "d3d12.texture_u" (pointer) - the ID3D12Resource associated with the U
+ *   plane of a YUV texture, if you want to wrap an existing texture.
+ * - "d3d12.texture_v" (pointer) - the ID3D12Resource associated with the V
+ *   plane of a YUV texture, if you want to wrap an existing texture.
  *
  * With the opengl renderer:
  *
- * - "opengl.texture" (number) - the GLuint texture associated with the texture, if you want to wrap an existing texture.
- * - "opengl.texture_uv" (number) - the GLuint texture associated with the UV plane of an NV12 texture, if you want to wrap an existing texture.
- * - "opengl.texture_u" (number) - the GLuint texture associated with the U plane of a YUV texture, if you want to wrap an existing texture.
- * - "opengl.texture_v" (number) - the GLuint texture associated with the V plane of a YUV texture, if you want to wrap an existing texture.
+ * - "opengl.texture" (number) - the GLuint texture associated with the
+ *   texture, if you want to wrap an existing texture.
+ * - "opengl.texture_uv" (number) - the GLuint texture associated with the UV
+ *   plane of an NV12 texture, if you want to wrap an existing texture.
+ * - "opengl.texture_u" (number) - the GLuint texture associated with the U
+ *   plane of a YUV texture, if you want to wrap an existing texture.
+ * - "opengl.texture_v" (number) - the GLuint texture associated with the V
+ *   plane of a YUV texture, if you want to wrap an existing texture.
  *
  * With the opengles2 renderer:
  *
- * - "opengles2.texture" (number) - the GLuint texture associated with the texture, if you want to wrap an existing texture.
- * - "opengles2.texture_uv" (number) - the GLuint texture associated with the UV plane of an NV12 texture, if you want to wrap an existing texture.
- * - "opengles2.texture_u" (number) - the GLuint texture associated with the U plane of a YUV texture, if you want to wrap an existing texture.
- * - "opengles2.texture_v" (number) - the GLuint texture associated with the V plane of a YUV texture, if you want to wrap an existing texture.
+ * - "opengles2.texture" (number) - the GLuint texture associated with the
+ *   texture, if you want to wrap an existing texture.
+ * - "opengles2.texture_uv" (number) - the GLuint texture associated with the
+ *   UV plane of an NV12 texture, if you want to wrap an existing texture.
+ * - "opengles2.texture_u" (number) - the GLuint texture associated with the U
+ *   plane of a YUV texture, if you want to wrap an existing texture.
+ * - "opengles2.texture_v" (number) - the GLuint texture associated with the V
+ *   plane of a YUV texture, if you want to wrap an existing texture.
  *
  * \param renderer the rendering context
  * \param props the properties to use
@@ -501,31 +510,47 @@ extern DECLSPEC SDL_Texture *SDLCALL SDL_CreateTextureWithProperties(SDL_Rendere
  *
  * With the direct3d11 renderer:
  *
- * - "SDL.texture.d3d11.texture" (pointer) - the ID3D11Texture2D associated with the texture
- * - "SDL.texture.d3d11.texture_u" (pointer) - the ID3D11Texture2D associated with the U plane of a YUV texture
- * - "SDL.texture.d3d11.texture_v" (pointer) - the ID3D11Texture2D associated with the V plane of a YUV texture
+ * - "SDL.texture.d3d11.texture" (pointer) - the ID3D11Texture2D associated
+ *   with the texture
+ * - "SDL.texture.d3d11.texture_u" (pointer) - the ID3D11Texture2D associated
+ *   with the U plane of a YUV texture
+ * - "SDL.texture.d3d11.texture_v" (pointer) - the ID3D11Texture2D associated
+ *   with the V plane of a YUV texture
  *
  * With the direct3d12 renderer:
  *
- * - "SDL.texture.d3d12.texture" (pointer) - the ID3D12Resource associated with the texture
- * - "SDL.texture.d3d12.texture_u" (pointer) - the ID3D12Resource associated with the U plane of a YUV texture
- * - "SDL.texture.d3d12.texture_v" (pointer) - the ID3D12Resource associated with the V plane of a YUV texture
+ * - "SDL.texture.d3d12.texture" (pointer) - the ID3D12Resource associated
+ *   with the texture
+ * - "SDL.texture.d3d12.texture_u" (pointer) - the ID3D12Resource associated
+ *   with the U plane of a YUV texture
+ * - "SDL.texture.d3d12.texture_v" (pointer) - the ID3D12Resource associated
+ *   with the V plane of a YUV texture
  *
  * With the opengl renderer:
  *
- * - "SDL.texture.opengl.texture" (number) - the GLuint texture associated with the texture
- * - "SDL.texture.opengl.texture_uv" (number) - the GLuint texture associated with the UV plane of an NV12 texture
- * - "SDL.texture.opengl.texture_u" (number) - the GLuint texture associated with the U plane of a YUV texture
- * - "SDL.texture.opengl.texture_v" (number) - the GLuint texture associated with the V plane of a YUV texture
- * - "SDL.texture.opengl.tex_w" (float) - the texture coordinate width of the texture (0.0 - 1.0)
- * - "SDL.texture.opengl.tex_h" (float) - the texture coordinate height of the texture (0.0 - 1.0)
+ * - "SDL.texture.opengl.texture" (number) - the GLuint texture associated
+ *   with the texture
+ * - "SDL.texture.opengl.texture_uv" (number) - the GLuint texture associated
+ *   with the UV plane of an NV12 texture
+ * - "SDL.texture.opengl.texture_u" (number) - the GLuint texture associated
+ *   with the U plane of a YUV texture
+ * - "SDL.texture.opengl.texture_v" (number) - the GLuint texture associated
+ *   with the V plane of a YUV texture
+ * - "SDL.texture.opengl.tex_w" (float) - the texture coordinate width of the
+ *   texture (0.0 - 1.0)
+ * - "SDL.texture.opengl.tex_h" (float) - the texture coordinate height of the
+ *   texture (0.0 - 1.0)
  *
  * With the opengles2 renderer:
  *
- * - "SDL.texture.opengles2.texture" (number) - the GLuint texture associated with the texture
- * - "SDL.texture.opengles2.texture_uv" (number) - the GLuint texture associated with the UV plane of an NV12 texture
- * - "SDL.texture.opengles2.texture_u" (number) - the GLuint texture associated with the U plane of a YUV texture
- * - "SDL.texture.opengles2.texture_v" (number) - the GLuint texture associated with the V plane of a YUV texture
+ * - "SDL.texture.opengles2.texture" (number) - the GLuint texture associated
+ *   with the texture
+ * - "SDL.texture.opengles2.texture_uv" (number) - the GLuint texture
+ *   associated with the UV plane of an NV12 texture
+ * - "SDL.texture.opengles2.texture_u" (number) - the GLuint texture
+ *   associated with the U plane of a YUV texture
+ * - "SDL.texture.opengles2.texture_v" (number) - the GLuint texture
+ *   associated with the V plane of a YUV texture
  *
  * \param texture the texture to query
  * \returns a valid property ID on success or 0 on failure; call
@@ -1552,27 +1577,27 @@ extern DECLSPEC void SDLCALL SDL_DestroyTexture(SDL_Texture *texture);
 extern DECLSPEC void SDLCALL SDL_DestroyRenderer(SDL_Renderer *renderer);
 
 /**
- * Force the rendering context to flush any pending commands to the underlying
- * rendering API.
+ * Force the rendering context to flush any pending commands and state.
  *
  * You do not need to (and in fact, shouldn't) call this function unless you
- * are planning to call into OpenGL/Direct3D/Metal/whatever directly in
+ * are planning to call into OpenGL/Direct3D/Metal/whatever directly, in
  * addition to using an SDL_Renderer.
  *
- * This is for a very-specific case: if you are using SDL's render API, you
- * asked for a specific renderer backend (OpenGL, Direct3D, etc), you set
- * SDL_HINT_RENDER_BATCHING to "1", and you plan to make OpenGL/D3D/whatever
- * calls in addition to SDL render API calls. If all of this applies, you
- * should call SDL_RenderFlush() between calls to SDL's render API and the
- * low-level API you're using in cooperation.
+ * This is for a very-specific case: if you are using SDL's render API, and
+ * you plan to make OpenGL/D3D/whatever calls in addition to SDL render API
+ * calls. If this applies, you should call this function between calls to
+ * SDL's render API and the low-level API you're using in cooperation.
  *
- * In all other cases, you can ignore this function. This is only here to get
- * maximum performance out of a specific situation. In all other cases, SDL
- * will do the right thing, perhaps at a performance loss.
+ * In all other cases, you can ignore this function.
  *
- * This function is first available in SDL 2.0.10, and is not needed in 2.0.9
- * and earlier, as earlier versions did not queue rendering commands at all,
- * instead flushing them to the OS immediately.
+ * This call makes SDL flush any pending rendering work it was queueing up to
+ * do later in a single batch, and marks any internal cached state as invalid,
+ * so it'll prepare all its state again later, from scratch.
+ *
+ * This means you do not need to save state in your rendering code to protect
+ * the SDL renderer. However, there lots of arbitrary pieces of Direct3D and
+ * OpenGL state that can confuse things; you should use your best judgement
+ * and be prepared to make changes if specific state needs to be protected.
  *
  * \param renderer the rendering context
  * \returns 0 on success or a negative error code on failure; call
@@ -1580,7 +1605,7 @@ extern DECLSPEC void SDLCALL SDL_DestroyRenderer(SDL_Renderer *renderer);
  *
  * \since This function is available since SDL 3.0.0.
  */
-extern DECLSPEC int SDLCALL SDL_RenderFlush(SDL_Renderer *renderer);
+extern DECLSPEC int SDLCALL SDL_FlushRenderer(SDL_Renderer *renderer);
 
 
 /**

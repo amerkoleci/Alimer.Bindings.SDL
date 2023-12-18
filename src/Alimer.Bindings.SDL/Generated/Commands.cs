@@ -41,9 +41,6 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_GetError")]
 	public static partial sbyte* SDL_GetError();
 
-	[LibraryImport(LibName, EntryPoint = "SDL_GetErrorMsg")]
-	public static partial sbyte* SDL_GetErrorMsg(sbyte* errstr, int maxlen);
-
 	[LibraryImport(LibName, EntryPoint = "SDL_ClearError")]
 	public static partial void SDL_ClearError();
 
@@ -431,11 +428,8 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_ReloadGamepadMappings")]
 	public static partial int SDL_ReloadGamepadMappings();
 
-	[LibraryImport(LibName, EntryPoint = "SDL_GetNumGamepadMappings")]
-	public static partial int SDL_GetNumGamepadMappings();
-
-	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadMappingForIndex")]
-	public static partial sbyte* SDL_GetGamepadMappingForIndex(int mapping_index);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadMappings")]
+	public static partial sbyte** SDL_GetGamepadMappings(out int count);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadMappingForGUID")]
 	public static partial sbyte* SDL_GetGamepadMappingForGUID(Guid guid);
@@ -755,14 +749,11 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_RemoveTimer")]
 	public static partial SDL_bool SDL_RemoveTimer(SDL_TimerID id);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_GetNumTouchDevices")]
-	public static partial int SDL_GetNumTouchDevices();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTouchDevices")]
+	public static partial SDL_TouchID* SDL_GetTouchDevices(out int count);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_GetTouchDevice")]
-	public static partial SDL_TouchID SDL_GetTouchDevice(int index);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_GetTouchName")]
-	public static partial sbyte* SDL_GetTouchName(int index);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTouchDeviceName")]
+	public static partial sbyte* SDL_GetTouchDeviceName(SDL_TouchID touchID);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetTouchDeviceType")]
 	public static partial SDL_TouchDeviceType SDL_GetTouchDeviceType(SDL_TouchID touchID);
@@ -1027,6 +1018,9 @@ public unsafe partial class SDL
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowFullscreen")]
 	public static partial int SDL_SetWindowFullscreen(SDL_Window window, SDL_bool fullscreen);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SyncWindow")]
+	public static partial int SDL_SyncWindow(SDL_Window window);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_HasWindowSurface")]
 	public static partial SDL_bool SDL_HasWindowSurface(SDL_Window window);

@@ -312,24 +312,19 @@ extern DECLSPEC int SDLCALL SDL_AddGamepadMappingsFromFile(const char *file);
 extern DECLSPEC int SDLCALL SDL_ReloadGamepadMappings(void);
 
 /**
- * Get the number of mappings installed.
- *
- * \returns the number of mappings.
- *
- * \since This function is available since SDL 3.0.0.
- */
-extern DECLSPEC int SDLCALL SDL_GetNumGamepadMappings(void);
-
-/**
  * Get the mapping at a particular index.
  *
- * \param mapping_index mapping index
- * \returns the mapping string. Must be freed with SDL_free(). Returns NULL if
- *          the index is out of range.
+ * You must free the returned pointer with SDL_free() when you are done with
+ * it, but you do _not_ free each string in the array.
+ *
+ * \param count a pointer filled in with the number of mappings returned, can
+ *              be NULL.
+ * \returns an array of the mapping strings, NULL-terminated. Must be freed
+ *          with SDL_free(). Returns NULL on error.
  *
  * \since This function is available since SDL 3.0.0.
  */
-extern DECLSPEC char * SDLCALL SDL_GetGamepadMappingForIndex(int mapping_index);
+extern DECLSPEC char ** SDLCALL SDL_GetGamepadMappings(int *count);
 
 /**
  * Get the gamepad mapping string for a given GUID.

@@ -1857,6 +1857,8 @@ public enum SDL_EventType
 	GamepadSensorUpdate = 1625,
 	/// <unmanaged>SDL_EVENT_GAMEPAD_UPDATE_COMPLETE</unmanaged>
 	GamepadUpdateComplete = 1626,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_STEAM_HANDLE_UPDATED</unmanaged>
+	GamepadSteamHandleUpdated = 1627,
 	/// <unmanaged>SDL_EVENT_FINGER_DOWN</unmanaged>
 	FingerDown = 0x700,
 	/// <unmanaged>SDL_EVENT_FINGER_UP</unmanaged>

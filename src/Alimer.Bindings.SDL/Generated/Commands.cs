@@ -524,6 +524,9 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadSerial")]
 	public static partial sbyte* SDL_GetGamepadSerial(SDL_Gamepad gamepad);
 
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadSteamHandle")]
+	public static partial ulong SDL_GetGamepadSteamHandle(SDL_Gamepad gamepad);
+
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadPowerLevel")]
 	public static partial SDL_JoystickPowerLevel SDL_GetGamepadPowerLevel(SDL_Gamepad gamepad);
 

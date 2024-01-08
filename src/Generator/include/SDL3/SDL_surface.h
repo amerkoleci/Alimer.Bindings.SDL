@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2024 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -104,11 +104,7 @@ typedef struct SDL_Surface
     int pitch;                  /**< Read-only */
     void *pixels;               /**< Read-write */
 
-    /** Application data associated with the surface */
-    union {
-        void *reserved;         /**< For ABI compatibility only, do not use */
-        SDL_PropertiesID props; /**< Read-only */
-    };
+    void *reserved;             /**< Private */
 
     /** information needed for surfaces requiring locks */
     int locked;                 /**< Read-only */

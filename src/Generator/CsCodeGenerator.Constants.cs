@@ -77,31 +77,37 @@ public static partial class CsCodeGenerator
             {
                 //string csName = GetPrettyEnumName(cppMacro.Name, "VK_");
 
-                string modifier = "const";
-                string csDataType = "string";
+                string modifier = "static";
+                string csDataType = "ReadOnlySpan<byte>";
                 string macroValue = NormalizeEnumValue(cppMacro.Value);
                 if (macroValue.EndsWith("F", StringComparison.OrdinalIgnoreCase))
                 {
+                    modifier = "const";
                     csDataType = "float";
                 }
                 else if (macroValue.EndsWith("LL", StringComparison.OrdinalIgnoreCase))
                 {
+                    modifier = "const";
                     csDataType = "long";
                 }
                 else if (macroValue.EndsWith("UL", StringComparison.OrdinalIgnoreCase))
                 {
+                    modifier = "const";
                     csDataType = "ulong";
                 }
                 else if (macroValue.EndsWith("U", StringComparison.OrdinalIgnoreCase))
                 {
+                    modifier = "const";
                     csDataType = "uint";
                 }
                 else if (uint.TryParse(macroValue, out _) || macroValue.StartsWith("0x"))
                 {
+                    modifier = "const";
                     csDataType = "uint";
                 }
                 else if (macroValue.Contains("<<"))
                 {
+                    modifier = "const";
                     csDataType = "int";
                 }
 
@@ -116,10 +122,12 @@ public static partial class CsCodeGenerator
                     || cppMacro.Name == "SDL_TEXTEDITINGEVENT_TEXT_SIZE"
                     || cppMacro.Name == "SDL_TEXTINPUTEVENT_TEXT_SIZE")
                 {
+                    modifier = "const";
                     csDataType = "int";
                 }
                 if (cppMacro.Name == "SDL_IPHONE_MAX_GFORCE")
                 {
+                    modifier = "const";
                     csDataType = "float";
                     macroValue = "5.0f";
                 }
@@ -129,12 +137,14 @@ public static partial class CsCodeGenerator
                     || cppMacro.Name == "SDL_HAT_LEFTDOWN"
                     || cppMacro.Name.StartsWith("SDL_PEN_"))
                 {
+                    modifier = "const";
                     csDataType = "uint";
                 }
                 if (cppMacro.Name == "SDL_NS_PER_SECOND")
                 {
                     csDataType = "long";
                 }
+
                 if (cppMacro.Name == "SDL_AUDIO_MASK_BITSIZE" ||
                     cppMacro.Name == "SDL_AUDIO_MASK_FLOAT" ||
                     cppMacro.Name == "SDL_AUDIO_MASK_BIG_ENDIAN" ||
@@ -144,12 +154,14 @@ public static partial class CsCodeGenerator
                     || cppMacro.Name == "SDL_AUDIO_F32"
                     || cppMacro.Name.StartsWith("SDL_HAPTIC_"))
                 {
+                    modifier = "const";
                     csDataType = "ushort";
                 }
 
                 if (cppMacro.Name.StartsWith("SDL_AUDIO_S")
                     || cppMacro.Name.StartsWith("SDL_AUDIO_F"))
                 {
+                    modifier = "const";
                     csDataType = "ushort";
                 }
 
@@ -161,7 +173,14 @@ public static partial class CsCodeGenerator
                 }
 
                 //writer.WriteLine($"/// <unmanaged>{cppMacro.Name}</unmanaged>");
-                writer.WriteLine($"public {modifier} {csDataType} {cppMacro.Name} = {macroValue};");
+                if (modifier == "static" && csDataType == "ReadOnlySpan<byte>")
+                {
+                    writer.WriteLine($"public {modifier} {csDataType} {cppMacro.Name} => {macroValue}u8;");
+                }
+                else
+                {
+                    writer.WriteLine($"public {modifier} {csDataType} {cppMacro.Name} = {macroValue};");
+                }
             }
         }
     }

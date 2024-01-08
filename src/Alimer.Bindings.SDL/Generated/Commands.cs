@@ -72,16 +72,16 @@ public unsafe partial class SDL
 	public static partial SDL_PenSubtype SDL_GetPenType(SDL_PenID instance_id);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Init")]
-	public static partial int SDL_Init(SDL_InitFlags flags);
+	public static partial int SDL_Init(uint flags);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_InitSubSystem")]
-	public static partial int SDL_InitSubSystem(SDL_InitFlags flags);
+	public static partial int SDL_InitSubSystem(uint flags);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_QuitSubSystem")]
-	public static partial void SDL_QuitSubSystem(SDL_InitFlags flags);
+	public static partial void SDL_QuitSubSystem(uint flags);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_WasInit")]
-	public static partial uint SDL_WasInit(SDL_InitFlags flags);
+	public static partial uint SDL_WasInit(uint flags);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Quit")]
 	public static partial void SDL_Quit();
@@ -930,10 +930,10 @@ public unsafe partial class SDL
 	public static partial uint SDL_GetWindowPixelFormat(SDL_Window window);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateWindow")]
-	public static partial SDL_Window SDL_CreateWindow(sbyte* title, int w, int h, SDL_WindowFlags flags);
+	public static partial SDL_Window SDL_CreateWindow(sbyte* title, int w, int h, uint flags);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreatePopupWindow")]
-	public static partial SDL_Window SDL_CreatePopupWindow(SDL_Window parent, int offset_x, int offset_y, int w, int h, SDL_WindowFlags flags);
+	public static partial SDL_Window SDL_CreatePopupWindow(SDL_Window parent, int offset_x, int offset_y, int w, int h, uint flags);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateWindowWithProperties")]
 	public static partial SDL_Window SDL_CreateWindowWithProperties(SDL_PropertiesID props);

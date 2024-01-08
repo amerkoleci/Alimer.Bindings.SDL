@@ -299,24 +299,6 @@ public static partial class CsCodeGenerator
             string paramCsTypeName = GetCsTypeName(cppParameter.Type, false);
             string paramCsName = GetParameterName(cppParameter.Name);
 
-            if (paramCsName == "flags")
-            {
-                if (functionName == "SDL_Init" ||
-                    functionName == "SDL_InitSubSystem" ||
-                    functionName == "SDL_QuitSubSystem" ||
-                    functionName == "SDL_WasInit")
-                {
-                    paramCsTypeName = "SDL_InitFlags";
-                }
-                else if (
-                    functionName == "SDL_CreateWindow"
-                    || functionName == "SDL_CreatePopupWindow"
-                    || functionName == "SDL_CreateWindowWithPosition")
-                {
-                    paramCsTypeName = "SDL_WindowFlags";
-                }
-            }
-
             if (paramCsTypeName == "sbyte*" && unsafeStrings == false)
             {
                 paramCsName = "ReadOnlySpan<sbyte>";

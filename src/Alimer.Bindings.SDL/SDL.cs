@@ -18,6 +18,58 @@ public enum SDL_bool
     SDL_TRUE = 1
 }
 
+[Flags]
+public enum SDL_WindowFlags : uint
+{
+    None = 0,
+    /// <unmanaged>SDL_WINDOW_FULLSCREEN</unmanaged>
+    Fullscreen = SDL_WINDOW_FULLSCREEN,
+    /// <unmanaged>SDL_WINDOW_OPENGL</unmanaged>
+    OpenGL = SDL_WINDOW_OPENGL,
+    /// <unmanaged>SDL_WINDOW_OCCLUDED</unmanaged>
+    Occluded = SDL_WINDOW_OCCLUDED,
+    /// <unmanaged>SDL_WINDOW_HIDDEN</unmanaged>
+    Hidden = SDL_WINDOW_HIDDEN,
+    /// <unmanaged>SDL_WINDOW_BORDERLESS</unmanaged>
+    Borderless = SDL_WINDOW_BORDERLESS,
+    /// <unmanaged>SDL_WINDOW_RESIZABLE</unmanaged>
+    Resizable = SDL_WINDOW_RESIZABLE,
+    /// <unmanaged>SDL_WINDOW_MINIMIZED</unmanaged>
+    Minimized = SDL_WINDOW_MINIMIZED,
+    /// <unmanaged>SDL_WINDOW_MAXIMIZED</unmanaged>
+    Maximized = SDL_WINDOW_MAXIMIZED,
+    /// <unmanaged>SDL_WINDOW_MOUSE_GRABBED</unmanaged>
+    MouseGrabbed = SDL_WINDOW_MOUSE_GRABBED,
+    /// <unmanaged>SDL_WINDOW_INPUT_FOCUS</unmanaged>
+    InputFocus = SDL_WINDOW_INPUT_FOCUS,
+    /// <unmanaged>SDL_WINDOW_MOUSE_FOCUS</unmanaged>
+    MouseFocus = SDL_WINDOW_MOUSE_FOCUS,
+    /// <unmanaged>SDL_WINDOW_EXTERNAL</unmanaged>
+    External = SDL_WINDOW_EXTERNAL,
+    /// <unmanaged>SDL_WINDOW_HIGH_PIXEL_DENSITY</unmanaged>
+    HighPixelDensity = SDL_WINDOW_HIGH_PIXEL_DENSITY,
+    /// <unmanaged>SDL_WINDOW_MOUSE_CAPTURE</unmanaged>
+    MouseCapture = SDL_WINDOW_MOUSE_CAPTURE,
+    /// <unmanaged>SDL_WINDOW_ALWAYS_ON_TOP</unmanaged>
+    AlwaysOnTop = SDL_WINDOW_ALWAYS_ON_TOP,
+    /// <unmanaged>SDL_WINDOW_UTILITY</unmanaged>
+    Utility = SDL_WINDOW_UTILITY,
+    /// <unmanaged>SDL_WINDOW_TOOLTIP</unmanaged>
+    Tooltip = SDL_WINDOW_TOOLTIP,
+    /// <unmanaged>SDL_WINDOW_POPUP_MENU</unmanaged>
+    PopupMenu = SDL_WINDOW_POPUP_MENU,
+    /// <unmanaged>SDL_WINDOW_KEYBOARD_GRABBED</unmanaged>
+    KeyboardGrabbed = SDL_WINDOW_KEYBOARD_GRABBED,
+    /// <unmanaged>SDL_WINDOW_VULKAN</unmanaged>
+    Vulkan = SDL_WINDOW_VULKAN,
+    /// <unmanaged>SDL_WINDOW_METAL</unmanaged>
+    Metal = SDL_WINDOW_METAL,
+    /// <unmanaged>SDL_WINDOW_TRANSPARENT</unmanaged>
+    Transparent = SDL_WINDOW_TRANSPARENT,
+    /// <unmanaged>SDL_WINDOW_NOT_FOCUSABLE</unmanaged>
+    NotFocusable = SDL_WINDOW_NOT_FOCUSABLE,
+}
+
 public enum SDL_HapticEffectType : ushort
 {
     Constant = SDL_HAPTIC_CONSTANT,
@@ -141,6 +193,14 @@ public static unsafe partial class SDL
     [LibraryImport(LibName)]
     private static partial void SDL_free(void* memblock);
 
+    public static int SDL_Init(SDL_InitFlags flags) => SDL_Init((uint)flags);
+
+    public static int SDL_InitSubSystem(SDL_InitFlags flags) => SDL_InitSubSystem((uint)flags);
+
+    public static void SDL_QuitSubSystem(SDL_InitFlags flags) => SDL_QuitSubSystem((uint)flags);
+
+    public static uint SDL_WasInit(SDL_InitFlags flags) => SDL_WasInit((uint)flags);
+
     #region SDL_platform.h
     public static string SDL_GetPlatformString()
     {
@@ -173,15 +233,18 @@ public static unsafe partial class SDL
     #endregion
 
     #region SDL_hints.h
+    public static SDL_bool SDL_SetHint(ReadOnlySpan<byte> name, ReadOnlySpan<byte> value)
+    {
+        fixed (byte* pName = name)
+        fixed (byte* pValue = value)
+            return SDL_SetHint((sbyte*)pName, (sbyte*)pValue);
+    }
+
     public static SDL_bool SDL_SetHint(ReadOnlySpan<sbyte> name, ReadOnlySpan<sbyte> value)
     {
         fixed (sbyte* pName = name)
-        {
-            fixed (sbyte* pValue = value)
-            {
-                return SDL_SetHint(pName, pValue);
-            }
-        }
+        fixed (sbyte* pValue = value)
+            return SDL_SetHint(pName, pValue);
     }
 
     public static SDL_bool SDL_SetHint(string name, string value)
@@ -215,6 +278,13 @@ public static unsafe partial class SDL
                 return SDL_SetHintWithPriority(pName, pValue, priority);
             }
         }
+    }
+
+    public static SDL_bool SDL_SetHint(ReadOnlySpan<byte> name, bool value)
+    {
+        fixed (byte* pName = name)
+        fixed (byte* pValue = (value ? "1"u8 : "0"u8))
+            return SDL_SetHint((sbyte*)pName, (sbyte*)pValue);
     }
 
     public static SDL_bool SDL_SetHint(string name, bool value)
@@ -376,11 +446,18 @@ public static unsafe partial class SDL
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate SDL_HitTestResult SDL_HitTest(IntPtr win, IntPtr area, IntPtr data);
 
+    public static SDL_Window SDL_CreateWindow(sbyte* title, int w, int h, SDL_WindowFlags flags)
+    {
+        return SDL_CreateWindow(title, w, h, (uint)flags);
+    }
+
+
+
     public static SDL_Window SDL_CreateWindow(ReadOnlySpan<sbyte> title, int width, int height, SDL_WindowFlags flags)
     {
         fixed (sbyte* pName = title)
         {
-            return SDL_CreateWindow(pName, width, height, flags);
+            return SDL_CreateWindow(pName, width, height, (uint)flags);
         }
     }
 
@@ -388,12 +465,14 @@ public static unsafe partial class SDL
     {
         fixed (sbyte* pName = title.GetUtf8Span())
         {
-            return SDL_CreateWindow(pName, width, height, flags);
+            return SDL_CreateWindow(pName, width, height, (uint)flags);
         }
     }
 
-    //[DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    //public static extern int SDL_CreateWindowAndRenderer(int width, int height, SDL_WindowFlags windowFlags, out SDL_Window window, out SDL_Renderer renderer);
+    public static SDL_Window SDL_CreatePopupWindow(SDL_Window parent, int offset_x, int offset_y, int w, int h, SDL_WindowFlags flags)
+    {
+        return SDL_CreatePopupWindow(parent, offset_x, offset_y, w, h, (uint)flags);
+    }
 
     public static int SDL_SetWindowTitle(SDL_Window window, ReadOnlySpan<sbyte> name)
     {
@@ -541,6 +620,13 @@ public static unsafe partial class SDL
     [LibraryImport(LibName)]
     public static partial int SDL_ClearProperty(SDL_PropertiesID properties, sbyte* name);
 
+    public static nint SDL_GetProperty(SDL_PropertiesID properties, ReadOnlySpan<byte> name)
+    {
+        fixed (byte* pName = name)
+        {
+            return SDL_GetProperty(properties, (sbyte*)pName);
+        }
+    }
 
     public static nint SDL_GetProperty(SDL_PropertiesID properties, ReadOnlySpan<sbyte> name)
     {

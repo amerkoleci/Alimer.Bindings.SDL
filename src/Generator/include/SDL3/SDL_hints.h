@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2024 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -2706,7 +2706,6 @@ extern "C" {
  */
 #define SDL_HINT_AUDIO_DEVICE_SAMPLE_FRAMES "SDL_AUDIO_DEVICE_SAMPLE_FRAMES"
 
-
 /**
  * Request SDL_AppIterate() be called at a specific rate.
  *
@@ -2720,6 +2719,22 @@ extern "C" {
  * the default.
  */
 #define SDL_HINT_MAIN_CALLBACK_RATE "SDL_MAIN_CALLBACK_RATE"
+
+/**
+ * Cause SDL to call dbus_shutdown() on quit.
+ *
+ * This is useful as a debug tool to validate memory leaks, but shouldn't ever
+ * be set in production applications, as other libraries used by the application
+ * might use dbus under the hood and this cause cause crashes if they continue
+ * after SDL_Quit().
+ *
+ * This variable can be set to the following values:
+ *   "0"       - SDL will not call dbus_shutdown() on quit (default)
+ *   "1"       - SDL will call dbus_shutdown() on quit
+ *
+ * This hint is available since SDL 3.0.0.
+ */
+#define SDL_HINT_SHUTDOWN_DBUS_ON_QUIT "SDL_SHUTDOWN_DBUS_ON_QUIT"
 
 
 /**

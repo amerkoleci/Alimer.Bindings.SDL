@@ -1520,58 +1520,6 @@ public enum SDL_DisplayOrientation
 	PortraitFlipped = 4,
 }
 
-[Flags]
-public enum SDL_WindowFlags : uint
-{
-	None = 0,
-	/// <unmanaged>SDL_WINDOW_FULLSCREEN</unmanaged>
-	Fullscreen = 0x00000001,
-	/// <unmanaged>SDL_WINDOW_OPENGL</unmanaged>
-	OpenGL = 0x00000002,
-	/// <unmanaged>SDL_WINDOW_OCCLUDED</unmanaged>
-	Occluded = 0x00000004,
-	/// <unmanaged>SDL_WINDOW_HIDDEN</unmanaged>
-	Hidden = 0x00000008,
-	/// <unmanaged>SDL_WINDOW_BORDERLESS</unmanaged>
-	Borderless = 0x00000010,
-	/// <unmanaged>SDL_WINDOW_RESIZABLE</unmanaged>
-	Resizable = 0x00000020,
-	/// <unmanaged>SDL_WINDOW_MINIMIZED</unmanaged>
-	Minimized = 0x00000040,
-	/// <unmanaged>SDL_WINDOW_MAXIMIZED</unmanaged>
-	Maximized = 0x00000080,
-	/// <unmanaged>SDL_WINDOW_MOUSE_GRABBED</unmanaged>
-	MouseGrabbed = 0x00000100,
-	/// <unmanaged>SDL_WINDOW_INPUT_FOCUS</unmanaged>
-	InputFocus = 0x00000200,
-	/// <unmanaged>SDL_WINDOW_MOUSE_FOCUS</unmanaged>
-	MouseFocus = 0x00000400,
-	/// <unmanaged>SDL_WINDOW_EXTERNAL</unmanaged>
-	External = 0x00000800,
-	/// <unmanaged>SDL_WINDOW_HIGH_PIXEL_DENSITY</unmanaged>
-	HighPixelDensity = 0x00002000,
-	/// <unmanaged>SDL_WINDOW_MOUSE_CAPTURE</unmanaged>
-	MouseCapture = 0x00004000,
-	/// <unmanaged>SDL_WINDOW_ALWAYS_ON_TOP</unmanaged>
-	AlwaysOnTop = 0x00008000,
-	/// <unmanaged>SDL_WINDOW_UTILITY</unmanaged>
-	Utility = 0x00020000,
-	/// <unmanaged>SDL_WINDOW_TOOLTIP</unmanaged>
-	Tooltip = 0x00040000,
-	/// <unmanaged>SDL_WINDOW_POPUP_MENU</unmanaged>
-	PopupMenu = 0x00080000,
-	/// <unmanaged>SDL_WINDOW_KEYBOARD_GRABBED</unmanaged>
-	KeyboardGrabbed = 0x00100000,
-	/// <unmanaged>SDL_WINDOW_VULKAN</unmanaged>
-	Vulkan = 0x10000000,
-	/// <unmanaged>SDL_WINDOW_METAL</unmanaged>
-	Metal = 0x20000000,
-	/// <unmanaged>SDL_WINDOW_TRANSPARENT</unmanaged>
-	Transparent = 0x40000000,
-	/// <unmanaged>SDL_WINDOW_NOT_FOCUSABLE</unmanaged>
-	NotFocusable = 0x80000000,
-}
-
 public enum SDL_FlashOperation
 {
 	/// <unmanaged>SDL_FLASH_CANCEL</unmanaged>

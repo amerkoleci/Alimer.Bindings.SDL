@@ -44,6 +44,7 @@ public static partial class SDL
 	public const uint SDL_NS_PER_US = 1000;
 	public const uint SDL_MAX_LOG_MESSAGE = 4096;
 	public const float SDL_STANDARD_GRAVITY = 9.80665f;
+	public static ReadOnlySpan<byte> SDL_PROPERTY_GLOBAL_VIDEO_WAYLAND_WL_DISPLAY_POINTER => "video.wayland.wl_display"u8;
 	public const uint SDL_WINDOW_FULLSCREEN = 0x00000001U;
 	public const uint SDL_WINDOW_OPENGL = 0x00000002U;
 	public const uint SDL_WINDOW_OCCLUDED = 0x00000004U;
@@ -92,6 +93,9 @@ public static partial class SDL
 	public static ReadOnlySpan<byte> SDL_PROPERTY_WINDOW_CREATE_Y_NUMBER => "y"u8;
 	public static ReadOnlySpan<byte> SDL_PROPERTY_WINDOW_CREATE_COCOA_WINDOW_POINTER => "cocoa.window"u8;
 	public static ReadOnlySpan<byte> SDL_PROPERTY_WINDOW_CREATE_COCOA_VIEW_POINTER => "cocoa.view"u8;
+	public static ReadOnlySpan<byte> SDL_PROPERTY_WINDOW_CREATE_WAYLAND_SURFACE_ROLE_CUSTOM_BOOLEAN => "wayland.surface_role_custom"u8;
+	public static ReadOnlySpan<byte> SDL_PROPERTY_WINDOW_CREATE_WAYLAND_CREATE_EGL_WINDOW_BOOLEAN => "wayland.create_egl_window"u8;
+	public static ReadOnlySpan<byte> SDL_PROPERTY_WINDOW_CREATE_WAYLAND_WL_SURFACE_POINTER => "wayland.wl_surface"u8;
 	public static ReadOnlySpan<byte> SDL_PROPERTY_WINDOW_CREATE_WIN32_HWND_POINTER => "win32.hwnd"u8;
 	public static ReadOnlySpan<byte> SDL_PROPERTY_WINDOW_CREATE_WIN32_PIXEL_FORMAT_HWND_POINTER => "win32.pixel_format_hwnd"u8;
 	public static ReadOnlySpan<byte> SDL_PROPERTY_WINDOW_CREATE_X11_WINDOW_NUMBER => "x11.window"u8;
@@ -111,7 +115,6 @@ public static partial class SDL
 	public static ReadOnlySpan<byte> SDL_PROPERTY_WINDOW_WIN32_HWND_POINTER => "SDL.window.win32.hwnd"u8;
 	public static ReadOnlySpan<byte> SDL_PROPERTY_WINDOW_WIN32_HDC_POINTER => "SDL.window.win32.hdc"u8;
 	public static ReadOnlySpan<byte> SDL_PROPERTY_WINDOW_WIN32_INSTANCE_POINTER => "SDL.window.win32.instance"u8;
-	public static ReadOnlySpan<byte> SDL_PROPERTY_WINDOW_WAYLAND_REGISTRY_POINTER => "SDL.window.wayland.registry"u8;
 	public static ReadOnlySpan<byte> SDL_PROPERTY_WINDOW_WAYLAND_DISPLAY_POINTER => "SDL.window.wayland.display"u8;
 	public static ReadOnlySpan<byte> SDL_PROPERTY_WINDOW_WAYLAND_SURFACE_POINTER => "SDL.window.wayland.surface"u8;
 	public static ReadOnlySpan<byte> SDL_PROPERTY_WINDOW_WAYLAND_EGL_WINDOW_POINTER => "SDL.window.wayland.egl_window"u8;
@@ -307,7 +310,6 @@ public static partial class SDL
 	public static ReadOnlySpan<byte> SDL_HINT_WAVE_FACT_CHUNK => "SDL_WAVE_FACT_CHUNK"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_WAVE_RIFF_CHUNK_SIZE => "SDL_WAVE_RIFF_CHUNK_SIZE"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_WAVE_TRUNCATION => "SDL_WAVE_TRUNCATION"u8;
-	public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING => "SDL_WINDOWS_DISABLE_THREAD_NAMING"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_ENABLE_MENU_MNEMONICS => "SDL_WINDOWS_ENABLE_MENU_MNEMONICS"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_ENABLE_MESSAGELOOP => "SDL_WINDOWS_ENABLE_MESSAGELOOP"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_FORCE_MUTEX_CRITICAL_SECTIONS => "SDL_WINDOWS_FORCE_MUTEX_CRITICAL_SECTIONS"u8;
@@ -324,7 +326,6 @@ public static partial class SDL
 	public static ReadOnlySpan<byte> SDL_HINT_X11_FORCE_OVERRIDE_REDIRECT => "SDL_X11_FORCE_OVERRIDE_REDIRECT"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_XINPUT_ENABLED => "SDL_XINPUT_ENABLED"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_DIRECTINPUT_ENABLED => "SDL_DIRECTINPUT_ENABLED"u8;
-	public static ReadOnlySpan<byte> SDL_HINT_XINPUT_USE_OLD_JOYSTICK_MAPPING => "SDL_XINPUT_USE_OLD_JOYSTICK_MAPPING"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_AUDIO_INCLUDE_MONITORS => "SDL_AUDIO_INCLUDE_MONITORS"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_X11_WINDOW_TYPE => "SDL_X11_WINDOW_TYPE"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_QUIT_ON_LAST_WINDOW_CLOSE => "SDL_QUIT_ON_LAST_WINDOW_CLOSE"u8;

@@ -35,6 +35,7 @@
 #endif
 #include <stdarg.h>
 #include <stdint.h>
+#include <string.h>
 #include <wchar.h>
 
 #ifndef SDL_DISABLE_ALLOCA
@@ -522,22 +523,45 @@ extern DECLSPEC int SDLCALL SDL_tolower(int x);
 extern DECLSPEC Uint16 SDLCALL SDL_crc16(Uint16 crc, const void *data, size_t len);
 extern DECLSPEC Uint32 SDLCALL SDL_crc32(Uint32 crc, const void *data, size_t len);
 
+extern DECLSPEC void *SDLCALL SDL_memcpy(SDL_OUT_BYTECAP(len) void *dst, SDL_IN_BYTECAP(len) const void *src, size_t len);
+
+/* Take advantage of compiler optimizations for memcpy */
+#ifndef SDL_SLOW_MEMCPY
+#ifdef SDL_memcpy
+#undef SDL_memcpy
+#endif
+#define SDL_memcpy  memcpy
+#endif
+
+#define SDL_copyp(dst, src)                                                                 \
+    { SDL_COMPILE_TIME_ASSERT(SDL_copyp, sizeof (*(dst)) == sizeof (*(src))); }             \
+    SDL_memcpy((dst), (src), sizeof(*(src)))
+
+extern DECLSPEC void *SDLCALL SDL_memmove(SDL_OUT_BYTECAP(len) void *dst, SDL_IN_BYTECAP(len) const void *src, size_t len);
+
+/* Take advantage of compiler optimizations for memmove */
+#ifndef SDL_SLOW_MEMMOVE
+#ifdef SDL_memmove
+#undef SDL_memmove
+#endif
+#define SDL_memmove memmove
+#endif
+
 extern DECLSPEC void *SDLCALL SDL_memset(SDL_OUT_BYTECAP(len) void *dst, int c, size_t len);
 extern DECLSPEC void *SDLCALL SDL_memset4(void *dst, Uint32 val, size_t dwords);
+
+/* Take advantage of compiler optimizations for memset */
+#ifndef SDL_SLOW_MEMSET
+#ifdef SDL_memset
+#undef SDL_memset
+#endif
+#define SDL_memset  memset
+#endif
 
 #define SDL_zero(x) SDL_memset(&(x), 0, sizeof((x)))
 #define SDL_zerop(x) SDL_memset((x), 0, sizeof(*(x)))
 #define SDL_zeroa(x) SDL_memset((x), 0, sizeof((x)))
 
-#define SDL_copyp(dst, src)                                                                 \
-    { SDL_COMPILE_TIME_ASSERT(SDL_copyp, sizeof (*(dst)) == sizeof (*(src))); }             \
-    SDL_memcpy((dst), (src), sizeof (*(src)))
-
-
-
-extern DECLSPEC void *SDLCALL SDL_memcpy(SDL_OUT_BYTECAP(len) void *dst, SDL_IN_BYTECAP(len) const void *src, size_t len);
-
-extern DECLSPEC void *SDLCALL SDL_memmove(SDL_OUT_BYTECAP(len) void *dst, SDL_IN_BYTECAP(len) const void *src, size_t len);
 extern DECLSPEC int SDLCALL SDL_memcmp(const void *s1, const void *s2, size_t len);
 
 extern DECLSPEC size_t SDLCALL SDL_wcslen(const wchar_t *wstr);
@@ -703,36 +727,41 @@ extern DECLSPEC char *SDLCALL SDL_iconv_string(const char *tocode,
 #if defined(__clang_analyzer__) && !defined(SDL_DISABLE_ANALYZE_MACROS)
 
 /* The analyzer knows about strlcpy even when the system doesn't provide it */
-#ifndef HAVE_STRLCPY
+#if !defined(HAVE_STRLCPY) && !defined(strlcpy)
 size_t strlcpy(char* dst, const char* src, size_t size);
 #endif
 
 /* The analyzer knows about strlcat even when the system doesn't provide it */
-#ifndef HAVE_STRLCAT
+#if !defined(HAVE_STRLCAT) && !defined(strlcat)
 size_t strlcat(char* dst, const char* src, size_t size);
 #endif
 
-#ifndef HAVE_WCSLCPY
+#if !defined(HAVE_WCSLCPY) && !defined(wcslcpy)
 size_t wcslcpy(wchar_t *dst, const wchar_t *src, size_t size);
 #endif
 
-#ifndef HAVE_WCSLCAT
+#if !defined(HAVE_WCSLCAT) && !defined(wcslcat)
 size_t wcslcat(wchar_t *dst, const wchar_t *src, size_t size);
 #endif
 
 /* Starting LLVM 16, the analyser errors out if these functions do not have
    their prototype defined (clang-diagnostic-implicit-function-declaration) */
 #include <stdlib.h>
-#include <string.h>
 #include <stdio.h>
 
 #define SDL_malloc malloc
 #define SDL_calloc calloc
 #define SDL_realloc realloc
 #define SDL_free free
-#define SDL_memset memset
+#ifndef SDL_memcpy
 #define SDL_memcpy memcpy
+#endif
+#ifndef SDL_memmove
 #define SDL_memmove memmove
+#endif
+#ifndef SDL_memset
+#define SDL_memset memset
+#endif
 #define SDL_memcmp memcmp
 #define SDL_strlcpy strlcpy
 #define SDL_strlcat strlcat
@@ -758,11 +787,6 @@ size_t wcslcat(wchar_t *dst, const wchar_t *src, size_t size);
 #define SDL_snprintf snprintf
 #define SDL_vsnprintf vsnprintf
 #endif
-
-SDL_FORCE_INLINE void *SDL_memcpy4(SDL_OUT_BYTECAP(dwords*4) void *dst, SDL_IN_BYTECAP(dwords*4) const void *src, size_t dwords)
-{
-    return SDL_memcpy(dst, src, dwords * 4);
-}
 
 /**
  * If a * b would overflow, return -1. Otherwise store a * b via ret

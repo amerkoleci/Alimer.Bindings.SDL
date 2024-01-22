@@ -196,18 +196,25 @@ public static partial class CsCodeGenerator
                 }
             }
         }
-        else if (field.Type is CppClass cppClass)
+        else if (field.Type is CppClass cppClass && cppClass.IsAnonymous)
         {
-            string fullParentName = field.FullParentName;
-            if (fullParentName.EndsWith("::"))
+            if (cppClass.IsAnonymous)
             {
-                fullParentName = fullParentName.Substring(0, fullParentName.Length - 2);
-            }
-            string csFieldType = $"{fullParentName}_{csFieldName}";
-            writer.WriteLine($"public {csFieldType} {csFieldName};");
-            writer.WriteLine("");
+                string fullParentName = field.FullParentName;
+                if (fullParentName.EndsWith("::"))
+                {
+                    fullParentName = fullParentName.Substring(0, fullParentName.Length - 2);
+                }
+                string csFieldType = $"{fullParentName}_{csFieldName}";
+                writer.WriteLine($"public {csFieldType} {csFieldName};");
+                writer.WriteLine("");
 
-            WriteStruct(writer, cppClass, csFieldType);
+                WriteStruct(writer, cppClass, csFieldType);
+            }
+            else
+            {
+
+            }
         }
         else
         {

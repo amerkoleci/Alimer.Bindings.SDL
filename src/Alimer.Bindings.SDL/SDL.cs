@@ -70,33 +70,6 @@ public enum SDL_WindowFlags : uint
     NotFocusable = SDL_WINDOW_NOT_FOCUSABLE,
 }
 
-public enum SDL_HapticEffectType : ushort
-{
-    Constant = SDL_HAPTIC_CONSTANT,
-    Sine = SDL_HAPTIC_SINE,
-    LeftRight = SDL_HAPTIC_LEFTRIGHT,
-    Triangle = SDL_HAPTIC_TRIANGLE,
-    SawToothUp = SDL_HAPTIC_SAWTOOTHUP,
-    SawToothDown = SDL_HAPTIC_SAWTOOTHDOWN,
-    Spring = SDL_HAPTIC_SPRING,
-    Damper = SDL_HAPTIC_DAMPER,
-    Inertia = SDL_HAPTIC_INERTIA,
-    Friction = SDL_HAPTIC_FRICTION,
-    Custom = SDL_HAPTIC_CUSTOM,
-    Gain = SDL_HAPTIC_GAIN,
-    AutoCenter = SDL_HAPTIC_AUTOCENTER,
-    Status = SDL_HAPTIC_STATUS,
-    Pause = SDL_HAPTIC_PAUSE,
-}
-
-public enum SDL_HapticDirectionType : byte
-{
-    Polar = SDL_HAPTIC_POLAR,
-    Cartesian = SDL_HAPTIC_CARTESIAN,
-    Spherical = SDL_HAPTIC_SPHERICAL,
-    SteeringAxis = SDL_HAPTIC_STEERING_AXIS,
-}
-
 public enum SDL_WinRT_DeviceFamily
 {
     Unknown,
@@ -781,40 +754,6 @@ public static unsafe partial class SDL
     public static readonly uint SDL_BUTTON_X2MASK = SDL_BUTTON(SDL_BUTTON_X2);
     #endregion
 
-    #region SDL_haptic.h
-
-    /* SDL_HapticEffect type */
-    public const ushort SDL_HAPTIC_CONSTANT = (1 << 0);
-    public const ushort SDL_HAPTIC_SINE = (1 << 1);
-    public const ushort SDL_HAPTIC_LEFTRIGHT = (1 << 2);
-    public const ushort SDL_HAPTIC_TRIANGLE = (1 << 3);
-    public const ushort SDL_HAPTIC_SAWTOOTHUP = (1 << 4);
-    public const ushort SDL_HAPTIC_SAWTOOTHDOWN = (1 << 5);
-    public const ushort SDL_HAPTIC_SPRING = (1 << 7);
-    public const ushort SDL_HAPTIC_DAMPER = (1 << 8);
-    public const ushort SDL_HAPTIC_INERTIA = (1 << 9);
-    public const ushort SDL_HAPTIC_FRICTION = (1 << 10);
-    public const ushort SDL_HAPTIC_CUSTOM = (1 << 11);
-    public const ushort SDL_HAPTIC_GAIN = (1 << 12);
-    public const ushort SDL_HAPTIC_AUTOCENTER = (1 << 13);
-    public const ushort SDL_HAPTIC_STATUS = (1 << 14);
-    public const ushort SDL_HAPTIC_PAUSE = (1 << 15);
-
-    /* SDL_HapticDirection type */
-    public const byte SDL_HAPTIC_POLAR = 0;
-    public const byte SDL_HAPTIC_CARTESIAN = 1;
-    public const byte SDL_HAPTIC_SPHERICAL = 2;
-    public const byte SDL_HAPTIC_STEERING_AXIS = 3;
-
-    /* SDL_HapticRunEffect */
-    public const uint SDL_HAPTIC_INFINITY = 4294967295U;
-
-    public static string SDL_HapticNameString(int device_index)
-    {
-        return GetStringOrEmpty(SDL_HapticName(device_index));
-    }
-    #endregion
-
     #region SDL_timer.h
     public static ulong SDL_MS_TO_NS(ulong MS) => MS * SDL_NS_PER_MS;
     public static ulong SDL_NS_TO_MS(ulong NS) => NS / SDL_NS_PER_MS;
@@ -845,42 +784,42 @@ public static unsafe partial class SDL
     public const int SDL_ANDROID_EXTERNAL_STORAGE_WRITE = 0x02;
 
     /* IntPtr refers to a JNIEnv* */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr SDL_AndroidGetJNIEnv();
+    [LibraryImport(LibName)]
+    public static partial nint SDL_AndroidGetJNIEnv();
 
     /* IntPtr refers to a jobject */
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr SDL_AndroidGetActivity();
+    [LibraryImport(LibName)]
+    public static partial nint SDL_AndroidGetActivity();
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_IsAndroidTV();
+    [LibraryImport(LibName)]
+    public static partial SDL_bool SDL_IsAndroidTV();
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_IsChromebook();
+    [LibraryImport(LibName)]
+    public static partial SDL_bool SDL_IsChromebook();
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern SDL_bool SDL_IsDeXMode();
+    [LibraryImport(LibName)]
+    public static partial SDL_bool SDL_IsDeXMode();
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SDL_AndroidBackButton();
+    [LibraryImport(LibName)]
+    public static partial void SDL_AndroidBackButton();
 
-    [DllImport(LibName, EntryPoint = "SDL_AndroidGetInternalStoragePath", CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_AndroidGetInternalStoragePath();
+    [LibraryImport(LibName, EntryPoint = "SDL_AndroidGetInternalStoragePath")]
+    private static partial sbyte* INTERNAL_SDL_AndroidGetInternalStoragePath();
 
-    public static string SDL_AndroidGetInternalStoragePath()
+    public static string? SDL_AndroidGetInternalStoragePath()
     {
         return GetString(
             INTERNAL_SDL_AndroidGetInternalStoragePath()
         );
     }
 
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int SDL_AndroidGetExternalStorageState();
+    [LibraryImport(LibName)]
+    public static partial int SDL_AndroidGetExternalStorageState();
 
-    [DllImport(LibName, EntryPoint = "SDL_AndroidGetExternalStoragePath", CallingConvention = CallingConvention.Cdecl)]
-    private static extern byte* INTERNAL_SDL_AndroidGetExternalStoragePath();
+    [LibraryImport(LibName, EntryPoint = "SDL_AndroidGetExternalStoragePath")]
+    private static partial sbyte* INTERNAL_SDL_AndroidGetExternalStoragePath();
 
-    public static string SDL_AndroidGetExternalStoragePath()
+    public static string? SDL_AndroidGetExternalStoragePath()
     {
         return GetString(
             INTERNAL_SDL_AndroidGetExternalStoragePath()
@@ -944,10 +883,6 @@ public static unsafe partial class SDL
     #endregion
 
     #region Marshal
-    /// <inheritdoc cref="Unsafe.SizeOf{T}" />
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static uint SizeOf<T>() => unchecked((uint)Unsafe.SizeOf<T>());
-
     /// <inheritdoc cref="Unsafe.AsPointer{T}(ref T)" />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T* AsPointer<T>(ref T source) where T : unmanaged => (T*)Unsafe.AsPointer(ref source);
@@ -956,20 +891,6 @@ public static unsafe partial class SDL
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ref readonly TTo AsReadOnly<TFrom, TTo>(in TFrom source) => ref Unsafe.As<TFrom, TTo>(ref AsRef(in source));
 
-    /// <summary>Reinterprets the given native integer as a reference.</summary>
-    /// <typeparam name="T">The type of the reference.</typeparam>
-    /// <param name="source">The native integer to reinterpret.</param>
-    /// <returns>A reference to a value of type <typeparamref name="T" />.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ref T AsRef<T>(nint source) => ref Unsafe.AsRef<T>((void*)source);
-
-    /// <summary>Reinterprets the given native unsigned integer as a reference.</summary>
-    /// <typeparam name="T">The type of the reference.</typeparam>
-    /// <param name="source">The native unsigned integer to reinterpret.</param>
-    /// <returns>A reference to a value of type <typeparamref name="T" />.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ref T AsRef<T>(nuint source) => ref Unsafe.AsRef<T>((void*)source);
-
     /// <inheritdoc cref="Unsafe.AsRef{T}(in T)" />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ref T AsRef<T>(in T source) => ref Unsafe.AsRef(in source);
@@ -977,13 +898,21 @@ public static unsafe partial class SDL
     /// <inheritdoc cref="MemoryMarshal.CreateReadOnlySpan{T}(ref T, int)" />
     public static ReadOnlySpan<T> CreateReadOnlySpan<T>(scoped in T reference, int length) => MemoryMarshal.CreateReadOnlySpan(ref AsRef(in reference), length);
 
-    // <summary>Returns a pointer to the element of the span at index zero.</summary>
+    /// <summary>Returns a pointer to the element of the span at index zero.</summary>
     /// <typeparam name="T">The type of items in <paramref name="span" />.</typeparam>
     /// <param name="span">The span from which the pointer is retrieved.</param>
     /// <returns>A pointer to the item at index zero of <paramref name="span" />.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T* GetPointer<T>(this Span<T> span)
-        where T : unmanaged => AsPointer(ref span.GetReference());
+    public static T* GetPointerUnsafe<T>(this Span<T> span)
+        where T : unmanaged => (T*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(span));
+
+    /// <summary>Returns a pointer to the element of the span at index zero.</summary>
+    /// <typeparam name="T">The type of items in <paramref name="span" />.</typeparam>
+    /// <param name="span">The span from which the pointer is retrieved.</param>
+    /// <returns>A pointer to the item at index zero of <paramref name="span" />.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static T* GetPointerUnsafe<T>(this ReadOnlySpan<T> span)
+        where T : unmanaged => (T*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(span));
 
     /// <summary>Returns a pointer to the element of the span at index zero.</summary>
     /// <typeparam name="T">The type of items in <paramref name="span" />.</typeparam>
@@ -993,18 +922,9 @@ public static unsafe partial class SDL
     public static T* GetPointer<T>(this ReadOnlySpan<T> span)
         where T : unmanaged => AsPointer(ref AsRef(in span.GetReference()));
 
-    /// <inheritdoc cref="MemoryMarshal.GetReference{T}(Span{T})" />
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ref T GetReference<T>(this Span<T> span) => ref MemoryMarshal.GetReference(span);
-
     /// <inheritdoc cref="MemoryMarshal.GetReference{T}(ReadOnlySpan{T})" />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ref readonly T GetReference<T>(this ReadOnlySpan<T> span) => ref MemoryMarshal.GetReference(span);
-
-    /// <inheritdoc cref="Unsafe.As{TFrom, TTo}(ref TFrom)" />
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ref TTo As<TFrom, TTo>(ref TFrom source)
-        => ref Unsafe.As<TFrom, TTo>(ref source);
 
     /// <inheritdoc cref="Unsafe.As{TFrom, TTo}(ref TFrom)" />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1026,10 +946,10 @@ public static unsafe partial class SDL
 
         if (source is not null)
         {
-            var maxLength = Encoding.UTF8.GetMaxByteCount(source.Length);
-            var bytes = new byte[maxLength + 1];
+            int maxLength = Encoding.UTF8.GetMaxByteCount(source.Length);
+            byte[] bytes = new byte[maxLength + 1];
 
-            var length = Encoding.UTF8.GetBytes(source, bytes);
+            int length = Encoding.UTF8.GetBytes(source, bytes);
             result = bytes.AsSpan(0, length);
         }
         else
@@ -1040,14 +960,20 @@ public static unsafe partial class SDL
         return result.As<byte, sbyte>();
     }
 
+    /// <summary>Gets a span for a null-terminated UTF8 character sequence.</summary>
+    /// <param name="source">The pointer to a null-terminated UTF8 character sequence.</param>
+    /// <param name="maxLength">The maximum length of <paramref name="source" /> or <c>-1</c> if the maximum length is unknown.</param>
+    /// <returns>A span that starts at <paramref name="source" /> and extends to <paramref name="maxLength" /> or the first null character, whichever comes first.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ReadOnlySpan<sbyte> GetUtf8Span(sbyte* source, int maxLength = -1)
-    {
-        return (source != null) ? GetUtf8Span(in source[0], maxLength) : null;
-    }
+        => (source != null) ? GetUtf8Span(in source[0], maxLength) : null;
 
+    /// <summary>Gets a span for a null-terminated UTF8 character sequence.</summary>
+    /// <param name="source">The reference to a null-terminated UTF8 character sequence.</param>
+    /// <param name="maxLength">The maximum length of <paramref name="source" /> or <c>-1</c> if the maximum length is unknown.</param>
+    /// <returns>A span that starts at <paramref name="source" /> and extends to <paramref name="maxLength" /> or the first null character, whichever comes first.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ReadOnlySpan<sbyte> GetUtf8Span(in sbyte source, int maxLength = -1)
+    public static ReadOnlySpan<sbyte> GetUtf8Span(ref readonly sbyte source, int maxLength = -1)
     {
         ReadOnlySpan<sbyte> result;
 
@@ -1061,7 +987,7 @@ public static unsafe partial class SDL
             result = CreateReadOnlySpan(in source, maxLength);
             var length = result.IndexOf((sbyte)'\0');
 
-            if (length != -1)
+            if (length >= 0)
             {
                 result = result.Slice(0, length);
             }
@@ -1078,20 +1004,20 @@ public static unsafe partial class SDL
     /// <param name="span">The span for which to create the string.</param>
     /// <returns>A string created from <paramref name="span" />.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? GetString(this ReadOnlySpan<sbyte> span)
-    {
-        return span.GetPointer() != null ? Encoding.UTF8.GetString(span.As<sbyte, byte>()) : null;
-    }
+    public static string? GetString(this ReadOnlySpan<sbyte> span) => span.GetPointerUnsafe() != null ? Encoding.UTF8.GetString(span.As<sbyte, byte>()) : null;
+
+    /// <summary>Gets a string for a given span.</summary>
+    /// <param name="span">The span for which to create the string.</param>
+    /// <returns>A string created from <paramref name="span" />.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string GetStringOrEmpty(this ReadOnlySpan<sbyte> span) => span.GetPointerUnsafe() != null ? Encoding.UTF8.GetString(span.As<sbyte, byte>()) : string.Empty;
 
 
     /// <summary>Gets a string for a given span.</summary>
     /// <param name="span">The span for which to create the string.</param>
     /// <returns>A string created from <paramref name="span" />.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string GetStringOrEmpty(this ReadOnlySpan<sbyte> span)
-    {
-        return span.GetPointer() != null ? Encoding.UTF8.GetString(span.As<sbyte, byte>()) : string.Empty;
-    }
+    public static string? GetString(this ReadOnlySpan<char> span) => span.GetPointerUnsafe() != null ? new string(span) : null;
 
     /// <summary>Gets a string for a given span.</summary>
     /// <param name="span">The span for which to create the string.</param>
@@ -1110,71 +1036,6 @@ public static unsafe partial class SDL
     {
         return GetUtf8Span(source, maxLength).GetStringOrEmpty();
     }
-
-    /// <summary>Gets a string for a given span.</summary>
-    /// <param name="span">The span for which to create the string.</param>
-    /// <returns>A string created from <paramref name="span" />.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? GetString(this ReadOnlySpan<ushort> span)
-    {
-        return span.GetPointer() != null ? new string(span.As<ushort, char>()) : null;
-    }
-
-    private static string GetString(byte* ptr)
-    {
-        if (ptr == null)
-        {
-            return string.Empty;
-        }
-
-        int characters = 0;
-        while (ptr[characters] != 0)
-        {
-            characters++;
-        }
-
-        return Encoding.UTF8.GetString(ptr, characters);
-    }
-
-    public static string GetString(byte* s, bool freePtr = false)
-    {
-        if (s == null)
-        {
-            return string.Empty;
-        }
-
-        /* We get to do strlen ourselves! */
-        byte* ptr = (byte*)s;
-        while (*ptr != 0)
-        {
-            ptr++;
-        }
-
-        /* TODO: This #ifdef is only here because the equivalent
-         * .NET 2.0 constructor appears to be less efficient?
-         * Here's the pretty version, maybe steal this instead:
-         *
-        string result = new string(
-            (sbyte*) s, // Also, why sbyte???
-            0,
-            (int) (ptr - (byte*) s),
-            System.Text.Encoding.UTF8
-        );
-         * See the CoreCLR source for more info.
-         * -flibit
-         */
-        /* Modern C# lets you just send the byte*, nice! */
-        string result = Encoding.UTF8.GetString(s, (int)(ptr - s));
-
-        /* Some SDL functions will malloc, we have to free! */
-        if (freePtr)
-        {
-            SDL_free(s);
-        }
-
-        return result;
-    }
-
 
     /* Used for stack allocated string marshaling. */
     private static int Utf8Size(string str)

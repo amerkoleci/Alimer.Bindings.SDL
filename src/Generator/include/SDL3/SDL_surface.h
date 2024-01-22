@@ -75,6 +75,15 @@ typedef enum
     SDL_SCALEMODE_BEST     /**< anisotropic filtering */
 } SDL_ScaleMode;
 
+/**
+ * The flip mode
+ */
+typedef enum
+{
+    SDL_FLIP_NONE,          /**< Do not flip */
+    SDL_FLIP_HORIZONTAL,    /**< flip horizontally */
+    SDL_FLIP_VERTICAL       /**< flip vertically */
+} SDL_FlipMode;
 
 /**
  * A collection of pixels used in software blitting.
@@ -603,6 +612,18 @@ extern DECLSPEC int SDLCALL SDL_GetSurfaceClipRect(SDL_Surface *surface,
                                              SDL_Rect *rect);
 
 /*
+ * Flip a surface vertically or horizontally.
+ *
+ * \param surface the surface to flip
+ * \param flip the direction to flip
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ */
+extern DECLSPEC int SDLCALL SDL_FlipSurface(SDL_Surface *surface, SDL_FlipMode flip);
+
+/*
  * Creates a new surface identical to the existing surface.
  *
  * The returned surface should be freed with SDL_DestroySurface().
@@ -931,6 +952,34 @@ extern DECLSPEC int SDLCALL SDL_BlitSurfaceUncheckedScaled(SDL_Surface *src,
                                                            SDL_Surface *dst,
                                                            const SDL_Rect *dstrect,
                                                            SDL_ScaleMode scaleMode);
+
+/**
+ * Retrieves a single pixel from a surface.
+ *
+ * This function prioritizes correctness over speed: it is suitable for unit
+ * tests, but is not intended for use in a game engine.
+ *
+ * Like SDL_GetRGBA, this uses the entire 0..255 range when converting color
+ * components from pixel formats with less than 8 bits per RGB component.
+ *
+ * \param surface the surface to read
+ * \param x the horizontal coordinate, 0 <= x < width
+ * \param y the vertical coordinate, 0 <= y < height
+ * \param r a pointer filled in with the red channel, 0-255, or NULL to ignore
+ *          this channel
+ * \param g a pointer filled in with the green channel, 0-255, or NULL to
+ *          ignore this channel
+ * \param b a pointer filled in with the blue channel, 0-255, or NULL to
+ *          ignore this channel
+ * \param a a pointer filled in with the alpha channel, 0-255, or NULL to
+ *          ignore this channel
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ */
+extern DECLSPEC int SDLCALL SDL_ReadSurfacePixel(SDL_Surface *surface, int x, int y, Uint8 *r, Uint8 *g, Uint8 *b, Uint8 *a);
+
 
 /**
  * Set the YUV conversion mode

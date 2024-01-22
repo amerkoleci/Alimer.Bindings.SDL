@@ -1382,95 +1382,98 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_ClearHints")]
 	public static partial void SDL_ClearHints();
 
-	[LibraryImport(LibName, EntryPoint = "SDL_NumHaptics")]
-	public static partial int SDL_NumHaptics();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetHaptics")]
+	public static partial SDL_HapticID* SDL_GetHaptics(out int count);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticName")]
-	public static partial sbyte* SDL_HapticName(int device_index);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetHapticInstanceName")]
+	public static partial sbyte* SDL_GetHapticInstanceName(SDL_HapticID instance_id);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticOpen")]
-	public static partial SDL_Haptic SDL_HapticOpen(int device_index);
+	[LibraryImport(LibName, EntryPoint = "SDL_OpenHaptic")]
+	public static partial SDL_Haptic SDL_OpenHaptic(SDL_HapticID instance_id);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticOpened")]
-	public static partial int SDL_HapticOpened(int device_index);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetHapticFromInstanceID")]
+	public static partial SDL_Haptic SDL_GetHapticFromInstanceID(SDL_HapticID instance_id);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticIndex")]
-	public static partial int SDL_HapticIndex(SDL_Haptic haptic);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetHapticInstanceID")]
+	public static partial SDL_HapticID SDL_GetHapticInstanceID(SDL_Haptic haptic);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_MouseIsHaptic")]
-	public static partial int SDL_MouseIsHaptic();
+	[LibraryImport(LibName, EntryPoint = "SDL_GetHapticName")]
+	public static partial sbyte* SDL_GetHapticName(SDL_Haptic haptic);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticOpenFromMouse")]
-	public static partial SDL_Haptic SDL_HapticOpenFromMouse();
+	[LibraryImport(LibName, EntryPoint = "SDL_IsMouseHaptic")]
+	public static partial SDL_bool SDL_IsMouseHaptic();
 
-	[LibraryImport(LibName, EntryPoint = "SDL_JoystickIsHaptic")]
-	public static partial int SDL_JoystickIsHaptic(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_OpenHapticFromMouse")]
+	public static partial SDL_Haptic SDL_OpenHapticFromMouse();
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticOpenFromJoystick")]
-	public static partial SDL_Haptic SDL_HapticOpenFromJoystick(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_IsJoystickHaptic")]
+	public static partial SDL_bool SDL_IsJoystickHaptic(SDL_Joystick joystick);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticClose")]
-	public static partial void SDL_HapticClose(SDL_Haptic haptic);
+	[LibraryImport(LibName, EntryPoint = "SDL_OpenHapticFromJoystick")]
+	public static partial SDL_Haptic SDL_OpenHapticFromJoystick(SDL_Joystick joystick);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticNumEffects")]
-	public static partial int SDL_HapticNumEffects(SDL_Haptic haptic);
+	[LibraryImport(LibName, EntryPoint = "SDL_CloseHaptic")]
+	public static partial void SDL_CloseHaptic(SDL_Haptic haptic);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticNumEffectsPlaying")]
-	public static partial int SDL_HapticNumEffectsPlaying(SDL_Haptic haptic);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetMaxHapticEffects")]
+	public static partial int SDL_GetMaxHapticEffects(SDL_Haptic haptic);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticQuery")]
-	public static partial uint SDL_HapticQuery(SDL_Haptic haptic);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetMaxHapticEffectsPlaying")]
+	public static partial int SDL_GetMaxHapticEffectsPlaying(SDL_Haptic haptic);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticNumAxes")]
-	public static partial int SDL_HapticNumAxes(SDL_Haptic haptic);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetHapticFeatures")]
+	public static partial uint SDL_GetHapticFeatures(SDL_Haptic haptic);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetNumHapticAxes")]
+	public static partial int SDL_GetNumHapticAxes(SDL_Haptic haptic);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_HapticEffectSupported")]
-	public static partial int SDL_HapticEffectSupported(SDL_Haptic haptic, SDL_HapticEffect* effect);
+	public static partial SDL_bool SDL_HapticEffectSupported(SDL_Haptic haptic, SDL_HapticEffect* effect);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticNewEffect")]
-	public static partial int SDL_HapticNewEffect(SDL_Haptic haptic, SDL_HapticEffect* effect);
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateHapticEffect")]
+	public static partial int SDL_CreateHapticEffect(SDL_Haptic haptic, SDL_HapticEffect* effect);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticUpdateEffect")]
-	public static partial int SDL_HapticUpdateEffect(SDL_Haptic haptic, int effect, SDL_HapticEffect* data);
+	[LibraryImport(LibName, EntryPoint = "SDL_UpdateHapticEffect")]
+	public static partial int SDL_UpdateHapticEffect(SDL_Haptic haptic, int effect, SDL_HapticEffect* data);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticRunEffect")]
-	public static partial int SDL_HapticRunEffect(SDL_Haptic haptic, int effect, uint iterations);
+	[LibraryImport(LibName, EntryPoint = "SDL_RunHapticEffect")]
+	public static partial int SDL_RunHapticEffect(SDL_Haptic haptic, int effect, uint iterations);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticStopEffect")]
-	public static partial int SDL_HapticStopEffect(SDL_Haptic haptic, int effect);
+	[LibraryImport(LibName, EntryPoint = "SDL_StopHapticEffect")]
+	public static partial int SDL_StopHapticEffect(SDL_Haptic haptic, int effect);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticDestroyEffect")]
-	public static partial void SDL_HapticDestroyEffect(SDL_Haptic haptic, int effect);
+	[LibraryImport(LibName, EntryPoint = "SDL_DestroyHapticEffect")]
+	public static partial void SDL_DestroyHapticEffect(SDL_Haptic haptic, int effect);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticGetEffectStatus")]
-	public static partial int SDL_HapticGetEffectStatus(SDL_Haptic haptic, int effect);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetHapticEffectStatus")]
+	public static partial int SDL_GetHapticEffectStatus(SDL_Haptic haptic, int effect);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticSetGain")]
-	public static partial int SDL_HapticSetGain(SDL_Haptic haptic, int gain);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetHapticGain")]
+	public static partial int SDL_SetHapticGain(SDL_Haptic haptic, int gain);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticSetAutocenter")]
-	public static partial int SDL_HapticSetAutocenter(SDL_Haptic haptic, int autocenter);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetHapticAutocenter")]
+	public static partial int SDL_SetHapticAutocenter(SDL_Haptic haptic, int autocenter);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticPause")]
-	public static partial int SDL_HapticPause(SDL_Haptic haptic);
+	[LibraryImport(LibName, EntryPoint = "SDL_PauseHaptic")]
+	public static partial int SDL_PauseHaptic(SDL_Haptic haptic);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticUnpause")]
-	public static partial int SDL_HapticUnpause(SDL_Haptic haptic);
+	[LibraryImport(LibName, EntryPoint = "SDL_ResumeHaptic")]
+	public static partial int SDL_ResumeHaptic(SDL_Haptic haptic);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticStopAll")]
-	public static partial int SDL_HapticStopAll(SDL_Haptic haptic);
+	[LibraryImport(LibName, EntryPoint = "SDL_StopHapticEffects")]
+	public static partial int SDL_StopHapticEffects(SDL_Haptic haptic);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_HapticRumbleSupported")]
-	public static partial int SDL_HapticRumbleSupported(SDL_Haptic haptic);
+	public static partial SDL_bool SDL_HapticRumbleSupported(SDL_Haptic haptic);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticRumbleInit")]
-	public static partial int SDL_HapticRumbleInit(SDL_Haptic haptic);
+	[LibraryImport(LibName, EntryPoint = "SDL_InitHapticRumble")]
+	public static partial int SDL_InitHapticRumble(SDL_Haptic haptic);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticRumblePlay")]
-	public static partial int SDL_HapticRumblePlay(SDL_Haptic haptic, float strength, uint length);
+	[LibraryImport(LibName, EntryPoint = "SDL_PlayHapticRumble")]
+	public static partial int SDL_PlayHapticRumble(SDL_Haptic haptic, float strength, uint length);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HapticRumbleStop")]
-	public static partial int SDL_HapticRumbleStop(SDL_Haptic haptic);
+	[LibraryImport(LibName, EntryPoint = "SDL_StopHapticRumble")]
+	public static partial int SDL_StopHapticRumble(SDL_Haptic haptic);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ComposeCustomBlendMode")]
 	public static partial SDL_BlendMode SDL_ComposeCustomBlendMode(SDL_BlendFactor srcColorFactor, SDL_BlendFactor dstColorFactor, SDL_BlendOperation colorOperation, SDL_BlendFactor srcAlphaFactor, SDL_BlendFactor dstAlphaFactor, SDL_BlendOperation alphaOperation);

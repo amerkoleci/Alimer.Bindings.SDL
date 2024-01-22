@@ -68,9 +68,9 @@ public static unsafe class Program
         var display = SDL_GetDisplayForWindow(window);
         display = SDL_GetDisplayForPoint(Point.Empty);
 
-        var primary = SDL_GetPrimaryDisplay();
-        var dispName = SDL_GetDisplayNameString(primary);
-        var test3 = SDL_GetNumVideoDrivers();
+        SDL_DisplayID primary = SDL_GetPrimaryDisplay();
+        string dispName = SDL_GetDisplayNameString(primary);
+        int test3 = SDL_GetNumVideoDrivers();
         //var test2 = SDL_GetCurrentVideoDriver();
         ReadOnlySpan<SDL_DisplayID> displays = SDL_GetDisplays();
         for(int i = 0; i < displays.Length; i++)

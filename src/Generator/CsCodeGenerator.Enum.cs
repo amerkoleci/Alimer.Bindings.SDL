@@ -229,16 +229,6 @@ public static partial class CsCodeGenerator
                         writer.WriteLine($"{enumItemName} = {enumItem.Value},");
                     }
                 }
-
-                if (cppEnum.Name == "SDL_InitFlags")
-                {
-                    if (s_options.EnumWriteUnmanagedTag)
-                    {
-                        writer.WriteLine($"/// <unmanaged>SDL_INIT_EVERYTHING</unmanaged>");
-                    }
-
-                    writer.WriteLine($"Everything = Timer | Audio | Video | Events | Joystick | Haptic | Gamepad | Sensor,");
-                }
             }
 
             writer.WriteLine();

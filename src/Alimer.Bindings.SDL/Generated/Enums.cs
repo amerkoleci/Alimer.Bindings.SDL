@@ -83,8 +83,6 @@ public enum SDL_InitFlags
 	Events = 0x00004000,
 	/// <unmanaged>SDL_INIT_SENSOR</unmanaged>
 	Sensor = 0x00008000,
-	/// <unmanaged>SDL_INIT_EVERYTHING</unmanaged>
-	Everything = Timer | Audio | Video | Events | Joystick | Haptic | Gamepad | Sensor,
 }
 
 public enum SDL_Scancode

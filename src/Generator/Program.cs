@@ -71,6 +71,8 @@ public static class Program
             "SDL_hints.h",
             "SDL_haptic.h",
             "SDL_blendmode.h",
+            "SDL_pixels.h",
+            "SDL_surface.h",
         ];
 
         foreach(string header in headers)

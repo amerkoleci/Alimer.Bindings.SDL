@@ -53,7 +53,15 @@ public static partial class CsCodeGenerator
                 || cppMacro.Name == "SDL_PEN_INFO_UNKNOWN"
                 || cppMacro.Name == "SDL_PEN_CAPABILITY"
                 || cppMacro.Name == "SDL_PEN_AXIS_CAPABILITY"
-                || cppMacro.Name == "SDL_PEN_AXIS_BIDIRECTIONAL_MASKS")
+                || cppMacro.Name == "SDL_PEN_AXIS_BIDIRECTIONAL_MASKS"
+                || cppMacro.Name == "SDL_MUSTLOCK"
+                || cppMacro.Name == "SDL_DEFINE_PIXELFOURCC"
+                || cppMacro.Name == "SDL_DEFINE_PIXELFORMAT"
+                || cppMacro.Name == "SDL_BYTESPERPIXEL"
+                || cppMacro.Name == "SDL_BITSPERPIXEL"
+                || cppMacro.Name == "SDL_Colour"
+                || cppMacro.Name.StartsWith("SDL_PIXEL")
+                || cppMacro.Name.StartsWith("SDL_ISPIXELFORMAT"))
             {
                 continue;
             }

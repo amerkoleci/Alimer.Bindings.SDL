@@ -163,6 +163,11 @@ public static unsafe partial class SDL
         return false;
     }
 
+    public static uint SDL_FOURCC(byte A, byte B, byte C, byte D)
+    {
+        return (uint)(A | (B << 8) | (C << 16) | (D << 24));
+    }
+
     [LibraryImport(LibName)]
     private static partial void SDL_free(void* memblock);
 

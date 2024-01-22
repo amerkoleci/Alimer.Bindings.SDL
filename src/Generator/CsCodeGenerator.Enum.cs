@@ -51,6 +51,18 @@ public static partial class CsCodeGenerator
         { "SDL_GamepadButtonLabel", "SDL_GAMEPAD_BUTTON_LABEL" },
         { "SDL_PenAxis", "SDL_PEN_AXIS" },
         { "SDL_PenSubtype", "SDL_PEN_TYPE" },
+
+        // SDL_pixels.h
+        { "SDL_PixelType", "SDL_PIXELTYPE" },
+        { "SDL_BitmapOrder", "SDL_BITMAPORDER" },
+        { "SDL_PackedOrder", "SDL_PACKEDORDER" },
+        { "SDL_ArrayOrder", "SDL_ARRAYORDER" },
+        { "SDL_PackedLayout", "SDL_PACKEDLAYOUT" },
+        { "SDL_PixelFormatEnum", "SDL_PIXELFORMAT" },
+
+        { "SDL_ScaleMode", "SDL_SCALEMODE" },
+        { "SDL_FlipMode", "SDL_FLIP" },
+        { "SDL_YUV_CONVERSION_MODE", "SDL_YUV_CONVERSION" },
     };
 
     private static readonly Dictionary<string, string> s_knownEnumValueNames = new()
@@ -110,6 +122,11 @@ public static partial class CsCodeGenerator
         "MultisampleBuffers",
         "MultisampleSamples",
         "OpenGL",
+        "ArrayU8",
+        "ArrayU16",
+        "ArrayU32",
+        "ArrayF16",
+        "ArrayF32",
     };
 
     public static void CollectEnums(CppCompilation compilation)
@@ -204,7 +221,11 @@ public static partial class CsCodeGenerator
 
                     if (enumItem.ValueExpression is CppRawExpression rawExpression)
                     {
-                        if (rawExpression.Text.Contains("0x"))
+                        if (string.IsNullOrEmpty(rawExpression.Text))
+                        {
+                            writer.WriteLine($"{enumItemName} = {enumItem.Value},");
+                        }
+                        else if (rawExpression.Text.Contains("0x"))
                         {
                             writer.WriteLine($"{enumItemName} = {rawExpression.Text},");
                         }

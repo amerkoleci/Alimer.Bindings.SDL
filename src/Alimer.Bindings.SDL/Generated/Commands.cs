@@ -1478,4 +1478,166 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_ComposeCustomBlendMode")]
 	public static partial SDL_BlendMode SDL_ComposeCustomBlendMode(SDL_BlendFactor srcColorFactor, SDL_BlendFactor dstColorFactor, SDL_BlendOperation colorOperation, SDL_BlendFactor srcAlphaFactor, SDL_BlendFactor dstAlphaFactor, SDL_BlendOperation alphaOperation);
 
+	[LibraryImport(LibName, EntryPoint = "SDL_GetPixelFormatName")]
+	public static partial sbyte* SDL_GetPixelFormatName(uint format);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetMasksForPixelFormatEnum")]
+	public static partial SDL_bool SDL_GetMasksForPixelFormatEnum(uint format, int* bpp, uint* Rmask, uint* Gmask, uint* Bmask, uint* Amask);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetPixelFormatEnumForMasks")]
+	public static partial uint SDL_GetPixelFormatEnumForMasks(int bpp, uint Rmask, uint Gmask, uint Bmask, uint Amask);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_CreatePixelFormat")]
+	public static partial SDL_PixelFormat* SDL_CreatePixelFormat(uint pixel_format);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_DestroyPixelFormat")]
+	public static partial void SDL_DestroyPixelFormat(SDL_PixelFormat* format);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_CreatePalette")]
+	public static partial SDL_Palette* SDL_CreatePalette(int ncolors);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetPixelFormatPalette")]
+	public static partial int SDL_SetPixelFormatPalette(SDL_PixelFormat* format, SDL_Palette* palette);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetPaletteColors")]
+	public static partial int SDL_SetPaletteColors(SDL_Palette* palette, SDL_Color* colors, int firstcolor, int ncolors);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_DestroyPalette")]
+	public static partial void SDL_DestroyPalette(SDL_Palette* palette);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_MapRGB")]
+	public static partial uint SDL_MapRGB(SDL_PixelFormat* format, byte r, byte g, byte b);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_MapRGBA")]
+	public static partial uint SDL_MapRGBA(SDL_PixelFormat* format, byte r, byte g, byte b, byte a);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetRGB")]
+	public static partial void SDL_GetRGB(uint pixel, SDL_PixelFormat* format, byte* r, byte* g, byte* b);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetRGBA")]
+	public static partial void SDL_GetRGBA(uint pixel, SDL_PixelFormat* format, byte* r, byte* g, byte* b, byte* a);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateSurface")]
+	public static partial SDL_Surface* SDL_CreateSurface(int width, int height, uint format);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateSurfaceFrom")]
+	public static partial SDL_Surface* SDL_CreateSurfaceFrom(nint pixels, int width, int height, int pitch, uint format);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_DestroySurface")]
+	public static partial void SDL_DestroySurface(SDL_Surface* surface);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSurfaceProperties")]
+	public static partial SDL_PropertiesID SDL_GetSurfaceProperties(SDL_Surface* surface);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetSurfacePalette")]
+	public static partial int SDL_SetSurfacePalette(SDL_Surface* surface, SDL_Palette* palette);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_LockSurface")]
+	public static partial int SDL_LockSurface(SDL_Surface* surface);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_UnlockSurface")]
+	public static partial void SDL_UnlockSurface(SDL_Surface* surface);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_LoadBMP_RW")]
+	public static partial SDL_Surface* SDL_LoadBMP_RW(nint src, SDL_bool freesrc);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_LoadBMP")]
+	public static partial SDL_Surface* SDL_LoadBMP(sbyte* file);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SaveBMP_RW")]
+	public static partial int SDL_SaveBMP_RW(SDL_Surface* surface, nint dst, SDL_bool freedst);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SaveBMP")]
+	public static partial int SDL_SaveBMP(SDL_Surface* surface, sbyte* file);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetSurfaceRLE")]
+	public static partial int SDL_SetSurfaceRLE(SDL_Surface* surface, int flag);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SurfaceHasRLE")]
+	public static partial SDL_bool SDL_SurfaceHasRLE(SDL_Surface* surface);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetSurfaceColorKey")]
+	public static partial int SDL_SetSurfaceColorKey(SDL_Surface* surface, int flag, uint key);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SurfaceHasColorKey")]
+	public static partial SDL_bool SDL_SurfaceHasColorKey(SDL_Surface* surface);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSurfaceColorKey")]
+	public static partial int SDL_GetSurfaceColorKey(SDL_Surface* surface, uint* key);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetSurfaceColorMod")]
+	public static partial int SDL_SetSurfaceColorMod(SDL_Surface* surface, byte r, byte g, byte b);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSurfaceColorMod")]
+	public static partial int SDL_GetSurfaceColorMod(SDL_Surface* surface, byte* r, byte* g, byte* b);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetSurfaceAlphaMod")]
+	public static partial int SDL_SetSurfaceAlphaMod(SDL_Surface* surface, byte alpha);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSurfaceAlphaMod")]
+	public static partial int SDL_GetSurfaceAlphaMod(SDL_Surface* surface, byte* alpha);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetSurfaceBlendMode")]
+	public static partial int SDL_SetSurfaceBlendMode(SDL_Surface* surface, SDL_BlendMode blendMode);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSurfaceBlendMode")]
+	public static partial int SDL_GetSurfaceBlendMode(SDL_Surface* surface, SDL_BlendMode* blendMode);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetSurfaceClipRect")]
+	public static partial SDL_bool SDL_SetSurfaceClipRect(SDL_Surface* surface, Rectangle* rect);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSurfaceClipRect")]
+	public static partial int SDL_GetSurfaceClipRect(SDL_Surface* surface, Rectangle* rect);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_FlipSurface")]
+	public static partial int SDL_FlipSurface(SDL_Surface* surface, SDL_FlipMode flip);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_DuplicateSurface")]
+	public static partial SDL_Surface* SDL_DuplicateSurface(SDL_Surface* surface);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ConvertSurface")]
+	public static partial SDL_Surface* SDL_ConvertSurface(SDL_Surface* surface, SDL_PixelFormat* format);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ConvertSurfaceFormat")]
+	public static partial SDL_Surface* SDL_ConvertSurfaceFormat(SDL_Surface* surface, uint pixel_format);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ConvertPixels")]
+	public static partial int SDL_ConvertPixels(int width, int height, uint src_format, void* src, int src_pitch, uint dst_format, nint dst, int dst_pitch);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_PremultiplyAlpha")]
+	public static partial int SDL_PremultiplyAlpha(int width, int height, uint src_format, void* src, int src_pitch, uint dst_format, nint dst, int dst_pitch);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_FillSurfaceRect")]
+	public static partial int SDL_FillSurfaceRect(SDL_Surface* dst, Rectangle* rect, uint color);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_FillSurfaceRects")]
+	public static partial int SDL_FillSurfaceRects(SDL_Surface* dst, Rectangle* rects, int count, uint color);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_BlitSurface")]
+	public static partial int SDL_BlitSurface(SDL_Surface* src, Rectangle* srcrect, SDL_Surface* dst, Rectangle* dstrect);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_BlitSurfaceUnchecked")]
+	public static partial int SDL_BlitSurfaceUnchecked(SDL_Surface* src, Rectangle* srcrect, SDL_Surface* dst, Rectangle* dstrect);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SoftStretch")]
+	public static partial int SDL_SoftStretch(SDL_Surface* src, Rectangle* srcrect, SDL_Surface* dst, Rectangle* dstrect, SDL_ScaleMode scaleMode);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_BlitSurfaceScaled")]
+	public static partial int SDL_BlitSurfaceScaled(SDL_Surface* src, Rectangle* srcrect, SDL_Surface* dst, Rectangle* dstrect, SDL_ScaleMode scaleMode);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_BlitSurfaceUncheckedScaled")]
+	public static partial int SDL_BlitSurfaceUncheckedScaled(SDL_Surface* src, Rectangle* srcrect, SDL_Surface* dst, Rectangle* dstrect, SDL_ScaleMode scaleMode);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ReadSurfacePixel")]
+	public static partial int SDL_ReadSurfacePixel(SDL_Surface* surface, int x, int y, byte* r, byte* g, byte* b, byte* a);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetYUVConversionMode")]
+	public static partial void SDL_SetYUVConversionMode(SDL_YUV_CONVERSION_MODE mode);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetYUVConversionMode")]
+	public static partial SDL_YUV_CONVERSION_MODE SDL_GetYUVConversionMode();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetYUVConversionModeForResolution")]
+	public static partial SDL_YUV_CONVERSION_MODE SDL_GetYUVConversionModeForResolution(int width, int height);
+
 }

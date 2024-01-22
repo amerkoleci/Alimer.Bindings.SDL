@@ -341,4 +341,12 @@ public static partial class SDL
 	public static ReadOnlySpan<byte> SDL_HINT_AUDIO_DEVICE_SAMPLE_FRAMES => "SDL_AUDIO_DEVICE_SAMPLE_FRAMES"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_MAIN_CALLBACK_RATE => "SDL_MAIN_CALBACK_RATE"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_SHUTDOWN_DBUS_ON_QUIT => "SDL_SHUTDOWN_DBUS_ON_QUIT"u8;
+	public const uint SDL_ALPHA_OPAQUE = 255;
+	public const uint SDL_ALPHA_TRANSPARENT = 0;
+	public const uint SDL_SWSURFACE = 0;
+	public const uint SDL_PREALLOC = 0x00000001;
+	public const uint SDL_RLEACCEL = 0x00000002;
+	public const uint SDL_DONTFREE = 0x00000004;
+	public const uint SDL_SIMD_ALIGNED = 0x00000008;
+	public const uint SDL_SURFACE_USES_PROPERTIES = 0x00000010;
 }

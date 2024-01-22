@@ -10,6 +10,7 @@
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 
 #pragma warning disable CS0649
 namespace SDL;
@@ -667,5 +668,60 @@ public partial struct SDL_HapticEffect
 	public SDL_HapticLeftRight leftright;
 	[FieldOffset(0)]
 	public SDL_HapticCustom custom;
+}
+
+public partial struct SDL_Color
+{
+	public byte r;
+	public byte g;
+	public byte b;
+	public byte a;
+}
+
+public partial struct SDL_Palette
+{
+	public int ncolors;
+	public unsafe SDL_Color* colors;
+	public uint version;
+	public int refcount;
+}
+
+public partial struct SDL_PixelFormat
+{
+	public uint format;
+	public unsafe SDL_Palette* palette;
+	public byte BitsPerPixel;
+	public byte BytesPerPixel;
+	public unsafe fixed byte padding[2];
+	public uint Rmask;
+	public uint Gmask;
+	public uint Bmask;
+	public uint Amask;
+	public byte Rloss;
+	public byte Gloss;
+	public byte Bloss;
+	public byte Aloss;
+	public byte Rshift;
+	public byte Gshift;
+	public byte Bshift;
+	public byte Ashift;
+	public int refcount;
+	public unsafe SDL_PixelFormat* next;
+}
+
+public partial struct SDL_Surface
+{
+	public uint flags;
+	public unsafe SDL_PixelFormat* format;
+	public int w;
+	public int h;
+	public int pitch;
+	public nint pixels;
+	public nint reserved;
+	public int locked;
+	public nint list_blitmap;
+	public Rectangle clip_rect;
+	public unsafe nint* map;
+	public int refcount;
 }
 

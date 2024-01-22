@@ -1926,3 +1926,251 @@ public enum SDL_BlendFactor
 	OneMinusDstAlpha = 0xA,
 }
 
+public enum SDL_PixelType
+{
+	/// <unmanaged>SDL_PIXELTYPE_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_PIXELTYPE_INDEX1</unmanaged>
+	Index1 = 1,
+	/// <unmanaged>SDL_PIXELTYPE_INDEX4</unmanaged>
+	Index4 = 2,
+	/// <unmanaged>SDL_PIXELTYPE_INDEX8</unmanaged>
+	Index8 = 3,
+	/// <unmanaged>SDL_PIXELTYPE_PACKED8</unmanaged>
+	Packed8 = 4,
+	/// <unmanaged>SDL_PIXELTYPE_PACKED16</unmanaged>
+	Packed16 = 5,
+	/// <unmanaged>SDL_PIXELTYPE_PACKED32</unmanaged>
+	Packed32 = 6,
+	/// <unmanaged>SDL_PIXELTYPE_ARRAYU8</unmanaged>
+	ArrayU8 = 7,
+	/// <unmanaged>SDL_PIXELTYPE_ARRAYU16</unmanaged>
+	ArrayU16 = 8,
+	/// <unmanaged>SDL_PIXELTYPE_ARRAYU32</unmanaged>
+	ArrayU32 = 9,
+	/// <unmanaged>SDL_PIXELTYPE_ARRAYF16</unmanaged>
+	ArrayF16 = 10,
+	/// <unmanaged>SDL_PIXELTYPE_ARRAYF32</unmanaged>
+	ArrayF32 = 11,
+	/// <unmanaged>SDL_PIXELTYPE_INDEX2</unmanaged>
+	Index2 = 12,
+}
+
+public enum SDL_BitmapOrder
+{
+	/// <unmanaged>SDL_BITMAPORDER_NONE</unmanaged>
+	None = 0,
+	/// <unmanaged>SDL_BITMAPORDER_4321</unmanaged>
+	_4321 = 1,
+	/// <unmanaged>SDL_BITMAPORDER_1234</unmanaged>
+	_1234 = 2,
+}
+
+public enum SDL_PackedOrder
+{
+	/// <unmanaged>SDL_PACKEDORDER_NONE</unmanaged>
+	None = 0,
+	/// <unmanaged>SDL_PACKEDORDER_XRGB</unmanaged>
+	Xrgb = 1,
+	/// <unmanaged>SDL_PACKEDORDER_RGBX</unmanaged>
+	Rgbx = 2,
+	/// <unmanaged>SDL_PACKEDORDER_ARGB</unmanaged>
+	Argb = 3,
+	/// <unmanaged>SDL_PACKEDORDER_RGBA</unmanaged>
+	Rgba = 4,
+	/// <unmanaged>SDL_PACKEDORDER_XBGR</unmanaged>
+	Xbgr = 5,
+	/// <unmanaged>SDL_PACKEDORDER_BGRX</unmanaged>
+	Bgrx = 6,
+	/// <unmanaged>SDL_PACKEDORDER_ABGR</unmanaged>
+	Abgr = 7,
+	/// <unmanaged>SDL_PACKEDORDER_BGRA</unmanaged>
+	Bgra = 8,
+}
+
+public enum SDL_ArrayOrder
+{
+	/// <unmanaged>SDL_ARRAYORDER_NONE</unmanaged>
+	None = 0,
+	/// <unmanaged>SDL_ARRAYORDER_RGB</unmanaged>
+	Rgb = 1,
+	/// <unmanaged>SDL_ARRAYORDER_UNUSED1</unmanaged>
+	Unused1 = 2,
+	/// <unmanaged>SDL_ARRAYORDER_UNUSED2</unmanaged>
+	Unused2 = 3,
+	/// <unmanaged>SDL_ARRAYORDER_BGR</unmanaged>
+	Bgr = 4,
+}
+
+public enum SDL_PackedLayout
+{
+	/// <unmanaged>SDL_PACKEDLAYOUT_NONE</unmanaged>
+	None = 0,
+	/// <unmanaged>SDL_PACKEDLAYOUT_332</unmanaged>
+	_332 = 1,
+	/// <unmanaged>SDL_PACKEDLAYOUT_4444</unmanaged>
+	_4444 = 2,
+	/// <unmanaged>SDL_PACKEDLAYOUT_1555</unmanaged>
+	_1555 = 3,
+	/// <unmanaged>SDL_PACKEDLAYOUT_5551</unmanaged>
+	_5551 = 4,
+	/// <unmanaged>SDL_PACKEDLAYOUT_565</unmanaged>
+	_565 = 5,
+	/// <unmanaged>SDL_PACKEDLAYOUT_8888</unmanaged>
+	_8888 = 6,
+	/// <unmanaged>SDL_PACKEDLAYOUT_2101010</unmanaged>
+	_2101010 = 7,
+	/// <unmanaged>SDL_PACKEDLAYOUT_1010102</unmanaged>
+	_1010102 = 8,
+}
+
+public enum SDL_PixelFormatEnum
+{
+	/// <unmanaged>SDL_PIXELFORMAT_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_PIXELFORMAT_INDEX1LSB</unmanaged>
+	Index1lsb = 286261504,
+	/// <unmanaged>SDL_PIXELFORMAT_INDEX1MSB</unmanaged>
+	Index1msb = 287310080,
+	/// <unmanaged>SDL_PIXELFORMAT_INDEX2LSB</unmanaged>
+	Index2lsb = 470811136,
+	/// <unmanaged>SDL_PIXELFORMAT_INDEX2MSB</unmanaged>
+	Index2msb = 471859712,
+	/// <unmanaged>SDL_PIXELFORMAT_INDEX4LSB</unmanaged>
+	Index4lsb = 303039488,
+	/// <unmanaged>SDL_PIXELFORMAT_INDEX4MSB</unmanaged>
+	Index4msb = 304088064,
+	/// <unmanaged>SDL_PIXELFORMAT_INDEX8</unmanaged>
+	Index8 = 318769153,
+	/// <unmanaged>SDL_PIXELFORMAT_RGB332</unmanaged>
+	Rgb332 = 336660481,
+	/// <unmanaged>SDL_PIXELFORMAT_XRGB4444</unmanaged>
+	Xrgb4444 = 353504258,
+	/// <unmanaged>SDL_PIXELFORMAT_RGB444</unmanaged>
+	Rgb444 = Xrgb4444,
+	/// <unmanaged>SDL_PIXELFORMAT_XBGR4444</unmanaged>
+	Xbgr4444 = 357698562,
+	/// <unmanaged>SDL_PIXELFORMAT_BGR444</unmanaged>
+	Bgr444 = Xbgr4444,
+	/// <unmanaged>SDL_PIXELFORMAT_XRGB1555</unmanaged>
+	Xrgb1555 = 353570562,
+	/// <unmanaged>SDL_PIXELFORMAT_RGB555</unmanaged>
+	Rgb555 = Xrgb1555,
+	/// <unmanaged>SDL_PIXELFORMAT_XBGR1555</unmanaged>
+	Xbgr1555 = 357764866,
+	/// <unmanaged>SDL_PIXELFORMAT_BGR555</unmanaged>
+	Bgr555 = Xbgr1555,
+	/// <unmanaged>SDL_PIXELFORMAT_ARGB4444</unmanaged>
+	Argb4444 = 355602434,
+	/// <unmanaged>SDL_PIXELFORMAT_RGBA4444</unmanaged>
+	Rgba4444 = 356651010,
+	/// <unmanaged>SDL_PIXELFORMAT_ABGR4444</unmanaged>
+	Abgr4444 = 359796738,
+	/// <unmanaged>SDL_PIXELFORMAT_BGRA4444</unmanaged>
+	Bgra4444 = 360845314,
+	/// <unmanaged>SDL_PIXELFORMAT_ARGB1555</unmanaged>
+	Argb1555 = 355667970,
+	/// <unmanaged>SDL_PIXELFORMAT_RGBA5551</unmanaged>
+	Rgba5551 = 356782082,
+	/// <unmanaged>SDL_PIXELFORMAT_ABGR1555</unmanaged>
+	Abgr1555 = 359862274,
+	/// <unmanaged>SDL_PIXELFORMAT_BGRA5551</unmanaged>
+	Bgra5551 = 360976386,
+	/// <unmanaged>SDL_PIXELFORMAT_RGB565</unmanaged>
+	Rgb565 = 353701890,
+	/// <unmanaged>SDL_PIXELFORMAT_BGR565</unmanaged>
+	Bgr565 = 357896194,
+	/// <unmanaged>SDL_PIXELFORMAT_RGB24</unmanaged>
+	Rgb24 = 386930691,
+	/// <unmanaged>SDL_PIXELFORMAT_BGR24</unmanaged>
+	Bgr24 = 390076419,
+	/// <unmanaged>SDL_PIXELFORMAT_XRGB8888</unmanaged>
+	Xrgb8888 = 370546692,
+	/// <unmanaged>SDL_PIXELFORMAT_RGBX8888</unmanaged>
+	Rgbx8888 = 371595268,
+	/// <unmanaged>SDL_PIXELFORMAT_XBGR8888</unmanaged>
+	Xbgr8888 = 374740996,
+	/// <unmanaged>SDL_PIXELFORMAT_BGRX8888</unmanaged>
+	Bgrx8888 = 375789572,
+	/// <unmanaged>SDL_PIXELFORMAT_ARGB8888</unmanaged>
+	Argb8888 = 372645892,
+	/// <unmanaged>SDL_PIXELFORMAT_RGBA8888</unmanaged>
+	Rgba8888 = 373694468,
+	/// <unmanaged>SDL_PIXELFORMAT_ABGR8888</unmanaged>
+	Abgr8888 = 376840196,
+	/// <unmanaged>SDL_PIXELFORMAT_BGRA8888</unmanaged>
+	Bgra8888 = 377888772,
+	/// <unmanaged>SDL_PIXELFORMAT_XRGB2101010</unmanaged>
+	Xrgb2101010 = 370614276,
+	/// <unmanaged>SDL_PIXELFORMAT_XBGR2101010</unmanaged>
+	Xbgr2101010 = 374808580,
+	/// <unmanaged>SDL_PIXELFORMAT_ARGB2101010</unmanaged>
+	Argb2101010 = 372711428,
+	/// <unmanaged>SDL_PIXELFORMAT_ABGR2101010</unmanaged>
+	Abgr2101010 = 376905732,
+	/// <unmanaged>SDL_PIXELFORMAT_RGBA32</unmanaged>
+	Rgba32 = Abgr8888,
+	/// <unmanaged>SDL_PIXELFORMAT_ARGB32</unmanaged>
+	Argb32 = Bgra8888,
+	/// <unmanaged>SDL_PIXELFORMAT_BGRA32</unmanaged>
+	Bgra32 = Argb8888,
+	/// <unmanaged>SDL_PIXELFORMAT_ABGR32</unmanaged>
+	Abgr32 = Rgba8888,
+	/// <unmanaged>SDL_PIXELFORMAT_RGBX32</unmanaged>
+	Rgbx32 = Xbgr8888,
+	/// <unmanaged>SDL_PIXELFORMAT_XRGB32</unmanaged>
+	Xrgb32 = Bgrx8888,
+	/// <unmanaged>SDL_PIXELFORMAT_BGRX32</unmanaged>
+	Bgrx32 = Xrgb8888,
+	/// <unmanaged>SDL_PIXELFORMAT_XBGR32</unmanaged>
+	Xbgr32 = Rgbx8888,
+	/// <unmanaged>SDL_PIXELFORMAT_YV12</unmanaged>
+	Yv12 = 842094169,
+	/// <unmanaged>SDL_PIXELFORMAT_IYUV</unmanaged>
+	Iyuv = 1448433993,
+	/// <unmanaged>SDL_PIXELFORMAT_YUY2</unmanaged>
+	Yuy2 = 844715353,
+	/// <unmanaged>SDL_PIXELFORMAT_UYVY</unmanaged>
+	Uyvy = 1498831189,
+	/// <unmanaged>SDL_PIXELFORMAT_YVYU</unmanaged>
+	Yvyu = 1431918169,
+	/// <unmanaged>SDL_PIXELFORMAT_NV12</unmanaged>
+	Nv12 = 842094158,
+	/// <unmanaged>SDL_PIXELFORMAT_NV21</unmanaged>
+	Nv21 = 825382478,
+	/// <unmanaged>SDL_PIXELFORMAT_EXTERNAL_OES</unmanaged>
+	ExternalOes = 542328143,
+}
+
+public enum SDL_ScaleMode
+{
+	/// <unmanaged>SDL_SCALEMODE_NEAREST</unmanaged>
+	Nearest = 0,
+	/// <unmanaged>SDL_SCALEMODE_LINEAR</unmanaged>
+	Linear = 1,
+	/// <unmanaged>SDL_SCALEMODE_BEST</unmanaged>
+	Best = 2,
+}
+
+public enum SDL_FlipMode
+{
+	/// <unmanaged>SDL_FLIP_NONE</unmanaged>
+	None = 0,
+	/// <unmanaged>SDL_FLIP_HORIZONTAL</unmanaged>
+	Horizontal = 1,
+	/// <unmanaged>SDL_FLIP_VERTICAL</unmanaged>
+	Vertical = 2,
+}
+
+public enum SDL_YUV_CONVERSION_MODE
+{
+	/// <unmanaged>SDL_YUV_CONVERSION_JPEG</unmanaged>
+	Jpeg = 0,
+	/// <unmanaged>SDL_YUV_CONVERSION_BT601</unmanaged>
+	Bt601 = 1,
+	/// <unmanaged>SDL_YUV_CONVERSION_BT709</unmanaged>
+	Bt709 = 2,
+	/// <unmanaged>SDL_YUV_CONVERSION_AUTOMATIC</unmanaged>
+	Automatic = 3,
+}
+

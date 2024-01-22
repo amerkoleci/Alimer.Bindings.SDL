@@ -42,7 +42,8 @@ public static partial class CsCodeGenerator
             [
                 "System.Runtime.InteropServices",
                 "System.Runtime.CompilerServices",
-                "System.Diagnostics.CodeAnalysis"
+                "System.Diagnostics.CodeAnalysis",
+                "System.Drawing"
             ],
             "#pragma warning disable CS0649"
             );

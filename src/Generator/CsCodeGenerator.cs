@@ -31,6 +31,7 @@ public static partial class CsCodeGenerator
         { "Sint16", "short" },
         { "int64_t", "long" },
         { "int64_t*", "long*" },
+        { "Sint64", "long" },
         { "Uint64", "ulong" },
         { "char", "byte" },
         { "size_t", "nuint" },
@@ -200,7 +201,7 @@ public static partial class CsCodeGenerator
                 return isPointer ? "nint" : "void";
 
             case CppPrimitiveKind.Char:
-                return isPointer ? "sbyte*" : "sbyte";
+                return isPointer ? "byte*" : "byte";
 
             case CppPrimitiveKind.Bool:
                 return "bool";

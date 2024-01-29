@@ -594,6 +594,19 @@ extern DECLSPEC SDL_Gamepad *SDLCALL SDL_GetGamepadFromPlayerIndex(int player_in
  *
  * These properties are shared with the underlying joystick object.
  *
+ * The following read-only properties are provided by SDL:
+ *
+ * - `SDL_PROP_GAMEPAD_CAP_MONO_LED_BOOLEAN`: true if this gamepad has an LED
+ *   that has adjustable brightness
+ * - `SDL_PROP_GAMEPAD_CAP_RGB_LED_BOOLEAN`: true if this gamepad has an LED
+ *   that has adjustable color
+ * - `SDL_PROP_GAMEPAD_CAP_PLAYER_LED_BOOLEAN`: true if this gamepad has a
+ *   player LED
+ * - `SDL_PROP_GAMEPAD_CAP_RUMBLE_BOOLEAN`: true if this gamepad has
+ *   left/right rumble
+ * - `SDL_PROP_GAMEPAD_CAP_TRIGGER_RUMBLE_BOOLEAN`: true if this gamepad has
+ *   simple trigger rumble
+ *
  * \param gamepad a gamepad identifier previously returned by
  *                SDL_OpenGamepad()
  * \returns a valid property ID on success or 0 on failure; call
@@ -605,6 +618,12 @@ extern DECLSPEC SDL_Gamepad *SDLCALL SDL_GetGamepadFromPlayerIndex(int player_in
  * \sa SDL_SetProperty
  */
 extern DECLSPEC SDL_PropertiesID SDLCALL SDL_GetGamepadProperties(SDL_Gamepad *gamepad);
+
+#define SDL_PROP_GAMEPAD_CAP_MONO_LED_BOOLEAN       SDL_PROP_JOYSTICK_CAP_MONO_LED_BOOLEAN
+#define SDL_PROP_GAMEPAD_CAP_RGB_LED_BOOLEAN        SDL_PROP_JOYSTICK_CAP_RGB_LED_BOOLEAN
+#define SDL_PROP_GAMEPAD_CAP_PLAYER_LED_BOOLEAN     SDL_PROP_JOYSTICK_CAP_PLAYER_LED_BOOLEAN
+#define SDL_PROP_GAMEPAD_CAP_RUMBLE_BOOLEAN         SDL_PROP_JOYSTICK_CAP_RUMBLE_BOOLEAN
+#define SDL_PROP_GAMEPAD_CAP_TRIGGER_RUMBLE_BOOLEAN SDL_PROP_JOYSTICK_CAP_TRIGGER_RUMBLE_BOOLEAN
 
 /**
  * Get the instance ID of an opened gamepad.
@@ -1184,8 +1203,6 @@ extern DECLSPEC int SDLCALL SDL_GetGamepadSensorData(SDL_Gamepad *gamepad, SDL_S
  * \returns 0, or -1 if rumble isn't supported on this gamepad
  *
  * \since This function is available since SDL 3.0.0.
- *
- * \sa SDL_GamepadHasRumble
  */
 extern DECLSPEC int SDLCALL SDL_RumbleGamepad(SDL_Gamepad *gamepad, Uint16 low_frequency_rumble, Uint16 high_frequency_rumble, Uint32 duration_ms);
 
@@ -1209,50 +1226,17 @@ extern DECLSPEC int SDLCALL SDL_RumbleGamepad(SDL_Gamepad *gamepad, Uint16 low_f
  *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
- *
- * \sa SDL_GamepadHasRumbleTriggers
  */
 extern DECLSPEC int SDLCALL SDL_RumbleGamepadTriggers(SDL_Gamepad *gamepad, Uint16 left_rumble, Uint16 right_rumble, Uint32 duration_ms);
 
 /**
- * Query whether a gamepad has an LED.
- *
- * \param gamepad The gamepad to query
- * \returns SDL_TRUE, or SDL_FALSE if this gamepad does not have a modifiable
- *          LED
- *
- * \since This function is available since SDL 3.0.0.
- */
-extern DECLSPEC SDL_bool SDLCALL SDL_GamepadHasLED(SDL_Gamepad *gamepad);
-
-/**
- * Query whether a gamepad has rumble support.
- *
- * \param gamepad The gamepad to query
- * \returns SDL_TRUE, or SDL_FALSE if this gamepad does not have rumble
- *          support
- *
- * \since This function is available since SDL 3.0.0.
- *
- * \sa SDL_RumbleGamepad
- */
-extern DECLSPEC SDL_bool SDLCALL SDL_GamepadHasRumble(SDL_Gamepad *gamepad);
-
-/**
- * Query whether a gamepad has rumble support on triggers.
- *
- * \param gamepad The gamepad to query
- * \returns SDL_TRUE, or SDL_FALSE if this gamepad does not have trigger
- *          rumble support
- *
- * \since This function is available since SDL 3.0.0.
- *
- * \sa SDL_RumbleGamepadTriggers
- */
-extern DECLSPEC SDL_bool SDLCALL SDL_GamepadHasRumbleTriggers(SDL_Gamepad *gamepad);
-
-/**
  * Update a gamepad's LED color.
+ *
+ * An example of a joystick LED is the light on the back of a PlayStation 4's
+ * DualShock 4 controller.
+ *
+ * For gamepads with a single color LED, the maximum of the RGB values will be
+ * used as the LED brightness.
  *
  * \param gamepad The gamepad to update
  * \param red The intensity of the red LED

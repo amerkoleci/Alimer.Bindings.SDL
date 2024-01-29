@@ -63,7 +63,7 @@ public static unsafe class Program
         var id = SDL_GetWindowID(window);
         SDL_GetWindowSizeInPixels(window, out int width, out int height);
 
-        nint hwnd = SDL_GetProperty(SDL_GetWindowProperties(window), SDL_PROPERTY_WINDOW_WIN32_HWND_POINTER);
+        nint hwnd = SDL_GetProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_WIN32_HWND_POINTER);
 
         var display = SDL_GetDisplayForWindow(window);
         display = SDL_GetDisplayForPoint(Point.Empty);

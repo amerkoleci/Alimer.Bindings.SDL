@@ -74,9 +74,9 @@ unsafe partial class SDL
     //    return new(ptr, count);
     //}
 
-    public static int SDL_AddGamepadMapping(ReadOnlySpan<sbyte> name)
+    public static int SDL_AddGamepadMapping(ReadOnlySpan<byte> name)
     {
-        fixed (sbyte* pName = name)
+        fixed (byte* pName = name)
         {
             return SDL_AddGamepadMapping(pName);
         }
@@ -89,7 +89,7 @@ unsafe partial class SDL
 
     public static string[] SDL_GetGamepadMappings()
     {
-        sbyte** strings = SDL_GetGamepadMappings(out int count);
+        byte** strings = SDL_GetGamepadMappings(out int count);
         string[] names = new string[count];
         for (int i = 0; i < count; i++)
         {
@@ -136,9 +136,9 @@ unsafe partial class SDL
         return GetStringOrEmpty(SDL_GetGamepadSerial(gamepad));
     }
 
-    public static SDL_GamepadAxis SDL_GetGamepadAxisFromString(ReadOnlySpan<sbyte> str)
+    public static SDL_GamepadAxis SDL_GetGamepadAxisFromString(ReadOnlySpan<byte> str)
     {
-        fixed (sbyte* pName = str)
+        fixed (byte* pName = str)
         {
             return SDL_GetGamepadAxisFromString(pName);
         }
@@ -154,9 +154,9 @@ unsafe partial class SDL
         return GetStringOrEmpty(SDL_GetGamepadStringForAxis(axis));
     }
 
-    public static SDL_GamepadButton SDL_GetGamepadButtonFromString(ReadOnlySpan<sbyte> str)
+    public static SDL_GamepadButton SDL_GetGamepadButtonFromString(ReadOnlySpan<byte> str)
     {
-        fixed (sbyte* pName = str)
+        fixed (byte* pName = str)
         {
             return SDL_GetGamepadButtonFromString(pName);
         }
@@ -202,9 +202,9 @@ unsafe partial class SDL
         }
     }
 
-    public static SDL_GamepadType SDL_GetGamepadTypeFromString(ReadOnlySpan<sbyte> str)
+    public static SDL_GamepadType SDL_GetGamepadTypeFromString(ReadOnlySpan<byte> str)
     {
-        fixed (sbyte* pName = str)
+        fixed (byte* pName = str)
         {
             return SDL_GetGamepadTypeFromString(pName);
         }

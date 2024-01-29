@@ -148,7 +148,7 @@
 #define SDL_JOYSTICK_MFI 1
 #define SDL_JOYSTICK_VIRTUAL    1
 
-#ifdef __TVOS__
+#ifdef SDL_PLATFORM_TVOS
 #define SDL_SENSOR_DUMMY    1
 #else
 /* Enable the CoreMotion sensor driver */
@@ -170,7 +170,7 @@
 #define SDL_VIDEO_DRIVER_DUMMY  1
 
 /* Enable OpenGL ES */
-#if !TARGET_OS_MACCATALYST
+#if !TARGET_OS_MACCATALYST && !TARGET_OS_VISION
 #define SDL_VIDEO_OPENGL_ES2 1
 #define SDL_VIDEO_OPENGL_ES 1
 #define SDL_VIDEO_RENDER_OGL_ES2    1

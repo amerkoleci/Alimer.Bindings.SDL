@@ -1283,6 +1283,22 @@ extern "C" {
 #define SDL_HINT_LINUX_JOYSTICK_DEADZONES "SDL_LINUX_JOYSTICK_DEADZONES"
 
 /**
+ *  A variable controlling the default SDL log levels.
+ *
+ *  This variable is a comma separated set of category=level tokens that define the default logging levels for SDL applications.
+ *
+ *  The category can be a numeric category, one of "app", "error", "assert", "system", "audio", "video", "render", "input", "test", or `*` for any unspecified category.
+ *
+ *  The level can be a numeric level, one of "verbose", "debug", "info", "warn", "error", "critical", or "quiet" to disable that category.
+ *
+ *  You can omit the category if you want to set the logging level for all categories.
+ *
+ *  If this hint isn't set, the default log levels are equivalent to:
+ *  "app=info,assert=warn,test=verbose,*=error"
+ */
+#define SDL_HINT_LOGGING   "SDL_LOGGING"
+
+/**
 *  When set don't force the SDL app to become a foreground process
 *
 *  This hint only applies to macOS.
@@ -1983,6 +1999,32 @@ extern "C" {
  *  By default 'stretch' is used.
  */
 #define SDL_HINT_VIDEO_WAYLAND_MODE_SCALING "SDL_VIDEO_WAYLAND_MODE_SCALING"
+
+/**
+ *  A variable forcing non-DPI-aware Wayland windows to output at 1:1 scaling.
+ *
+ *  When this hint is set, Wayland windows that are not flagged as being DPI-aware will be
+ *  output with scaling designed to force 1:1 pixel mapping.
+ *
+ *  This is intended to allow legacy applications to be displayed without desktop scaling
+ *  being applied, and has issues with certain display configurations, as this forces the
+ *  window to behave in a way that Wayland desktops were not designed to accommodate:
+ *
+ *   - Rounding errors can result with odd window sizes and/or desktop scales.
+ *   - The window may be unusably small.
+ *   - The window may jump in size at times.
+ *   - The window may appear to be larger than the desktop size to the application.
+ *   - Possible loss of cursor precision.
+ *
+ *  New applications should be designed with proper DPI awareness handling instead of enabling this.
+ *
+ *  This variable can be set to the following values:
+ *    "0"       - Windows will be scaled normally.
+ *    "1"       - Windows will be forced to scale to achieve 1:1 output.
+ *
+ *  By default, scaling to the display is disabled.
+ */
+#define SDL_HINT_VIDEO_WAYLAND_SCALE_TO_DISPLAY "SDL_VIDEO_WAYLAND_SCALE_TO_DISPLAY"
 
 /**
  *  Enable or disable mouse pointer warp emulation, needed by some older games.

@@ -34,7 +34,7 @@ public partial struct SDL_MessageBoxButtonData
 {
 	public uint flags;
 	public int buttonid;
-	public unsafe sbyte* text;
+	public unsafe byte* text;
 }
 
 public partial struct SDL_MessageBoxColor
@@ -79,8 +79,8 @@ public partial struct SDL_MessageBoxData
 {
 	public uint flags;
 	public SDL_Window window;
-	public unsafe sbyte* title;
-	public unsafe sbyte* message;
+	public unsafe byte* title;
+	public unsafe byte* message;
 	public int numbuttons;
 	public unsafe SDL_MessageBoxButtonData* buttons;
 	public unsafe SDL_MessageBoxColorScheme* colorScheme;
@@ -98,7 +98,7 @@ public partial struct SDL_VirtualJoystickDesc
 	public ushort padding;
 	public uint button_mask;
 	public uint axis_mask;
-	public unsafe sbyte* name;
+	public unsafe byte* name;
 	public nint userdata;
 	public unsafe delegate* unmanaged<nint, void> Update;
 	public unsafe delegate* unmanaged<nint, int, void> SetPlayerIndex;
@@ -184,13 +184,13 @@ public partial struct SDL_AudioSpec
 
 public partial struct SDL_CommonEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 }
 
 public partial struct SDL_DisplayEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_DisplayID displayID;
 	public int data1;
@@ -198,7 +198,7 @@ public partial struct SDL_DisplayEvent
 
 public partial struct SDL_WindowEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public int data1;
@@ -207,7 +207,7 @@ public partial struct SDL_WindowEvent
 
 public partial struct SDL_KeyboardEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public byte state;
@@ -219,25 +219,25 @@ public partial struct SDL_KeyboardEvent
 
 public partial struct SDL_TextEditingEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
-	public unsafe sbyte* text;
+	public unsafe byte* text;
 	public int start;
 	public int length;
 }
 
 public partial struct SDL_TextInputEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
-	public unsafe sbyte* text;
+	public unsafe byte* text;
 }
 
 public partial struct SDL_MouseMotionEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public SDL_MouseID which;
@@ -250,7 +250,7 @@ public partial struct SDL_MouseMotionEvent
 
 public partial struct SDL_MouseButtonEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public SDL_MouseID which;
@@ -264,7 +264,7 @@ public partial struct SDL_MouseButtonEvent
 
 public partial struct SDL_MouseWheelEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public SDL_MouseID which;
@@ -277,7 +277,7 @@ public partial struct SDL_MouseWheelEvent
 
 public partial struct SDL_JoyAxisEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_JoystickID which;
 	public byte axis;
@@ -290,7 +290,7 @@ public partial struct SDL_JoyAxisEvent
 
 public partial struct SDL_JoyHatEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_JoystickID which;
 	public byte hat;
@@ -301,7 +301,7 @@ public partial struct SDL_JoyHatEvent
 
 public partial struct SDL_JoyButtonEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_JoystickID which;
 	public byte button;
@@ -312,14 +312,14 @@ public partial struct SDL_JoyButtonEvent
 
 public partial struct SDL_JoyDeviceEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_JoystickID which;
 }
 
 public partial struct SDL_JoyBatteryEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_JoystickID which;
 	public SDL_JoystickPowerLevel level;
@@ -327,7 +327,7 @@ public partial struct SDL_JoyBatteryEvent
 
 public partial struct SDL_GamepadAxisEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_JoystickID which;
 	public byte axis;
@@ -340,7 +340,7 @@ public partial struct SDL_GamepadAxisEvent
 
 public partial struct SDL_GamepadButtonEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_JoystickID which;
 	public byte button;
@@ -351,14 +351,14 @@ public partial struct SDL_GamepadButtonEvent
 
 public partial struct SDL_GamepadDeviceEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_JoystickID which;
 }
 
 public partial struct SDL_GamepadTouchpadEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_JoystickID which;
 	public int touchpad;
@@ -370,7 +370,7 @@ public partial struct SDL_GamepadTouchpadEvent
 
 public partial struct SDL_GamepadSensorEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_JoystickID which;
 	public int sensor;
@@ -380,7 +380,7 @@ public partial struct SDL_GamepadSensorEvent
 
 public partial struct SDL_AudioDeviceEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_AudioDeviceID which;
 	public byte iscapture;
@@ -391,7 +391,7 @@ public partial struct SDL_AudioDeviceEvent
 
 public partial struct SDL_TouchFingerEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_TouchID touchId;
 	public SDL_FingerID fingerId;
@@ -405,7 +405,7 @@ public partial struct SDL_TouchFingerEvent
 
 public partial struct SDL_PenTipEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public uint windowID;
 	public SDL_PenID which;
@@ -419,7 +419,7 @@ public partial struct SDL_PenTipEvent
 
 public partial struct SDL_PenMotionEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public uint windowID;
 	public SDL_PenID which;
@@ -433,7 +433,7 @@ public partial struct SDL_PenMotionEvent
 
 public partial struct SDL_PenButtonEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public uint windowID;
 	public SDL_PenID which;
@@ -447,24 +447,24 @@ public partial struct SDL_PenButtonEvent
 
 public partial struct SDL_DropEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public float x;
 	public float y;
-	public unsafe sbyte* source;
-	public unsafe sbyte* data;
+	public unsafe byte* source;
+	public unsafe byte* data;
 }
 
 public partial struct SDL_ClipboardEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 }
 
 public partial struct SDL_SensorEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_SensorID which;
 	public unsafe fixed float data[6];
@@ -473,13 +473,13 @@ public partial struct SDL_SensorEvent
 
 public partial struct SDL_QuitEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 }
 
 public partial struct SDL_UserEvent
 {
-	public uint type;
+	public SDL_EventType type;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public int code;

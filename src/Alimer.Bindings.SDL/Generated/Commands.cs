@@ -16,7 +16,10 @@ using System.Drawing;
 namespace SDL;
 
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public unsafe delegate void* SDL_ClipboardDataCallback(nint userdata, sbyte* mime_type, nuint* size);
+public unsafe delegate void SDL_EnumeratePropertiesCallback(nint userdata, SDL_PropertiesID props, byte* name);
+
+[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+public unsafe delegate void* SDL_ClipboardDataCallback(nint userdata, byte* mime_type, nuint* size);
 
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 public unsafe delegate void SDL_ClipboardCleanupCallback(nint userdata);
@@ -31,15 +34,69 @@ public unsafe delegate void SDL_AudioStreamCallback(nint userdata, SDL_AudioStre
 public unsafe delegate void SDL_AudioPostmixCallback(nint userdata, SDL_AudioSpec* spec, float* buffer, int buflen);
 
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public unsafe delegate void SDL_HintCallback(nint userdata, sbyte* name, sbyte* oldValue, sbyte* newValue);
+public unsafe delegate void SDL_HintCallback(nint userdata, byte* name, byte* oldValue, byte* newValue);
 
 public unsafe partial class SDL
 {
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGlobalProperties")]
+	public static partial SDL_PropertiesID SDL_GetGlobalProperties();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateProperties")]
+	public static partial SDL_PropertiesID SDL_CreateProperties();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_LockProperties")]
+	public static partial int SDL_LockProperties(SDL_PropertiesID props);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_UnlockProperties")]
+	public static partial void SDL_UnlockProperties(SDL_PropertiesID props);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetProperty")]
+	public static partial int SDL_SetProperty(SDL_PropertiesID props, byte* name, nint value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetStringProperty")]
+	public static partial int SDL_SetStringProperty(SDL_PropertiesID props, byte* name, byte* value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetNumberProperty")]
+	public static partial int SDL_SetNumberProperty(SDL_PropertiesID props, byte* name, long value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetFloatProperty")]
+	public static partial int SDL_SetFloatProperty(SDL_PropertiesID props, byte* name, float value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetBooleanProperty")]
+	public static partial int SDL_SetBooleanProperty(SDL_PropertiesID props, byte* name, SDL_bool value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetPropertyType")]
+	public static partial SDL_PropertyType SDL_GetPropertyType(SDL_PropertiesID props, byte* name);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetProperty")]
+	public static partial nint SDL_GetProperty(SDL_PropertiesID props, byte* name, nint default_value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetStringProperty")]
+	public static partial byte* SDL_GetStringProperty(SDL_PropertiesID props, byte* name, byte* default_value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetNumberProperty")]
+	public static partial long SDL_GetNumberProperty(SDL_PropertiesID props, byte* name, long default_value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetFloatProperty")]
+	public static partial float SDL_GetFloatProperty(SDL_PropertiesID props, byte* name, float default_value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetBooleanProperty")]
+	public static partial SDL_bool SDL_GetBooleanProperty(SDL_PropertiesID props, byte* name, SDL_bool default_value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ClearProperty")]
+	public static partial int SDL_ClearProperty(SDL_PropertiesID props, byte* name);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_EnumerateProperties")]
+	public static partial int SDL_EnumerateProperties(SDL_PropertiesID props, SDL_EnumeratePropertiesCallback callback, nint userdata);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_DestroyProperties")]
+	public static partial void SDL_DestroyProperties(SDL_PropertiesID props);
+
 	[LibraryImport(LibName, EntryPoint = "SDL_SetError")]
-	public static partial int SDL_SetError(sbyte* fmt);
+	public static partial int SDL_SetError(byte* fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetError")]
-	public static partial sbyte* SDL_GetError();
+	public static partial byte* SDL_GetError();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ClearError")]
 	public static partial void SDL_ClearError();
@@ -63,7 +120,7 @@ public unsafe partial class SDL
 	public static partial SDL_bool SDL_PenConnected(SDL_PenID instance_id);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetPenName")]
-	public static partial sbyte* SDL_GetPenName(SDL_PenID instance_id);
+	public static partial byte* SDL_GetPenName(SDL_PenID instance_id);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetPenCapabilities")]
 	public static partial uint SDL_GetPenCapabilities(SDL_PenID instance_id, SDL_PenCapabilityInfo* capabilities);
@@ -87,37 +144,37 @@ public unsafe partial class SDL
 	public static partial void SDL_Quit();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetPlatform")]
-	public static partial sbyte* SDL_GetPlatform();
+	public static partial byte* SDL_GetPlatform();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetClipboardText")]
-	public static partial int SDL_SetClipboardText(sbyte* text);
+	public static partial int SDL_SetClipboardText(byte* text);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetClipboardText")]
-	public static partial sbyte* SDL_GetClipboardText();
+	public static partial byte* SDL_GetClipboardText();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_HasClipboardText")]
 	public static partial SDL_bool SDL_HasClipboardText();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetPrimarySelectionText")]
-	public static partial int SDL_SetPrimarySelectionText(sbyte* text);
+	public static partial int SDL_SetPrimarySelectionText(byte* text);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetPrimarySelectionText")]
-	public static partial sbyte* SDL_GetPrimarySelectionText();
+	public static partial byte* SDL_GetPrimarySelectionText();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_HasPrimarySelectionText")]
 	public static partial SDL_bool SDL_HasPrimarySelectionText();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetClipboardData")]
-	public static partial int SDL_SetClipboardData(SDL_ClipboardDataCallback callback, SDL_ClipboardCleanupCallback cleanup, nint userdata, sbyte** mime_types, nuint num_mime_types);
+	public static partial int SDL_SetClipboardData(SDL_ClipboardDataCallback callback, SDL_ClipboardCleanupCallback cleanup, nint userdata, byte** mime_types, nuint num_mime_types);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ClearClipboardData")]
 	public static partial int SDL_ClearClipboardData();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetClipboardData")]
-	public static partial nint SDL_GetClipboardData(sbyte* mime_type, nuint* size);
+	public static partial nint SDL_GetClipboardData(byte* mime_type, nuint* size);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_HasClipboardData")]
-	public static partial SDL_bool SDL_HasClipboardData(sbyte* mime_type);
+	public static partial SDL_bool SDL_HasClipboardData(byte* mime_type);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetCPUCount")]
 	public static partial int SDL_GetCPUCount();
@@ -174,10 +231,10 @@ public unsafe partial class SDL
 	public static partial nuint SDL_SIMDGetAlignment();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadObject")]
-	public static partial nint SDL_LoadObject(sbyte* sofile);
+	public static partial nint SDL_LoadObject(byte* sofile);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadFunction")]
-	public static partial delegate* unmanaged<void> SDL_LoadFunction(nint handle, sbyte* name);
+	public static partial delegate* unmanaged<void> SDL_LoadFunction(nint handle, byte* name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UnloadObject")]
 	public static partial void SDL_UnloadObject(nint handle);
@@ -204,16 +261,16 @@ public unsafe partial class SDL
 	public static partial SDL_Scancode SDL_GetScancodeFromKey(SDL_KeyCode key);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetScancodeName")]
-	public static partial sbyte* SDL_GetScancodeName(SDL_Scancode scancode);
+	public static partial byte* SDL_GetScancodeName(SDL_Scancode scancode);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetScancodeFromName")]
-	public static partial SDL_Scancode SDL_GetScancodeFromName(sbyte* name);
+	public static partial SDL_Scancode SDL_GetScancodeFromName(byte* name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetKeyName")]
-	public static partial sbyte* SDL_GetKeyName(SDL_KeyCode key);
+	public static partial byte* SDL_GetKeyName(SDL_KeyCode key);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetKeyFromName")]
-	public static partial SDL_KeyCode SDL_GetKeyFromName(sbyte* name);
+	public static partial SDL_KeyCode SDL_GetKeyFromName(byte* name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_StartTextInput")]
 	public static partial void SDL_StartTextInput();
@@ -243,7 +300,7 @@ public unsafe partial class SDL
 	public static partial int SDL_ShowMessageBox(SDL_MessageBoxData* messageboxdata, int* buttonid);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ShowSimpleMessageBox")]
-	public static partial int SDL_ShowSimpleMessageBox(uint flags, sbyte* title, sbyte* message, SDL_Window window);
+	public static partial int SDL_ShowSimpleMessageBox(uint flags, byte* title, byte* message, SDL_Window window);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LockJoysticks")]
 	public static partial void SDL_LockJoysticks();
@@ -255,10 +312,10 @@ public unsafe partial class SDL
 	public static partial SDL_JoystickID* SDL_GetJoysticks(out int count);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickInstanceName")]
-	public static partial sbyte* SDL_GetJoystickInstanceName(SDL_JoystickID instance_id);
+	public static partial byte* SDL_GetJoystickInstanceName(SDL_JoystickID instance_id);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickInstancePath")]
-	public static partial sbyte* SDL_GetJoystickInstancePath(SDL_JoystickID instance_id);
+	public static partial byte* SDL_GetJoystickInstancePath(SDL_JoystickID instance_id);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickInstancePlayerIndex")]
 	public static partial int SDL_GetJoystickInstancePlayerIndex(SDL_JoystickID instance_id);
@@ -312,10 +369,10 @@ public unsafe partial class SDL
 	public static partial SDL_PropertiesID SDL_GetJoystickProperties(SDL_Joystick joystick);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickName")]
-	public static partial sbyte* SDL_GetJoystickName(SDL_Joystick joystick);
+	public static partial byte* SDL_GetJoystickName(SDL_Joystick joystick);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickPath")]
-	public static partial sbyte* SDL_GetJoystickPath(SDL_Joystick joystick);
+	public static partial byte* SDL_GetJoystickPath(SDL_Joystick joystick);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickPlayerIndex")]
 	public static partial int SDL_GetJoystickPlayerIndex(SDL_Joystick joystick);
@@ -339,16 +396,16 @@ public unsafe partial class SDL
 	public static partial ushort SDL_GetJoystickFirmwareVersion(SDL_Joystick joystick);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickSerial")]
-	public static partial sbyte* SDL_GetJoystickSerial(SDL_Joystick joystick);
+	public static partial byte* SDL_GetJoystickSerial(SDL_Joystick joystick);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickType")]
 	public static partial SDL_JoystickType SDL_GetJoystickType(SDL_Joystick joystick);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickGUIDString")]
-	public static partial int SDL_GetJoystickGUIDString(Guid guid, sbyte* pszGUID, int cbGUID);
+	public static partial int SDL_GetJoystickGUIDString(Guid guid, byte* pszGUID, int cbGUID);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickGUIDFromString")]
-	public static partial Guid SDL_GetJoystickGUIDFromString(sbyte* pchGUID);
+	public static partial Guid SDL_GetJoystickGUIDFromString(byte* pchGUID);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickGUIDInfo")]
 	public static partial void SDL_GetJoystickGUIDInfo(Guid guid, ushort* vendor, ushort* product, ushort* version, ushort* crc16);
@@ -395,15 +452,6 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_RumbleJoystickTriggers")]
 	public static partial int SDL_RumbleJoystickTriggers(SDL_Joystick joystick, ushort left_rumble, ushort right_rumble, uint duration_ms);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_JoystickHasLED")]
-	public static partial SDL_bool SDL_JoystickHasLED(SDL_Joystick joystick);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_JoystickHasRumble")]
-	public static partial SDL_bool SDL_JoystickHasRumble(SDL_Joystick joystick);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_JoystickHasRumbleTriggers")]
-	public static partial SDL_bool SDL_JoystickHasRumbleTriggers(SDL_Joystick joystick);
-
 	[LibraryImport(LibName, EntryPoint = "SDL_SetJoystickLED")]
 	public static partial int SDL_SetJoystickLED(SDL_Joystick joystick, byte red, byte green, byte blue);
 
@@ -417,28 +465,28 @@ public unsafe partial class SDL
 	public static partial SDL_JoystickPowerLevel SDL_GetJoystickPowerLevel(SDL_Joystick joystick);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_AddGamepadMapping")]
-	public static partial int SDL_AddGamepadMapping(sbyte* mapping);
+	public static partial int SDL_AddGamepadMapping(byte* mapping);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_AddGamepadMappingsFromRW")]
 	public static partial int SDL_AddGamepadMappingsFromRW(nint src, SDL_bool freesrc);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_AddGamepadMappingsFromFile")]
-	public static partial int SDL_AddGamepadMappingsFromFile(sbyte* file);
+	public static partial int SDL_AddGamepadMappingsFromFile(byte* file);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ReloadGamepadMappings")]
 	public static partial int SDL_ReloadGamepadMappings();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadMappings")]
-	public static partial sbyte** SDL_GetGamepadMappings(out int count);
+	public static partial byte** SDL_GetGamepadMappings(out int count);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadMappingForGUID")]
-	public static partial sbyte* SDL_GetGamepadMappingForGUID(Guid guid);
+	public static partial byte* SDL_GetGamepadMappingForGUID(Guid guid);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadMapping")]
-	public static partial sbyte* SDL_GetGamepadMapping(SDL_Gamepad gamepad);
+	public static partial byte* SDL_GetGamepadMapping(SDL_Gamepad gamepad);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetGamepadMapping")]
-	public static partial int SDL_SetGamepadMapping(SDL_JoystickID instance_id, sbyte* mapping);
+	public static partial int SDL_SetGamepadMapping(SDL_JoystickID instance_id, byte* mapping);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepads")]
 	public static partial SDL_JoystickID* SDL_GetGamepads(out int count);
@@ -447,10 +495,10 @@ public unsafe partial class SDL
 	public static partial SDL_bool SDL_IsGamepad(SDL_JoystickID instance_id);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadInstanceName")]
-	public static partial sbyte* SDL_GetGamepadInstanceName(SDL_JoystickID instance_id);
+	public static partial byte* SDL_GetGamepadInstanceName(SDL_JoystickID instance_id);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadInstancePath")]
-	public static partial sbyte* SDL_GetGamepadInstancePath(SDL_JoystickID instance_id);
+	public static partial byte* SDL_GetGamepadInstancePath(SDL_JoystickID instance_id);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadInstancePlayerIndex")]
 	public static partial int SDL_GetGamepadInstancePlayerIndex(SDL_JoystickID instance_id);
@@ -474,7 +522,7 @@ public unsafe partial class SDL
 	public static partial SDL_GamepadType SDL_GetRealGamepadInstanceType(SDL_JoystickID instance_id);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadInstanceMapping")]
-	public static partial sbyte* SDL_GetGamepadInstanceMapping(SDL_JoystickID instance_id);
+	public static partial byte* SDL_GetGamepadInstanceMapping(SDL_JoystickID instance_id);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_OpenGamepad")]
 	public static partial SDL_Gamepad SDL_OpenGamepad(SDL_JoystickID instance_id);
@@ -492,10 +540,10 @@ public unsafe partial class SDL
 	public static partial SDL_JoystickID SDL_GetGamepadInstanceID(SDL_Gamepad gamepad);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadName")]
-	public static partial sbyte* SDL_GetGamepadName(SDL_Gamepad gamepad);
+	public static partial byte* SDL_GetGamepadName(SDL_Gamepad gamepad);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadPath")]
-	public static partial sbyte* SDL_GetGamepadPath(SDL_Gamepad gamepad);
+	public static partial byte* SDL_GetGamepadPath(SDL_Gamepad gamepad);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadType")]
 	public static partial SDL_GamepadType SDL_GetGamepadType(SDL_Gamepad gamepad);
@@ -522,7 +570,7 @@ public unsafe partial class SDL
 	public static partial ushort SDL_GetGamepadFirmwareVersion(SDL_Gamepad gamepad);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadSerial")]
-	public static partial sbyte* SDL_GetGamepadSerial(SDL_Gamepad gamepad);
+	public static partial byte* SDL_GetGamepadSerial(SDL_Gamepad gamepad);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadSteamHandle")]
 	public static partial ulong SDL_GetGamepadSteamHandle(SDL_Gamepad gamepad);
@@ -549,16 +597,16 @@ public unsafe partial class SDL
 	public static partial void SDL_UpdateGamepads();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadTypeFromString")]
-	public static partial SDL_GamepadType SDL_GetGamepadTypeFromString(sbyte* str);
+	public static partial SDL_GamepadType SDL_GetGamepadTypeFromString(byte* str);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadStringForType")]
-	public static partial sbyte* SDL_GetGamepadStringForType(SDL_GamepadType type);
+	public static partial byte* SDL_GetGamepadStringForType(SDL_GamepadType type);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadAxisFromString")]
-	public static partial SDL_GamepadAxis SDL_GetGamepadAxisFromString(sbyte* str);
+	public static partial SDL_GamepadAxis SDL_GetGamepadAxisFromString(byte* str);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadStringForAxis")]
-	public static partial sbyte* SDL_GetGamepadStringForAxis(SDL_GamepadAxis axis);
+	public static partial byte* SDL_GetGamepadStringForAxis(SDL_GamepadAxis axis);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GamepadHasAxis")]
 	public static partial SDL_bool SDL_GamepadHasAxis(SDL_Gamepad gamepad, SDL_GamepadAxis axis);
@@ -567,10 +615,10 @@ public unsafe partial class SDL
 	public static partial short SDL_GetGamepadAxis(SDL_Gamepad gamepad, SDL_GamepadAxis axis);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadButtonFromString")]
-	public static partial SDL_GamepadButton SDL_GetGamepadButtonFromString(sbyte* str);
+	public static partial SDL_GamepadButton SDL_GetGamepadButtonFromString(byte* str);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadStringForButton")]
-	public static partial sbyte* SDL_GetGamepadStringForButton(SDL_GamepadButton button);
+	public static partial byte* SDL_GetGamepadStringForButton(SDL_GamepadButton button);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GamepadHasButton")]
 	public static partial SDL_bool SDL_GamepadHasButton(SDL_Gamepad gamepad, SDL_GamepadButton button);
@@ -614,15 +662,6 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_RumbleGamepadTriggers")]
 	public static partial int SDL_RumbleGamepadTriggers(SDL_Gamepad gamepad, ushort left_rumble, ushort right_rumble, uint duration_ms);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_GamepadHasLED")]
-	public static partial SDL_bool SDL_GamepadHasLED(SDL_Gamepad gamepad);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_GamepadHasRumble")]
-	public static partial SDL_bool SDL_GamepadHasRumble(SDL_Gamepad gamepad);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_GamepadHasRumbleTriggers")]
-	public static partial SDL_bool SDL_GamepadHasRumbleTriggers(SDL_Gamepad gamepad);
-
 	[LibraryImport(LibName, EntryPoint = "SDL_SetGamepadLED")]
 	public static partial int SDL_SetGamepadLED(SDL_Gamepad gamepad, byte red, byte green, byte blue);
 
@@ -633,10 +672,10 @@ public unsafe partial class SDL
 	public static partial void SDL_CloseGamepad(SDL_Gamepad gamepad);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadAppleSFSymbolsNameForButton")]
-	public static partial sbyte* SDL_GetGamepadAppleSFSymbolsNameForButton(SDL_Gamepad gamepad, SDL_GamepadButton button);
+	public static partial byte* SDL_GetGamepadAppleSFSymbolsNameForButton(SDL_Gamepad gamepad, SDL_GamepadButton button);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadAppleSFSymbolsNameForAxis")]
-	public static partial sbyte* SDL_GetGamepadAppleSFSymbolsNameForAxis(SDL_Gamepad gamepad, SDL_GamepadAxis axis);
+	public static partial byte* SDL_GetGamepadAppleSFSymbolsNameForAxis(SDL_Gamepad gamepad, SDL_GamepadAxis axis);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetMouseFocus")]
 	public static partial SDL_Window SDL_GetMouseFocus();
@@ -756,7 +795,7 @@ public unsafe partial class SDL
 	public static partial SDL_TouchID* SDL_GetTouchDevices(out int count);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetTouchDeviceName")]
-	public static partial sbyte* SDL_GetTouchDeviceName(SDL_TouchID touchID);
+	public static partial byte* SDL_GetTouchDeviceName(SDL_TouchID touchID);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetTouchDeviceType")]
 	public static partial SDL_TouchDeviceType SDL_GetTouchDeviceType(SDL_TouchID touchID);
@@ -780,31 +819,31 @@ public unsafe partial class SDL
 	public static partial void SDL_LogResetPriorities();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Log")]
-	public static partial void SDL_Log(sbyte* fmt);
+	public static partial void SDL_Log(byte* fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogVerbose")]
-	public static partial void SDL_LogVerbose(int category, sbyte* fmt);
+	public static partial void SDL_LogVerbose(int category, byte* fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogDebug")]
-	public static partial void SDL_LogDebug(int category, sbyte* fmt);
+	public static partial void SDL_LogDebug(int category, byte* fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogInfo")]
-	public static partial void SDL_LogInfo(int category, sbyte* fmt);
+	public static partial void SDL_LogInfo(int category, byte* fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogWarn")]
-	public static partial void SDL_LogWarn(int category, sbyte* fmt);
+	public static partial void SDL_LogWarn(int category, byte* fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogError")]
-	public static partial void SDL_LogError(int category, sbyte* fmt);
+	public static partial void SDL_LogError(int category, byte* fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogCritical")]
-	public static partial void SDL_LogCritical(int category, sbyte* fmt);
+	public static partial void SDL_LogCritical(int category, byte* fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogMessage")]
-	public static partial void SDL_LogMessage(int category, SDL_LogPriority priority, sbyte* fmt);
+	public static partial void SDL_LogMessage(int category, SDL_LogPriority priority, byte* fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_OpenURL")]
-	public static partial int SDL_OpenURL(sbyte* url);
+	public static partial int SDL_OpenURL(byte* url);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetPowerInfo")]
 	public static partial SDL_PowerState SDL_GetPowerInfo(int* seconds, int* percent);
@@ -813,7 +852,7 @@ public unsafe partial class SDL
 	public static partial SDL_SensorID* SDL_GetSensors(out int count);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetSensorInstanceName")]
-	public static partial sbyte* SDL_GetSensorInstanceName(SDL_SensorID instance_id);
+	public static partial byte* SDL_GetSensorInstanceName(SDL_SensorID instance_id);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetSensorInstanceType")]
 	public static partial SDL_SensorType SDL_GetSensorInstanceType(SDL_SensorID instance_id);
@@ -831,7 +870,7 @@ public unsafe partial class SDL
 	public static partial SDL_PropertiesID SDL_GetSensorProperties(SDL_Sensor sensor);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetSensorName")]
-	public static partial sbyte* SDL_GetSensorName(SDL_Sensor sensor);
+	public static partial byte* SDL_GetSensorName(SDL_Sensor sensor);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetSensorType")]
 	public static partial SDL_SensorType SDL_GetSensorType(SDL_Sensor sensor);
@@ -855,10 +894,10 @@ public unsafe partial class SDL
 	public static partial int SDL_GetNumVideoDrivers();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetVideoDriver")]
-	public static partial sbyte* SDL_GetVideoDriver(int index);
+	public static partial byte* SDL_GetVideoDriver(int index);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetCurrentVideoDriver")]
-	public static partial sbyte* SDL_GetCurrentVideoDriver();
+	public static partial byte* SDL_GetCurrentVideoDriver();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetSystemTheme")]
 	public static partial SDL_SystemTheme SDL_GetSystemTheme();
@@ -873,7 +912,7 @@ public unsafe partial class SDL
 	public static partial SDL_PropertiesID SDL_GetDisplayProperties(SDL_DisplayID displayID);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetDisplayName")]
-	public static partial sbyte* SDL_GetDisplayName(SDL_DisplayID displayID);
+	public static partial byte* SDL_GetDisplayName(SDL_DisplayID displayID);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetDisplayBounds")]
 	public static partial int SDL_GetDisplayBounds(SDL_DisplayID displayID, Rectangle* rect);
@@ -930,7 +969,7 @@ public unsafe partial class SDL
 	public static partial uint SDL_GetWindowPixelFormat(SDL_Window window);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateWindow")]
-	public static partial SDL_Window SDL_CreateWindow(sbyte* title, int w, int h, uint flags);
+	public static partial SDL_Window SDL_CreateWindow(byte* title, int w, int h, uint flags);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreatePopupWindow")]
 	public static partial SDL_Window SDL_CreatePopupWindow(SDL_Window parent, int offset_x, int offset_y, int w, int h, uint flags);
@@ -954,10 +993,10 @@ public unsafe partial class SDL
 	public static partial uint SDL_GetWindowFlags(SDL_Window window);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowTitle")]
-	public static partial int SDL_SetWindowTitle(SDL_Window window, sbyte* title);
+	public static partial int SDL_SetWindowTitle(SDL_Window window, byte* title);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowTitle")]
-	public static partial sbyte* SDL_GetWindowTitle(SDL_Window window);
+	public static partial byte* SDL_GetWindowTitle(SDL_Window window);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowIcon")]
 	public static partial int SDL_SetWindowIcon(SDL_Window window, SDL_Surface* icon);
@@ -1104,19 +1143,19 @@ public unsafe partial class SDL
 	public static partial int SDL_DisableScreenSaver();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GL_LoadLibrary")]
-	public static partial int SDL_GL_LoadLibrary(sbyte* path);
+	public static partial int SDL_GL_LoadLibrary(byte* path);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GL_GetProcAddress")]
-	public static partial delegate* unmanaged<void> SDL_GL_GetProcAddress(sbyte* proc);
+	public static partial delegate* unmanaged<void> SDL_GL_GetProcAddress(byte* proc);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_EGL_GetProcAddress")]
-	public static partial delegate* unmanaged<void> SDL_EGL_GetProcAddress(sbyte* proc);
+	public static partial delegate* unmanaged<void> SDL_EGL_GetProcAddress(byte* proc);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GL_UnloadLibrary")]
 	public static partial void SDL_GL_UnloadLibrary();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GL_ExtensionSupported")]
-	public static partial SDL_bool SDL_GL_ExtensionSupported(sbyte* extension);
+	public static partial SDL_bool SDL_GL_ExtensionSupported(byte* extension);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GL_ResetAttributes")]
 	public static partial void SDL_GL_ResetAttributes();
@@ -1164,10 +1203,10 @@ public unsafe partial class SDL
 	public static partial int SDL_GetNumAudioDrivers();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetAudioDriver")]
-	public static partial sbyte* SDL_GetAudioDriver(int index);
+	public static partial byte* SDL_GetAudioDriver(int index);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetCurrentAudioDriver")]
-	public static partial sbyte* SDL_GetCurrentAudioDriver();
+	public static partial byte* SDL_GetCurrentAudioDriver();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetAudioOutputDevices")]
 	public static partial SDL_AudioDeviceID* SDL_GetAudioOutputDevices(out int count);
@@ -1176,7 +1215,7 @@ public unsafe partial class SDL
 	public static partial SDL_AudioDeviceID* SDL_GetAudioCaptureDevices(out int count);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetAudioDeviceName")]
-	public static partial sbyte* SDL_GetAudioDeviceName(SDL_AudioDeviceID devid);
+	public static partial byte* SDL_GetAudioDeviceName(SDL_AudioDeviceID devid);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetAudioDeviceFormat")]
 	public static partial int SDL_GetAudioDeviceFormat(SDL_AudioDeviceID devid, SDL_AudioSpec* spec, int* sample_frames);
@@ -1272,7 +1311,7 @@ public unsafe partial class SDL
 	public static partial int SDL_LoadWAV_RW(nint src, SDL_bool freesrc, SDL_AudioSpec* spec, byte** audio_buf, uint* audio_len);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadWAV")]
-	public static partial int SDL_LoadWAV(sbyte* path, SDL_AudioSpec* spec, byte** audio_buf, uint* audio_len);
+	public static partial int SDL_LoadWAV(byte* path, SDL_AudioSpec* spec, byte** audio_buf, uint* audio_len);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_MixAudioFormat")]
 	public static partial int SDL_MixAudioFormat(byte* dst, byte* src, SDL_AudioFormat format, uint len, int volume);
@@ -1338,7 +1377,7 @@ public unsafe partial class SDL
 	public static partial nint SDL_AllocateEventMemory(nuint size);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_LoadLibrary")]
-	public static partial int SDL_Vulkan_LoadLibrary(sbyte* path);
+	public static partial int SDL_Vulkan_LoadLibrary(byte* path);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_GetVkGetInstanceProcAddr")]
 	public static partial delegate* unmanaged<void> SDL_Vulkan_GetVkGetInstanceProcAddr();
@@ -1356,28 +1395,28 @@ public unsafe partial class SDL
 	public static partial nint SDL_Metal_GetLayer(nint view);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetHintWithPriority")]
-	public static partial SDL_bool SDL_SetHintWithPriority(sbyte* name, sbyte* value, SDL_HintPriority priority);
+	public static partial SDL_bool SDL_SetHintWithPriority(byte* name, byte* value, SDL_HintPriority priority);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetHint")]
-	public static partial SDL_bool SDL_SetHint(sbyte* name, sbyte* value);
+	public static partial SDL_bool SDL_SetHint(byte* name, byte* value);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ResetHint")]
-	public static partial SDL_bool SDL_ResetHint(sbyte* name);
+	public static partial SDL_bool SDL_ResetHint(byte* name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ResetHints")]
 	public static partial void SDL_ResetHints();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetHint")]
-	public static partial sbyte* SDL_GetHint(sbyte* name);
+	public static partial byte* SDL_GetHint(byte* name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetHintBoolean")]
-	public static partial SDL_bool SDL_GetHintBoolean(sbyte* name, SDL_bool default_value);
+	public static partial SDL_bool SDL_GetHintBoolean(byte* name, SDL_bool default_value);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_AddHintCallback")]
-	public static partial int SDL_AddHintCallback(sbyte* name, SDL_HintCallback callback, nint userdata);
+	public static partial int SDL_AddHintCallback(byte* name, SDL_HintCallback callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DelHintCallback")]
-	public static partial void SDL_DelHintCallback(sbyte* name, SDL_HintCallback callback, nint userdata);
+	public static partial void SDL_DelHintCallback(byte* name, SDL_HintCallback callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ClearHints")]
 	public static partial void SDL_ClearHints();
@@ -1386,7 +1425,7 @@ public unsafe partial class SDL
 	public static partial SDL_HapticID* SDL_GetHaptics(out int count);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetHapticInstanceName")]
-	public static partial sbyte* SDL_GetHapticInstanceName(SDL_HapticID instance_id);
+	public static partial byte* SDL_GetHapticInstanceName(SDL_HapticID instance_id);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_OpenHaptic")]
 	public static partial SDL_Haptic SDL_OpenHaptic(SDL_HapticID instance_id);
@@ -1398,7 +1437,7 @@ public unsafe partial class SDL
 	public static partial SDL_HapticID SDL_GetHapticInstanceID(SDL_Haptic haptic);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetHapticName")]
-	public static partial sbyte* SDL_GetHapticName(SDL_Haptic haptic);
+	public static partial byte* SDL_GetHapticName(SDL_Haptic haptic);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_IsMouseHaptic")]
 	public static partial SDL_bool SDL_IsMouseHaptic();
@@ -1479,7 +1518,7 @@ public unsafe partial class SDL
 	public static partial SDL_BlendMode SDL_ComposeCustomBlendMode(SDL_BlendFactor srcColorFactor, SDL_BlendFactor dstColorFactor, SDL_BlendOperation colorOperation, SDL_BlendFactor srcAlphaFactor, SDL_BlendFactor dstAlphaFactor, SDL_BlendOperation alphaOperation);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetPixelFormatName")]
-	public static partial sbyte* SDL_GetPixelFormatName(uint format);
+	public static partial byte* SDL_GetPixelFormatName(uint format);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetMasksForPixelFormatEnum")]
 	public static partial SDL_bool SDL_GetMasksForPixelFormatEnum(uint format, int* bpp, uint* Rmask, uint* Gmask, uint* Bmask, uint* Amask);
@@ -1542,13 +1581,13 @@ public unsafe partial class SDL
 	public static partial SDL_Surface* SDL_LoadBMP_RW(nint src, SDL_bool freesrc);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadBMP")]
-	public static partial SDL_Surface* SDL_LoadBMP(sbyte* file);
+	public static partial SDL_Surface* SDL_LoadBMP(byte* file);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SaveBMP_RW")]
 	public static partial int SDL_SaveBMP_RW(SDL_Surface* surface, nint dst, SDL_bool freedst);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SaveBMP")]
-	public static partial int SDL_SaveBMP(SDL_Surface* surface, sbyte* file);
+	public static partial int SDL_SaveBMP(SDL_Surface* surface, byte* file);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetSurfaceRLE")]
 	public static partial int SDL_SetSurfaceRLE(SDL_Surface* surface, int flag);

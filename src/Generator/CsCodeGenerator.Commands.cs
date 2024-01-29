@@ -68,7 +68,9 @@ public static partial class CsCodeGenerator
                 || cppFunction.Name == "SDL_Vulkan_GetInstanceExtensions"
                 || cppFunction.Name == "SDL_Vulkan_CreateSurface"
                 || cppFunction.Name == "SDL_GUIDToString"
-                || cppFunction.Name == "SDL_GUIDFromString")
+                || cppFunction.Name == "SDL_GUIDFromString"
+                || cppFunction.Name == "SDL_SetPropertyWithCleanup"
+                )
             {
                 continue;
             }

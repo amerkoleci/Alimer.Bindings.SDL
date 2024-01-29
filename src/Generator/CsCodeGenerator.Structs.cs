@@ -65,7 +65,7 @@ public static partial class CsCodeGenerator
         bool isUnion = @struct.ClassKind == CppClassKind.Union;
         bool isReadOnly = false;
         string typeName = string.Empty; ;
-        if (structName.StartsWith("SDL_Event"))
+        if (structName.StartsWith("SDL_Event") || structName.EndsWith("Event"))
         {
             typeName = "SDL_EventType";
         }

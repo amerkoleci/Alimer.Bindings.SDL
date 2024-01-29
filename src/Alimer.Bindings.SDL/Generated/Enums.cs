@@ -11,6 +11,22 @@ using System;
 
 namespace SDL;
 
+public enum SDL_PropertyType
+{
+	/// <unmanaged>SDL_PROPERTY_TYPE_INVALID</unmanaged>
+	Invalid = 0,
+	/// <unmanaged>SDL_PROPERTY_TYPE_POINTER</unmanaged>
+	Pointer = 1,
+	/// <unmanaged>SDL_PROPERTY_TYPE_STRING</unmanaged>
+	String = 2,
+	/// <unmanaged>SDL_PROPERTY_TYPE_NUMBER</unmanaged>
+	Number = 3,
+	/// <unmanaged>SDL_PROPERTY_TYPE_FLOAT</unmanaged>
+	Float = 4,
+	/// <unmanaged>SDL_PROPERTY_TYPE_BOOLEAN</unmanaged>
+	Boolean = 5,
+}
+
 public enum SDL_errorcode
 {
 	/// <unmanaged>SDL_ENOMEM</unmanaged>
@@ -1994,12 +2010,16 @@ public enum SDL_ArrayOrder
 	None = 0,
 	/// <unmanaged>SDL_ARRAYORDER_RGB</unmanaged>
 	Rgb = 1,
-	/// <unmanaged>SDL_ARRAYORDER_UNUSED1</unmanaged>
-	Unused1 = 2,
-	/// <unmanaged>SDL_ARRAYORDER_UNUSED2</unmanaged>
-	Unused2 = 3,
+	/// <unmanaged>SDL_ARRAYORDER_RGBA</unmanaged>
+	Rgba = 2,
+	/// <unmanaged>SDL_ARRAYORDER_ARGB</unmanaged>
+	Argb = 3,
 	/// <unmanaged>SDL_ARRAYORDER_BGR</unmanaged>
 	Bgr = 4,
+	/// <unmanaged>SDL_ARRAYORDER_BGRA</unmanaged>
+	Bgra = 5,
+	/// <unmanaged>SDL_ARRAYORDER_ABGR</unmanaged>
+	Abgr = 6,
 }
 
 public enum SDL_PackedLayout
@@ -2108,6 +2128,30 @@ public enum SDL_PixelFormatEnum
 	Argb2101010 = 372711428,
 	/// <unmanaged>SDL_PIXELFORMAT_ABGR2101010</unmanaged>
 	Abgr2101010 = 376905732,
+	/// <unmanaged>SDL_PIXELFORMAT_RGB48</unmanaged>
+	Rgb48 = 403714051,
+	/// <unmanaged>SDL_PIXELFORMAT_BGR48</unmanaged>
+	Bgr48 = 406859779,
+	/// <unmanaged>SDL_PIXELFORMAT_RGBA64</unmanaged>
+	Rgba64 = 404766724,
+	/// <unmanaged>SDL_PIXELFORMAT_ARGB64</unmanaged>
+	Argb64 = 405815300,
+	/// <unmanaged>SDL_PIXELFORMAT_BGRA64</unmanaged>
+	Bgra64 = 407912452,
+	/// <unmanaged>SDL_PIXELFORMAT_ABGR64</unmanaged>
+	Abgr64 = 408961028,
+	/// <unmanaged>SDL_PIXELFORMAT_RGB48_FLOAT</unmanaged>
+	Rgb48Float = 437268483,
+	/// <unmanaged>SDL_PIXELFORMAT_BGR48_FLOAT</unmanaged>
+	Bgr48Float = 440414211,
+	/// <unmanaged>SDL_PIXELFORMAT_RGBA64_FLOAT</unmanaged>
+	Rgba64Float = 438321156,
+	/// <unmanaged>SDL_PIXELFORMAT_ARGB64_FLOAT</unmanaged>
+	Argb64Float = 439369732,
+	/// <unmanaged>SDL_PIXELFORMAT_BGRA64_FLOAT</unmanaged>
+	Bgra64Float = 441466884,
+	/// <unmanaged>SDL_PIXELFORMAT_ABGR64_FLOAT</unmanaged>
+	Abgr64Float = 442515460,
 	/// <unmanaged>SDL_PIXELFORMAT_RGBA32</unmanaged>
 	Rgba32 = Abgr8888,
 	/// <unmanaged>SDL_PIXELFORMAT_ARGB32</unmanaged>
@@ -2140,6 +2184,168 @@ public enum SDL_PixelFormatEnum
 	Nv21 = 825382478,
 	/// <unmanaged>SDL_PIXELFORMAT_EXTERNAL_OES</unmanaged>
 	ExternalOes = 542328143,
+}
+
+public enum SDL_ColorType
+{
+	/// <unmanaged>SDL_COLOR_TYPE_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_COLOR_TYPE_RGB</unmanaged>
+	Rgb = 1,
+	/// <unmanaged>SDL_COLOR_TYPE_YCBCR</unmanaged>
+	Ycbcr = 2,
+}
+
+public enum SDL_ColorRange
+{
+	/// <unmanaged>SDL_COLOR_RANGE_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_COLOR_RANGE_LIMITED</unmanaged>
+	Limited = 1,
+	/// <unmanaged>SDL_COLOR_RANGE_FULL</unmanaged>
+	Full = 2,
+}
+
+public enum SDL_ColorPrimaries
+{
+	/// <unmanaged>SDL_COLOR_PRIMARIES_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_BT709</unmanaged>
+	Bt709 = 1,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_UNSPECIFIED</unmanaged>
+	Unspecified = 2,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_BT470M</unmanaged>
+	Bt470m = 4,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_BT470BG</unmanaged>
+	Bt470bg = 5,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_BT601</unmanaged>
+	Bt601 = 6,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_SMPTE240</unmanaged>
+	Smpte240 = 7,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_GENERIC_FILM</unmanaged>
+	GenericFilm = 8,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_BT2020</unmanaged>
+	Bt2020 = 9,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_XYZ</unmanaged>
+	Xyz = 10,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_SMPTE431</unmanaged>
+	Smpte431 = 11,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_SMPTE432</unmanaged>
+	Smpte432 = 12,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_EBU3213</unmanaged>
+	Ebu3213 = 22,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_CUSTOM</unmanaged>
+	Custom = 31,
+}
+
+public enum SDL_TransferCharacteristics
+{
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_BT709</unmanaged>
+	Bt709 = 1,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_UNSPECIFIED</unmanaged>
+	Unspecified = 2,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_GAMMA22</unmanaged>
+	Gamma22 = 4,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_GAMMA28</unmanaged>
+	Gamma28 = 5,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_BT601</unmanaged>
+	Bt601 = 6,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_SMPTE240</unmanaged>
+	Smpte240 = 7,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_LINEAR</unmanaged>
+	Linear = 8,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_LOG100</unmanaged>
+	Log100 = 9,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_LOG100_SQRT10</unmanaged>
+	Log100Sqrt10 = 10,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_IEC61966</unmanaged>
+	Iec61966 = 11,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_BT1361</unmanaged>
+	Bt1361 = 12,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_SRGB</unmanaged>
+	Srgb = 13,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_BT2020_10BIT</unmanaged>
+	Bt202010bit = 14,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_BT2020_12BIT</unmanaged>
+	Bt202012bit = 15,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_PQ</unmanaged>
+	Pq = 16,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_SMPTE428</unmanaged>
+	Smpte428 = 17,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_HLG</unmanaged>
+	Hlg = 18,
+	/// <unmanaged>SDL_TRANSFER_COEFFICIENTS_CUSTOM</unmanaged>
+	SDL_TRANSFER_COEFFICIENTS_CUSTOM = 31,
+}
+
+public enum SDL_MatrixCoefficients
+{
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_IDENTITY</unmanaged>
+	Identity = 0,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_BT709</unmanaged>
+	Bt709 = 1,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_UNSPECIFIED</unmanaged>
+	Unspecified = 2,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_FCC</unmanaged>
+	Fcc = 4,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_BT470BG</unmanaged>
+	Bt470bg = 5,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_BT601</unmanaged>
+	Bt601 = 6,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_SMPTE240</unmanaged>
+	Smpte240 = 7,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_YCGCO</unmanaged>
+	Ycgco = 8,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_BT2020_NCL</unmanaged>
+	Bt2020Ncl = 9,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_BT2020_CL</unmanaged>
+	Bt2020Cl = 10,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_SMPTE2085</unmanaged>
+	Smpte2085 = 11,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_CHROMA_DERIVED_NCL</unmanaged>
+	ChromaDerivedNcl = 12,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_CHROMA_DERIVED_CL</unmanaged>
+	ChromaDerivedCl = 13,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_ICTCP</unmanaged>
+	Ictcp = 14,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_CUSTOM</unmanaged>
+	Custom = 31,
+}
+
+public enum SDL_ChromaLocation
+{
+	/// <unmanaged>SDL_CHROMA_LOCATION_NONE</unmanaged>
+	None = 0,
+	/// <unmanaged>SDL_CHROMA_LOCATION_LEFT</unmanaged>
+	Left = 1,
+	/// <unmanaged>SDL_CHROMA_LOCATION_CENTER</unmanaged>
+	Center = 2,
+	/// <unmanaged>SDL_CHROMA_LOCATION_TOPLEFT</unmanaged>
+	Topleft = 3,
+}
+
+public enum SDL_Colorspace
+{
+	/// <unmanaged>SDL_COLORSPACE_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_COLORSPACE_SRGB</unmanaged>
+	Srgb = 301991330,
+	/// <unmanaged>SDL_COLORSPACE_SCRGB</unmanaged>
+	Scrgb = 301991170,
+	/// <unmanaged>SDL_COLORSPACE_HDR10</unmanaged>
+	Hdr10 = 301999618,
+	/// <unmanaged>SDL_COLORSPACE_BT601_LIMITED</unmanaged>
+	Bt601Limited = 554703046,
+	/// <unmanaged>SDL_COLORSPACE_BT601_FULL</unmanaged>
+	Bt601Full = 554703046,
+	/// <unmanaged>SDL_COLORSPACE_BT709_LIMITED</unmanaged>
+	Bt709Limited = 554697761,
+	/// <unmanaged>SDL_COLORSPACE_BT709_FULL</unmanaged>
+	Bt709Full = 554697761,
+	/// <unmanaged>SDL_COLORSPACE_RGB_DEFAULT</unmanaged>
+	RgbDefault = 301991330,
 }
 
 public enum SDL_ScaleMode

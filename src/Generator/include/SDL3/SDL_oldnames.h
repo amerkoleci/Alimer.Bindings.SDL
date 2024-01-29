@@ -235,9 +235,6 @@
 #define SDL_GameControllerGetVendor SDL_GetGamepadVendor
 #define SDL_GameControllerHasAxis SDL_GamepadHasAxis
 #define SDL_GameControllerHasButton SDL_GamepadHasButton
-#define SDL_GameControllerHasLED SDL_GamepadHasLED
-#define SDL_GameControllerHasRumble SDL_GamepadHasRumble
-#define SDL_GameControllerHasRumbleTriggers SDL_GamepadHasRumbleTriggers
 #define SDL_GameControllerHasSensor SDL_GamepadHasSensor
 #define SDL_GameControllerIsSensorEnabled SDL_GamepadSensorEnabled
 #define SDL_GameControllerMapping SDL_GetGamepadMapping
@@ -379,14 +376,6 @@
 #define SDL_PIXELFORMAT_BGR888 SDL_PIXELFORMAT_XBGR8888
 #define SDL_PIXELFORMAT_RGB888 SDL_PIXELFORMAT_XRGB8888
 #define SDL_PixelFormatEnumToMasks SDL_GetMasksForPixelFormatEnum
-
-/* ##SDL_platform.h */
-#ifdef __IOS__
-#define __IPHONEOS__ __IOS__
-#endif
-#ifdef __MACOS__
-#define __MACOSX__ __MACOS__
-#endif
 
 /* ##SDL_rect.h */
 #define SDL_EncloseFPoints SDL_GetRectEnclosingPointsFloat
@@ -713,9 +702,6 @@
 #define SDL_GameControllerGetVendor SDL_GameControllerGetVendor_renamed_SDL_GetGamepadVendor
 #define SDL_GameControllerHasAxis SDL_GameControllerHasAxis_renamed_SDL_GamepadHasAxis
 #define SDL_GameControllerHasButton SDL_GameControllerHasButton_renamed_SDL_GamepadHasButton
-#define SDL_GameControllerHasLED SDL_GameControllerHasLED_renamed_SDL_GamepadHasLED
-#define SDL_GameControllerHasRumble SDL_GameControllerHasRumble_renamed_SDL_GamepadHasRumble
-#define SDL_GameControllerHasRumbleTriggers SDL_GameControllerHasRumbleTriggers_renamed_SDL_GamepadHasRumbleTriggers
 #define SDL_GameControllerHasSensor SDL_GameControllerHasSensor_renamed_SDL_GamepadHasSensor
 #define SDL_GameControllerIsSensorEnabled SDL_GameControllerIsSensorEnabled_renamed_SDL_GamepadSensorEnabled
 #define SDL_GameControllerMapping SDL_GameControllerMapping_renamed_SDL_GetGamepadMapping
@@ -858,14 +844,6 @@
 #define SDL_PIXELFORMAT_BGR888 SDL_PIXELFORMAT_BGR888_renamed_SDL_PIXELFORMAT_XBGR8888
 #define SDL_PIXELFORMAT_RGB888 SDL_PIXELFORMAT_RGB888_renamed_SDL_PIXELFORMAT_XRGB8888
 #define SDL_PixelFormatEnumToMasks SDL_PixelFormatEnumToMasks_renamed_SDL_GetMasksForPixelFormatEnum
-
-/* ##SDL_platform.h */
-#ifdef __IOS__
-#define __IPHONEOS__ __IPHONEOS___renamed___IOS__
-#endif
-#ifdef __MACOS__
-#define __MACOSX__ __MACOSX___renamed___MACOS__
-#endif
 
 /* ##SDL_rect.h */
 #define SDL_EncloseFPoints SDL_EncloseFPoints_renamed_SDL_GetRectEnclosingPointsFloat

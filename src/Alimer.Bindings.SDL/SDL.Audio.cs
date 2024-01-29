@@ -61,9 +61,9 @@ unsafe partial class SDL
         return GetStringOrEmpty(SDL_GetAudioDeviceName(deviceId));
     }
 
-    public static int SDL_LoadWAV(ReadOnlySpan<sbyte> path, SDL_AudioSpec* spec, byte** audio_buf, uint* audio_len)
+    public static int SDL_LoadWAV(ReadOnlySpan<byte> path, SDL_AudioSpec* spec, byte** audio_buf, uint* audio_len)
     {
-        fixed (sbyte* pPath = path)
+        fixed (byte* pPath = path)
         {
             return SDL_LoadWAV(pPath, spec, audio_buf, audio_len);
         }
@@ -71,7 +71,7 @@ unsafe partial class SDL
 
     public static int SDL_LoadWAV(string path, SDL_AudioSpec* spec, byte** audio_buf, uint* audio_len)
     {
-        fixed (sbyte* pPath = path.GetUtf8Span())
+        fixed (byte* pPath = path.GetUtf8Span())
         {
             return SDL_LoadWAV(pPath, spec, audio_buf, audio_len);
         }

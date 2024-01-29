@@ -61,7 +61,10 @@ public static partial class CsCodeGenerator
                 || cppMacro.Name == "SDL_BITSPERPIXEL"
                 || cppMacro.Name == "SDL_Colour"
                 || cppMacro.Name.StartsWith("SDL_PIXEL")
-                || cppMacro.Name.StartsWith("SDL_ISPIXELFORMAT"))
+                || cppMacro.Name.StartsWith("SDL_ISPIXELFORMAT")
+                || cppMacro.Name == "SDL_DEFINE_COLORSPACE"
+                || cppMacro.Name.StartsWith("SDL_COLORSPACE")
+                )
             {
                 continue;
             }
@@ -83,6 +86,12 @@ public static partial class CsCodeGenerator
         {
             foreach (CppMacro cppMacro in s_collectedMacros)
             {
+                if (cppMacro.Name.StartsWith("SDL_PROP_GAMEPAD_CAP_") && cppMacro.Name.EndsWith("_BOOLEAN"))
+                {
+                    writer.WriteLine($"public static ReadOnlySpan<byte> {cppMacro.Name} => {cppMacro.Value};");
+                    continue;
+                }
+
                 //string csName = GetPrettyEnumName(cppMacro.Name, "VK_");
 
                 string modifier = "static";

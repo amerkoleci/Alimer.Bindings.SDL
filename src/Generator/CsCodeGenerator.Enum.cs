@@ -12,6 +12,7 @@ public static partial class CsCodeGenerator
 
     private static readonly Dictionary<string, string> s_knownEnumPrefixes = new()
     {
+        { "SDL_PropertyType", "SDL_PROPERTY_TYPE" },
         { "SDL_Scancode", "SDL_SCANCODE" },
         { "SDL_KeyCode", "SDLK" },
         { "SDL_Keymod", "SDL_KMOD" },
@@ -59,6 +60,13 @@ public static partial class CsCodeGenerator
         { "SDL_ArrayOrder", "SDL_ARRAYORDER" },
         { "SDL_PackedLayout", "SDL_PACKEDLAYOUT" },
         { "SDL_PixelFormatEnum", "SDL_PIXELFORMAT" },
+        { "SDL_ColorType", "SDL_COLOR_TYPE" },
+        { "SDL_ColorRange", "SDL_COLOR_RANGE" },
+        { "SDL_ColorPrimaries", "SDL_COLOR_PRIMARIES" },
+        { "SDL_TransferCharacteristics", "SDL_TRANSFER_CHARACTERISTICS" },
+        { "SDL_MatrixCoefficients", "SDL_MATRIX_COEFFICIENTS" },
+        { "SDL_ChromaLocation", "SDL_CHROMA_LOCATION" },
+        { "SDL_Colorspace", "SDL_COLORSPACE" },
 
         { "SDL_ScaleMode", "SDL_SCALEMODE" },
         { "SDL_FlipMode", "SDL_FLIP" },
@@ -219,9 +227,14 @@ public static partial class CsCodeGenerator
                         writer.WriteLine($"/// <unmanaged>{enumItem.Name}</unmanaged>");
                     }
 
+                    if (csName == "SDL_Colorspace")
+                    {
+                        
+                    }
+
                     if (enumItem.ValueExpression is CppRawExpression rawExpression)
                     {
-                        if (string.IsNullOrEmpty(rawExpression.Text))
+                        if (string.IsNullOrEmpty(rawExpression.Text) || csName == "SDL_Colorspace")
                         {
                             writer.WriteLine($"{enumItemName} = {enumItem.Value},");
                         }

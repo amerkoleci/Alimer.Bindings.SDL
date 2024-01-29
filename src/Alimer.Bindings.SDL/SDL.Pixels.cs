@@ -138,10 +138,54 @@ unsafe partial class SDL
     {
         return (format == SDL_PixelFormatEnum.Unknown) && (SDL_PIXELFLAG((uint)format) != 1);
     }
+
+    public static uint SDL_DEFINE_COLORSPACE(
+        SDL_ColorType type,
+        SDL_ColorRange range,
+        SDL_ColorPrimaries primaries,
+        SDL_TransferCharacteristics transfer,
+        SDL_MatrixCoefficients matrix,
+        SDL_ChromaLocation chroma
+        )
+    {
+        return (((uint)(type) << 28) | ((uint)(range) << 24) | ((uint)(chroma) << 20) | ((uint)(primaries) << 10) | ((uint)(transfer) << 5) | ((uint)(matrix) << 0));
+    }
+
+    public static SDL_ColorType SDL_COLORSPACETYPE(uint space)
+    {
+        return (SDL_ColorType)(((space) >> 28) & 0x0F);
+    }
+
+    public static SDL_ColorRange SDL_COLORSPACERANGE(uint space)
+    {
+        return (SDL_ColorRange)(((space) >> 24) & 0x0F);
+    }
+
+    public static SDL_ChromaLocation SDL_COLORSPACECHROMA(uint space)
+    {
+        return (SDL_ChromaLocation)(((space) >> 20) & 0x0F);
+    }
+
+    public static SDL_ColorPrimaries SDL_COLORSPACEPRIMARIES(uint space)
+    {
+        return (SDL_ColorPrimaries)(((space) >> 10) & 0x1F);
+    }
+
+    public static SDL_TransferCharacteristics SDL_COLORSPACETRANSFER(uint space)
+    {
+        return (SDL_TransferCharacteristics)(((space) >> 5) & 0x1F);
+    }
+
+    public static SDL_MatrixCoefficients SDL_COLORSPACEMATRIX(uint space)
+    {
+        return (SDL_MatrixCoefficients)((space) & 0x1F);
+    }
+
     public static string SDL_GetPixelFormatName(SDL_PixelFormatEnum format)
     {
         return GetStringOrEmpty(SDL_GetPixelFormatName((uint)format));
     }
+
     public static SDL_PixelFormat* SDL_CreatePixelFormat(SDL_PixelFormatEnum format)
     {
         return SDL_CreatePixelFormat((uint)format);

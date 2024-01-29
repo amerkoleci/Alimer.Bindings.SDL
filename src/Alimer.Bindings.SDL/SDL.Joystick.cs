@@ -21,9 +21,9 @@ unsafe partial class SDL
         return new(ptr, count);
     }
 
-    public static Guid SDL_GetJoystickGUIDFromString(ReadOnlySpan<sbyte> pchGuid)
+    public static Guid SDL_GetJoystickGUIDFromString(ReadOnlySpan<byte> pchGuid)
     {
-        fixed (sbyte* pName = pchGuid)
+        fixed (byte* pName = pchGuid)
         {
             return SDL_GetJoystickGUIDFromString(pName);
         }

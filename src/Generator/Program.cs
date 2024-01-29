@@ -42,6 +42,7 @@ public static class Program
 
         List<string> headers =
         [
+            "SDL_properties.h",
             "SDL_pen.h",
             "SDL_init.h",
             "SDL_platform.h",
@@ -61,7 +62,6 @@ public static class Program
             "SDL_log.h",
             "SDL_misc.h",
             "SDL_power.h",
-            //"SDL_properties.h",
             "SDL_sensor.h",
             "SDL_video.h",
             "SDL_audio.h",

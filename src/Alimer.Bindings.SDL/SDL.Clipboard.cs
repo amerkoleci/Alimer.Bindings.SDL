@@ -10,9 +10,9 @@ public delegate void ClipboardCleanupCallback(nint userData);
 
 unsafe partial class SDL
 {
-    public static int SDL_SetClipboardText(ReadOnlySpan<sbyte> name)
+    public static int SDL_SetClipboardText(ReadOnlySpan<byte> name)
     {
-        fixed (sbyte* pName = name)
+        fixed (byte* pName = name)
         {
             return SDL_SetClipboardText(pName);
         }
@@ -28,9 +28,9 @@ unsafe partial class SDL
         return GetString(SDL_GetClipboardText());
     }
 
-    public static int SDL_SetPrimarySelectionText(ReadOnlySpan<sbyte> name)
+    public static int SDL_SetPrimarySelectionText(ReadOnlySpan<byte> name)
     {
-        fixed (sbyte* pName = name)
+        fixed (byte* pName = name)
         {
             return SDL_SetPrimarySelectionText(pName);
         }
@@ -46,9 +46,9 @@ unsafe partial class SDL
         return GetString(SDL_GetPrimarySelectionText());
     }
 
-    public static nint SDL_GetClipboardData(ReadOnlySpan<sbyte> mimeType, nuint* size)
+    public static nint SDL_GetClipboardData(ReadOnlySpan<byte> mimeType, nuint* size)
     {
-        fixed (sbyte* pName = mimeType)
+        fixed (byte* pName = mimeType)
         {
             return SDL_GetClipboardData(pName, size);
         }
@@ -59,9 +59,9 @@ unsafe partial class SDL
         return SDL_GetClipboardData(mimeType.GetUtf8Span(), size);
     }
 
-    public static bool SDL_HasClipboardData(ReadOnlySpan<sbyte> mimeType)
+    public static bool SDL_HasClipboardData(ReadOnlySpan<byte> mimeType)
     {
-        fixed (sbyte* pName = mimeType)
+        fixed (byte* pName = mimeType)
         {
             return SDL_HasClipboardData(pName) == SDL_bool.SDL_TRUE;
         }

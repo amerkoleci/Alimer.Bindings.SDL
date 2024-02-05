@@ -1290,8 +1290,18 @@ public enum SDL_GamepadButton
 	LeftPaddle2 = 19,
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_TOUCHPAD</unmanaged>
 	Touchpad = 20,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC2</unmanaged>
+	Misc2 = 21,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC3</unmanaged>
+	Misc3 = 22,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC4</unmanaged>
+	Misc4 = 23,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC5</unmanaged>
+	Misc5 = 24,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC6</unmanaged>
+	Misc6 = 25,
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_MAX</unmanaged>
-	Max = 21,
+	Max = 26,
 }
 
 public enum SDL_GamepadButtonLabel
@@ -2129,29 +2139,41 @@ public enum SDL_PixelFormatEnum
 	/// <unmanaged>SDL_PIXELFORMAT_ABGR2101010</unmanaged>
 	Abgr2101010 = 376905732,
 	/// <unmanaged>SDL_PIXELFORMAT_RGB48</unmanaged>
-	Rgb48 = 403714051,
+	Rgb48 = 403714054,
 	/// <unmanaged>SDL_PIXELFORMAT_BGR48</unmanaged>
-	Bgr48 = 406859779,
+	Bgr48 = 406859782,
 	/// <unmanaged>SDL_PIXELFORMAT_RGBA64</unmanaged>
-	Rgba64 = 404766724,
+	Rgba64 = 404766728,
 	/// <unmanaged>SDL_PIXELFORMAT_ARGB64</unmanaged>
-	Argb64 = 405815300,
+	Argb64 = 405815304,
 	/// <unmanaged>SDL_PIXELFORMAT_BGRA64</unmanaged>
-	Bgra64 = 407912452,
+	Bgra64 = 407912456,
 	/// <unmanaged>SDL_PIXELFORMAT_ABGR64</unmanaged>
-	Abgr64 = 408961028,
+	Abgr64 = 408961032,
 	/// <unmanaged>SDL_PIXELFORMAT_RGB48_FLOAT</unmanaged>
-	Rgb48Float = 437268483,
+	Rgb48Float = 437268486,
 	/// <unmanaged>SDL_PIXELFORMAT_BGR48_FLOAT</unmanaged>
-	Bgr48Float = 440414211,
+	Bgr48Float = 440414214,
 	/// <unmanaged>SDL_PIXELFORMAT_RGBA64_FLOAT</unmanaged>
-	Rgba64Float = 438321156,
+	Rgba64Float = 438321160,
 	/// <unmanaged>SDL_PIXELFORMAT_ARGB64_FLOAT</unmanaged>
-	Argb64Float = 439369732,
+	Argb64Float = 439369736,
 	/// <unmanaged>SDL_PIXELFORMAT_BGRA64_FLOAT</unmanaged>
-	Bgra64Float = 441466884,
+	Bgra64Float = 441466888,
 	/// <unmanaged>SDL_PIXELFORMAT_ABGR64_FLOAT</unmanaged>
-	Abgr64Float = 442515460,
+	Abgr64Float = 442515464,
+	/// <unmanaged>SDL_PIXELFORMAT_RGB96_FLOAT</unmanaged>
+	Rgb96Float = 454057996,
+	/// <unmanaged>SDL_PIXELFORMAT_BGR96_FLOAT</unmanaged>
+	Bgr96Float = 457203724,
+	/// <unmanaged>SDL_PIXELFORMAT_RGBA128_FLOAT</unmanaged>
+	Rgba128Float = 455114768,
+	/// <unmanaged>SDL_PIXELFORMAT_ARGB128_FLOAT</unmanaged>
+	Argb128Float = 456163344,
+	/// <unmanaged>SDL_PIXELFORMAT_BGRA128_FLOAT</unmanaged>
+	Bgra128Float = 458260496,
+	/// <unmanaged>SDL_PIXELFORMAT_ABGR128_FLOAT</unmanaged>
+	Abgr128Float = 459309072,
 	/// <unmanaged>SDL_PIXELFORMAT_RGBA32</unmanaged>
 	Rgba32 = Abgr8888,
 	/// <unmanaged>SDL_PIXELFORMAT_ARGB32</unmanaged>
@@ -2276,8 +2298,8 @@ public enum SDL_TransferCharacteristics
 	Smpte428 = 17,
 	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_HLG</unmanaged>
 	Hlg = 18,
-	/// <unmanaged>SDL_TRANSFER_COEFFICIENTS_CUSTOM</unmanaged>
-	SDL_TRANSFER_COEFFICIENTS_CUSTOM = 31,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_CUSTOM</unmanaged>
+	Custom = 31,
 }
 
 public enum SDL_MatrixCoefficients
@@ -2336,16 +2358,20 @@ public enum SDL_Colorspace
 	Scrgb = 301991170,
 	/// <unmanaged>SDL_COLORSPACE_HDR10</unmanaged>
 	Hdr10 = 301999618,
+	/// <unmanaged>SDL_COLORSPACE_JPEG</unmanaged>
+	Jpeg = 570426566,
 	/// <unmanaged>SDL_COLORSPACE_BT601_LIMITED</unmanaged>
 	Bt601Limited = 554703046,
 	/// <unmanaged>SDL_COLORSPACE_BT601_FULL</unmanaged>
-	Bt601Full = 554703046,
+	Bt601Full = 571480262,
 	/// <unmanaged>SDL_COLORSPACE_BT709_LIMITED</unmanaged>
 	Bt709Limited = 554697761,
 	/// <unmanaged>SDL_COLORSPACE_BT709_FULL</unmanaged>
-	Bt709Full = 554697761,
+	Bt709Full = 571474977,
 	/// <unmanaged>SDL_COLORSPACE_RGB_DEFAULT</unmanaged>
 	RgbDefault = 301991330,
+	/// <unmanaged>SDL_COLORSPACE_YUV_DEFAULT</unmanaged>
+	YuvDefault = 570426566,
 }
 
 public enum SDL_ScaleMode
@@ -2366,17 +2392,5 @@ public enum SDL_FlipMode
 	Horizontal = 1,
 	/// <unmanaged>SDL_FLIP_VERTICAL</unmanaged>
 	Vertical = 2,
-}
-
-public enum SDL_YUV_CONVERSION_MODE
-{
-	/// <unmanaged>SDL_YUV_CONVERSION_JPEG</unmanaged>
-	Jpeg = 0,
-	/// <unmanaged>SDL_YUV_CONVERSION_BT601</unmanaged>
-	Bt601 = 1,
-	/// <unmanaged>SDL_YUV_CONVERSION_BT709</unmanaged>
-	Bt709 = 2,
-	/// <unmanaged>SDL_YUV_CONVERSION_AUTOMATIC</unmanaged>
-	Automatic = 3,
 }
 

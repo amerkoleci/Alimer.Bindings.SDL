@@ -363,6 +363,5 @@ public static partial class SDL
 	public const uint SDL_SIMD_ALIGNED = 0x00000008;
 	public const uint SDL_SURFACE_USES_PROPERTIES = 0x00000010;
 	public static ReadOnlySpan<byte> SDL_PROP_SURFACE_COLORSPACE_NUMBER => "SDL.surface.colorspace"u8;
-	public static ReadOnlySpan<byte> SDL_PROP_SURFACE_MAXCLL_NUMBER => "SDL.surface.maxCL"u8;
-	public static ReadOnlySpan<byte> SDL_PROP_SURFACE_MAXFALL_NUMBER => "SDL.surface.maxFAL"u8;
+	public static ReadOnlySpan<byte> SDL_PROP_SURFACE_TONEMAP_OPERATOR_STRING => "SDL.surface.tonemap"u8;
 }

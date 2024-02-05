@@ -60,10 +60,12 @@ public static partial class CsCodeGenerator
                 || cppMacro.Name == "SDL_BYTESPERPIXEL"
                 || cppMacro.Name == "SDL_BITSPERPIXEL"
                 || cppMacro.Name == "SDL_Colour"
+                || cppMacro.Name == "SDL_FColour"
                 || cppMacro.Name.StartsWith("SDL_PIXEL")
                 || cppMacro.Name.StartsWith("SDL_ISPIXELFORMAT")
                 || cppMacro.Name == "SDL_DEFINE_COLORSPACE"
                 || cppMacro.Name.StartsWith("SDL_COLORSPACE")
+                || cppMacro.Name.StartsWith("SDL_ISCOLORSPACE_")
                 )
             {
                 continue;

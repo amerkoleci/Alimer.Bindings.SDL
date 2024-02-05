@@ -19,7 +19,8 @@ public static unsafe class Program
 
         SDL_GetVersion(out SDL_version version);
 
-        string str = SDL_GetPlatformString();
+        var strSpan = SDL_GetPlatformSpan();
+        string str = strSpan.GetString();
 
         // Init SDL
         if (SDL_Init(SDL_InitFlags.Timer | SDL_InitFlags.Video | SDL_InitFlags.Gamepad) != 0)

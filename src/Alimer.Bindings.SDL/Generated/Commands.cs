@@ -44,6 +44,9 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateProperties")]
 	public static partial SDL_PropertiesID SDL_CreateProperties();
 
+	[LibraryImport(LibName, EntryPoint = "SDL_CopyProperties")]
+	public static partial int SDL_CopyProperties(SDL_PropertiesID src, SDL_PropertiesID dst);
+
 	[LibraryImport(LibName, EntryPoint = "SDL_LockProperties")]
 	public static partial int SDL_LockProperties(SDL_PropertiesID props);
 
@@ -1568,6 +1571,12 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_GetSurfaceProperties")]
 	public static partial SDL_PropertiesID SDL_GetSurfaceProperties(SDL_Surface* surface);
 
+	[LibraryImport(LibName, EntryPoint = "SDL_SetSurfaceColorspace")]
+	public static partial int SDL_SetSurfaceColorspace(SDL_Surface* surface, SDL_Colorspace colorspace);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetSurfaceColorspace")]
+	public static partial int SDL_GetSurfaceColorspace(SDL_Surface* surface, SDL_Colorspace* colorspace);
+
 	[LibraryImport(LibName, EntryPoint = "SDL_SetSurfacePalette")]
 	public static partial int SDL_SetSurfacePalette(SDL_Surface* surface, SDL_Palette* palette);
 
@@ -1640,8 +1649,14 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_ConvertSurfaceFormat")]
 	public static partial SDL_Surface* SDL_ConvertSurfaceFormat(SDL_Surface* surface, uint pixel_format);
 
+	[LibraryImport(LibName, EntryPoint = "SDL_ConvertSurfaceFormatAndColorspace")]
+	public static partial SDL_Surface* SDL_ConvertSurfaceFormatAndColorspace(SDL_Surface* surface, uint pixel_format, SDL_Colorspace colorspace);
+
 	[LibraryImport(LibName, EntryPoint = "SDL_ConvertPixels")]
 	public static partial int SDL_ConvertPixels(int width, int height, uint src_format, void* src, int src_pitch, uint dst_format, nint dst, int dst_pitch);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ConvertPixelsAndColorspace")]
+	public static partial int SDL_ConvertPixelsAndColorspace(int width, int height, uint src_format, SDL_Colorspace src_colorspace, void* src, int src_pitch, uint dst_format, SDL_Colorspace dst_colorspace, nint dst, int dst_pitch);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_PremultiplyAlpha")]
 	public static partial int SDL_PremultiplyAlpha(int width, int height, uint src_format, void* src, int src_pitch, uint dst_format, nint dst, int dst_pitch);
@@ -1669,14 +1684,5 @@ public unsafe partial class SDL
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ReadSurfacePixel")]
 	public static partial int SDL_ReadSurfacePixel(SDL_Surface* surface, int x, int y, byte* r, byte* g, byte* b, byte* a);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_SetYUVConversionMode")]
-	public static partial void SDL_SetYUVConversionMode(SDL_YUV_CONVERSION_MODE mode);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_GetYUVConversionMode")]
-	public static partial SDL_YUV_CONVERSION_MODE SDL_GetYUVConversionMode();
-
-	[LibraryImport(LibName, EntryPoint = "SDL_GetYUVConversionModeForResolution")]
-	public static partial SDL_YUV_CONVERSION_MODE SDL_GetYUVConversionModeForResolution(int width, int height);
 
 }

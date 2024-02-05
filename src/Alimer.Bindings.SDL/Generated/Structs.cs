@@ -678,6 +678,14 @@ public partial struct SDL_Color
 	public byte a;
 }
 
+public partial struct SDL_FColor
+{
+	public float r;
+	public float g;
+	public float b;
+	public float a;
+}
+
 public partial struct SDL_Palette
 {
 	public int ncolors;

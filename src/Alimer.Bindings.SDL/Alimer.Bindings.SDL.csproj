@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <VersionPrefix>3.4.6</VersionPrefix>
+    <VersionPrefix>3.4.7</VersionPrefix>
     <VersionSuffix Condition="'$(VersionSuffix)' == ''"></VersionSuffix>
   </PropertyGroup>
 
@@ -26,7 +26,7 @@
       <PackagePath>runtimes\win-arm64\native</PackagePath>
       <Pack>true</Pack>
     </Content>
-    <Content Include="runtimes\linux-x64\native\libSDL3-0.0.so.0">
+    <Content Include="runtimes\linux-x64\native\libSDL3.so.0.0.0">
       <PackagePath>runtimes\linux-x64\native</PackagePath>
       <Pack>true</Pack>
     </Content>

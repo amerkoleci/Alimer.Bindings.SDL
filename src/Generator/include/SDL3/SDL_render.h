@@ -91,7 +91,7 @@ typedef struct SDL_RendererInfo
 typedef struct SDL_Vertex
 {
     SDL_FPoint position;        /**< Vertex position, in SDL_Renderer coordinates  */
-    SDL_Color  color;           /**< Vertex color */
+    SDL_FColor color;           /**< Vertex color */
     SDL_FPoint tex_coord;       /**< Normalized texture coordinates, if needed */
 } SDL_Vertex;
 
@@ -240,6 +240,13 @@ extern DECLSPEC SDL_Renderer * SDLCALL SDL_CreateRenderer(SDL_Window *window, co
  *   is displayed, if you want a software renderer without a window
  * - `SDL_PROP_RENDERER_CREATE_NAME_STRING`: the name of the rendering driver
  *   to use, if a specific one is desired
+ * - `SDL_PROP_RENDERER_CREATE_OUTPUT_COLORSPACE_NUMBER`: an SDL_ColorSpace
+ *   value describing the colorspace for output to the display, defaults to
+ *   SDL_COLORSPACE_SRGB. The direct3d11 and direct3d12 renderers support
+ *   SDL_COLORSPACE_SCRGB, which is a linear color space and supports HDR
+ *   output. If you select SDL_COLORSPACE_SCRGB, drawing still uses the sRGB
+ *   colorspace, but values can go beyond 1.0 and float (linear) format
+ *   textures can be used for HDR content.
  * - `SDL_PROP_RENDERER_CREATE_PRESENT_VSYNC_BOOLEAN`: true if you want
  *   present synchronized with the refresh rate
  *
@@ -256,10 +263,11 @@ extern DECLSPEC SDL_Renderer * SDLCALL SDL_CreateRenderer(SDL_Window *window, co
  */
 extern DECLSPEC SDL_Renderer * SDLCALL SDL_CreateRendererWithProperties(SDL_PropertiesID props);
 
-#define SDL_PROP_RENDERER_CREATE_WINDOW_POINTER         "window"
-#define SDL_PROP_RENDERER_CREATE_SURFACE_POINTER        "surface"
-#define SDL_PROP_RENDERER_CREATE_NAME_STRING            "name"
-#define SDL_PROP_RENDERER_CREATE_PRESENT_VSYNC_BOOLEAN  "present_vsync"
+#define SDL_PROP_RENDERER_CREATE_WINDOW_POINTER                 "window"
+#define SDL_PROP_RENDERER_CREATE_SURFACE_POINTER                "surface"
+#define SDL_PROP_RENDERER_CREATE_NAME_STRING                    "name"
+#define SDL_PROP_RENDERER_CREATE_OUTPUT_COLORSPACE_NUMBER       "output_colorspace"
+#define SDL_PROP_RENDERER_CREATE_PRESENT_VSYNC_BOOLEAN          "present_vsync"
 
 /**
  * Create a 2D software rendering context for a surface.
@@ -447,6 +455,11 @@ extern DECLSPEC SDL_Texture *SDLCALL SDL_CreateTextureFromSurface(SDL_Renderer *
  *
  * These are the supported properties:
  *
+ * - `SDL_PROP_TEXTURE_CREATE_COLORSPACE_NUMBER`: an SDL_ColorSpace value
+ *   describing the texture colorspace, defaults to SDL_COLORSPACE_SCRGB for
+ *   floating point textures, SDL_COLORSPACE_HDR10 for 10-bit textures,
+ *   SDL_COLORSPACE_SRGB for other RGB textures and SDL_COLORSPACE_JPEG for
+ *   YUV textures.
  * - `SDL_PROP_TEXTURE_CREATE_FORMAT_NUMBER`: one of the enumerated values in
  *   SDL_PixelFormatEnum, defaults to the best RGBA format for the renderer
  * - `SDL_PROP_TEXTURE_CREATE_ACCESS_NUMBER`: one of the enumerated values in
@@ -524,6 +537,7 @@ extern DECLSPEC SDL_Texture *SDLCALL SDL_CreateTextureFromSurface(SDL_Renderer *
  */
 extern DECLSPEC SDL_Texture *SDLCALL SDL_CreateTextureWithProperties(SDL_Renderer *renderer, SDL_PropertiesID props);
 
+#define SDL_PROP_TEXTURE_CREATE_COLORSPACE_NUMBER           "colorspace"
 #define SDL_PROP_TEXTURE_CREATE_FORMAT_NUMBER               "format"
 #define SDL_PROP_TEXTURE_CREATE_ACCESS_NUMBER               "access"
 #define SDL_PROP_TEXTURE_CREATE_WIDTH_NUMBER                "width"
@@ -549,6 +563,9 @@ extern DECLSPEC SDL_Texture *SDLCALL SDL_CreateTextureWithProperties(SDL_Rendere
  * Get the properties associated with a texture.
  *
  * The following read-only properties are provided by SDL:
+ *
+ * - `SDL_PROP_TEXTURE_COLORSPACE_NUMBER`: an SDL_ColorSpace value describing
+ *   the colorspace used by the texture
  *
  * With the direct3d11 renderer:
  *
@@ -609,6 +626,7 @@ extern DECLSPEC SDL_Texture *SDLCALL SDL_CreateTextureWithProperties(SDL_Rendere
  */
 extern DECLSPEC SDL_PropertiesID SDLCALL SDL_GetTextureProperties(SDL_Texture *texture);
 
+#define SDL_PROP_TEXTURE_COLORSPACE_NUMBER                  "SDL.texture.colorspace"
 #define SDL_PROP_TEXTURE_D3D11_TEXTURE_POINTER              "SDL.texture.d3d11.texture"
 #define SDL_PROP_TEXTURE_D3D11_TEXTURE_U_POINTER            "SDL.texture.d3d11.texture_u"
 #define SDL_PROP_TEXTURE_D3D11_TEXTURE_V_POINTER            "SDL.texture.d3d11.texture_v"
@@ -692,8 +710,37 @@ extern DECLSPEC int SDLCALL SDL_QueryTexture(SDL_Texture *texture, Uint32 *forma
  *
  * \sa SDL_GetTextureColorMod
  * \sa SDL_SetTextureAlphaMod
+ * \sa SDL_SetTextureColorModFloat
  */
 extern DECLSPEC int SDLCALL SDL_SetTextureColorMod(SDL_Texture *texture, Uint8 r, Uint8 g, Uint8 b);
+
+
+/**
+ * Set an additional color value multiplied into render copy operations.
+ *
+ * When this texture is rendered, during the copy operation each source color
+ * channel is modulated by the appropriate color value according to the
+ * following formula:
+ *
+ * `srcC = srcC * color`
+ *
+ * Color modulation is not always supported by the renderer; it will return -1
+ * if color modulation is not supported.
+ *
+ * \param texture the texture to update
+ * \param r the red color value multiplied into copy operations
+ * \param g the green color value multiplied into copy operations
+ * \param b the blue color value multiplied into copy operations
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_GetTextureColorModFloat
+ * \sa SDL_SetTextureAlphaModFloat
+ * \sa SDL_SetTextureColorMod
+ */
+extern DECLSPEC int SDLCALL SDL_SetTextureColorModFloat(SDL_Texture *texture, float r, float g, float b);
 
 
 /**
@@ -709,9 +756,28 @@ extern DECLSPEC int SDLCALL SDL_SetTextureColorMod(SDL_Texture *texture, Uint8 r
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_GetTextureAlphaMod
+ * \sa SDL_GetTextureColorModFloat
  * \sa SDL_SetTextureColorMod
  */
 extern DECLSPEC int SDLCALL SDL_GetTextureColorMod(SDL_Texture *texture, Uint8 *r, Uint8 *g, Uint8 *b);
+
+/**
+ * Get the additional color value multiplied into render copy operations.
+ *
+ * \param texture the texture to query
+ * \param r a pointer filled in with the current red color value
+ * \param g a pointer filled in with the current green color value
+ * \param b a pointer filled in with the current blue color value
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_GetTextureAlphaModFloat
+ * \sa SDL_GetTextureColorMod
+ * \sa SDL_SetTextureColorModFloat
+ */
+extern DECLSPEC int SDLCALL SDL_GetTextureColorModFloat(SDL_Texture *texture, float *r, float *g, float *b);
 
 /**
  * Set an additional alpha value multiplied into render copy operations.
@@ -732,9 +798,34 @@ extern DECLSPEC int SDLCALL SDL_GetTextureColorMod(SDL_Texture *texture, Uint8 *
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_GetTextureAlphaMod
+ * \sa SDL_SetTextureAlphaModFloat
  * \sa SDL_SetTextureColorMod
  */
 extern DECLSPEC int SDLCALL SDL_SetTextureAlphaMod(SDL_Texture *texture, Uint8 alpha);
+
+/**
+ * Set an additional alpha value multiplied into render copy operations.
+ *
+ * When this texture is rendered, during the copy operation the source alpha
+ * value is modulated by this alpha value according to the following formula:
+ *
+ * `srcA = srcA * alpha`
+ *
+ * Alpha modulation is not always supported by the renderer; it will return -1
+ * if alpha modulation is not supported.
+ *
+ * \param texture the texture to update
+ * \param alpha the source alpha value multiplied into copy operations
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_GetTextureAlphaModFloat
+ * \sa SDL_SetTextureAlphaMod
+ * \sa SDL_SetTextureColorModFloat
+ */
+extern DECLSPEC int SDLCALL SDL_SetTextureAlphaModFloat(SDL_Texture *texture, float alpha);
 
 /**
  * Get the additional alpha value multiplied into render copy operations.
@@ -746,10 +837,27 @@ extern DECLSPEC int SDLCALL SDL_SetTextureAlphaMod(SDL_Texture *texture, Uint8 a
  *
  * \since This function is available since SDL 3.0.0.
  *
+ * \sa SDL_GetTextureAlphaModFloat
  * \sa SDL_GetTextureColorMod
  * \sa SDL_SetTextureAlphaMod
  */
 extern DECLSPEC int SDLCALL SDL_GetTextureAlphaMod(SDL_Texture *texture, Uint8 *alpha);
+
+/**
+ * Get the additional alpha value multiplied into render copy operations.
+ *
+ * \param texture the texture to query
+ * \param alpha a pointer filled in with the current alpha value
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_GetTextureAlphaMod
+ * \sa SDL_GetTextureColorModFloat
+ * \sa SDL_SetTextureAlphaModFloat
+ */
+extern DECLSPEC int SDLCALL SDL_GetTextureAlphaModFloat(SDL_Texture *texture, float *alpha);
 
 /**
  * Set the blend mode for a texture, used by SDL_RenderTexture().
@@ -1244,7 +1352,7 @@ extern DECLSPEC int SDLCALL SDL_SetRenderScale(SDL_Renderer *renderer, float sca
 extern DECLSPEC int SDLCALL SDL_GetRenderScale(SDL_Renderer *renderer, float *scaleX, float *scaleY);
 
 /**
- * Set the color used for drawing operations (Rect, Line and Clear).
+ * Set the color used for drawing operations.
  *
  * Set the color for drawing or filling rectangles, lines, and points, and for
  * SDL_RenderClear().
@@ -1263,16 +1371,49 @@ extern DECLSPEC int SDLCALL SDL_GetRenderScale(SDL_Renderer *renderer, float *sc
  *
  * \sa SDL_GetRenderDrawColor
  * \sa SDL_RenderClear
+ * \sa SDL_RenderFillRect
+ * \sa SDL_RenderFillRects
  * \sa SDL_RenderLine
  * \sa SDL_RenderLines
  * \sa SDL_RenderPoint
  * \sa SDL_RenderPoints
  * \sa SDL_RenderRect
  * \sa SDL_RenderRects
- * \sa SDL_RenderFillRect
- * \sa SDL_RenderFillRects
+ * \sa SDL_SetRenderDrawColorFloat
  */
 extern DECLSPEC int SDLCALL SDL_SetRenderDrawColor(SDL_Renderer *renderer, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+
+/**
+ * Set the color used for drawing operations (Rect, Line and Clear).
+ *
+ * Set the color for drawing or filling rectangles, lines, and points, and for
+ * SDL_RenderClear().
+ *
+ * \param renderer the rendering context
+ * \param r the red value used to draw on the rendering target
+ * \param g the green value used to draw on the rendering target
+ * \param b the blue value used to draw on the rendering target
+ * \param a the alpha value used to draw on the rendering target. Use
+ *          SDL_SetRenderDrawBlendMode to specify how the alpha channel is
+ *          used
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_GetRenderDrawColorFloat
+ * \sa SDL_RenderClear
+ * \sa SDL_RenderFillRect
+ * \sa SDL_RenderFillRects
+ * \sa SDL_RenderLine
+ * \sa SDL_RenderLines
+ * \sa SDL_RenderPoint
+ * \sa SDL_RenderPoints
+ * \sa SDL_RenderRect
+ * \sa SDL_RenderRects
+ * \sa SDL_SetRenderDrawColor
+ */
+extern DECLSPEC int SDLCALL SDL_SetRenderDrawColorFloat(SDL_Renderer *renderer, float r, float g, float b, float a);
 
 /**
  * Get the color used for drawing operations (Rect, Line and Clear).
@@ -1291,9 +1432,32 @@ extern DECLSPEC int SDLCALL SDL_SetRenderDrawColor(SDL_Renderer *renderer, Uint8
  *
  * \since This function is available since SDL 3.0.0.
  *
+ * \sa SDL_GetRenderDrawColorFloat
  * \sa SDL_SetRenderDrawColor
  */
 extern DECLSPEC int SDLCALL SDL_GetRenderDrawColor(SDL_Renderer *renderer, Uint8 *r, Uint8 *g, Uint8 *b, Uint8 *a);
+
+/**
+ * Get the color used for drawing operations (Rect, Line and Clear).
+ *
+ * \param renderer the rendering context
+ * \param r a pointer filled in with the red value used to draw on the
+ *          rendering target
+ * \param g a pointer filled in with the green value used to draw on the
+ *          rendering target
+ * \param b a pointer filled in with the blue value used to draw on the
+ *          rendering target
+ * \param a a pointer filled in with the alpha value used to draw on the
+ *          rendering target
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_SetRenderDrawColorFloat
+ * \sa SDL_GetRenderDrawColor
+ */
+extern DECLSPEC int SDLCALL SDL_GetRenderDrawColorFloat(SDL_Renderer *renderer, float *r, float *g, float *b, float *a);
 
 /**
  * Set the blend mode used for drawing operations (Fill and Line).
@@ -1532,7 +1696,7 @@ extern DECLSPEC int SDLCALL SDL_RenderGeometry(SDL_Renderer *renderer,
  * \param texture (optional) The SDL texture to use.
  * \param xy Vertex positions
  * \param xy_stride Byte size to move from one element to the next element
- * \param color Vertex colors (as SDL_Color)
+ * \param color Vertex colors (as SDL_FColor)
  * \param color_stride Byte size to move from one element to the next element
  * \param uv Vertex normalized texture coordinates
  * \param uv_stride Byte size to move from one element to the next element
@@ -1552,41 +1716,29 @@ extern DECLSPEC int SDLCALL SDL_RenderGeometry(SDL_Renderer *renderer,
 extern DECLSPEC int SDLCALL SDL_RenderGeometryRaw(SDL_Renderer *renderer,
                                                SDL_Texture *texture,
                                                const float *xy, int xy_stride,
-                                               const SDL_Color *color, int color_stride,
+                                               const SDL_FColor *color, int color_stride,
                                                const float *uv, int uv_stride,
                                                int num_vertices,
                                                const void *indices, int num_indices, int size_indices);
 
 /**
- * Read pixels from the current rendering target to an array of pixels.
+ * Read pixels from the current rendering target.
+ *
+ * The returned surface should be freed with SDL_DestroySurface()
  *
  * **WARNING**: This is a very slow operation, and should not be used
  * frequently. If you're using this on the main rendering target, it should be
  * called after rendering and before SDL_RenderPresent().
  *
- * `pitch` specifies the number of bytes between rows in the destination
- * `pixels` data. This allows you to write to a subrectangle or have padded
- * rows in the destination. Generally, `pitch` should equal the number of
- * pixels per row in the `pixels` data times the number of bytes per pixel,
- * but it might contain additional padding (for example, 24bit RGB Windows
- * Bitmap data pads all rows to multiples of 4 bytes).
- *
  * \param renderer the rendering context
  * \param rect an SDL_Rect structure representing the area in pixels relative
  *             to the to current viewport, or NULL for the entire viewport
- * \param format an SDL_PixelFormatEnum value of the desired format of the
- *               pixel data, or 0 to use the format of the rendering target
- * \param pixels a pointer to the pixel data to copy into
- * \param pitch the pitch of the `pixels` parameter
- * \returns 0 on success or a negative error code on failure; call
+ * \returns a new SDL_Surface on success or NULL on failure; call
  *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  */
-extern DECLSPEC int SDLCALL SDL_RenderReadPixels(SDL_Renderer *renderer,
-                                                 const SDL_Rect *rect,
-                                                 Uint32 format,
-                                                 void *pixels, int pitch);
+extern DECLSPEC SDL_Surface * SDLCALL SDL_RenderReadPixels(SDL_Renderer *renderer, const SDL_Rect *rect);
 
 /**
  * Update the screen with any rendering performed since the previous call.

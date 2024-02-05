@@ -181,6 +181,26 @@ unsafe partial class SDL
         return (SDL_MatrixCoefficients)((space) & 0x1F);
     }
 
+    public static bool SDL_ISCOLORSPACE_YUV_BT601(uint space)
+    {
+        return (SDL_COLORSPACEMATRIX(space) == SDL_MatrixCoefficients.Bt601 || SDL_COLORSPACEMATRIX(space) == SDL_MatrixCoefficients.Bt470bg);
+    }
+
+    public static bool SDL_ISCOLORSPACE_YUV_BT709(uint space)
+    {
+        return SDL_COLORSPACEMATRIX(space) == SDL_MatrixCoefficients.Bt709;
+    }
+
+    public static bool SDL_ISCOLORSPACE_LIMITED_RANGE(uint space)
+    {
+        return SDL_COLORSPACERANGE(space) == SDL_ColorRange.Limited;
+    }
+
+    public static bool SDL_ISCOLORSPACE_FULL_RANGE(uint space)
+    {
+        return SDL_COLORSPACERANGE(space) == SDL_ColorRange.Full;
+    }
+
     public static string SDL_GetPixelFormatName(SDL_PixelFormatEnum format)
     {
         return GetStringOrEmpty(SDL_GetPixelFormatName((uint)format));

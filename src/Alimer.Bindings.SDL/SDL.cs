@@ -131,12 +131,12 @@ public static unsafe partial class SDL
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                if (NativeLibrary.TryLoad("libSDL3-0.0.so", assembly, searchPath, out nativeLibrary))
+                if (NativeLibrary.TryLoad("libSDL3.so.0.0.0", assembly, searchPath, out nativeLibrary))
                 {
                     return true;
                 }
 
-                if (NativeLibrary.TryLoad("libSDL3-0.0.so.0", assembly, searchPath, out nativeLibrary))
+                if (NativeLibrary.TryLoad("libSDL3.so", assembly, searchPath, out nativeLibrary))
                 {
                     return true;
                 }
@@ -180,6 +180,11 @@ public static unsafe partial class SDL
     public static uint SDL_WasInit(SDL_InitFlags flags) => SDL_WasInit((uint)flags);
 
     #region SDL_platform.h
+    public static ReadOnlySpan<byte> SDL_GetPlatformSpan()
+    {
+        return GetUtf8Span(SDL_GetPlatform());
+    }
+
     public static string SDL_GetPlatformString()
     {
         return GetString(SDL_GetPlatform())!;
@@ -293,7 +298,7 @@ public static unsafe partial class SDL
 
     #region SDL_log.h
 
-    private static SDL_LogOutputFunction? _logCallback;
+    private static SDL_LogOutputFunction? s_logCallback;
 
     public static void SDL_LogSetPriority(SDL_LogCategory category, SDL_LogPriority priority)
     {
@@ -302,7 +307,7 @@ public static unsafe partial class SDL
 
     public static void SDL_LogSetOutputFunction(SDL_LogOutputFunction? callback)
     {
-        _logCallback = callback;
+        s_logCallback = callback;
 
         Internal_SDL_LogSetOutputFunction(callback != null ? &OnNativeMessageCallback : null, IntPtr.Zero);
     }
@@ -315,9 +320,9 @@ public static unsafe partial class SDL
     {
         string message = new(messagePtr);
 
-        if (_logCallback != null)
+        if (s_logCallback != null)
         {
-            _logCallback((SDL_LogCategory)category, priority, message);
+            s_logCallback((SDL_LogCategory)category, priority, message);
         }
     }
     #endregion

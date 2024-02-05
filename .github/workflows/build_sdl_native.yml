@@ -65,8 +65,6 @@ jobs:
       run: |
         mkdir -p bin/linux-x64/native
         mv build_linux_64/lib/libSDL3.so.0.0.0 bin/linux-x64/native/libSDL3.so.0.0.0
-        mv build_linux_64/lib/lib/libSDL3.so.0 bin/linux-x64/native/lib/libSDL3.so.0
-        mv build_linux_64/lib/lib/libSDL3.so bin/linux-x64/native/lib/libSDL3.so
     - uses: actions/upload-artifact@v3
       with:
         name: libs_linux

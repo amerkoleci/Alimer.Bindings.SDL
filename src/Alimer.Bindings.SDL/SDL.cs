@@ -131,11 +131,6 @@ public static unsafe partial class SDL
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                if (NativeLibrary.TryLoad("libSDL3.so.0.0.0", assembly, searchPath, out nativeLibrary))
-                {
-                    return true;
-                }
-
                 if (NativeLibrary.TryLoad("libSDL3.so", assembly, searchPath, out nativeLibrary))
                 {
                     return true;

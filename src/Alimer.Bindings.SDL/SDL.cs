@@ -115,10 +115,10 @@ public static unsafe partial class SDL
             return nativeLibrary;
         }
 
-        return IntPtr.Zero;
+        return 0;
     }
 
-    private static bool TryResolveSDL3(Assembly assembly, DllImportSearchPath? searchPath, out IntPtr nativeLibrary)
+    private static bool TryResolveSDL3(Assembly assembly, DllImportSearchPath? searchPath, out nint nativeLibrary)
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
@@ -149,7 +149,7 @@ public static unsafe partial class SDL
                 }
             }
 
-            if (NativeLibrary.TryLoad("libSDL3", assembly, searchPath, out nativeLibrary))
+            if (NativeLibrary.TryLoad("SDL3", assembly, searchPath, out nativeLibrary))
             {
                 return true;
             }

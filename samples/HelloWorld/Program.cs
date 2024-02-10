@@ -12,7 +12,7 @@ public static unsafe class Program
     public static void Main()
     {
 #if DEBUG
-        SDL_LogSetAllPriority(SDL_LogPriority.Verbose);
+        SDL_LogSetAllPriority(SDL_LogPriority.Debug);
 #endif
 
         SDL_LogSetOutputFunction(OnLog);

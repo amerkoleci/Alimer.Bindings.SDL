@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <VersionPrefix>3.4.8</VersionPrefix>
+    <VersionPrefix>3.4.9</VersionPrefix>
     <VersionSuffix Condition="'$(VersionSuffix)' == ''"></VersionSuffix>
   </PropertyGroup>
 
@@ -18,22 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="runtimes\win-x64\native\SDL3.dll">
-      <PackagePath>runtimes\win-x64\native</PackagePath>
-      <Pack>true</Pack>
-    </Content>
-    <Content Include="runtimes\win-arm64\native\SDL3.dll">
-      <PackagePath>runtimes\win-arm64\native</PackagePath>
-      <Pack>true</Pack>
-    </Content>
-    <Content Include="runtimes\linux-x64\native\libSDL3.so">
-      <PackagePath>runtimes\linux-x64\native</PackagePath>
-      <Pack>true</Pack>
-    </Content>
-    <Content Include="runtimes\osx\native\libSDL3.dylib">
-      <PackagePath>runtimes\osx\native</PackagePath>
-      <Pack>true</Pack>
-    </Content>
+    <Content Include="runtimes\**" PackagePath="runtimes" Pack="true" />
   </ItemGroup>
 
 </Project>

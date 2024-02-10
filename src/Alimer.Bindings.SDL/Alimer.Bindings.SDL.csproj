@@ -30,8 +30,8 @@
       <PackagePath>runtimes\linux-x64\native</PackagePath>
       <Pack>true</Pack>
     </Content>
-    <Content Include="runtimes\osx-universal\native\libSDL3.dylib">
-      <PackagePath>runtimes\osx-universal\native</PackagePath>
+    <Content Include="runtimes\osx\native\libSDL3.dylib">
+      <PackagePath>runtimes\osx\native</PackagePath>
       <Pack>true</Pack>
     </Content>
   </ItemGroup>

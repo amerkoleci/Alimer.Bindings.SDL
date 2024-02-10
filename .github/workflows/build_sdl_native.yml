@@ -86,8 +86,8 @@ jobs:
     # macOS artifacts
     - name: package_osx
       run: |
-        mkdir -p bin/osx-universal/native
-        mv build_osx/lib/libSDL3.1.0.0.dylib bin/osx-universal/native/libSDL3.dylib
+        mkdir -p bin/osx/native
+        mv build_osx/lib/libSDL3.1.0.0.dylib bin/osx/native/libSDL3.dylib
     - uses: actions/upload-artifact@v4
       with:
         name: libs_osx

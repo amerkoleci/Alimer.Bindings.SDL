@@ -25,7 +25,10 @@ unsafe partial class SDL
 
     public static string? SDL_GetClipboardTextString()
     {
-        return GetString(SDL_GetClipboardText());
+        byte* textPtr = SDL_GetClipboardText();
+        string? result = GetString(textPtr);
+        SDL_free(textPtr);
+        return result;
     }
 
     public static int SDL_SetPrimarySelectionText(ReadOnlySpan<byte> name)

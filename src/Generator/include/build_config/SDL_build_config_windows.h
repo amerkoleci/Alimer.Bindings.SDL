@@ -112,8 +112,11 @@ typedef unsigned int uintptr_t;
 #endif
 
 /* This can be disabled to avoid C runtime dependencies and manifest requirements */
-#define HAVE_LIBC
-#ifdef HAVE_LIBC
+#ifndef HAVE_LIBC
+#define HAVE_LIBC   1
+#endif
+
+#if HAVE_LIBC
 /* Useful headers */
 #define HAVE_CTYPE_H 1
 #define HAVE_FLOAT_H 1
@@ -132,8 +135,6 @@ typedef unsigned int uintptr_t;
 #define HAVE_CALLOC 1
 #define HAVE_REALLOC 1
 #define HAVE_FREE 1
-#define HAVE_QSORT 1
-#define HAVE_BSEARCH 1
 #define HAVE_ABS 1
 #define HAVE_MEMSET 1
 #define HAVE_MEMCPY 1
@@ -235,6 +236,7 @@ typedef unsigned int uintptr_t;
 
 /* Enable various input drivers */
 #define SDL_JOYSTICK_DINPUT 1
+/*#define SDL_JOYSTICK_GAMEINPUT 1*/
 #define SDL_JOYSTICK_HIDAPI 1
 #ifndef SDL_PLATFORM_WINRT
 #define SDL_JOYSTICK_RAWINPUT   1
@@ -301,10 +303,18 @@ typedef unsigned int uintptr_t;
 /* Enable Vulkan support */
 #define SDL_VIDEO_VULKAN 1
 
+#ifndef SDL_VIDEO_RENDER_VULKAN
+#define SDL_VIDEO_RENDER_VULKAN    1
+#endif
+
 /* Enable system power support */
 #define SDL_POWER_WINDOWS 1
 
 /* Enable filesystem support */
 #define SDL_FILESYSTEM_WINDOWS  1
+
+/* Enable the camera driver */
+#define SDL_CAMERA_DRIVER_MEDIAFOUNDATION 1
+#define SDL_CAMERA_DRIVER_DUMMY 1
 
 #endif /* SDL_build_config_windows_h_ */

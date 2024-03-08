@@ -33,7 +33,7 @@ public partial struct SDL_Keysym
 public partial struct SDL_MessageBoxButtonData
 {
 	public uint flags;
-	public int buttonid;
+	public int buttonID;
 	public unsafe byte* text;
 }
 
@@ -110,7 +110,7 @@ public partial struct SDL_VirtualJoystickDesc
 
 public partial struct SDL_GamepadBinding
 {
-	public SDL_GamepadBindingType inputType;
+	public SDL_GamepadBindingType input_type;
 	public SDL_GamepadBinding_input input;
 	
 	[StructLayout(LayoutKind.Explicit)]
@@ -136,7 +136,7 @@ public partial struct SDL_GamepadBinding
 			public int hat_mask;
 		}
 	}
-	public SDL_GamepadBindingType outputType;
+	public SDL_GamepadBindingType output_type;
 	public SDL_GamepadBinding_output output;
 	
 	[StructLayout(LayoutKind.Explicit)]
@@ -167,7 +167,7 @@ public partial struct SDL_Finger
 public partial struct SDL_DisplayMode
 {
 	public SDL_DisplayID displayID;
-	public uint format;
+	public SDL_PixelFormatEnum format;
 	public int w;
 	public int h;
 	public float pixel_density;
@@ -185,12 +185,14 @@ public partial struct SDL_AudioSpec
 public partial struct SDL_CommonEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 }
 
 public partial struct SDL_DisplayEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_DisplayID displayID;
 	public int data1;
@@ -199,6 +201,7 @@ public partial struct SDL_DisplayEvent
 public partial struct SDL_WindowEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public int data1;
@@ -208,6 +211,7 @@ public partial struct SDL_WindowEvent
 public partial struct SDL_KeyboardEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public byte state;
@@ -220,6 +224,7 @@ public partial struct SDL_KeyboardEvent
 public partial struct SDL_TextEditingEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public unsafe byte* text;
@@ -230,6 +235,7 @@ public partial struct SDL_TextEditingEvent
 public partial struct SDL_TextInputEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public unsafe byte* text;
@@ -238,6 +244,7 @@ public partial struct SDL_TextInputEvent
 public partial struct SDL_MouseMotionEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public SDL_MouseID which;
@@ -251,6 +258,7 @@ public partial struct SDL_MouseMotionEvent
 public partial struct SDL_MouseButtonEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public SDL_MouseID which;
@@ -265,19 +273,21 @@ public partial struct SDL_MouseButtonEvent
 public partial struct SDL_MouseWheelEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public SDL_MouseID which;
 	public float x;
 	public float y;
-	public uint direction;
-	public float mouseX;
-	public float mouseY;
+	public SDL_MouseWheelDirection direction;
+	public float mouse_x;
+	public float mouse_y;
 }
 
 public partial struct SDL_JoyAxisEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_JoystickID which;
 	public byte axis;
@@ -291,6 +301,7 @@ public partial struct SDL_JoyAxisEvent
 public partial struct SDL_JoyHatEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_JoystickID which;
 	public byte hat;
@@ -302,6 +313,7 @@ public partial struct SDL_JoyHatEvent
 public partial struct SDL_JoyButtonEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_JoystickID which;
 	public byte button;
@@ -313,6 +325,7 @@ public partial struct SDL_JoyButtonEvent
 public partial struct SDL_JoyDeviceEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_JoystickID which;
 }
@@ -320,6 +333,7 @@ public partial struct SDL_JoyDeviceEvent
 public partial struct SDL_JoyBatteryEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_JoystickID which;
 	public SDL_JoystickPowerLevel level;
@@ -328,6 +342,7 @@ public partial struct SDL_JoyBatteryEvent
 public partial struct SDL_GamepadAxisEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_JoystickID which;
 	public byte axis;
@@ -341,6 +356,7 @@ public partial struct SDL_GamepadAxisEvent
 public partial struct SDL_GamepadButtonEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_JoystickID which;
 	public byte button;
@@ -352,6 +368,7 @@ public partial struct SDL_GamepadButtonEvent
 public partial struct SDL_GamepadDeviceEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_JoystickID which;
 }
@@ -359,6 +376,7 @@ public partial struct SDL_GamepadDeviceEvent
 public partial struct SDL_GamepadTouchpadEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_JoystickID which;
 	public int touchpad;
@@ -371,6 +389,7 @@ public partial struct SDL_GamepadTouchpadEvent
 public partial struct SDL_GamepadSensorEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_JoystickID which;
 	public int sensor;
@@ -381,6 +400,7 @@ public partial struct SDL_GamepadSensorEvent
 public partial struct SDL_AudioDeviceEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_AudioDeviceID which;
 	public byte iscapture;
@@ -389,12 +409,23 @@ public partial struct SDL_AudioDeviceEvent
 	public byte padding3;
 }
 
-public partial struct SDL_TouchFingerEvent
+public partial struct SDL_CameraDeviceEvent
 {
 	public SDL_EventType type;
 	public ulong timestamp;
-	public SDL_TouchID touchId;
-	public SDL_FingerID fingerId;
+	public SDL_CameraDeviceID which;
+	public byte padding1;
+	public byte padding2;
+	public byte padding3;
+}
+
+public partial struct SDL_TouchFingerEvent
+{
+	public SDL_EventType type;
+	public uint reserved;
+	public ulong timestamp;
+	public SDL_TouchID touchID;
+	public SDL_FingerID fingerID;
 	public float x;
 	public float y;
 	public float dx;
@@ -406,8 +437,9 @@ public partial struct SDL_TouchFingerEvent
 public partial struct SDL_PenTipEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
-	public uint windowID;
+	public SDL_WindowID windowID;
 	public SDL_PenID which;
 	public byte tip;
 	public byte state;
@@ -420,8 +452,9 @@ public partial struct SDL_PenTipEvent
 public partial struct SDL_PenMotionEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
-	public uint windowID;
+	public SDL_WindowID windowID;
 	public SDL_PenID which;
 	public byte padding1;
 	public byte padding2;
@@ -434,8 +467,9 @@ public partial struct SDL_PenMotionEvent
 public partial struct SDL_PenButtonEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
-	public uint windowID;
+	public SDL_WindowID windowID;
 	public SDL_PenID which;
 	public byte button;
 	public byte state;
@@ -448,6 +482,7 @@ public partial struct SDL_PenButtonEvent
 public partial struct SDL_DropEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public float x;
@@ -459,12 +494,14 @@ public partial struct SDL_DropEvent
 public partial struct SDL_ClipboardEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 }
 
 public partial struct SDL_SensorEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_SensorID which;
 	public unsafe fixed float data[6];
@@ -474,12 +511,14 @@ public partial struct SDL_SensorEvent
 public partial struct SDL_QuitEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 }
 
 public partial struct SDL_UserEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public int code;
@@ -532,6 +571,8 @@ public partial struct SDL_Event
 	public SDL_GamepadSensorEvent gsensor;
 	[FieldOffset(0)]
 	public SDL_AudioDeviceEvent adevice;
+	[FieldOffset(0)]
+	public SDL_CameraDeviceEvent cdevice;
 	[FieldOffset(0)]
 	public SDL_SensorEvent sensor;
 	[FieldOffset(0)]
@@ -696,10 +737,10 @@ public partial struct SDL_Palette
 
 public partial struct SDL_PixelFormat
 {
-	public uint format;
+	public SDL_PixelFormatEnum format;
 	public unsafe SDL_Palette* palette;
-	public byte BitsPerPixel;
-	public byte BytesPerPixel;
+	public byte bits_per_pixel;
+	public byte bytes_per_pixel;
 	public unsafe fixed byte padding[2];
 	public uint Rmask;
 	public uint Gmask;
@@ -731,5 +772,14 @@ public partial struct SDL_Surface
 	public Rectangle clip_rect;
 	public unsafe nint* map;
 	public int refcount;
+}
+
+public partial struct SDL_CameraSpec
+{
+	public SDL_PixelFormatEnum format;
+	public int width;
+	public int height;
+	public int interval_numerator;
+	public int interval_denominator;
 }
 

@@ -65,6 +65,8 @@ public enum SDL_PenAxis
 
 public enum SDL_PenSubtype
 {
+	/// <unmanaged>SDL_PEN_TYPE_UNKNOWN</unmanaged>
+	Unknown = 0,
 	/// <unmanaged>SDL_PEN_TYPE_ERASER</unmanaged>
 	Eraser = 1,
 	/// <unmanaged>SDL_PEN_TYPE_PEN</unmanaged>
@@ -99,6 +101,8 @@ public enum SDL_InitFlags
 	Events = 0x00004000,
 	/// <unmanaged>SDL_INIT_SENSOR</unmanaged>
 	Sensor = 0x00008000,
+	/// <unmanaged>SDL_INIT_CAMERA</unmanaged>
+	Camera = 0x00010000,
 }
 
 public enum SDL_Scancode
@@ -1715,10 +1719,12 @@ public enum SDL_EventType
 	DisplayMoved = 340,
 	/// <unmanaged>SDL_EVENT_DISPLAY_CONTENT_SCALE_CHANGED</unmanaged>
 	DisplayContentScaleChanged = 341,
+	/// <unmanaged>SDL_EVENT_DISPLAY_HDR_STATE_CHANGED</unmanaged>
+	DisplayHdrStateChanged = 342,
 	/// <unmanaged>SDL_EVENT_DISPLAY_FIRST</unmanaged>
 	DisplayFirst = DisplayOrientation,
 	/// <unmanaged>SDL_EVENT_DISPLAY_LAST</unmanaged>
-	DisplayLast = DisplayContentScaleChanged,
+	DisplayLast = DisplayHdrStateChanged,
 	/// <unmanaged>SDL_EVENT_WINDOW_SHOWN</unmanaged>
 	WindowShown = 0x202,
 	/// <unmanaged>SDL_EVENT_WINDOW_HIDDEN</unmanaged>
@@ -1867,6 +1873,14 @@ public enum SDL_EventType
 	PenButtonDown = 4867,
 	/// <unmanaged>SDL_EVENT_PEN_BUTTON_UP</unmanaged>
 	PenButtonUp = 4868,
+	/// <unmanaged>SDL_EVENT_CAMERA_DEVICE_ADDED</unmanaged>
+	CameraDeviceAdded = 0x1400,
+	/// <unmanaged>SDL_EVENT_CAMERA_DEVICE_REMOVED</unmanaged>
+	CameraDeviceRemoved = 5121,
+	/// <unmanaged>SDL_EVENT_CAMERA_DEVICE_APPROVED</unmanaged>
+	CameraDeviceApproved = 5122,
+	/// <unmanaged>SDL_EVENT_CAMERA_DEVICE_DENIED</unmanaged>
+	CameraDeviceDenied = 5123,
 	/// <unmanaged>SDL_EVENT_RENDER_TARGETS_RESET</unmanaged>
 	RenderTargetsReset = 0x2000,
 	/// <unmanaged>SDL_EVENT_RENDER_DEVICE_RESET</unmanaged>
@@ -1877,6 +1891,8 @@ public enum SDL_EventType
 	User = 0x8000,
 	/// <unmanaged>SDL_EVENT_LAST</unmanaged>
 	Last = 0xFFFF,
+	/// <unmanaged>SDL_EVENT_ENUM_PADDING</unmanaged>
+	EnumPadding = 0x7FFFFFFF,
 }
 
 public enum SDL_eventaction
@@ -2204,6 +2220,8 @@ public enum SDL_PixelFormatEnum
 	Nv12 = 842094158,
 	/// <unmanaged>SDL_PIXELFORMAT_NV21</unmanaged>
 	Nv21 = 825382478,
+	/// <unmanaged>SDL_PIXELFORMAT_P010</unmanaged>
+	P010 = 808530000,
 	/// <unmanaged>SDL_PIXELFORMAT_EXTERNAL_OES</unmanaged>
 	ExternalOes = 542328143,
 }
@@ -2353,11 +2371,11 @@ public enum SDL_Colorspace
 	/// <unmanaged>SDL_COLORSPACE_UNKNOWN</unmanaged>
 	Unknown = 0,
 	/// <unmanaged>SDL_COLORSPACE_SRGB</unmanaged>
-	Srgb = 301991330,
-	/// <unmanaged>SDL_COLORSPACE_SCRGB</unmanaged>
-	Scrgb = 301991170,
+	Srgb = 301991328,
+	/// <unmanaged>SDL_COLORSPACE_SRGB_LINEAR</unmanaged>
+	SrgbLinear = 301991168,
 	/// <unmanaged>SDL_COLORSPACE_HDR10</unmanaged>
-	Hdr10 = 301999618,
+	Hdr10 = 301999616,
 	/// <unmanaged>SDL_COLORSPACE_JPEG</unmanaged>
 	Jpeg = 570426566,
 	/// <unmanaged>SDL_COLORSPACE_BT601_LIMITED</unmanaged>
@@ -2368,8 +2386,12 @@ public enum SDL_Colorspace
 	Bt709Limited = 554697761,
 	/// <unmanaged>SDL_COLORSPACE_BT709_FULL</unmanaged>
 	Bt709Full = 571474977,
+	/// <unmanaged>SDL_COLORSPACE_BT2020_LIMITED</unmanaged>
+	Bt2020Limited = 554706441,
+	/// <unmanaged>SDL_COLORSPACE_BT2020_FULL</unmanaged>
+	Bt2020Full = 571483657,
 	/// <unmanaged>SDL_COLORSPACE_RGB_DEFAULT</unmanaged>
-	RgbDefault = 301991330,
+	RgbDefault = 301991328,
 	/// <unmanaged>SDL_COLORSPACE_YUV_DEFAULT</unmanaged>
 	YuvDefault = 570426566,
 }
@@ -2392,5 +2414,15 @@ public enum SDL_FlipMode
 	Horizontal = 1,
 	/// <unmanaged>SDL_FLIP_VERTICAL</unmanaged>
 	Vertical = 2,
+}
+
+public enum SDL_CameraPosition
+{
+	/// <unmanaged>SDL_CAMERA_POSITION_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_CAMERA_POSITION_FRONT_FACING</unmanaged>
+	FrontFacing = 1,
+	/// <unmanaged>SDL_CAMERA_POSITION_BACK_FACING</unmanaged>
+	BackFacing = 2,
 }
 

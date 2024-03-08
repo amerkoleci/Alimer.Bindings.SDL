@@ -201,27 +201,9 @@ unsafe partial class SDL
         return SDL_COLORSPACERANGE(space) == SDL_ColorRange.Full;
     }
 
-    public static string SDL_GetPixelFormatName(SDL_PixelFormatEnum format)
+    public static string SDL_GetPixelFormatNameString(SDL_PixelFormatEnum format)
     {
-        return GetStringOrEmpty(SDL_GetPixelFormatName((uint)format));
-    }
-
-    public static SDL_PixelFormat* SDL_CreatePixelFormat(SDL_PixelFormatEnum format)
-    {
-        return SDL_CreatePixelFormat((uint)format);
-    }
-
-    public static SDL_Surface* SDL_CreateSurface(int width, int height, SDL_PixelFormatEnum format)
-    {
-        return SDL_CreateSurface(width, height, (uint)format);
-    }
-
-    [LibraryImport(LibName, EntryPoint = "SDL_CreateSurfaceFrom")]
-    public static partial SDL_Surface* SDL_CreateSurfaceFrom(void* pixels, int width, int height, int pitch, uint format);
-
-    public static SDL_Surface* SDL_CreateSurfaceFrom(nint pixels, int width, int height, int pitch, SDL_PixelFormatEnum format)
-    {
-        return SDL_CreateSurfaceFrom(pixels, width, height, pitch, (uint)format);
+        return GetStringOrEmpty(SDL_GetPixelFormatName(format));
     }
 
     public static SDL_Surface* SDL_CreateSurfaceFrom<T>(T[] source, int width, int height, int pitch, SDL_PixelFormatEnum format)
@@ -243,7 +225,7 @@ unsafe partial class SDL
     {
         fixed (void* sourcePointer = &source)
         {
-            return SDL_CreateSurfaceFrom(sourcePointer, width, height, pitch, (uint)format);
+            return SDL_CreateSurfaceFrom((nint)sourcePointer, width, height, pitch, format);
         }
     }
 }

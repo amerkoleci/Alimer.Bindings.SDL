@@ -71,6 +71,8 @@ public static partial class CsCodeGenerator
         { "SDL_ScaleMode", "SDL_SCALEMODE" },
         { "SDL_FlipMode", "SDL_FLIP" },
         { "SDL_YUV_CONVERSION_MODE", "SDL_YUV_CONVERSION" },
+
+        { "SDL_CameraPosition", "SDL_CAMERA_POSITION" },
     };
 
     private static readonly Dictionary<string, string> s_knownEnumValueNames = new()

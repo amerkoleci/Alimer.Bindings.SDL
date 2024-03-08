@@ -178,9 +178,9 @@ typedef enum
     SDL_GAMEPAD_BINDTYPE_HAT
 } SDL_GamepadBindingType;
 
-typedef struct
+typedef struct SDL_GamepadBinding
 {
-    SDL_GamepadBindingType inputType;
+    SDL_GamepadBindingType input_type;
     union
     {
         int button;
@@ -200,7 +200,7 @@ typedef struct
 
     } input;
 
-    SDL_GamepadBindingType outputType;
+    SDL_GamepadBindingType output_type;
     union
     {
         SDL_GamepadButton button;
@@ -319,7 +319,7 @@ extern DECLSPEC int SDLCALL SDL_AddGamepadMappingsFromFile(const char *file);
 extern DECLSPEC int SDLCALL SDL_ReloadGamepadMappings(void);
 
 /**
- * Get the mapping at a particular index.
+ * Get the current gamepad mappings.
  *
  * You must free the returned pointer with SDL_free() when you are done with
  * it, but you do _not_ free each string in the array.
@@ -1199,6 +1199,9 @@ extern DECLSPEC int SDLCALL SDL_GetGamepadSensorData(SDL_Gamepad *gamepad, SDL_S
  * Each call to this function cancels any previous rumble effect, and calling
  * it with 0 intensity stops any rumbling.
  *
+ * This function requires you to process SDL events or call
+ * SDL_UpdateJoysticks() to update rumble state.
+ *
  * \param gamepad The gamepad to vibrate
  * \param low_frequency_rumble The intensity of the low frequency (left)
  *                             rumble motor, from 0 to 0xFFFF
@@ -1220,6 +1223,9 @@ extern DECLSPEC int SDLCALL SDL_RumbleGamepad(SDL_Gamepad *gamepad, Uint16 low_f
  * Note that this is rumbling of the _triggers_ and not the gamepad as a
  * whole. This is currently only supported on Xbox One gamepads. If you want
  * the (more common) whole-gamepad rumble, use SDL_RumbleGamepad() instead.
+ *
+ * This function requires you to process SDL events or call
+ * SDL_UpdateJoysticks() to update rumble state.
  *
  * \param gamepad The gamepad to vibrate
  * \param left_rumble The intensity of the left trigger rumble motor, from 0

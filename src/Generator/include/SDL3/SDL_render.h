@@ -79,8 +79,8 @@ typedef struct SDL_RendererInfo
 {
     const char *name;           /**< The name of the renderer */
     Uint32 flags;               /**< Supported ::SDL_RendererFlags */
-    Uint32 num_texture_formats; /**< The number of available texture formats */
-    Uint32 texture_formats[16]; /**< The available texture formats */
+    int num_texture_formats;    /**< The number of available texture formats */
+    SDL_PixelFormatEnum texture_formats[16]; /**< The available texture formats */
     int max_texture_width;      /**< The maximum texture width */
     int max_texture_height;     /**< The maximum texture height */
 } SDL_RendererInfo;
@@ -192,7 +192,7 @@ extern DECLSPEC const char *SDLCALL SDL_GetRenderDriver(int index);
  * \sa SDL_CreateRenderer
  * \sa SDL_CreateWindow
  */
-extern DECLSPEC int SDLCALL SDL_CreateWindowAndRenderer(int width, int height, Uint32 window_flags, SDL_Window **window, SDL_Renderer **renderer);
+extern DECLSPEC int SDLCALL SDL_CreateWindowAndRenderer(int width, int height, SDL_WindowFlags window_flags, SDL_Window **window, SDL_Renderer **renderer);
 
 /**
  * Create a 2D rendering context for a window.
@@ -234,21 +234,36 @@ extern DECLSPEC SDL_Renderer * SDLCALL SDL_CreateRenderer(SDL_Window *window, co
  *
  * These are the supported properties:
  *
- * - `SDL_PROP_RENDERER_CREATE_WINDOW_POINTER`: the window where rendering is
- *   displayed
- * - `SDL_PROP_RENDERER_CREATE_SURFACE_POINTER`: the surface where rendering
- *   is displayed, if you want a software renderer without a window
  * - `SDL_PROP_RENDERER_CREATE_NAME_STRING`: the name of the rendering driver
  *   to use, if a specific one is desired
+ * - `SDL_PROP_RENDERER_CREATE_WINDOW_POINTER`: the window where rendering is
+ *   displayed, required if this isn't a software renderer using a surface
+ * - `SDL_PROP_RENDERER_CREATE_SURFACE_POINTER`: the surface where rendering
+ *   is displayed, if you want a software renderer without a window
  * - `SDL_PROP_RENDERER_CREATE_OUTPUT_COLORSPACE_NUMBER`: an SDL_ColorSpace
  *   value describing the colorspace for output to the display, defaults to
- *   SDL_COLORSPACE_SRGB. The direct3d11 and direct3d12 renderers support
- *   SDL_COLORSPACE_SCRGB, which is a linear color space and supports HDR
- *   output. If you select SDL_COLORSPACE_SCRGB, drawing still uses the sRGB
- *   colorspace, but values can go beyond 1.0 and float (linear) format
- *   textures can be used for HDR content.
+ *   SDL_COLORSPACE_SRGB. The direct3d11, direct3d12, and metal renderers
+ *   support SDL_COLORSPACE_SRGB_LINEAR, which is a linear color space and
+ *   supports HDR output. If you select SDL_COLORSPACE_SRGB_LINEAR, drawing
+ *   still uses the sRGB colorspace, but values can go beyond 1.0 and float
+ *   (linear) format textures can be used for HDR content.
  * - `SDL_PROP_RENDERER_CREATE_PRESENT_VSYNC_BOOLEAN`: true if you want
  *   present synchronized with the refresh rate
+ *
+ * With the vulkan renderer:
+ *
+ * - `SDL_PROP_RENDERER_CREATE_VULKAN_INSTANCE_POINTER`: the VkInstance to use
+ *   with the renderer, optional.
+ * - `SDL_PROP_RENDERER_CREATE_VULKAN_SURFACE_NUMBER`: the VkSurfaceKHR to use
+ *   with the renderer, optional.
+ * - `SDL_PROP_RENDERER_CREATE_VULKAN_PHYSICAL_DEVICE_POINTER`: the
+ *   VkPhysicalDevice to use with the renderer, optional.
+ * - `SDL_PROP_RENDERER_CREATE_VULKAN_DEVICE_POINTER`: the VkDevice to use
+ *   with the renderer, optional.
+ * - `SDL_PROP_RENDERER_CREATE_VULKAN_GRAPHICS_QUEUE_FAMILY_INDEX_NUMBER`: the
+ *   queue family index used for rendering.
+ * - `SDL_PROP_RENDERER_CREATE_VULKAN_PRESENT_QUEUE_FAMILY_INDEX_NUMBER`: the
+ *   queue family index used for presentation.
  *
  * \param props the properties to use
  * \returns a valid rendering context or NULL if there was an error; call
@@ -263,11 +278,17 @@ extern DECLSPEC SDL_Renderer * SDLCALL SDL_CreateRenderer(SDL_Window *window, co
  */
 extern DECLSPEC SDL_Renderer * SDLCALL SDL_CreateRendererWithProperties(SDL_PropertiesID props);
 
-#define SDL_PROP_RENDERER_CREATE_WINDOW_POINTER                 "window"
-#define SDL_PROP_RENDERER_CREATE_SURFACE_POINTER                "surface"
-#define SDL_PROP_RENDERER_CREATE_NAME_STRING                    "name"
-#define SDL_PROP_RENDERER_CREATE_OUTPUT_COLORSPACE_NUMBER       "output_colorspace"
-#define SDL_PROP_RENDERER_CREATE_PRESENT_VSYNC_BOOLEAN          "present_vsync"
+#define SDL_PROP_RENDERER_CREATE_NAME_STRING                                "name"
+#define SDL_PROP_RENDERER_CREATE_WINDOW_POINTER                             "window"
+#define SDL_PROP_RENDERER_CREATE_SURFACE_POINTER                            "surface"
+#define SDL_PROP_RENDERER_CREATE_OUTPUT_COLORSPACE_NUMBER                   "output_colorspace"
+#define SDL_PROP_RENDERER_CREATE_PRESENT_VSYNC_BOOLEAN                      "present_vsync"
+#define SDL_PROP_RENDERER_CREATE_VULKAN_INSTANCE_POINTER                    "vulkan.instance"
+#define SDL_PROP_RENDERER_CREATE_VULKAN_SURFACE_NUMBER                      "vulkan.surface"
+#define SDL_PROP_RENDERER_CREATE_VULKAN_PHYSICAL_DEVICE_POINTER             "vulkan.physical_device"
+#define SDL_PROP_RENDERER_CREATE_VULKAN_DEVICE_POINTER                      "vulkan.device"
+#define SDL_PROP_RENDERER_CREATE_VULKAN_GRAPHICS_QUEUE_FAMILY_INDEX_NUMBER  "vulkan.graphics_queue_family_index"
+#define SDL_PROP_RENDERER_CREATE_VULKAN_PRESENT_QUEUE_FAMILY_INDEX_NUMBER   "vulkan.present_queue_family_index"
 
 /**
  * Create a 2D software rendering context for a surface.
@@ -334,14 +355,61 @@ extern DECLSPEC int SDLCALL SDL_GetRendererInfo(SDL_Renderer *renderer, SDL_Rend
  *
  * The following read-only properties are provided by SDL:
  *
+ * - `SDL_PROP_RENDERER_NAME_STRING`: the name of the rendering driver
+ * - `SDL_PROP_RENDERER_WINDOW_POINTER`: the window where rendering is
+ *   displayed, if any
+ * - `SDL_PROP_RENDERER_SURFACE_POINTER`: the surface where rendering is
+ *   displayed, if this is a software renderer without a window
+ * - `SDL_PROP_RENDERER_OUTPUT_COLORSPACE_NUMBER`: an SDL_ColorSpace value
+ *   describing the colorspace for output to the display, defaults to
+ *   SDL_COLORSPACE_SRGB.
+ * - `SDL_PROP_RENDERER_HDR_ENABLED_BOOLEAN`: true if the output colorspace is
+ *   SDL_COLORSPACE_SRGB_LINEAR and the renderer is showing on a display with
+ *   HDR enabled. This property can change dynamically when
+ *   SDL_EVENT_DISPLAY_HDR_STATE_CHANGED is sent.
+ * - `SDL_PROP_RENDERER_SDR_WHITE_POINT_FLOAT`: the value of SDR white in the
+ *   SDL_COLORSPACE_SRGB_LINEAR colorspace. When HDR is enabled, this value is
+ *   automatically multiplied into the color scale. This property can change
+ *   dynamically when SDL_EVENT_DISPLAY_HDR_STATE_CHANGED is sent.
+ * - `SDL_PROP_RENDERER_HDR_HEADROOM_FLOAT`: the additional high dynamic range
+ *   that can be displayed, in terms of the SDR white point. When HDR is not
+ *   enabled, this will be 1.0. This property can change dynamically when
+ *   SDL_EVENT_DISPLAY_HDR_STATE_CHANGED is sent.
+ *
+ * With the direct3d renderer:
+ *
  * - `SDL_PROP_RENDERER_D3D9_DEVICE_POINTER`: the IDirect3DDevice9 associated
  *   with the renderer
+ *
+ * With the direct3d11 renderer:
+ *
  * - `SDL_PROP_RENDERER_D3D11_DEVICE_POINTER`: the ID3D11Device associated
  *   with the renderer
+ *
+ * With the direct3d12 renderer:
+ *
  * - `SDL_PROP_RENDERER_D3D12_DEVICE_POINTER`: the ID3D12Device associated
  *   with the renderer
  * - `SDL_PROP_RENDERER_D3D12_COMMAND_QUEUE_POINTER`: the ID3D12CommandQueue
  *   associated with the renderer
+ *
+ * With the vulkan renderer:
+ *
+ * - `SDL_PROP_RENDERER_VULKAN_INSTANCE_POINTER`: the VkInstance associated
+ *   with the renderer
+ * - `SDL_PROP_RENDERER_VULKAN_SURFACE_NUMBER`: the VkSurfaceKHR associated
+ *   with the renderer
+ * - `SDL_PROP_RENDERER_VULKAN_PHYSICAL_DEVICE_POINTER`: the VkPhysicalDevice
+ *   associated with the renderer
+ * - `SDL_PROP_RENDERER_VULKAN_DEVICE_POINTER`: the VkDevice associated with
+ *   the renderer
+ * - `SDL_PROP_RENDERER_VULKAN_GRAPHICS_QUEUE_FAMILY_INDEX_NUMBER`: the queue
+ *   family index used for rendering
+ * - `SDL_PROP_RENDERER_VULKAN_PRESENT_QUEUE_FAMILY_INDEX_NUMBER`: the queue
+ *   family index used for presentation
+ * - `SDL_PROP_RENDERER_VULKAN_SWAPCHAIN_IMAGE_COUNT_NUMBER`: the number of
+ *   swapchain images, or potential frames in flight, used by the Vulkan
+ *   renderer
  *
  * \param renderer the rendering context
  * \returns a valid property ID on success or 0 on failure; call
@@ -354,10 +422,24 @@ extern DECLSPEC int SDLCALL SDL_GetRendererInfo(SDL_Renderer *renderer, SDL_Rend
  */
 extern DECLSPEC SDL_PropertiesID SDLCALL SDL_GetRendererProperties(SDL_Renderer *renderer);
 
-#define SDL_PROP_RENDERER_D3D9_DEVICE_POINTER           "SDL.renderer.d3d9.device"
-#define SDL_PROP_RENDERER_D3D11_DEVICE_POINTER          "SDL.renderer.d3d11.device"
-#define SDL_PROP_RENDERER_D3D12_DEVICE_POINTER          "SDL.renderer.d3d12.device"
-#define SDL_PROP_RENDERER_D3D12_COMMAND_QUEUE_POINTER   "SDL.renderer.d3d12.command_queue"
+#define SDL_PROP_RENDERER_NAME_STRING                               "SDL.renderer.name"
+#define SDL_PROP_RENDERER_WINDOW_POINTER                            "SDL.renderer.window"
+#define SDL_PROP_RENDERER_SURFACE_POINTER                           "SDL.renderer.surface"
+#define SDL_PROP_RENDERER_OUTPUT_COLORSPACE_NUMBER                  "SDL.renderer.output_colorspace"
+#define SDL_PROP_RENDERER_HDR_ENABLED_BOOLEAN                       "SDL.renderer.HDR_enabled"
+#define SDL_PROP_RENDERER_SDR_WHITE_POINT_FLOAT                     "SDL.renderer.SDR_white_point"
+#define SDL_PROP_RENDERER_HDR_HEADROOM_FLOAT                        "SDL.renderer.HDR_headroom"
+#define SDL_PROP_RENDERER_D3D9_DEVICE_POINTER                       "SDL.renderer.d3d9.device"
+#define SDL_PROP_RENDERER_D3D11_DEVICE_POINTER                      "SDL.renderer.d3d11.device"
+#define SDL_PROP_RENDERER_D3D12_DEVICE_POINTER                      "SDL.renderer.d3d12.device"
+#define SDL_PROP_RENDERER_D3D12_COMMAND_QUEUE_POINTER               "SDL.renderer.d3d12.command_queue"
+#define SDL_PROP_RENDERER_VULKAN_INSTANCE_POINTER                   "SDL.renderer.vulkan.instance"
+#define SDL_PROP_RENDERER_VULKAN_SURFACE_NUMBER                     "SDL.renderer.vulkan.surface"
+#define SDL_PROP_RENDERER_VULKAN_PHYSICAL_DEVICE_POINTER            "SDL.renderer.vulkan.physical_device"
+#define SDL_PROP_RENDERER_VULKAN_DEVICE_POINTER                     "SDL.renderer.vulkan.device"
+#define SDL_PROP_RENDERER_VULKAN_GRAPHICS_QUEUE_FAMILY_INDEX_NUMBER "SDL.renderer.vulkan.graphics_queue_family_index"
+#define SDL_PROP_RENDERER_VULKAN_PRESENT_QUEUE_FAMILY_INDEX_NUMBER  "SDL.renderer.vulkan.present_queue_family_index"
+#define SDL_PROP_RENDERER_VULKAN_SWAPCHAIN_IMAGE_COUNT_NUMBER       "SDL.renderer.vulkan.swapchain_image_count"
 
 /**
  * Get the output size in pixels of a rendering context.
@@ -456,8 +538,8 @@ extern DECLSPEC SDL_Texture *SDLCALL SDL_CreateTextureFromSurface(SDL_Renderer *
  * These are the supported properties:
  *
  * - `SDL_PROP_TEXTURE_CREATE_COLORSPACE_NUMBER`: an SDL_ColorSpace value
- *   describing the texture colorspace, defaults to SDL_COLORSPACE_SCRGB for
- *   floating point textures, SDL_COLORSPACE_HDR10 for 10-bit textures,
+ *   describing the texture colorspace, defaults to SDL_COLORSPACE_SRGB_LINEAR
+ *   for floating point textures, SDL_COLORSPACE_HDR10 for 10-bit textures,
  *   SDL_COLORSPACE_SRGB for other RGB textures and SDL_COLORSPACE_JPEG for
  *   YUV textures.
  * - `SDL_PROP_TEXTURE_CREATE_FORMAT_NUMBER`: one of the enumerated values in
@@ -468,6 +550,17 @@ extern DECLSPEC SDL_Texture *SDLCALL SDL_CreateTextureFromSurface(SDL_Renderer *
  *   pixels, required
  * - `SDL_PROP_TEXTURE_CREATE_HEIGHT_NUMBER`: the height of the texture in
  *   pixels, required
+ * - `SDL_PROP_TEXTURE_CREATE_SDR_WHITE_POINT_FLOAT`: for HDR10 and floating
+ *   point textures, this defines the value of 100% diffuse white, with higher
+ *   values being displayed in the High Dynamic Range headroom. This defaults
+ *   to 100 for HDR10 textures and 1.0 for floating point textures.
+ * - `SDL_PROP_TEXTURE_CREATE_HDR_HEADROOM_FLOAT`: for HDR10 and floating
+ *   point textures, this defines the maximum dynamic range used by the
+ *   content, in terms of the SDR white point. This would be equivalent to
+ *   maxCLL / SDL_PROP_TEXTURE_CREATE_SDR_WHITE_POINT_FLOAT for HDR10 content.
+ *   If this is defined, any values outside the range supported by the display
+ *   will be scaled into the available HDR headroom, otherwise they are
+ *   clipped.
  *
  * With the direct3d11 renderer:
  *
@@ -490,6 +583,12 @@ extern DECLSPEC SDL_Texture *SDLCALL SDL_CreateTextureFromSurface(SDL_Renderer *
  * - `SDL_PROP_TEXTURE_CREATE_D3D12_TEXTURE_V_POINTER`: the ID3D12Resource
  *   associated with the V plane of a YUV texture, if you want to wrap an
  *   existing texture.
+ *
+ * With the metal renderer:
+ *
+ * - `SDL_PROP_TEXTURE_CREATE_METAL_PIXELBUFFER_POINTER`: the CVPixelBufferRef
+ *   associated with the texture, if you want to create a texture from an
+ *   existing pixel buffer.
  *
  * With the opengl renderer:
  *
@@ -521,6 +620,12 @@ extern DECLSPEC SDL_Texture *SDLCALL SDL_CreateTextureFromSurface(SDL_Renderer *
  *   associated with the V plane of a YUV texture, if you want to wrap an
  *   existing texture.
  *
+ * With the vulkan renderer:
+ *
+ * - `SDL_PROP_TEXTURE_CREATE_VULKAN_TEXTURE_NUMBER`: the VkImage with layout
+ *   VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL associated with the texture, if
+ *   you want to wrap an existing texture.
+ *
  * \param renderer the rendering context
  * \param props the properties to use
  * \returns a pointer to the created texture or NULL if no rendering context
@@ -542,12 +647,15 @@ extern DECLSPEC SDL_Texture *SDLCALL SDL_CreateTextureWithProperties(SDL_Rendere
 #define SDL_PROP_TEXTURE_CREATE_ACCESS_NUMBER               "access"
 #define SDL_PROP_TEXTURE_CREATE_WIDTH_NUMBER                "width"
 #define SDL_PROP_TEXTURE_CREATE_HEIGHT_NUMBER               "height"
+#define SDL_PROP_TEXTURE_CREATE_SDR_WHITE_POINT_FLOAT       "SDR_white_point"
+#define SDL_PROP_TEXTURE_CREATE_HDR_HEADROOM_FLOAT          "HDR_headroom"
 #define SDL_PROP_TEXTURE_CREATE_D3D11_TEXTURE_POINTER       "d3d11.texture"
 #define SDL_PROP_TEXTURE_CREATE_D3D11_TEXTURE_U_POINTER     "d3d11.texture_u"
 #define SDL_PROP_TEXTURE_CREATE_D3D11_TEXTURE_V_POINTER     "d3d11.texture_v"
 #define SDL_PROP_TEXTURE_CREATE_D3D12_TEXTURE_POINTER       "d3d12.texture"
 #define SDL_PROP_TEXTURE_CREATE_D3D12_TEXTURE_U_POINTER     "d3d12.texture_u"
 #define SDL_PROP_TEXTURE_CREATE_D3D12_TEXTURE_V_POINTER     "d3d12.texture_v"
+#define SDL_PROP_TEXTURE_CREATE_METAL_PIXELBUFFER_POINTER   "metal.pixelbuffer"
 #define SDL_PROP_TEXTURE_CREATE_OPENGL_TEXTURE_NUMBER       "opengl.texture"
 #define SDL_PROP_TEXTURE_CREATE_OPENGL_TEXTURE_UV_NUMBER    "opengl.texture_uv"
 #define SDL_PROP_TEXTURE_CREATE_OPENGL_TEXTURE_U_NUMBER     "opengl.texture_u"
@@ -557,7 +665,7 @@ extern DECLSPEC SDL_Texture *SDLCALL SDL_CreateTextureWithProperties(SDL_Rendere
 #define SDL_PROP_TEXTURE_CREATE_OPENGLES2_TEXTURE_UV_NUMBER "opengles2.texture_uv"
 #define SDL_PROP_TEXTURE_CREATE_OPENGLES2_TEXTURE_U_NUMBER  "opengles2.texture_u"
 #define SDL_PROP_TEXTURE_CREATE_OPENGLES2_TEXTURE_V_NUMBER  "opengles2.texture_v"
-
+#define SDL_PROP_TEXTURE_CREATE_VULKAN_TEXTURE_NUMBER       "vulkan.texture"
 
 /**
  * Get the properties associated with a texture.
@@ -566,6 +674,17 @@ extern DECLSPEC SDL_Texture *SDLCALL SDL_CreateTextureWithProperties(SDL_Rendere
  *
  * - `SDL_PROP_TEXTURE_COLORSPACE_NUMBER`: an SDL_ColorSpace value describing
  *   the colorspace used by the texture
+ * - `SDL_PROP_TEXTURE_SDR_WHITE_POINT_FLOAT`: for HDR10 and floating point
+ *   textures, this defines the value of 100% diffuse white, with higher
+ *   values being displayed in the High Dynamic Range headroom. This defaults
+ *   to 100 for HDR10 textures and 1.0 for other textures.
+ * - `SDL_PROP_TEXTURE_HDR_HEADROOM_FLOAT`: for HDR10 and floating point
+ *   textures, this defines the maximum dynamic range used by the content, in
+ *   terms of the SDR white point. If this is defined, any values outside the
+ *   range supported by the display will be scaled into the available HDR
+ *   headroom, otherwise they are clipped. This defaults to 1.0 for SDR
+ *   textures, 4.0 for HDR10 textures, and no default for floating point
+ *   textures.
  *
  * With the direct3d11 renderer:
  *
@@ -585,6 +704,17 @@ extern DECLSPEC SDL_Texture *SDLCALL SDL_CreateTextureWithProperties(SDL_Rendere
  * - `SDL_PROP_TEXTURE_D3D12_TEXTURE_V_POINTER`: the ID3D12Resource associated
  *   with the V plane of a YUV texture
  *
+ * With the vulkan renderer:
+ *
+ * - `SDL_PROP_TEXTURE_VULKAN_TEXTURE_POINTER`: the VkImage associated with
+ *   the texture
+ * - `SDL_PROP_TEXTURE_VULKAN_TEXTURE_U_POINTER`: the VkImage associated with
+ *   the U plane of a YUV texture
+ * - `SDL_PROP_TEXTURE_VULKAN_TEXTURE_V_POINTER`: the VkImage associated with
+ *   the V plane of a YUV texture
+ * - `SDL_PROP_TEXTURE_VULKAN_TEXTURE_UV_POINTER`: the VkImage associated with
+ *   the UV plane of a NV12/NV21 texture
+ *
  * With the opengl renderer:
  *
  * - `SDL_PROP_TEXTURE_OPENGL_TEXTURE_NUMBER`: the GLuint texture associated
@@ -595,8 +725,8 @@ extern DECLSPEC SDL_Texture *SDLCALL SDL_CreateTextureWithProperties(SDL_Rendere
  *   with the U plane of a YUV texture
  * - `SDL_PROP_TEXTURE_OPENGL_TEXTURE_V_NUMBER`: the GLuint texture associated
  *   with the V plane of a YUV texture
- * - `SDL_PROP_TEXTURE_OPENGL_TEXTURE_TARGET`: the GLenum for the texture
- *   target (`GL_TEXTURE_2D`, `GL_TEXTURE_RECTANGLE_ARB`, etc)
+ * - `SDL_PROP_TEXTURE_OPENGL_TEXTURE_TARGET_NUMBER`: the GLenum for the
+ *   texture target (`GL_TEXTURE_2D`, `GL_TEXTURE_RECTANGLE_ARB`, etc)
  * - `SDL_PROP_TEXTURE_OPENGL_TEX_W_FLOAT`: the texture coordinate width of
  *   the texture (0.0 - 1.0)
  * - `SDL_PROP_TEXTURE_OPENGL_TEX_H_FLOAT`: the texture coordinate height of
@@ -612,8 +742,13 @@ extern DECLSPEC SDL_Texture *SDLCALL SDL_CreateTextureWithProperties(SDL_Rendere
  *   associated with the U plane of a YUV texture
  * - `SDL_PROP_TEXTURE_OPENGLES2_TEXTURE_V_NUMBER`: the GLuint texture
  *   associated with the V plane of a YUV texture
- * - `SDL_PROP_TEXTURE_OPENGLES2_TEXTURE_TARGET`: the GLenum for the texture
- *   target (`GL_TEXTURE_2D`, `GL_TEXTURE_EXTERNAL_OES`, etc)
+ * - `SDL_PROP_TEXTURE_OPENGLES2_TEXTURE_TARGET_NUMBER`: the GLenum for the
+ *   texture target (`GL_TEXTURE_2D`, `GL_TEXTURE_EXTERNAL_OES`, etc)
+ *
+ * With the vulkan renderer:
+ *
+ * - `SDL_PROP_TEXTURE_VULKAN_TEXTURE_NUMBER`: the VkImage associated with the
+ *   texture
  *
  * \param texture the texture to query
  * \returns a valid property ID on success or 0 on failure; call
@@ -627,6 +762,8 @@ extern DECLSPEC SDL_Texture *SDLCALL SDL_CreateTextureWithProperties(SDL_Rendere
 extern DECLSPEC SDL_PropertiesID SDLCALL SDL_GetTextureProperties(SDL_Texture *texture);
 
 #define SDL_PROP_TEXTURE_COLORSPACE_NUMBER                  "SDL.texture.colorspace"
+#define SDL_PROP_TEXTURE_SDR_WHITE_POINT_FLOAT              "SDL.texture.SDR_white_point"
+#define SDL_PROP_TEXTURE_HDR_HEADROOM_FLOAT                 "SDL.texture.HDR_headroom"
 #define SDL_PROP_TEXTURE_D3D11_TEXTURE_POINTER              "SDL.texture.d3d11.texture"
 #define SDL_PROP_TEXTURE_D3D11_TEXTURE_U_POINTER            "SDL.texture.d3d11.texture_u"
 #define SDL_PROP_TEXTURE_D3D11_TEXTURE_V_POINTER            "SDL.texture.d3d11.texture_v"
@@ -637,14 +774,15 @@ extern DECLSPEC SDL_PropertiesID SDLCALL SDL_GetTextureProperties(SDL_Texture *t
 #define SDL_PROP_TEXTURE_OPENGL_TEXTURE_UV_NUMBER           "SDL.texture.opengl.texture_uv"
 #define SDL_PROP_TEXTURE_OPENGL_TEXTURE_U_NUMBER            "SDL.texture.opengl.texture_u"
 #define SDL_PROP_TEXTURE_OPENGL_TEXTURE_V_NUMBER            "SDL.texture.opengl.texture_v"
-#define SDL_PROP_TEXTURE_OPENGL_TEXTURE_TARGET              "SDL.texture.opengl.target"
+#define SDL_PROP_TEXTURE_OPENGL_TEXTURE_TARGET_NUMBER       "SDL.texture.opengl.target"
 #define SDL_PROP_TEXTURE_OPENGL_TEX_W_FLOAT                 "SDL.texture.opengl.tex_w"
 #define SDL_PROP_TEXTURE_OPENGL_TEX_H_FLOAT                 "SDL.texture.opengl.tex_h"
 #define SDL_PROP_TEXTURE_OPENGLES2_TEXTURE_NUMBER           "SDL.texture.opengles2.texture"
 #define SDL_PROP_TEXTURE_OPENGLES2_TEXTURE_UV_NUMBER        "SDL.texture.opengles2.texture_uv"
 #define SDL_PROP_TEXTURE_OPENGLES2_TEXTURE_U_NUMBER         "SDL.texture.opengles2.texture_u"
 #define SDL_PROP_TEXTURE_OPENGLES2_TEXTURE_V_NUMBER         "SDL.texture.opengles2.texture_v"
-#define SDL_PROP_TEXTURE_OPENGLES2_TEXTURE_TARGET           "SDL.texture.opengles2.target"
+#define SDL_PROP_TEXTURE_OPENGLES2_TEXTURE_TARGET_NUMBER    "SDL.texture.opengles2.target"
+#define SDL_PROP_TEXTURE_VULKAN_TEXTURE_NUMBER              "SDL.texture.vulkan.texture"
 
 /**
  * Get the renderer that created an SDL_Texture.
@@ -893,6 +1031,8 @@ extern DECLSPEC int SDLCALL SDL_GetTextureBlendMode(SDL_Texture *texture, SDL_Bl
 
 /**
  * Set the scale mode used for texture scale operations.
+ *
+ * The default texture scale mode is SDL_SCALEMODE_LINEAR.
  *
  * If the scale mode is not supported, the closest supported mode is chosen.
  *
@@ -1250,6 +1390,7 @@ extern DECLSPEC int SDLCALL SDL_ConvertEventToRenderCoordinates(SDL_Renderer *re
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_GetRenderViewport
+ * \sa SDL_RenderViewportSet
  */
 extern DECLSPEC int SDLCALL SDL_SetRenderViewport(SDL_Renderer *renderer, const SDL_Rect *rect);
 
@@ -1263,9 +1404,28 @@ extern DECLSPEC int SDLCALL SDL_SetRenderViewport(SDL_Renderer *renderer, const 
  *
  * \since This function is available since SDL 3.0.0.
  *
+ * \sa SDL_RenderViewportSet
  * \sa SDL_SetRenderViewport
  */
 extern DECLSPEC int SDLCALL SDL_GetRenderViewport(SDL_Renderer *renderer, SDL_Rect *rect);
+
+/**
+ * Return whether an explicit rectangle was set as the viewport.
+ *
+ * This is useful if you're saving and restoring the viewport and want to know
+ * whether you should restore a specific rectangle or NULL. Note that the
+ * viewport is always reset when changing rendering targets.
+ *
+ * \param renderer the rendering context
+ * \returns SDL_TRUE if the viewport was set to a specific rectangle, or
+ *          SDL_FALSE if it was set to NULL (the entire target)
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_GetRenderViewport
+ * \sa SDL_SetRenderViewport
+ */
+extern DECLSPEC SDL_bool SDLCALL SDL_RenderViewportSet(SDL_Renderer *renderer);
 
 /**
  * Set the clip rectangle for rendering on the specified target.
@@ -1458,6 +1618,42 @@ extern DECLSPEC int SDLCALL SDL_GetRenderDrawColor(SDL_Renderer *renderer, Uint8
  * \sa SDL_GetRenderDrawColor
  */
 extern DECLSPEC int SDLCALL SDL_GetRenderDrawColorFloat(SDL_Renderer *renderer, float *r, float *g, float *b, float *a);
+
+/**
+ * Set the color scale used for render operations.
+ *
+ * The color scale is an additional scale multiplied into the pixel color
+ * value while rendering. This can be used to adjust the brightness of colors
+ * during HDR rendering, or changing HDR video brightness when playing on an
+ * SDR display.
+ *
+ * The color scale does not affect the alpha channel, only the color
+ * brightness.
+ *
+ * \param renderer the rendering context
+ * \param scale the color scale value
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_GetRenderColorScale
+ */
+extern DECLSPEC int SDLCALL SDL_SetRenderColorScale(SDL_Renderer *renderer, float scale);
+
+/**
+ * Get the color scale used for render operations.
+ *
+ * \param renderer the rendering context
+ * \param scale a pointer filled in with the current color scale value
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_SetRenderColorScale
+ */
+extern DECLSPEC int SDLCALL SDL_GetRenderColorScale(SDL_Renderer *renderer, float *scale);
 
 /**
  * Set the blend mode used for drawing operations (Fill and Line).
@@ -1696,7 +1892,7 @@ extern DECLSPEC int SDLCALL SDL_RenderGeometry(SDL_Renderer *renderer,
  * \param texture (optional) The SDL texture to use.
  * \param xy Vertex positions
  * \param xy_stride Byte size to move from one element to the next element
- * \param color Vertex colors (as SDL_FColor)
+ * \param color Vertex colors (as SDL_Color)
  * \param color_stride Byte size to move from one element to the next element
  * \param uv Vertex normalized texture coordinates
  * \param uv_stride Byte size to move from one element to the next element
@@ -1714,6 +1910,40 @@ extern DECLSPEC int SDLCALL SDL_RenderGeometry(SDL_Renderer *renderer,
  * \sa SDL_Vertex
  */
 extern DECLSPEC int SDLCALL SDL_RenderGeometryRaw(SDL_Renderer *renderer,
+                                               SDL_Texture *texture,
+                                               const float *xy, int xy_stride,
+                                               const SDL_Color *color, int color_stride,
+                                               const float *uv, int uv_stride,
+                                               int num_vertices,
+                                               const void *indices, int num_indices, int size_indices);
+
+/**
+ * Render a list of triangles, optionally using a texture and indices into the
+ * vertex arrays Color and alpha modulation is done per vertex
+ * (SDL_SetTextureColorMod and SDL_SetTextureAlphaMod are ignored).
+ *
+ * \param renderer The rendering context.
+ * \param texture (optional) The SDL texture to use.
+ * \param xy Vertex positions
+ * \param xy_stride Byte size to move from one element to the next element
+ * \param color Vertex colors (as SDL_FColor)
+ * \param color_stride Byte size to move from one element to the next element
+ * \param uv Vertex normalized texture coordinates
+ * \param uv_stride Byte size to move from one element to the next element
+ * \param num_vertices Number of vertices.
+ * \param indices (optional) An array of indices into the 'vertices' arrays,
+ *                if NULL all vertices will be rendered in sequential order.
+ * \param num_indices Number of indices.
+ * \param size_indices Index size: 1 (byte), 2 (short), 4 (int)
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_RenderGeometry
+ * \sa SDL_Vertex
+ */
+extern DECLSPEC int SDLCALL SDL_RenderGeometryRawFloat(SDL_Renderer *renderer,
                                                SDL_Texture *texture,
                                                const float *xy, int xy_stride,
                                                const SDL_FColor *color, int color_stride,
@@ -1877,6 +2107,34 @@ extern DECLSPEC void *SDLCALL SDL_GetRenderMetalLayer(SDL_Renderer *renderer);
  * \sa SDL_GetRenderMetalLayer
  */
 extern DECLSPEC void *SDLCALL SDL_GetRenderMetalCommandEncoder(SDL_Renderer *renderer);
+
+
+/**
+ * Add a set of synchronization semaphores for the current frame.
+ *
+ * The Vulkan renderer will wait for `wait_semaphore` before submitting
+ * rendering commands and signal `signal_semaphore` after rendering commands
+ * are complete for this frame.
+ *
+ * This should be called each frame that you want semaphore synchronization.
+ * The Vulkan renderer may have multiple frames in flight on the GPU, so you
+ * should have multiple semaphores that are used for synchronization. Querying
+ * SDL_PROP_RENDERER_VULKAN_SWAPCHAIN_IMAGE_COUNT_NUMBER will give you the
+ * maximum number of semaphores you'll need.
+ *
+ * \param renderer the rendering context
+ * \param wait_stage_mask the VkPipelineStageFlags for the wait
+ * \param wait_semaphore a VkSempahore to wait on before rendering the current
+ *                       frame, or 0 if not needed
+ * \param signal_semaphore a VkSempahore that SDL will signal when rendering
+ *                         for the current frame is complete, or 0 if not
+ *                         needed
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ */
+extern DECLSPEC int SDLCALL SDL_AddVulkanRenderSemaphores(SDL_Renderer *renderer, Uint32 wait_stage_mask, Sint64 wait_semaphore, Sint64 signal_semaphore);
 
 /**
  * Toggle VSync of the given renderer.

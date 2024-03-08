@@ -73,6 +73,7 @@ public static class Program
             "SDL_blendmode.h",
             "SDL_pixels.h",
             "SDL_surface.h",
+            "SDL_camera.h",
         ];
 
         foreach(string header in headers)

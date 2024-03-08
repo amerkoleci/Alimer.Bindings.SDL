@@ -55,6 +55,7 @@
 #define HAVE_WCHAR_H 1
 
 /* C library functions */
+#define HAVE_LIBC   1
 #define HAVE_DLOPEN 1
 #define HAVE_MALLOC 1
 #define HAVE_CALLOC 1
@@ -64,8 +65,6 @@
 #define HAVE_SETENV 1
 #define HAVE_PUTENV 1
 #define HAVE_UNSETENV 1
-#define HAVE_QSORT 1
-#define HAVE_BSEARCH 1
 #define HAVE_ABS 1
 #define HAVE_BCOPY 1
 #define HAVE_MEMSET 1
@@ -207,5 +206,8 @@
 
 /* Enable system filesystem support */
 #define SDL_FILESYSTEM_EMSCRIPTEN 1
+
+/* Enable the camera driver */
+#define SDL_CAMERA_DRIVER_EMSCRIPTEN  1
 
 #endif /* SDL_build_config_emscripten_h */

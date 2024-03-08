@@ -417,16 +417,11 @@ public static unsafe partial class SDL
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate SDL_HitTestResult SDL_HitTest(IntPtr win, IntPtr area, IntPtr data);
 
-    public static SDL_Window SDL_CreateWindow(byte* title, int w, int h, SDL_WindowFlags flags)
-    {
-        return SDL_CreateWindow(title, w, h, (uint)flags);
-    }
-
     public static SDL_Window SDL_CreateWindow(ReadOnlySpan<byte> title, int width, int height, SDL_WindowFlags flags)
     {
         fixed (byte* pName = title)
         {
-            return SDL_CreateWindow(pName, width, height, (uint)flags);
+            return SDL_CreateWindow(pName, width, height, flags);
         }
     }
 
@@ -434,13 +429,8 @@ public static unsafe partial class SDL
     {
         fixed (byte* pName = title.GetUtf8Span())
         {
-            return SDL_CreateWindow(pName, width, height, (uint)flags);
+            return SDL_CreateWindow(pName, width, height, flags);
         }
-    }
-
-    public static SDL_Window SDL_CreatePopupWindow(SDL_Window parent, int offset_x, int offset_y, int w, int h, SDL_WindowFlags flags)
-    {
-        return SDL_CreatePopupWindow(parent, offset_x, offset_y, w, h, (uint)flags);
     }
 
     public static int SDL_SetWindowTitle(SDL_Window window, ReadOnlySpan<byte> name)
@@ -614,6 +604,19 @@ public static unsafe partial class SDL
     public static int SDL_SetBooleanProperty(SDL_PropertiesID properties, string name, bool value)
     {
         return SDL_SetBooleanProperty(properties, name.GetUtf8Span(), value);
+    }
+
+    public static bool SDL_HasProperty(SDL_PropertiesID properties, ReadOnlySpan<byte> name)
+    {
+        fixed (byte* pName = name)
+        {
+            return SDL_HasProperty(properties, pName) == SDL_TRUE;
+        }
+    }
+
+    public static bool SDL_HasProperty(SDL_PropertiesID properties, string name)
+    {
+        return SDL_HasProperty(properties, name.GetUtf8Span());
     }
 
     public static SDL_PropertyType SDL_GetPropertyType(SDL_PropertiesID properties, ReadOnlySpan<byte> name)

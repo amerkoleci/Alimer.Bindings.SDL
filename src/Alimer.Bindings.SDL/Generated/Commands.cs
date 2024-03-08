@@ -68,6 +68,9 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_SetBooleanProperty")]
 	public static partial int SDL_SetBooleanProperty(SDL_PropertiesID props, byte* name, SDL_bool value);
 
+	[LibraryImport(LibName, EntryPoint = "SDL_HasProperty")]
+	public static partial SDL_bool SDL_HasProperty(SDL_PropertiesID props, byte* name);
+
 	[LibraryImport(LibName, EntryPoint = "SDL_GetPropertyType")]
 	public static partial SDL_PropertyType SDL_GetPropertyType(SDL_PropertiesID props, byte* name);
 
@@ -972,10 +975,10 @@ public unsafe partial class SDL
 	public static partial uint SDL_GetWindowPixelFormat(SDL_Window window);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateWindow")]
-	public static partial SDL_Window SDL_CreateWindow(byte* title, int w, int h, uint flags);
+	public static partial SDL_Window SDL_CreateWindow(byte* title, int w, int h, SDL_WindowFlags flags);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreatePopupWindow")]
-	public static partial SDL_Window SDL_CreatePopupWindow(SDL_Window parent, int offset_x, int offset_y, int w, int h, uint flags);
+	public static partial SDL_Window SDL_CreatePopupWindow(SDL_Window parent, int offset_x, int offset_y, int w, int h, SDL_WindowFlags flags);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateWindowWithProperties")]
 	public static partial SDL_Window SDL_CreateWindowWithProperties(SDL_PropertiesID props);
@@ -993,7 +996,7 @@ public unsafe partial class SDL
 	public static partial SDL_PropertiesID SDL_GetWindowProperties(SDL_Window window);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowFlags")]
-	public static partial uint SDL_GetWindowFlags(SDL_Window window);
+	public static partial SDL_WindowFlags SDL_GetWindowFlags(SDL_Window window);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowTitle")]
 	public static partial int SDL_SetWindowTitle(SDL_Window window, byte* title);
@@ -1067,8 +1070,8 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_SyncWindow")]
 	public static partial int SDL_SyncWindow(SDL_Window window);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_HasWindowSurface")]
-	public static partial SDL_bool SDL_HasWindowSurface(SDL_Window window);
+	[LibraryImport(LibName, EntryPoint = "SDL_WindowHasSurface")]
+	public static partial SDL_bool SDL_WindowHasSurface(SDL_Window window);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowSurface")]
 	public static partial SDL_Surface* SDL_GetWindowSurface(SDL_Window window);
@@ -1129,6 +1132,9 @@ public unsafe partial class SDL
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowHitTest")]
 	public static partial int SDL_SetWindowHitTest(SDL_Window window, SDL_HitTest callback, nint callback_data);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowShape")]
+	public static partial int SDL_SetWindowShape(SDL_Window window, SDL_Surface* shape);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_FlashWindow")]
 	public static partial int SDL_FlashWindow(SDL_Window window, SDL_FlashOperation operation);
@@ -1421,9 +1427,6 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_DelHintCallback")]
 	public static partial void SDL_DelHintCallback(byte* name, SDL_HintCallback callback, nint userdata);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_ClearHints")]
-	public static partial void SDL_ClearHints();
-
 	[LibraryImport(LibName, EntryPoint = "SDL_GetHaptics")]
 	public static partial SDL_HapticID* SDL_GetHaptics(out int count);
 
@@ -1521,16 +1524,16 @@ public unsafe partial class SDL
 	public static partial SDL_BlendMode SDL_ComposeCustomBlendMode(SDL_BlendFactor srcColorFactor, SDL_BlendFactor dstColorFactor, SDL_BlendOperation colorOperation, SDL_BlendFactor srcAlphaFactor, SDL_BlendFactor dstAlphaFactor, SDL_BlendOperation alphaOperation);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetPixelFormatName")]
-	public static partial byte* SDL_GetPixelFormatName(uint format);
+	public static partial byte* SDL_GetPixelFormatName(SDL_PixelFormatEnum format);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetMasksForPixelFormatEnum")]
-	public static partial SDL_bool SDL_GetMasksForPixelFormatEnum(uint format, int* bpp, uint* Rmask, uint* Gmask, uint* Bmask, uint* Amask);
+	public static partial SDL_bool SDL_GetMasksForPixelFormatEnum(SDL_PixelFormatEnum format, int* bpp, uint* Rmask, uint* Gmask, uint* Bmask, uint* Amask);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetPixelFormatEnumForMasks")]
-	public static partial uint SDL_GetPixelFormatEnumForMasks(int bpp, uint Rmask, uint Gmask, uint Bmask, uint Amask);
+	public static partial SDL_PixelFormatEnum SDL_GetPixelFormatEnumForMasks(int bpp, uint Rmask, uint Gmask, uint Bmask, uint Amask);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreatePixelFormat")]
-	public static partial SDL_PixelFormat* SDL_CreatePixelFormat(uint pixel_format);
+	public static partial SDL_PixelFormat* SDL_CreatePixelFormat(SDL_PixelFormatEnum pixel_format);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DestroyPixelFormat")]
 	public static partial void SDL_DestroyPixelFormat(SDL_PixelFormat* format);
@@ -1560,10 +1563,10 @@ public unsafe partial class SDL
 	public static partial void SDL_GetRGBA(uint pixel, SDL_PixelFormat* format, byte* r, byte* g, byte* b, byte* a);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateSurface")]
-	public static partial SDL_Surface* SDL_CreateSurface(int width, int height, uint format);
+	public static partial SDL_Surface* SDL_CreateSurface(int width, int height, SDL_PixelFormatEnum format);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateSurfaceFrom")]
-	public static partial SDL_Surface* SDL_CreateSurfaceFrom(nint pixels, int width, int height, int pitch, uint format);
+	public static partial SDL_Surface* SDL_CreateSurfaceFrom(nint pixels, int width, int height, int pitch, SDL_PixelFormatEnum format);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DestroySurface")]
 	public static partial void SDL_DestroySurface(SDL_Surface* surface);
@@ -1647,19 +1650,19 @@ public unsafe partial class SDL
 	public static partial SDL_Surface* SDL_ConvertSurface(SDL_Surface* surface, SDL_PixelFormat* format);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ConvertSurfaceFormat")]
-	public static partial SDL_Surface* SDL_ConvertSurfaceFormat(SDL_Surface* surface, uint pixel_format);
+	public static partial SDL_Surface* SDL_ConvertSurfaceFormat(SDL_Surface* surface, SDL_PixelFormatEnum pixel_format);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ConvertSurfaceFormatAndColorspace")]
-	public static partial SDL_Surface* SDL_ConvertSurfaceFormatAndColorspace(SDL_Surface* surface, uint pixel_format, SDL_Colorspace colorspace);
+	public static partial SDL_Surface* SDL_ConvertSurfaceFormatAndColorspace(SDL_Surface* surface, SDL_PixelFormatEnum pixel_format, SDL_Colorspace colorspace, SDL_PropertiesID props);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ConvertPixels")]
-	public static partial int SDL_ConvertPixels(int width, int height, uint src_format, void* src, int src_pitch, uint dst_format, nint dst, int dst_pitch);
+	public static partial int SDL_ConvertPixels(int width, int height, SDL_PixelFormatEnum src_format, void* src, int src_pitch, SDL_PixelFormatEnum dst_format, nint dst, int dst_pitch);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ConvertPixelsAndColorspace")]
-	public static partial int SDL_ConvertPixelsAndColorspace(int width, int height, uint src_format, SDL_Colorspace src_colorspace, void* src, int src_pitch, uint dst_format, SDL_Colorspace dst_colorspace, nint dst, int dst_pitch);
+	public static partial int SDL_ConvertPixelsAndColorspace(int width, int height, SDL_PixelFormatEnum src_format, SDL_Colorspace src_colorspace, SDL_PropertiesID src_properties, void* src, int src_pitch, SDL_PixelFormatEnum dst_format, SDL_Colorspace dst_colorspace, SDL_PropertiesID dst_properties, nint dst, int dst_pitch);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_PremultiplyAlpha")]
-	public static partial int SDL_PremultiplyAlpha(int width, int height, uint src_format, void* src, int src_pitch, uint dst_format, nint dst, int dst_pitch);
+	public static partial int SDL_PremultiplyAlpha(int width, int height, SDL_PixelFormatEnum src_format, void* src, int src_pitch, SDL_PixelFormatEnum dst_format, nint dst, int dst_pitch);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_FillSurfaceRect")]
 	public static partial int SDL_FillSurfaceRect(SDL_Surface* dst, Rectangle* rect, uint color);
@@ -1684,5 +1687,50 @@ public unsafe partial class SDL
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ReadSurfacePixel")]
 	public static partial int SDL_ReadSurfacePixel(SDL_Surface* surface, int x, int y, byte* r, byte* g, byte* b, byte* a);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetNumCameraDrivers")]
+	public static partial int SDL_GetNumCameraDrivers();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetCameraDriver")]
+	public static partial byte* SDL_GetCameraDriver(int index);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetCurrentCameraDriver")]
+	public static partial byte* SDL_GetCurrentCameraDriver();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetCameraDevices")]
+	public static partial SDL_CameraDeviceID* SDL_GetCameraDevices(out int count);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetCameraDeviceSupportedFormats")]
+	public static partial SDL_CameraSpec* SDL_GetCameraDeviceSupportedFormats(SDL_CameraDeviceID devid, out int count);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetCameraDeviceName")]
+	public static partial byte* SDL_GetCameraDeviceName(SDL_CameraDeviceID instance_id);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetCameraDevicePosition")]
+	public static partial SDL_CameraPosition SDL_GetCameraDevicePosition(SDL_CameraDeviceID instance_id);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_OpenCameraDevice")]
+	public static partial SDL_Camera* SDL_OpenCameraDevice(SDL_CameraDeviceID instance_id, SDL_CameraSpec* spec);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetCameraPermissionState")]
+	public static partial int SDL_GetCameraPermissionState(SDL_Camera* camera);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetCameraInstanceID")]
+	public static partial SDL_CameraDeviceID SDL_GetCameraInstanceID(SDL_Camera* camera);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetCameraProperties")]
+	public static partial SDL_PropertiesID SDL_GetCameraProperties(SDL_Camera* camera);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetCameraFormat")]
+	public static partial int SDL_GetCameraFormat(SDL_Camera* camera, SDL_CameraSpec* spec);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_AcquireCameraFrame")]
+	public static partial SDL_Surface* SDL_AcquireCameraFrame(SDL_Camera* camera, ulong* timestampNS);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ReleaseCameraFrame")]
+	public static partial int SDL_ReleaseCameraFrame(SDL_Camera* camera, SDL_Surface* frame);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_CloseCamera")]
+	public static partial void SDL_CloseCamera(SDL_Camera* camera);
 
 }

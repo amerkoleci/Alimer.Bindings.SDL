@@ -20,14 +20,15 @@ set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Build architectures for
 # SDL3
 set(SDL_SHARED ON CACHE BOOL "Build a SDL shared library")
 set(SDL_STATIC OFF CACHE BOOL "Build a SDL static library")
-set(SDL_TESTS OFF CACHE BOOL "Disable SDL tests")
 set(SDL_TEST_LIBRARY OFF CACHE BOOL "Disable SDL test library")
+set(SDL_DISABLE_INSTALL ON CACHE BOOL "")
+set(SDL_DISABLE_INSTALL_DOCS ON CACHE BOOL "")
 
 include(FetchContent)
 FetchContent_Declare(
     SDL3
     GIT_REPOSITORY https://github.com/libsdl-org/SDL
-    GIT_TAG 790cd395f54f458303fb3b4a4f8ed4fd62719e55
+    GIT_TAG fc26d5d3285d4a5f501c7416a61181e3402d4a50
     GIT_PROGRESS TRUE
 )
 FetchContent_MakeAvailable(SDL3)

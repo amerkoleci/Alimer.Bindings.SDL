@@ -22,6 +22,15 @@ public partial struct SDL_PenCapabilityInfo
 	public sbyte num_buttons;
 }
 
+public partial struct SDL_IOStreamInterface
+{
+	public unsafe delegate* unmanaged<nint, long> size;
+	public unsafe delegate* unmanaged<nint, long, int, long> seek;
+	public unsafe delegate* unmanaged<nint, nint, nuint, SDL_IOStatus*, nuint> read;
+	public unsafe delegate* unmanaged<nint, void*, nuint, SDL_IOStatus*, nuint> write;
+	public unsafe delegate* unmanaged<nint, int> close;
+}
+
 public partial struct SDL_Keysym
 {
 	public SDL_Scancode scancode;
@@ -255,6 +264,19 @@ public partial struct SDL_MouseMotionEvent
 	public float yrel;
 }
 
+public partial struct SDL_JoyBallEvent
+{
+	public SDL_EventType type;
+	public ulong timestamp;
+	public SDL_JoystickID which;
+	public byte ball;
+	public byte padding1;
+	public byte padding2;
+	public byte padding3;
+	public short xrel;
+	public short yrel;
+}
+
 public partial struct SDL_MouseButtonEvent
 {
 	public SDL_EventType type;
@@ -412,6 +434,7 @@ public partial struct SDL_AudioDeviceEvent
 public partial struct SDL_CameraDeviceEvent
 {
 	public SDL_EventType type;
+	public uint reserved;
 	public ulong timestamp;
 	public SDL_CameraDeviceID which;
 	public byte padding1;
@@ -551,6 +574,8 @@ public partial struct SDL_Event
 	public SDL_MouseWheelEvent wheel;
 	[FieldOffset(0)]
 	public SDL_JoyAxisEvent jaxis;
+	[FieldOffset(0)]
+	public SDL_JoyBallEvent jball;
 	[FieldOffset(0)]
 	public SDL_JoyHatEvent jhat;
 	[FieldOffset(0)]

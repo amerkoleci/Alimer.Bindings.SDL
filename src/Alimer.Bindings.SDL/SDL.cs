@@ -174,6 +174,21 @@ public static unsafe partial class SDL
 
     public static uint SDL_WasInit(SDL_InitFlags flags) => SDL_WasInit((uint)flags);
 
+    public static ulong SDL_SECONDS_TO_NS(ulong seconds) => seconds * SDL_NS_PER_SECOND;
+    public static ulong SDL_NS_TO_SECONDS(ulong ns) => ns / SDL_NS_PER_SECOND;
+
+    public static SDL_IOStream SDL_IOFromFile(ReadOnlySpan<byte> file, ReadOnlySpan<byte> mode)
+    {
+        fixed (byte* pFile = file)
+        fixed (byte* pMode = mode)
+            return SDL_IOFromFile(pFile, pMode);
+    }
+
+    public static SDL_IOStream SDL_IOFromFile(string file, string mode)
+    {
+        return SDL_IOFromFile(file.GetUtf8Span(), mode.GetUtf8Span());
+    }
+
     #region SDL_platform.h
     public static ReadOnlySpan<byte> SDL_GetPlatformSpan()
     {
@@ -182,31 +197,7 @@ public static unsafe partial class SDL
 
     public static string SDL_GetPlatformString()
     {
-        return GetString(SDL_GetPlatform())!;
-    }
-    #endregion
-
-    #region SDL_rwops.h
-    /* IntPtr refers to an SDL_RWops* */
-    [DllImport(LibName, EntryPoint = "SDL_RWFromFile", CallingConvention = CallingConvention.Cdecl)]
-    private static extern unsafe IntPtr INTERNAL_SDL_RWFromFile(
-        byte* file,
-        byte* mode
-    );
-    public static unsafe IntPtr SDL_RWFromFile(
-        string file,
-        string mode
-    )
-    {
-        byte* utf8File = Utf8EncodeHeap(file);
-        byte* utf8Mode = Utf8EncodeHeap(mode);
-        IntPtr rwOps = INTERNAL_SDL_RWFromFile(
-            utf8File,
-            utf8Mode
-        );
-        NativeMemory.Free(utf8Mode);
-        NativeMemory.Free(utf8File);
-        return rwOps;
+        return GetStringOrEmpty(SDL_GetPlatform())!;
     }
     #endregion
 
@@ -300,15 +291,15 @@ public static unsafe partial class SDL
         SDL_LogSetPriority((int)category, priority);
     }
 
-    public static void SDL_LogSetOutputFunction(SDL_LogOutputFunction? callback)
+    public static void SDL_SetLogOutputFunction(SDL_LogOutputFunction? callback)
     {
         s_logCallback = callback;
 
-        Internal_SDL_LogSetOutputFunction(callback != null ? &OnNativeMessageCallback : null, IntPtr.Zero);
+        Internal_SDL_SetLogOutputFunction(callback != null ? &OnNativeMessageCallback : null, IntPtr.Zero);
     }
 
-    [DllImport(LibName, EntryPoint = nameof(SDL_LogSetOutputFunction), CallingConvention = CallingConvention.Cdecl)]
-    private static extern void Internal_SDL_LogSetOutputFunction(delegate* unmanaged<nint, int, SDL_LogPriority, sbyte*, void> callback, IntPtr userdata);
+    [DllImport(LibName, EntryPoint = nameof(SDL_SetLogOutputFunction), CallingConvention = CallingConvention.Cdecl)]
+    private static extern void Internal_SDL_SetLogOutputFunction(delegate* unmanaged<nint, int, SDL_LogPriority, sbyte*, void> callback, IntPtr userdata);
 
     [UnmanagedCallersOnly]
     private static unsafe void OnNativeMessageCallback(nint userdata, int category, SDL_LogPriority priority, sbyte* messagePtr)

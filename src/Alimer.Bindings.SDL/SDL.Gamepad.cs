@@ -99,11 +99,17 @@ unsafe partial class SDL
         return names;
     }
 
-    /* THIS IS AN RWops FUNCTION! */
+    public static int SDL_AddGamepadMappingsFromFile(ReadOnlySpan<byte> file)
+    {
+        fixed (byte* pName = file)
+        {
+            return SDL_AddGamepadMappingsFromFile(pName);
+        }
+    }
+
     public static int SDL_AddGamepadMappingsFromFile(string file)
     {
-        IntPtr rwops = SDL_RWFromFile(file, "rb");
-        return SDL_AddGamepadMappingsFromRW(rwops, SDL_bool.SDL_TRUE);
+        return SDL_AddGamepadMappingsFromFile(file.GetUtf8Span());
     }
 
     public static string SDL_GetGamepadMappingForGUIDString(Guid guid)

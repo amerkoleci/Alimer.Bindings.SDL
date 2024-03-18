@@ -66,6 +66,8 @@ public static partial class CsCodeGenerator
                 || cppMacro.Name == "SDL_DEFINE_COLORSPACE"
                 || cppMacro.Name.StartsWith("SDL_COLORSPACE")
                 || cppMacro.Name.StartsWith("SDL_ISCOLORSPACE_")
+                || cppMacro.Name == "SDL_SECONDS_TO_NS"
+                || cppMacro.Name == "SDL_NS_TO_SECONDS"
                 )
             {
                 continue;
@@ -161,7 +163,7 @@ public static partial class CsCodeGenerator
                 }
                 if (cppMacro.Name == "SDL_NS_PER_SECOND")
                 {
-                    csDataType = "long";
+                    csDataType = "ulong";
                 }
 
                 if (cppMacro.Name == "SDL_AUDIO_MASK_BITSIZE" ||

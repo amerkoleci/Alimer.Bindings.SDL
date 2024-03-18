@@ -62,14 +62,16 @@ public static partial class CsCodeGenerator
         foreach (CppFunction? cppFunction in compilation.Functions)
         {
             if (cppFunction.Name == "SDL_LogMessageV"
-                || cppFunction.Name == "SDL_LogGetOutputFunction"
-                || cppFunction.Name == "SDL_LogSetOutputFunction"
+                || cppFunction.Name == "SDL_GetLogOutputFunction"
+                || cppFunction.Name == "SDL_SetLogOutputFunction"
                 || cppFunction.Name == "SDL_EGL_SetEGLAttributeCallbacks"
                 || cppFunction.Name == "SDL_Vulkan_GetInstanceExtensions"
                 || cppFunction.Name == "SDL_Vulkan_CreateSurface"
                 || cppFunction.Name == "SDL_GUIDToString"
                 || cppFunction.Name == "SDL_GUIDFromString"
                 || cppFunction.Name == "SDL_SetPropertyWithCleanup"
+                || cppFunction.Name == "SDL_IOprintf"
+                || cppFunction.Name == "SDL_IOvprintf"
                 )
             {
                 continue;
@@ -161,11 +163,9 @@ public static partial class CsCodeGenerator
         string functionName = cppFunction.Name;
 
         string modifier = "public";
-        bool isPrivate = false;
         if (cppFunction.Name == "SDL_PollEvent")
         {
             modifier = "private";
-            isPrivate = true;
             functionName += "Private";
         }
 

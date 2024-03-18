@@ -71,19 +71,22 @@ public static partial class CsCodeGenerator
         "SDL_Sensor",
         "SDL_AudioStream",
         "SDL_Haptic",
+        "SDL_IOStream",
     };
 
     private static CsCodeGeneratorOptions s_options = new();
 
-    private static readonly List<CppEnum> s_collectedEnums = new();
-    private static readonly Dictionary<string, CppFunctionType> s_collectedCallbackTypedes = new();
-    private static readonly List<CppClass> s_collectedStructAndUnions = new();
-    private static readonly List<CppFunction> s_collectedFunctions = new();
+    private static readonly List<CppEnum> s_collectedEnums = [];
+    private static readonly Dictionary<string, CppFunctionType> s_collectedCallbackTypedes = [];
+    private static readonly Dictionary<string, string> s_collectedHandles = [];
+    private static readonly List<CppClass> s_collectedStructAndUnions = [];
+    private static readonly List<CppFunction> s_collectedFunctions = [];
 
     public static void Collect(CppCompilation compilation)
     {
         CollectConstants(compilation);
         CollectEnums(compilation);
+        CollectHandles(compilation);
         CollectStructAndUnions(compilation);
         CollectCommands(compilation);
     }
@@ -94,7 +97,7 @@ public static partial class CsCodeGenerator
 
         GenerateConstants();
         GenerateEnums();
-        //GenerateHandles(compilation);
+        GenerateHandles();
         GenerateStructAndUnions();
         GenerateCommands();
     }

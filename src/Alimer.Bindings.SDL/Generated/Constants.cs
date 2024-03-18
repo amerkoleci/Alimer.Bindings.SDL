@@ -18,6 +18,14 @@ public static partial class SDL
 	public const uint SDL_PEN_TIP_INK = SDL_PEN_FLAG_INK_BIT_INDEX;
 	public const uint SDL_PEN_TIP_ERASER = SDL_PEN_FLAG_ERASER_BIT_INDEX;
 	public const uint SDL_CACHELINE_SIZE = 128;
+	public static ReadOnlySpan<byte> SDL_PROP_IOSTREAM_WINDOWS_HANDLE_POINTER => "SDL.iostream.windows.handle"u8;
+	public static ReadOnlySpan<byte> SDL_PROP_IOSTREAM_STDIO_HANDLE_POINTER => "SDL.iostream.stdio.handle"u8;
+	public static ReadOnlySpan<byte> SDL_PROP_IOSTREAM_ANDROID_AASSET_POINTER => "SDL.iostream.android.aasset"u8;
+	public static ReadOnlySpan<byte> SDL_PROP_IOSTREAM_DYNAMIC_MEMORY_POINTER => "SDL.iostream.dynamic.memory"u8;
+	public static ReadOnlySpan<byte> SDL_PROP_IOSTREAM_DYNAMIC_CHUNKSIZE_NUMBER => "SDL.iostream.dynamic.chunksize"u8;
+	public const uint SDL_IO_SEEK_SET = 0;
+	public const uint SDL_IO_SEEK_CUR = 1;
+	public const uint SDL_IO_SEEK_END = 2;
 	public const int SDLK_SCANCODE_MASK = 1<<30;
 	public const int SDL_JOYSTICK_AXIS_MAX = 32767;
 	public const int SDL_JOYSTICK_AXIS_MIN = -32768;
@@ -49,7 +57,7 @@ public static partial class SDL
 	public const uint SDL_BUTTON_X2 = 5;
 	public const uint SDL_MS_PER_SECOND = 1000;
 	public const uint SDL_US_PER_SECOND = 1000000;
-	public static long SDL_NS_PER_SECOND = 1000000000L;
+	public static ulong SDL_NS_PER_SECOND = 1000000000L;
 	public const uint SDL_NS_PER_MS = 1000000;
 	public const uint SDL_NS_PER_US = 1000;
 	public const uint SDL_MAX_LOG_MESSAGE = 4096;
@@ -136,6 +144,7 @@ public static partial class SDL
 	public static ReadOnlySpan<byte> SDL_PROP_WINDOW_WAYLAND_EGL_WINDOW_POINTER => "SDL.window.wayland.egl_window"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_WINDOW_WAYLAND_XDG_SURFACE_POINTER => "SDL.window.wayland.xdg_surface"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_WINDOW_WAYLAND_XDG_TOPLEVEL_POINTER => "SDL.window.wayland.xdg_toplevel"u8;
+	public static ReadOnlySpan<byte> SDL_PROP_WINDOW_WAYLAND_XDG_TOPLEVEL_EXPORT_HANDLE_POINTER => "SDL.window.wayland.xdg_toplevel_export_handle"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_WINDOW_WAYLAND_XDG_POPUP_POINTER => "SDL.window.wayland.xdg_popup"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_WINDOW_WAYLAND_XDG_POSITIONER_POINTER => "SDL.window.wayland.xdg_positioner"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_WINDOW_X11_DISPLAY_POINTER => "SDL.window.x11.display"u8;
@@ -229,6 +238,7 @@ public static partial class SDL
 	public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_LUNA => "SDL_JOYSTICK_HIDAPI_LUNA"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_NINTENDO_CLASSIC => "SDL_JOYSTICK_HIDAPI_NINTENDO_CLASSIC"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_PS3 => "SDL_JOYSTICK_HIDAPI_PS3"u8;
+	public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_PS3_SIXAXIS_DRIVER => "SDL_JOYSTICK_HIDAPI_PS3_SIXAXIS_DRIVER"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_PS4 => "SDL_JOYSTICK_HIDAPI_PS4"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_PS4_RUMBLE => "SDL_JOYSTICK_HIDAPI_PS4_RUMBLE"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_PS5 => "SDL_JOYSTICK_HIDAPI_PS5"u8;
@@ -306,6 +316,8 @@ public static partial class SDL
 	public static ReadOnlySpan<byte> SDL_HINT_RPI_VIDEO_LAYER => "SDL_RPI_VIDEO_LAYER"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_SCREENSAVER_INHIBIT_ACTIVITY_NAME => "SDL_SCREENSAVER_INHIBIT_ACTIVITY_NAME"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_SHUTDOWN_DBUS_ON_QUIT => "SDL_SHUTDOWN_DBUS_ON_QUIT"u8;
+	public static ReadOnlySpan<byte> SDL_HINT_STORAGE_TITLE_DRIVER => "SDL_STORAGE_TITLE_DRIVER"u8;
+	public static ReadOnlySpan<byte> SDL_HINT_STORAGE_USER_DRIVER => "SDL_STORAGE_USER_DRIVER"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_THREAD_FORCE_REALTIME_TIME_CRITICAL => "SDL_THREAD_FORCE_REALTIME_TIME_CRITICAL"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_THREAD_PRIORITY_POLICY => "SDL_THREAD_PRIORITY_POLICY"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_TIMER_RESOLUTION => "SDL_TIMER_RESOLUTION"u8;

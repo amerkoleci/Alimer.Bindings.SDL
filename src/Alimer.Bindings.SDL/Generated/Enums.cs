@@ -605,6 +605,22 @@ public enum SDL_Scancode
 	NumScancodes = 512,
 }
 
+public enum SDL_IOStatus
+{
+	/// <unmanaged>SDL_IO_STATUS_READY</unmanaged>
+	Ready = 0,
+	/// <unmanaged>SDL_IO_STATUS_ERROR</unmanaged>
+	Error = 1,
+	/// <unmanaged>SDL_IO_STATUS_EOF</unmanaged>
+	Eof = 2,
+	/// <unmanaged>SDL_IO_STATUS_NOT_READY</unmanaged>
+	NotReady = 3,
+	/// <unmanaged>SDL_IO_STATUS_READONLY</unmanaged>
+	Readonly = 4,
+	/// <unmanaged>SDL_IO_STATUS_WRITEONLY</unmanaged>
+	Writeonly = 5,
+}
+
 public enum SDL_KeyCode
 {
 	/// <unmanaged>SDLK_UNKNOWN</unmanaged>
@@ -1799,8 +1815,10 @@ public enum SDL_EventType
 	MouseWheel = 1027,
 	/// <unmanaged>SDL_EVENT_JOYSTICK_AXIS_MOTION</unmanaged>
 	JoystickAxisMotion = 0x600,
+	/// <unmanaged>SDL_EVENT_JOYSTICK_BALL_MOTION</unmanaged>
+	JoystickBallMotion = 1537,
 	/// <unmanaged>SDL_EVENT_JOYSTICK_HAT_MOTION</unmanaged>
-	JoystickHatMotion = 0x602,
+	JoystickHatMotion = 1538,
 	/// <unmanaged>SDL_EVENT_JOYSTICK_BUTTON_DOWN</unmanaged>
 	JoystickButtonDown = 1539,
 	/// <unmanaged>SDL_EVENT_JOYSTICK_BUTTON_UP</unmanaged>

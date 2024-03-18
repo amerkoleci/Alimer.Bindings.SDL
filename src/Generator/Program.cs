@@ -50,6 +50,7 @@ public static class Program
             "SDL_cpuinfo.h",
             "SDL_loadso.h",
             "SDL_scancode.h",
+            "SDL_iostream.h",
             "SDL_keycode.h",
             "SDL_keyboard.h",
             "SDL_messagebox.h",

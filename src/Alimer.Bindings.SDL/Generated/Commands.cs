@@ -245,6 +245,129 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_UnloadObject")]
 	public static partial void SDL_UnloadObject(nint handle);
 
+	[LibraryImport(LibName, EntryPoint = "SDL_IOFromFile")]
+	public static partial SDL_IOStream SDL_IOFromFile(byte* file, byte* mode);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_IOFromMem")]
+	public static partial SDL_IOStream SDL_IOFromMem(nint mem, nuint size);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_IOFromConstMem")]
+	public static partial SDL_IOStream SDL_IOFromConstMem(void* mem, nuint size);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_IOFromDynamicMem")]
+	public static partial SDL_IOStream SDL_IOFromDynamicMem();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_OpenIO")]
+	public static partial SDL_IOStream SDL_OpenIO(SDL_IOStreamInterface* iface, nint userdata);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_CloseIO")]
+	public static partial int SDL_CloseIO(SDL_IOStream context);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetIOProperties")]
+	public static partial SDL_PropertiesID SDL_GetIOProperties(SDL_IOStream context);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetIOStatus")]
+	public static partial SDL_IOStatus SDL_GetIOStatus(SDL_IOStream context);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetIOSize")]
+	public static partial long SDL_GetIOSize(SDL_IOStream context);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SeekIO")]
+	public static partial long SDL_SeekIO(SDL_IOStream context, long offset, int whence);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_TellIO")]
+	public static partial long SDL_TellIO(SDL_IOStream context);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ReadIO")]
+	public static partial nuint SDL_ReadIO(SDL_IOStream context, nint ptr, nuint size);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_WriteIO")]
+	public static partial nuint SDL_WriteIO(SDL_IOStream context, void* ptr, nuint size);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_LoadFile_IO")]
+	public static partial nint SDL_LoadFile_IO(SDL_IOStream src, nuint* datasize, SDL_bool closeio);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_LoadFile")]
+	public static partial nint SDL_LoadFile(byte* file, nuint* datasize);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ReadU8")]
+	public static partial SDL_bool SDL_ReadU8(SDL_IOStream src, byte* value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ReadU16LE")]
+	public static partial SDL_bool SDL_ReadU16LE(SDL_IOStream src, ushort* value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ReadS16LE")]
+	public static partial SDL_bool SDL_ReadS16LE(SDL_IOStream src, short* value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ReadU16BE")]
+	public static partial SDL_bool SDL_ReadU16BE(SDL_IOStream src, ushort* value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ReadS16BE")]
+	public static partial SDL_bool SDL_ReadS16BE(SDL_IOStream src, short* value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ReadU32LE")]
+	public static partial SDL_bool SDL_ReadU32LE(SDL_IOStream src, uint* value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ReadS32LE")]
+	public static partial SDL_bool SDL_ReadS32LE(SDL_IOStream src, int* value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ReadU32BE")]
+	public static partial SDL_bool SDL_ReadU32BE(SDL_IOStream src, uint* value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ReadS32BE")]
+	public static partial SDL_bool SDL_ReadS32BE(SDL_IOStream src, int* value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ReadU64LE")]
+	public static partial SDL_bool SDL_ReadU64LE(SDL_IOStream src, ulong* value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ReadS64LE")]
+	public static partial SDL_bool SDL_ReadS64LE(SDL_IOStream src, long* value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ReadU64BE")]
+	public static partial SDL_bool SDL_ReadU64BE(SDL_IOStream src, ulong* value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_ReadS64BE")]
+	public static partial SDL_bool SDL_ReadS64BE(SDL_IOStream src, long* value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_WriteU8")]
+	public static partial SDL_bool SDL_WriteU8(SDL_IOStream dst, byte value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_WriteU16LE")]
+	public static partial SDL_bool SDL_WriteU16LE(SDL_IOStream dst, ushort value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_WriteS16LE")]
+	public static partial SDL_bool SDL_WriteS16LE(SDL_IOStream dst, short value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_WriteU16BE")]
+	public static partial SDL_bool SDL_WriteU16BE(SDL_IOStream dst, ushort value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_WriteS16BE")]
+	public static partial SDL_bool SDL_WriteS16BE(SDL_IOStream dst, short value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_WriteU32LE")]
+	public static partial SDL_bool SDL_WriteU32LE(SDL_IOStream dst, uint value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_WriteS32LE")]
+	public static partial SDL_bool SDL_WriteS32LE(SDL_IOStream dst, int value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_WriteU32BE")]
+	public static partial SDL_bool SDL_WriteU32BE(SDL_IOStream dst, uint value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_WriteS32BE")]
+	public static partial SDL_bool SDL_WriteS32BE(SDL_IOStream dst, int value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_WriteU64LE")]
+	public static partial SDL_bool SDL_WriteU64LE(SDL_IOStream dst, ulong value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_WriteS64LE")]
+	public static partial SDL_bool SDL_WriteS64LE(SDL_IOStream dst, long value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_WriteU64BE")]
+	public static partial SDL_bool SDL_WriteU64BE(SDL_IOStream dst, ulong value);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_WriteS64BE")]
+	public static partial SDL_bool SDL_WriteS64BE(SDL_IOStream dst, long value);
+
 	[LibraryImport(LibName, EntryPoint = "SDL_GetKeyboardFocus")]
 	public static partial SDL_Window SDL_GetKeyboardFocus();
 
@@ -425,6 +548,9 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_GetNumJoystickAxes")]
 	public static partial int SDL_GetNumJoystickAxes(SDL_Joystick joystick);
 
+	[LibraryImport(LibName, EntryPoint = "SDL_GetNumJoystickBalls")]
+	public static partial int SDL_GetNumJoystickBalls(SDL_Joystick joystick);
+
 	[LibraryImport(LibName, EntryPoint = "SDL_GetNumJoystickHats")]
 	public static partial int SDL_GetNumJoystickHats(SDL_Joystick joystick);
 
@@ -445,6 +571,9 @@ public unsafe partial class SDL
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickAxisInitialState")]
 	public static partial SDL_bool SDL_GetJoystickAxisInitialState(SDL_Joystick joystick, int axis, short* state);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickBall")]
+	public static partial int SDL_GetJoystickBall(SDL_Joystick joystick, int ball, int* dx, int* dy);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickHat")]
 	public static partial byte SDL_GetJoystickHat(SDL_Joystick joystick, int hat);
@@ -473,8 +602,8 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_AddGamepadMapping")]
 	public static partial int SDL_AddGamepadMapping(byte* mapping);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_AddGamepadMappingsFromRW")]
-	public static partial int SDL_AddGamepadMappingsFromRW(nint src, SDL_bool freesrc);
+	[LibraryImport(LibName, EntryPoint = "SDL_AddGamepadMappingsFromIO")]
+	public static partial int SDL_AddGamepadMappingsFromIO(SDL_IOStream src, SDL_bool closeio);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_AddGamepadMappingsFromFile")]
 	public static partial int SDL_AddGamepadMappingsFromFile(byte* file);
@@ -1316,8 +1445,8 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_SetAudioPostmixCallback")]
 	public static partial int SDL_SetAudioPostmixCallback(SDL_AudioDeviceID devid, SDL_AudioPostmixCallback callback, nint userdata);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_LoadWAV_RW")]
-	public static partial int SDL_LoadWAV_RW(nint src, SDL_bool freesrc, SDL_AudioSpec* spec, byte** audio_buf, uint* audio_len);
+	[LibraryImport(LibName, EntryPoint = "SDL_LoadWAV_IO")]
+	public static partial int SDL_LoadWAV_IO(SDL_IOStream src, SDL_bool closeio, SDL_AudioSpec* spec, byte** audio_buf, uint* audio_len);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadWAV")]
 	public static partial int SDL_LoadWAV(byte* path, SDL_AudioSpec* spec, byte** audio_buf, uint* audio_len);
@@ -1589,14 +1718,14 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_UnlockSurface")]
 	public static partial void SDL_UnlockSurface(SDL_Surface* surface);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_LoadBMP_RW")]
-	public static partial SDL_Surface* SDL_LoadBMP_RW(nint src, SDL_bool freesrc);
+	[LibraryImport(LibName, EntryPoint = "SDL_LoadBMP_IO")]
+	public static partial SDL_Surface* SDL_LoadBMP_IO(SDL_IOStream src, SDL_bool closeio);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadBMP")]
 	public static partial SDL_Surface* SDL_LoadBMP(byte* file);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_SaveBMP_RW")]
-	public static partial int SDL_SaveBMP_RW(SDL_Surface* surface, nint dst, SDL_bool freedst);
+	[LibraryImport(LibName, EntryPoint = "SDL_SaveBMP_IO")]
+	public static partial int SDL_SaveBMP_IO(SDL_Surface* surface, SDL_IOStream dst, SDL_bool closeio);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SaveBMP")]
 	public static partial int SDL_SaveBMP(SDL_Surface* surface, byte* file);

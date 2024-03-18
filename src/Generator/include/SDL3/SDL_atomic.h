@@ -267,7 +267,7 @@ typedef void (*SDL_KernelMemoryBarrierFunc)();
  *
  * It is a struct so people don't accidentally use numeric operations on it.
  */
-typedef struct { int value; } SDL_AtomicInt;
+typedef struct SDL_AtomicInt { int value; } SDL_AtomicInt;
 
 /**
  * Set an atomic variable to a new value if it is currently an old value.
@@ -283,8 +283,6 @@ typedef struct { int value; } SDL_AtomicInt;
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_AtomicCompareAndSwapPointer
- * \sa SDL_AtomicGet
- * \sa SDL_AtomicSet
  */
 extern DECLSPEC SDL_bool SDLCALL SDL_AtomicCompareAndSwap(SDL_AtomicInt *a, int oldval, int newval);
 

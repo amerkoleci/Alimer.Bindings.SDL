@@ -8,8 +8,6 @@ namespace Generator;
 
 public static partial class CsCodeGenerator
 {
-    private static bool generateSizeOfStructs = false;
-
     private static void CollectStructAndUnions(CppCompilation compilation)
     {
         foreach (CppClass? cppClass in compilation.Classes)
@@ -89,15 +87,6 @@ public static partial class CsCodeGenerator
 
         using (writer.PushBlock($"{visibility} partial struct {structName}"))
         {
-            if (generateSizeOfStructs && @struct.SizeOf > 0)
-            {
-                writer.WriteLine("/// <summary>");
-                writer.WriteLine($"/// The size of the <see cref=\"{structName}\"/> type, in bytes.");
-                writer.WriteLine("/// </summary>");
-                writer.WriteLine($"public static readonly int SizeInBytes = {@struct.SizeOf};");
-                writer.WriteLine();
-            }
-
             foreach (CppField cppField in @struct.Fields)
             {
                 WriteField(writer, cppField, isUnion, isReadOnly, typeName);

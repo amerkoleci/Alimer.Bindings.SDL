@@ -15,12 +15,11 @@ public static unsafe class Program
         SDL_LogSetAllPriority(SDL_LogPriority.Debug);
 #endif
 
-        SDL_LogSetOutputFunction(OnLog);
+        SDL_SetLogOutputFunction(OnLog);
 
         SDL_GetVersion(out SDL_version version);
 
-        var strSpan = SDL_GetPlatformSpan();
-        string str = strSpan.GetString();
+        string platform = SDL_GetPlatformString();
 
         // Init SDL
         if (SDL_Init(SDL_InitFlags.Timer | SDL_InitFlags.Video | SDL_InitFlags.Gamepad) != 0)

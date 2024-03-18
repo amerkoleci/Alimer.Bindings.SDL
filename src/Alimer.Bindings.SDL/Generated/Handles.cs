@@ -10,6 +10,728 @@
 #nullable enable
 
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SDL;
+
+public readonly partial struct SDL_PropertiesID(uint value) : IComparable, IComparable<SDL_PropertiesID>, IEquatable<SDL_PropertiesID>, IFormattable
+{
+	public readonly uint Value = value;
+	public static implicit operator uint(SDL_PropertiesID value) => value.Value;
+	public static implicit operator SDL_PropertiesID(uint value) => new(value);
+	public static bool operator ==(SDL_PropertiesID left, SDL_PropertiesID right) => left.Value == right.Value;
+	public static bool operator !=(SDL_PropertiesID left, SDL_PropertiesID right) => left.Value != right.Value;
+	public static bool operator <(SDL_PropertiesID left, SDL_PropertiesID right) => left.Value < right.Value;
+	public static bool operator <=(SDL_PropertiesID left, SDL_PropertiesID right) => left.Value <= right.Value;
+	public static bool operator >(SDL_PropertiesID left, SDL_PropertiesID right) => left.Value > right.Value;
+	public static bool operator >=(SDL_PropertiesID left, SDL_PropertiesID right) => left.Value >= right.Value;
+	public int CompareTo(object? obj)
+	{
+		if (obj is SDL_PropertiesID other)
+		{
+			return CompareTo(other);
+		}
+		return (obj is null) ? 1 : throw new ArgumentException($"obj is not an instance of csName.");
+	}
+	public int CompareTo(SDL_PropertiesID other) => Value.CompareTo(other.Value);
+	public bool Equals(SDL_PropertiesID other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_PropertiesID other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	public override string ToString() => Value.ToString();
+	public string ToString(string? format, IFormatProvider? formatProvider) => Value.ToString(format, formatProvider);
+}
+
+public readonly partial struct SDL_PenID(uint value) : IComparable, IComparable<SDL_PenID>, IEquatable<SDL_PenID>, IFormattable
+{
+	public readonly uint Value = value;
+	public static implicit operator uint(SDL_PenID value) => value.Value;
+	public static implicit operator SDL_PenID(uint value) => new(value);
+	public static bool operator ==(SDL_PenID left, SDL_PenID right) => left.Value == right.Value;
+	public static bool operator !=(SDL_PenID left, SDL_PenID right) => left.Value != right.Value;
+	public static bool operator <(SDL_PenID left, SDL_PenID right) => left.Value < right.Value;
+	public static bool operator <=(SDL_PenID left, SDL_PenID right) => left.Value <= right.Value;
+	public static bool operator >(SDL_PenID left, SDL_PenID right) => left.Value > right.Value;
+	public static bool operator >=(SDL_PenID left, SDL_PenID right) => left.Value >= right.Value;
+	public int CompareTo(object? obj)
+	{
+		if (obj is SDL_PenID other)
+		{
+			return CompareTo(other);
+		}
+		return (obj is null) ? 1 : throw new ArgumentException($"obj is not an instance of csName.");
+	}
+	public int CompareTo(SDL_PenID other) => Value.CompareTo(other.Value);
+	public bool Equals(SDL_PenID other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_PenID other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	public override string ToString() => Value.ToString();
+	public string ToString(string? format, IFormatProvider? formatProvider) => Value.ToString(format, formatProvider);
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_IOStream(nint value) : IEquatable<SDL_IOStream>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_IOStream Null => new(0);
+	public static implicit operator nint(SDL_IOStream value) => value.Value;
+	public static implicit operator SDL_IOStream(nint value) => new(value);
+	public static bool operator ==(SDL_IOStream left, SDL_IOStream right) => left.Value == right.Value;
+	public static bool operator !=(SDL_IOStream left, SDL_IOStream right) => left.Value != right.Value;
+	public static bool operator ==(SDL_IOStream left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_IOStream left, nint right) => left.Value != right;
+	public bool Equals(SDL_IOStream other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_IOStream other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_IOStream)} [0x{Value.ToString("X")}]";
+}
+
+public readonly partial struct SDL_JoystickID(uint value) : IComparable, IComparable<SDL_JoystickID>, IEquatable<SDL_JoystickID>, IFormattable
+{
+	public readonly uint Value = value;
+	public static implicit operator uint(SDL_JoystickID value) => value.Value;
+	public static implicit operator SDL_JoystickID(uint value) => new(value);
+	public static bool operator ==(SDL_JoystickID left, SDL_JoystickID right) => left.Value == right.Value;
+	public static bool operator !=(SDL_JoystickID left, SDL_JoystickID right) => left.Value != right.Value;
+	public static bool operator <(SDL_JoystickID left, SDL_JoystickID right) => left.Value < right.Value;
+	public static bool operator <=(SDL_JoystickID left, SDL_JoystickID right) => left.Value <= right.Value;
+	public static bool operator >(SDL_JoystickID left, SDL_JoystickID right) => left.Value > right.Value;
+	public static bool operator >=(SDL_JoystickID left, SDL_JoystickID right) => left.Value >= right.Value;
+	public int CompareTo(object? obj)
+	{
+		if (obj is SDL_JoystickID other)
+		{
+			return CompareTo(other);
+		}
+		return (obj is null) ? 1 : throw new ArgumentException($"obj is not an instance of csName.");
+	}
+	public int CompareTo(SDL_JoystickID other) => Value.CompareTo(other.Value);
+	public bool Equals(SDL_JoystickID other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_JoystickID other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	public override string ToString() => Value.ToString();
+	public string ToString(string? format, IFormatProvider? formatProvider) => Value.ToString(format, formatProvider);
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_Joystick(nint value) : IEquatable<SDL_Joystick>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_Joystick Null => new(0);
+	public static implicit operator nint(SDL_Joystick value) => value.Value;
+	public static implicit operator SDL_Joystick(nint value) => new(value);
+	public static bool operator ==(SDL_Joystick left, SDL_Joystick right) => left.Value == right.Value;
+	public static bool operator !=(SDL_Joystick left, SDL_Joystick right) => left.Value != right.Value;
+	public static bool operator ==(SDL_Joystick left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_Joystick left, nint right) => left.Value != right;
+	public bool Equals(SDL_Joystick other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_Joystick other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_Joystick)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_Gamepad(nint value) : IEquatable<SDL_Gamepad>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_Gamepad Null => new(0);
+	public static implicit operator nint(SDL_Gamepad value) => value.Value;
+	public static implicit operator SDL_Gamepad(nint value) => new(value);
+	public static bool operator ==(SDL_Gamepad left, SDL_Gamepad right) => left.Value == right.Value;
+	public static bool operator !=(SDL_Gamepad left, SDL_Gamepad right) => left.Value != right.Value;
+	public static bool operator ==(SDL_Gamepad left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_Gamepad left, nint right) => left.Value != right;
+	public bool Equals(SDL_Gamepad other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_Gamepad other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_Gamepad)} [0x{Value.ToString("X")}]";
+}
+
+public readonly partial struct SDL_MouseID(uint value) : IComparable, IComparable<SDL_MouseID>, IEquatable<SDL_MouseID>, IFormattable
+{
+	public readonly uint Value = value;
+	public static implicit operator uint(SDL_MouseID value) => value.Value;
+	public static implicit operator SDL_MouseID(uint value) => new(value);
+	public static bool operator ==(SDL_MouseID left, SDL_MouseID right) => left.Value == right.Value;
+	public static bool operator !=(SDL_MouseID left, SDL_MouseID right) => left.Value != right.Value;
+	public static bool operator <(SDL_MouseID left, SDL_MouseID right) => left.Value < right.Value;
+	public static bool operator <=(SDL_MouseID left, SDL_MouseID right) => left.Value <= right.Value;
+	public static bool operator >(SDL_MouseID left, SDL_MouseID right) => left.Value > right.Value;
+	public static bool operator >=(SDL_MouseID left, SDL_MouseID right) => left.Value >= right.Value;
+	public int CompareTo(object? obj)
+	{
+		if (obj is SDL_MouseID other)
+		{
+			return CompareTo(other);
+		}
+		return (obj is null) ? 1 : throw new ArgumentException($"obj is not an instance of csName.");
+	}
+	public int CompareTo(SDL_MouseID other) => Value.CompareTo(other.Value);
+	public bool Equals(SDL_MouseID other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_MouseID other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	public override string ToString() => Value.ToString();
+	public string ToString(string? format, IFormatProvider? formatProvider) => Value.ToString(format, formatProvider);
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_Cursor(nint value) : IEquatable<SDL_Cursor>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_Cursor Null => new(0);
+	public static implicit operator nint(SDL_Cursor value) => value.Value;
+	public static implicit operator SDL_Cursor(nint value) => new(value);
+	public static bool operator ==(SDL_Cursor left, SDL_Cursor right) => left.Value == right.Value;
+	public static bool operator !=(SDL_Cursor left, SDL_Cursor right) => left.Value != right.Value;
+	public static bool operator ==(SDL_Cursor left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_Cursor left, nint right) => left.Value != right;
+	public bool Equals(SDL_Cursor other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_Cursor other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_Cursor)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct tagMSG(nint value) : IEquatable<tagMSG>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static tagMSG Null => new(0);
+	public static implicit operator nint(tagMSG value) => value.Value;
+	public static implicit operator tagMSG(nint value) => new(value);
+	public static bool operator ==(tagMSG left, tagMSG right) => left.Value == right.Value;
+	public static bool operator !=(tagMSG left, tagMSG right) => left.Value != right.Value;
+	public static bool operator ==(tagMSG left, nint right) => left.Value == right;
+	public static bool operator !=(tagMSG left, nint right) => left.Value != right;
+	public bool Equals(tagMSG other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is tagMSG other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(tagMSG)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct _XEvent(nint value) : IEquatable<_XEvent>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static _XEvent Null => new(0);
+	public static implicit operator nint(_XEvent value) => value.Value;
+	public static implicit operator _XEvent(nint value) => new(value);
+	public static bool operator ==(_XEvent left, _XEvent right) => left.Value == right.Value;
+	public static bool operator !=(_XEvent left, _XEvent right) => left.Value != right.Value;
+	public static bool operator ==(_XEvent left, nint right) => left.Value == right;
+	public static bool operator !=(_XEvent left, nint right) => left.Value != right;
+	public bool Equals(_XEvent other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is _XEvent other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(_XEvent)} [0x{Value.ToString("X")}]";
+}
+
+public readonly partial struct SDL_TimerID(uint value) : IComparable, IComparable<SDL_TimerID>, IEquatable<SDL_TimerID>, IFormattable
+{
+	public readonly uint Value = value;
+	public static implicit operator uint(SDL_TimerID value) => value.Value;
+	public static implicit operator SDL_TimerID(uint value) => new(value);
+	public static bool operator ==(SDL_TimerID left, SDL_TimerID right) => left.Value == right.Value;
+	public static bool operator !=(SDL_TimerID left, SDL_TimerID right) => left.Value != right.Value;
+	public static bool operator <(SDL_TimerID left, SDL_TimerID right) => left.Value < right.Value;
+	public static bool operator <=(SDL_TimerID left, SDL_TimerID right) => left.Value <= right.Value;
+	public static bool operator >(SDL_TimerID left, SDL_TimerID right) => left.Value > right.Value;
+	public static bool operator >=(SDL_TimerID left, SDL_TimerID right) => left.Value >= right.Value;
+	public int CompareTo(object? obj)
+	{
+		if (obj is SDL_TimerID other)
+		{
+			return CompareTo(other);
+		}
+		return (obj is null) ? 1 : throw new ArgumentException($"obj is not an instance of csName.");
+	}
+	public int CompareTo(SDL_TimerID other) => Value.CompareTo(other.Value);
+	public bool Equals(SDL_TimerID other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_TimerID other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	public override string ToString() => Value.ToString();
+	public string ToString(string? format, IFormatProvider? formatProvider) => Value.ToString(format, formatProvider);
+}
+
+public readonly partial struct SDL_TouchID(ulong value) : IComparable, IComparable<SDL_TouchID>, IEquatable<SDL_TouchID>, IFormattable
+{
+	public readonly ulong Value = value;
+	public static implicit operator ulong(SDL_TouchID value) => value.Value;
+	public static implicit operator SDL_TouchID(ulong value) => new(value);
+	public static bool operator ==(SDL_TouchID left, SDL_TouchID right) => left.Value == right.Value;
+	public static bool operator !=(SDL_TouchID left, SDL_TouchID right) => left.Value != right.Value;
+	public static bool operator <(SDL_TouchID left, SDL_TouchID right) => left.Value < right.Value;
+	public static bool operator <=(SDL_TouchID left, SDL_TouchID right) => left.Value <= right.Value;
+	public static bool operator >(SDL_TouchID left, SDL_TouchID right) => left.Value > right.Value;
+	public static bool operator >=(SDL_TouchID left, SDL_TouchID right) => left.Value >= right.Value;
+	public int CompareTo(object? obj)
+	{
+		if (obj is SDL_TouchID other)
+		{
+			return CompareTo(other);
+		}
+		return (obj is null) ? 1 : throw new ArgumentException($"obj is not an instance of csName.");
+	}
+	public int CompareTo(SDL_TouchID other) => Value.CompareTo(other.Value);
+	public bool Equals(SDL_TouchID other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_TouchID other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	public override string ToString() => Value.ToString();
+	public string ToString(string? format, IFormatProvider? formatProvider) => Value.ToString(format, formatProvider);
+}
+
+public readonly partial struct SDL_FingerID(ulong value) : IComparable, IComparable<SDL_FingerID>, IEquatable<SDL_FingerID>, IFormattable
+{
+	public readonly ulong Value = value;
+	public static implicit operator ulong(SDL_FingerID value) => value.Value;
+	public static implicit operator SDL_FingerID(ulong value) => new(value);
+	public static bool operator ==(SDL_FingerID left, SDL_FingerID right) => left.Value == right.Value;
+	public static bool operator !=(SDL_FingerID left, SDL_FingerID right) => left.Value != right.Value;
+	public static bool operator <(SDL_FingerID left, SDL_FingerID right) => left.Value < right.Value;
+	public static bool operator <=(SDL_FingerID left, SDL_FingerID right) => left.Value <= right.Value;
+	public static bool operator >(SDL_FingerID left, SDL_FingerID right) => left.Value > right.Value;
+	public static bool operator >=(SDL_FingerID left, SDL_FingerID right) => left.Value >= right.Value;
+	public int CompareTo(object? obj)
+	{
+		if (obj is SDL_FingerID other)
+		{
+			return CompareTo(other);
+		}
+		return (obj is null) ? 1 : throw new ArgumentException($"obj is not an instance of csName.");
+	}
+	public int CompareTo(SDL_FingerID other) => Value.CompareTo(other.Value);
+	public bool Equals(SDL_FingerID other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_FingerID other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	public override string ToString() => Value.ToString();
+	public string ToString(string? format, IFormatProvider? formatProvider) => Value.ToString(format, formatProvider);
+}
+
+public readonly partial struct SDL_SensorID(uint value) : IComparable, IComparable<SDL_SensorID>, IEquatable<SDL_SensorID>, IFormattable
+{
+	public readonly uint Value = value;
+	public static implicit operator uint(SDL_SensorID value) => value.Value;
+	public static implicit operator SDL_SensorID(uint value) => new(value);
+	public static bool operator ==(SDL_SensorID left, SDL_SensorID right) => left.Value == right.Value;
+	public static bool operator !=(SDL_SensorID left, SDL_SensorID right) => left.Value != right.Value;
+	public static bool operator <(SDL_SensorID left, SDL_SensorID right) => left.Value < right.Value;
+	public static bool operator <=(SDL_SensorID left, SDL_SensorID right) => left.Value <= right.Value;
+	public static bool operator >(SDL_SensorID left, SDL_SensorID right) => left.Value > right.Value;
+	public static bool operator >=(SDL_SensorID left, SDL_SensorID right) => left.Value >= right.Value;
+	public int CompareTo(object? obj)
+	{
+		if (obj is SDL_SensorID other)
+		{
+			return CompareTo(other);
+		}
+		return (obj is null) ? 1 : throw new ArgumentException($"obj is not an instance of csName.");
+	}
+	public int CompareTo(SDL_SensorID other) => Value.CompareTo(other.Value);
+	public bool Equals(SDL_SensorID other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_SensorID other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	public override string ToString() => Value.ToString();
+	public string ToString(string? format, IFormatProvider? formatProvider) => Value.ToString(format, formatProvider);
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_Sensor(nint value) : IEquatable<SDL_Sensor>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_Sensor Null => new(0);
+	public static implicit operator nint(SDL_Sensor value) => value.Value;
+	public static implicit operator SDL_Sensor(nint value) => new(value);
+	public static bool operator ==(SDL_Sensor left, SDL_Sensor right) => left.Value == right.Value;
+	public static bool operator !=(SDL_Sensor left, SDL_Sensor right) => left.Value != right.Value;
+	public static bool operator ==(SDL_Sensor left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_Sensor left, nint right) => left.Value != right;
+	public bool Equals(SDL_Sensor other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_Sensor other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_Sensor)} [0x{Value.ToString("X")}]";
+}
+
+public readonly partial struct SDL_DisplayID(uint value) : IComparable, IComparable<SDL_DisplayID>, IEquatable<SDL_DisplayID>, IFormattable
+{
+	public readonly uint Value = value;
+	public static implicit operator uint(SDL_DisplayID value) => value.Value;
+	public static implicit operator SDL_DisplayID(uint value) => new(value);
+	public static bool operator ==(SDL_DisplayID left, SDL_DisplayID right) => left.Value == right.Value;
+	public static bool operator !=(SDL_DisplayID left, SDL_DisplayID right) => left.Value != right.Value;
+	public static bool operator <(SDL_DisplayID left, SDL_DisplayID right) => left.Value < right.Value;
+	public static bool operator <=(SDL_DisplayID left, SDL_DisplayID right) => left.Value <= right.Value;
+	public static bool operator >(SDL_DisplayID left, SDL_DisplayID right) => left.Value > right.Value;
+	public static bool operator >=(SDL_DisplayID left, SDL_DisplayID right) => left.Value >= right.Value;
+	public int CompareTo(object? obj)
+	{
+		if (obj is SDL_DisplayID other)
+		{
+			return CompareTo(other);
+		}
+		return (obj is null) ? 1 : throw new ArgumentException($"obj is not an instance of csName.");
+	}
+	public int CompareTo(SDL_DisplayID other) => Value.CompareTo(other.Value);
+	public bool Equals(SDL_DisplayID other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_DisplayID other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	public override string ToString() => Value.ToString();
+	public string ToString(string? format, IFormatProvider? formatProvider) => Value.ToString(format, formatProvider);
+}
+
+public readonly partial struct SDL_WindowID(uint value) : IComparable, IComparable<SDL_WindowID>, IEquatable<SDL_WindowID>, IFormattable
+{
+	public readonly uint Value = value;
+	public static implicit operator uint(SDL_WindowID value) => value.Value;
+	public static implicit operator SDL_WindowID(uint value) => new(value);
+	public static bool operator ==(SDL_WindowID left, SDL_WindowID right) => left.Value == right.Value;
+	public static bool operator !=(SDL_WindowID left, SDL_WindowID right) => left.Value != right.Value;
+	public static bool operator <(SDL_WindowID left, SDL_WindowID right) => left.Value < right.Value;
+	public static bool operator <=(SDL_WindowID left, SDL_WindowID right) => left.Value <= right.Value;
+	public static bool operator >(SDL_WindowID left, SDL_WindowID right) => left.Value > right.Value;
+	public static bool operator >=(SDL_WindowID left, SDL_WindowID right) => left.Value >= right.Value;
+	public int CompareTo(object? obj)
+	{
+		if (obj is SDL_WindowID other)
+		{
+			return CompareTo(other);
+		}
+		return (obj is null) ? 1 : throw new ArgumentException($"obj is not an instance of csName.");
+	}
+	public int CompareTo(SDL_WindowID other) => Value.CompareTo(other.Value);
+	public bool Equals(SDL_WindowID other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_WindowID other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	public override string ToString() => Value.ToString();
+	public string ToString(string? format, IFormatProvider? formatProvider) => Value.ToString(format, formatProvider);
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_Window(nint value) : IEquatable<SDL_Window>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_Window Null => new(0);
+	public static implicit operator nint(SDL_Window value) => value.Value;
+	public static implicit operator SDL_Window(nint value) => new(value);
+	public static bool operator ==(SDL_Window left, SDL_Window right) => left.Value == right.Value;
+	public static bool operator !=(SDL_Window left, SDL_Window right) => left.Value != right.Value;
+	public static bool operator ==(SDL_Window left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_Window left, nint right) => left.Value != right;
+	public bool Equals(SDL_Window other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_Window other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_Window)} [0x{Value.ToString("X")}]";
+}
+
+public readonly partial struct SDL_AudioFormat(ushort value) : IComparable, IComparable<SDL_AudioFormat>, IEquatable<SDL_AudioFormat>, IFormattable
+{
+	public readonly ushort Value = value;
+	public static implicit operator ushort(SDL_AudioFormat value) => value.Value;
+	public static implicit operator SDL_AudioFormat(ushort value) => new(value);
+	public static bool operator ==(SDL_AudioFormat left, SDL_AudioFormat right) => left.Value == right.Value;
+	public static bool operator !=(SDL_AudioFormat left, SDL_AudioFormat right) => left.Value != right.Value;
+	public static bool operator <(SDL_AudioFormat left, SDL_AudioFormat right) => left.Value < right.Value;
+	public static bool operator <=(SDL_AudioFormat left, SDL_AudioFormat right) => left.Value <= right.Value;
+	public static bool operator >(SDL_AudioFormat left, SDL_AudioFormat right) => left.Value > right.Value;
+	public static bool operator >=(SDL_AudioFormat left, SDL_AudioFormat right) => left.Value >= right.Value;
+	public int CompareTo(object? obj)
+	{
+		if (obj is SDL_AudioFormat other)
+		{
+			return CompareTo(other);
+		}
+		return (obj is null) ? 1 : throw new ArgumentException($"obj is not an instance of csName.");
+	}
+	public int CompareTo(SDL_AudioFormat other) => Value.CompareTo(other.Value);
+	public bool Equals(SDL_AudioFormat other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_AudioFormat other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	public override string ToString() => Value.ToString();
+	public string ToString(string? format, IFormatProvider? formatProvider) => Value.ToString(format, formatProvider);
+}
+
+public readonly partial struct SDL_AudioDeviceID(uint value) : IComparable, IComparable<SDL_AudioDeviceID>, IEquatable<SDL_AudioDeviceID>, IFormattable
+{
+	public readonly uint Value = value;
+	public static implicit operator uint(SDL_AudioDeviceID value) => value.Value;
+	public static implicit operator SDL_AudioDeviceID(uint value) => new(value);
+	public static bool operator ==(SDL_AudioDeviceID left, SDL_AudioDeviceID right) => left.Value == right.Value;
+	public static bool operator !=(SDL_AudioDeviceID left, SDL_AudioDeviceID right) => left.Value != right.Value;
+	public static bool operator <(SDL_AudioDeviceID left, SDL_AudioDeviceID right) => left.Value < right.Value;
+	public static bool operator <=(SDL_AudioDeviceID left, SDL_AudioDeviceID right) => left.Value <= right.Value;
+	public static bool operator >(SDL_AudioDeviceID left, SDL_AudioDeviceID right) => left.Value > right.Value;
+	public static bool operator >=(SDL_AudioDeviceID left, SDL_AudioDeviceID right) => left.Value >= right.Value;
+	public int CompareTo(object? obj)
+	{
+		if (obj is SDL_AudioDeviceID other)
+		{
+			return CompareTo(other);
+		}
+		return (obj is null) ? 1 : throw new ArgumentException($"obj is not an instance of csName.");
+	}
+	public int CompareTo(SDL_AudioDeviceID other) => Value.CompareTo(other.Value);
+	public bool Equals(SDL_AudioDeviceID other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_AudioDeviceID other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	public override string ToString() => Value.ToString();
+	public string ToString(string? format, IFormatProvider? formatProvider) => Value.ToString(format, formatProvider);
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_AudioStream(nint value) : IEquatable<SDL_AudioStream>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_AudioStream Null => new(0);
+	public static implicit operator nint(SDL_AudioStream value) => value.Value;
+	public static implicit operator SDL_AudioStream(nint value) => new(value);
+	public static bool operator ==(SDL_AudioStream left, SDL_AudioStream right) => left.Value == right.Value;
+	public static bool operator !=(SDL_AudioStream left, SDL_AudioStream right) => left.Value != right.Value;
+	public static bool operator ==(SDL_AudioStream left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_AudioStream left, nint right) => left.Value != right;
+	public bool Equals(SDL_AudioStream other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_AudioStream other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_AudioStream)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct VkInstance_T(nint value) : IEquatable<VkInstance_T>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static VkInstance_T Null => new(0);
+	public static implicit operator nint(VkInstance_T value) => value.Value;
+	public static implicit operator VkInstance_T(nint value) => new(value);
+	public static bool operator ==(VkInstance_T left, VkInstance_T right) => left.Value == right.Value;
+	public static bool operator !=(VkInstance_T left, VkInstance_T right) => left.Value != right.Value;
+	public static bool operator ==(VkInstance_T left, nint right) => left.Value == right;
+	public static bool operator !=(VkInstance_T left, nint right) => left.Value != right;
+	public bool Equals(VkInstance_T other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is VkInstance_T other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(VkInstance_T)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct VkSurfaceKHR_T(nint value) : IEquatable<VkSurfaceKHR_T>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static VkSurfaceKHR_T Null => new(0);
+	public static implicit operator nint(VkSurfaceKHR_T value) => value.Value;
+	public static implicit operator VkSurfaceKHR_T(nint value) => new(value);
+	public static bool operator ==(VkSurfaceKHR_T left, VkSurfaceKHR_T right) => left.Value == right.Value;
+	public static bool operator !=(VkSurfaceKHR_T left, VkSurfaceKHR_T right) => left.Value != right.Value;
+	public static bool operator ==(VkSurfaceKHR_T left, nint right) => left.Value == right;
+	public static bool operator !=(VkSurfaceKHR_T left, nint right) => left.Value != right;
+	public bool Equals(VkSurfaceKHR_T other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is VkSurfaceKHR_T other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(VkSurfaceKHR_T)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct VkAllocationCallbacks(nint value) : IEquatable<VkAllocationCallbacks>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static VkAllocationCallbacks Null => new(0);
+	public static implicit operator nint(VkAllocationCallbacks value) => value.Value;
+	public static implicit operator VkAllocationCallbacks(nint value) => new(value);
+	public static bool operator ==(VkAllocationCallbacks left, VkAllocationCallbacks right) => left.Value == right.Value;
+	public static bool operator !=(VkAllocationCallbacks left, VkAllocationCallbacks right) => left.Value != right.Value;
+	public static bool operator ==(VkAllocationCallbacks left, nint right) => left.Value == right;
+	public static bool operator !=(VkAllocationCallbacks left, nint right) => left.Value != right;
+	public bool Equals(VkAllocationCallbacks other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is VkAllocationCallbacks other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(VkAllocationCallbacks)} [0x{Value.ToString("X")}]";
+}
+
+public readonly partial struct SDL_HapticID(uint value) : IComparable, IComparable<SDL_HapticID>, IEquatable<SDL_HapticID>, IFormattable
+{
+	public readonly uint Value = value;
+	public static implicit operator uint(SDL_HapticID value) => value.Value;
+	public static implicit operator SDL_HapticID(uint value) => new(value);
+	public static bool operator ==(SDL_HapticID left, SDL_HapticID right) => left.Value == right.Value;
+	public static bool operator !=(SDL_HapticID left, SDL_HapticID right) => left.Value != right.Value;
+	public static bool operator <(SDL_HapticID left, SDL_HapticID right) => left.Value < right.Value;
+	public static bool operator <=(SDL_HapticID left, SDL_HapticID right) => left.Value <= right.Value;
+	public static bool operator >(SDL_HapticID left, SDL_HapticID right) => left.Value > right.Value;
+	public static bool operator >=(SDL_HapticID left, SDL_HapticID right) => left.Value >= right.Value;
+	public int CompareTo(object? obj)
+	{
+		if (obj is SDL_HapticID other)
+		{
+			return CompareTo(other);
+		}
+		return (obj is null) ? 1 : throw new ArgumentException($"obj is not an instance of csName.");
+	}
+	public int CompareTo(SDL_HapticID other) => Value.CompareTo(other.Value);
+	public bool Equals(SDL_HapticID other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_HapticID other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	public override string ToString() => Value.ToString();
+	public string ToString(string? format, IFormatProvider? formatProvider) => Value.ToString(format, formatProvider);
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_Haptic(nint value) : IEquatable<SDL_Haptic>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_Haptic Null => new(0);
+	public static implicit operator nint(SDL_Haptic value) => value.Value;
+	public static implicit operator SDL_Haptic(nint value) => new(value);
+	public static bool operator ==(SDL_Haptic left, SDL_Haptic right) => left.Value == right.Value;
+	public static bool operator !=(SDL_Haptic left, SDL_Haptic right) => left.Value != right.Value;
+	public static bool operator ==(SDL_Haptic left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_Haptic left, nint right) => left.Value != right;
+	public bool Equals(SDL_Haptic other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_Haptic other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_Haptic)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_BlitMap(nint value) : IEquatable<SDL_BlitMap>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_BlitMap Null => new(0);
+	public static implicit operator nint(SDL_BlitMap value) => value.Value;
+	public static implicit operator SDL_BlitMap(nint value) => new(value);
+	public static bool operator ==(SDL_BlitMap left, SDL_BlitMap right) => left.Value == right.Value;
+	public static bool operator !=(SDL_BlitMap left, SDL_BlitMap right) => left.Value != right.Value;
+	public static bool operator ==(SDL_BlitMap left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_BlitMap left, nint right) => left.Value != right;
+	public bool Equals(SDL_BlitMap other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_BlitMap other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_BlitMap)} [0x{Value.ToString("X")}]";
+}
+
+public readonly partial struct SDL_CameraDeviceID(uint value) : IComparable, IComparable<SDL_CameraDeviceID>, IEquatable<SDL_CameraDeviceID>, IFormattable
+{
+	public readonly uint Value = value;
+	public static implicit operator uint(SDL_CameraDeviceID value) => value.Value;
+	public static implicit operator SDL_CameraDeviceID(uint value) => new(value);
+	public static bool operator ==(SDL_CameraDeviceID left, SDL_CameraDeviceID right) => left.Value == right.Value;
+	public static bool operator !=(SDL_CameraDeviceID left, SDL_CameraDeviceID right) => left.Value != right.Value;
+	public static bool operator <(SDL_CameraDeviceID left, SDL_CameraDeviceID right) => left.Value < right.Value;
+	public static bool operator <=(SDL_CameraDeviceID left, SDL_CameraDeviceID right) => left.Value <= right.Value;
+	public static bool operator >(SDL_CameraDeviceID left, SDL_CameraDeviceID right) => left.Value > right.Value;
+	public static bool operator >=(SDL_CameraDeviceID left, SDL_CameraDeviceID right) => left.Value >= right.Value;
+	public int CompareTo(object? obj)
+	{
+		if (obj is SDL_CameraDeviceID other)
+		{
+			return CompareTo(other);
+		}
+		return (obj is null) ? 1 : throw new ArgumentException($"obj is not an instance of csName.");
+	}
+	public int CompareTo(SDL_CameraDeviceID other) => Value.CompareTo(other.Value);
+	public bool Equals(SDL_CameraDeviceID other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_CameraDeviceID other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	public override string ToString() => Value.ToString();
+	public string ToString(string? format, IFormatProvider? formatProvider) => Value.ToString(format, formatProvider);
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_Camera(nint value) : IEquatable<SDL_Camera>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_Camera Null => new(0);
+	public static implicit operator nint(SDL_Camera value) => value.Value;
+	public static implicit operator SDL_Camera(nint value) => new(value);
+	public static bool operator ==(SDL_Camera left, SDL_Camera right) => left.Value == right.Value;
+	public static bool operator !=(SDL_Camera left, SDL_Camera right) => left.Value != right.Value;
+	public static bool operator ==(SDL_Camera left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_Camera left, nint right) => left.Value != right;
+	public bool Equals(SDL_Camera other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_Camera other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_Camera)} [0x{Value.ToString("X")}]";
+}
 

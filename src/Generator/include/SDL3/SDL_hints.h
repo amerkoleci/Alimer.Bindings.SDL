@@ -121,9 +121,9 @@ extern "C" {
  *
  * For *nix platforms, this string should be formatted in reverse-DNS notation and follow some basic rules to be valid:
  *
- * - The application ID must be composed of two or more elements separated by a period (‘.’) character.
+ * - The application ID must be composed of two or more elements separated by a period (.) character.
  *
- * - Each element must contain one or more of the alphanumeric characters (A-Z, a-z, 0-9) plus underscore (‘_’) and hyphen (‘-’) and must not start with a digit. Note that hyphens, while technically allowed, should not be used if possible, as they are not supported by all components that use the ID, such as D-Bus. For maximum compatibility, replace hyphens with an underscore.
+ * - Each element must contain one or more of the alphanumeric characters (A-Z, a-z, 0-9) plus underscore (_) and hyphen (-) and must not start with a digit. Note that hyphens, while technically allowed, should not be used if possible, as they are not supported by all components that use the ID, such as D-Bus. For maximum compatibility, replace hyphens with an underscore.
  *
  * - The empty string is not a valid element (ie: your application ID may not start or end with a period and it is not valid to have two periods in a row).
  *
@@ -372,6 +372,37 @@ extern "C" {
 #define SDL_HINT_CAMERA_DRIVER "SDL_CAMERA_DRIVER"
 
 /**
+ *  A variable that limits what CPU features are available.
+ *
+ *  By default, SDL marks all features the current CPU supports as available.
+ *  This hint allows to limit these to a subset.
+ *
+ *  When the hint is unset, or empty, SDL will enable all detected CPU
+ *  features.
+ *
+ * The variable can be set to a comma separated list containing the following items:
+ *   "all"
+ *   "altivec"
+ *   "sse"
+ *   "sse2"
+ *   "sse3"
+ *   "sse41"
+ *   "sse42"
+ *   "avx"
+ *   "avx2"
+ *   "avx512f"
+ *   "arm-simd"
+ *   "neon"
+ *   "lsx"
+ *   "lasx"
+ *
+ *  The items can be prefixed by '+'/'-' to add/remove features.
+ *
+ *  This hint is available since SDL 3.0.0.
+ */
+#define SDL_HINT_CPU_FEATURE_MASK "SDL_CPU_FEATURE_MASK"
+
+/**
  * A variable controlling whether DirectInput should be used for controllers
  *
  * The variable can be set to the following values:
@@ -439,10 +470,11 @@ extern "C" {
  * A variable that controls whether the on-screen keyboard should be shown when text input is active
  *
  * The variable can be set to the following values:
+ *   "auto"    - The on-screen keyboard will be shown if there is no physical keyboard attached. (default)
  *   "0"       - Do not show the on-screen keyboard.
- *   "1"       - Show the on-screen keyboard. (default)
+ *   "1"       - Show the on-screen keyboard, if available.
  *
- * This hint must be set before text input is activated.
+ * This hint must be set before SDL_StartTextInput() is called
  */
 #define SDL_HINT_ENABLE_SCREEN_KEYBOARD "SDL_ENABLE_SCREEN_KEYBOARD"
 
@@ -621,19 +653,6 @@ extern "C" {
  * This hint should be set before calling SDL_StartTextInput()
  */
 #define SDL_HINT_GDK_TEXTINPUT_TITLE "SDL_GDK_TEXTINPUT_TITLE"
-
-/**
- * A variable controlling whether grabbing input grabs the keyboard
- *
- * The variable can be set to the following values:
- *   "0"       - Grab will affect only the mouse. (default)
- *   "1"       - Grab will affect mouse and keyboard.
- *
- * By default SDL will not grab the keyboard so system shortcuts still work.
- *
- * This hint can be set anytime.
- */
-#define SDL_HINT_GRAB_KEYBOARD              "SDL_GRAB_KEYBOARD"
 
 /**
  * A variable to control whether SDL_hid_enumerate() enumerates all HID devices or only controllers.

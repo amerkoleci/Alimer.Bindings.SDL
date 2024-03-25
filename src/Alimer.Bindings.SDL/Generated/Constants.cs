@@ -19,7 +19,7 @@ public static partial class SDL
 	public const uint SDL_PEN_TIP_ERASER = SDL_PEN_FLAG_ERASER_BIT_INDEX;
 	public const uint SDL_CACHELINE_SIZE = 128;
 	public static ReadOnlySpan<byte> SDL_PROP_IOSTREAM_WINDOWS_HANDLE_POINTER => "SDL.iostream.windows.handle"u8;
-	public static ReadOnlySpan<byte> SDL_PROP_IOSTREAM_STDIO_HANDLE_POINTER => "SDL.iostream.stdio.handle"u8;
+	public static ReadOnlySpan<byte> SDL_PROP_IOSTREAM_STDIO_FILE_POINTER => "SDL.iostream.stdio.file"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_IOSTREAM_ANDROID_AASSET_POINTER => "SDL.iostream.android.aasset"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_IOSTREAM_DYNAMIC_MEMORY_POINTER => "SDL.iostream.dynamic.memory"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_IOSTREAM_DYNAMIC_CHUNKSIZE_NUMBER => "SDL.iostream.dynamic.chunksize"u8;
@@ -62,7 +62,7 @@ public static partial class SDL
 	public const uint SDL_NS_PER_US = 1000;
 	public const uint SDL_MAX_LOG_MESSAGE = 4096;
 	public const float SDL_STANDARD_GRAVITY = 9.80665f;
-	public static ReadOnlySpan<byte> SDL_PROP_GLOBAL_VIDEO_WAYLAND_WL_DISPLAY_POINTER => "video.wayland.wl_display"u8;
+	public static ReadOnlySpan<byte> SDL_PROP_GLOBAL_VIDEO_WAYLAND_WL_DISPLAY_POINTER => "SDL.video.wayland.wl_display"u8;
 	public const uint SDL_WINDOW_FULLSCREEN = 0x00000001U;
 	public const uint SDL_WINDOW_OPENGL = 0x00000002U;
 	public const uint SDL_WINDOW_OCCLUDED = 0x00000004U;
@@ -144,7 +144,7 @@ public static partial class SDL
 	public static ReadOnlySpan<byte> SDL_PROP_WINDOW_WAYLAND_EGL_WINDOW_POINTER => "SDL.window.wayland.egl_window"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_WINDOW_WAYLAND_XDG_SURFACE_POINTER => "SDL.window.wayland.xdg_surface"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_WINDOW_WAYLAND_XDG_TOPLEVEL_POINTER => "SDL.window.wayland.xdg_toplevel"u8;
-	public static ReadOnlySpan<byte> SDL_PROP_WINDOW_WAYLAND_XDG_TOPLEVEL_EXPORT_HANDLE_POINTER => "SDL.window.wayland.xdg_toplevel_export_handle"u8;
+	public static ReadOnlySpan<byte> SDL_PROP_WINDOW_WAYLAND_XDG_TOPLEVEL_EXPORT_HANDLE_STRING => "SDL.window.wayland.xdg_toplevel_export_handle"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_WINDOW_WAYLAND_XDG_POPUP_POINTER => "SDL.window.wayland.xdg_popup"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_WINDOW_WAYLAND_XDG_POSITIONER_POINTER => "SDL.window.wayland.xdg_positioner"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_WINDOW_X11_DISPLAY_POINTER => "SDL.window.x11.display"u8;
@@ -193,6 +193,7 @@ public static partial class SDL
 	public static ReadOnlySpan<byte> SDL_HINT_AUTO_UPDATE_SENSORS => "SDL_AUTO_UPDATE_SENSORS"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_BMP_SAVE_LEGACY_FORMAT => "SDL_BMP_SAVE_LEGACY_FORMAT"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_CAMERA_DRIVER => "SDL_CAMERA_DRIVER"u8;
+	public static ReadOnlySpan<byte> SDL_HINT_CPU_FEATURE_MASK => "SDL_CPU_FEATURE_MASK"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_DIRECTINPUT => "SDL_JOYSTICK_DIRECTINPUT"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_DISPLAY_USABLE_BOUNDS => "SDL_DISPLAY_USABLE_BOUNDS"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_EMSCRIPTEN_ASYNCIFY => "SDL_EMSCRIPTEN_ASYNCIFY"u8;
@@ -213,7 +214,6 @@ public static partial class SDL
 	public static ReadOnlySpan<byte> SDL_HINT_GDK_TEXTINPUT_MAX_LENGTH => "SDL_GDK_TEXTINPUT_MAX_LENGTH"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_GDK_TEXTINPUT_SCOPE => "SDL_GDK_TEXTINPUT_SCOPE"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_GDK_TEXTINPUT_TITLE => "SDL_GDK_TEXTINPUT_TITLE"u8;
-	public static ReadOnlySpan<byte> SDL_HINT_GRAB_KEYBOARD => "SDL_GRAB_KEYBOARD"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_HIDAPI_ENUMERATE_ONLY_CONTROLLERS => "SDL_HIDAPI_ENUMERATE_ONLY_CONTROLERS"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_HIDAPI_IGNORE_DEVICES => "SDL_HIDAPI_IGNORE_DEVICES"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_IME_INTERNAL_EDITING => "SDL_IME_INTERNAL_EDITING"u8;
@@ -378,4 +378,6 @@ public static partial class SDL
 	public static ReadOnlySpan<byte> SDL_PROP_SURFACE_SDR_WHITE_POINT_FLOAT => "SDL.surface.SDR_white_point"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_SURFACE_HDR_HEADROOM_FLOAT => "SDL.surface.HDR_headroom"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_SURFACE_TONEMAP_OPERATOR_STRING => "SDL.surface.tonemap"u8;
+	public static ReadOnlySpan<byte> SDL_PROP_GLOBAL_SYSTEM_DATE_FORMAT_NUMBER => "SDL.time.date_format"u8;
+	public static ReadOnlySpan<byte> SDL_PROP_GLOBAL_SYSTEM_TIME_FORMAT_NUMBER => "SDL.time.time_format"u8;
 }

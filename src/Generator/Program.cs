@@ -43,6 +43,7 @@ public static class Program
         List<string> headers =
         [
             "SDL_properties.h",
+            "SDL_error.h",
             "SDL_pen.h",
             "SDL_init.h",
             "SDL_platform.h",
@@ -75,6 +76,7 @@ public static class Program
             "SDL_pixels.h",
             "SDL_surface.h",
             "SDL_camera.h",
+            "SDL_time.h",
         ];
 
         foreach(string header in headers)

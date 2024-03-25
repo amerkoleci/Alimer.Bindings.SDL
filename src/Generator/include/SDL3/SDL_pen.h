@@ -45,9 +45,9 @@
 #ifndef SDL_pen_h_
 #define SDL_pen_h_
 
-#include "SDL_error.h"
-#include "SDL_guid.h"
-#include "SDL_stdinc.h"
+#include <SDL3/SDL_error.h>
+#include <SDL3/SDL_guid.h>
+#include <SDL3/SDL_stdinc.h>
 
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
@@ -58,7 +58,7 @@ typedef Uint32 SDL_PenID; /**< SDL_PenIDs identify pens uniquely within a sessio
 
 #define SDL_PEN_INVALID ((SDL_PenID)0) /**< Reserved invalid ::SDL_PenID is valid */
 
-#define SDL_PEN_MOUSEID ((SDL_PenID)-2) /**< Device ID for mouse events triggered by pen events */
+#define SDL_PEN_MOUSEID ((SDL_MouseID)-2) /**< Device ID for mouse events triggered by pen events */
 
 #define SDL_PEN_INFO_UNKNOWN (-1) /**< Marks unknown information when querying the pen */
 

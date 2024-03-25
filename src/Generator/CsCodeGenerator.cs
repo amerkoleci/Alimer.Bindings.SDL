@@ -59,6 +59,7 @@ public static partial class CsCodeGenerator
         { "LPARAM", "nint" },
         // Until we understand how to treat this
         { "SDL_BlitMap", "nint" },
+        { "SDL_Time", "long" },
     };
 
     private static readonly HashSet<string> s_knownTypes = new(StringComparer.OrdinalIgnoreCase)

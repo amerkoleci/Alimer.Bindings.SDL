@@ -1805,6 +1805,10 @@ public enum SDL_EventType
 	TextInput = 771,
 	/// <unmanaged>SDL_EVENT_KEYMAP_CHANGED</unmanaged>
 	KeymapChanged = 772,
+	/// <unmanaged>SDL_EVENT_KEYBOARD_ADDED</unmanaged>
+	KeyboardAdded = 773,
+	/// <unmanaged>SDL_EVENT_KEYBOARD_REMOVED</unmanaged>
+	KeyboardRemoved = 774,
 	/// <unmanaged>SDL_EVENT_MOUSE_MOTION</unmanaged>
 	MouseMotion = 0x400,
 	/// <unmanaged>SDL_EVENT_MOUSE_BUTTON_DOWN</unmanaged>
@@ -1813,6 +1817,10 @@ public enum SDL_EventType
 	MouseButtonUp = 1026,
 	/// <unmanaged>SDL_EVENT_MOUSE_WHEEL</unmanaged>
 	MouseWheel = 1027,
+	/// <unmanaged>SDL_EVENT_MOUSE_ADDED</unmanaged>
+	MouseAdded = 1028,
+	/// <unmanaged>SDL_EVENT_MOUSE_REMOVED</unmanaged>
+	MouseRemoved = 1029,
 	/// <unmanaged>SDL_EVENT_JOYSTICK_AXIS_MOTION</unmanaged>
 	JoystickAxisMotion = 0x600,
 	/// <unmanaged>SDL_EVENT_JOYSTICK_BALL_MOTION</unmanaged>
@@ -2442,5 +2450,23 @@ public enum SDL_CameraPosition
 	FrontFacing = 1,
 	/// <unmanaged>SDL_CAMERA_POSITION_BACK_FACING</unmanaged>
 	BackFacing = 2,
+}
+
+public enum SDL_DATE_FORMAT
+{
+	/// <unmanaged>SDL_DATE_FORMAT_YYYYMMDD</unmanaged>
+	Yyyymmdd = 0,
+	/// <unmanaged>SDL_DATE_FORMAT_DDMMYYYY</unmanaged>
+	Ddmmyyyy = 1,
+	/// <unmanaged>SDL_DATE_FORMAT_MMDDYYYY</unmanaged>
+	Mmddyyyy = 2,
+}
+
+public enum SDL_TIME_FORMAT
+{
+	/// <unmanaged>SDL_TIME_FORMAT_24HR</unmanaged>
+	_24hr = 0,
+	/// <unmanaged>SDL_TIME_FORMAT_12HR</unmanaged>
+	_12hr = 1,
 }
 

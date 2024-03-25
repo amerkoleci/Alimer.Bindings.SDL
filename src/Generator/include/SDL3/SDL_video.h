@@ -58,7 +58,7 @@ typedef Uint32 SDL_WindowID;
  *    if one was set prior to initialization, or NULL. See
  *    docs/README-wayland.md for more information.
  */
-#define SDL_PROP_GLOBAL_VIDEO_WAYLAND_WL_DISPLAY_POINTER "video.wayland.wl_display"
+#define SDL_PROP_GLOBAL_VIDEO_WAYLAND_WL_DISPLAY_POINTER "SDL.video.wayland.wl_display"
 
 /**
  *  System theme
@@ -1083,7 +1083,7 @@ extern DECLSPEC SDL_Window *SDLCALL SDL_GetWindowParent(SDL_Window *window);
  *   with the window
  * - `SDL_PROP_WINDOW_WAYLAND_XDG_TOPLEVEL_POINTER`: the xdg_toplevel role
  *   associated with the window
- * - 'SDL_PROP_WINDOW_WAYLAND_XDG_TOPLEVEL_EXPORT_HANDLE_POINTER': the export
+ * - 'SDL_PROP_WINDOW_WAYLAND_XDG_TOPLEVEL_EXPORT_HANDLE_STRING': the export
  *   handle associated with the window
  * - `SDL_PROP_WINDOW_WAYLAND_XDG_POPUP_POINTER`: the xdg_popup role
  *   associated with the window
@@ -1110,34 +1110,34 @@ extern DECLSPEC SDL_Window *SDLCALL SDL_GetWindowParent(SDL_Window *window);
  */
 extern DECLSPEC SDL_PropertiesID SDLCALL SDL_GetWindowProperties(SDL_Window *window);
 
-#define SDL_PROP_WINDOW_SHAPE_POINTER                              "SDL.window.shape"
-#define SDL_PROP_WINDOW_ANDROID_WINDOW_POINTER                     "SDL.window.android.window"
-#define SDL_PROP_WINDOW_ANDROID_SURFACE_POINTER                    "SDL.window.android.surface"
-#define SDL_PROP_WINDOW_UIKIT_WINDOW_POINTER                       "SDL.window.uikit.window"
-#define SDL_PROP_WINDOW_UIKIT_METAL_VIEW_TAG_NUMBER                "SDL.window.uikit.metal_view_tag"
-#define SDL_PROP_WINDOW_KMSDRM_DEVICE_INDEX_NUMBER                 "SDL.window.kmsdrm.dev_index"
-#define SDL_PROP_WINDOW_KMSDRM_DRM_FD_NUMBER                       "SDL.window.kmsdrm.drm_fd"
-#define SDL_PROP_WINDOW_KMSDRM_GBM_DEVICE_POINTER                  "SDL.window.kmsdrm.gbm_dev"
-#define SDL_PROP_WINDOW_COCOA_WINDOW_POINTER                       "SDL.window.cocoa.window"
-#define SDL_PROP_WINDOW_COCOA_METAL_VIEW_TAG_NUMBER                "SDL.window.cocoa.metal_view_tag"
-#define SDL_PROP_WINDOW_VIVANTE_DISPLAY_POINTER                    "SDL.window.vivante.display"
-#define SDL_PROP_WINDOW_VIVANTE_WINDOW_POINTER                     "SDL.window.vivante.window"
-#define SDL_PROP_WINDOW_VIVANTE_SURFACE_POINTER                    "SDL.window.vivante.surface"
-#define SDL_PROP_WINDOW_WINRT_WINDOW_POINTER                       "SDL.window.winrt.window"
-#define SDL_PROP_WINDOW_WIN32_HWND_POINTER                         "SDL.window.win32.hwnd"
-#define SDL_PROP_WINDOW_WIN32_HDC_POINTER                          "SDL.window.win32.hdc"
-#define SDL_PROP_WINDOW_WIN32_INSTANCE_POINTER                     "SDL.window.win32.instance"
-#define SDL_PROP_WINDOW_WAYLAND_DISPLAY_POINTER                    "SDL.window.wayland.display"
-#define SDL_PROP_WINDOW_WAYLAND_SURFACE_POINTER                    "SDL.window.wayland.surface"
-#define SDL_PROP_WINDOW_WAYLAND_EGL_WINDOW_POINTER                 "SDL.window.wayland.egl_window"
-#define SDL_PROP_WINDOW_WAYLAND_XDG_SURFACE_POINTER                "SDL.window.wayland.xdg_surface"
-#define SDL_PROP_WINDOW_WAYLAND_XDG_TOPLEVEL_POINTER               "SDL.window.wayland.xdg_toplevel"
-#define SDL_PROP_WINDOW_WAYLAND_XDG_TOPLEVEL_EXPORT_HANDLE_POINTER "SDL.window.wayland.xdg_toplevel_export_handle"
-#define SDL_PROP_WINDOW_WAYLAND_XDG_POPUP_POINTER                  "SDL.window.wayland.xdg_popup"
-#define SDL_PROP_WINDOW_WAYLAND_XDG_POSITIONER_POINTER             "SDL.window.wayland.xdg_positioner"
-#define SDL_PROP_WINDOW_X11_DISPLAY_POINTER                        "SDL.window.x11.display"
-#define SDL_PROP_WINDOW_X11_SCREEN_NUMBER                          "SDL.window.x11.screen"
-#define SDL_PROP_WINDOW_X11_WINDOW_NUMBER                          "SDL.window.x11.window"
+#define SDL_PROP_WINDOW_SHAPE_POINTER                             "SDL.window.shape"
+#define SDL_PROP_WINDOW_ANDROID_WINDOW_POINTER                    "SDL.window.android.window"
+#define SDL_PROP_WINDOW_ANDROID_SURFACE_POINTER                   "SDL.window.android.surface"
+#define SDL_PROP_WINDOW_UIKIT_WINDOW_POINTER                      "SDL.window.uikit.window"
+#define SDL_PROP_WINDOW_UIKIT_METAL_VIEW_TAG_NUMBER               "SDL.window.uikit.metal_view_tag"
+#define SDL_PROP_WINDOW_KMSDRM_DEVICE_INDEX_NUMBER                "SDL.window.kmsdrm.dev_index"
+#define SDL_PROP_WINDOW_KMSDRM_DRM_FD_NUMBER                      "SDL.window.kmsdrm.drm_fd"
+#define SDL_PROP_WINDOW_KMSDRM_GBM_DEVICE_POINTER                 "SDL.window.kmsdrm.gbm_dev"
+#define SDL_PROP_WINDOW_COCOA_WINDOW_POINTER                      "SDL.window.cocoa.window"
+#define SDL_PROP_WINDOW_COCOA_METAL_VIEW_TAG_NUMBER               "SDL.window.cocoa.metal_view_tag"
+#define SDL_PROP_WINDOW_VIVANTE_DISPLAY_POINTER                   "SDL.window.vivante.display"
+#define SDL_PROP_WINDOW_VIVANTE_WINDOW_POINTER                    "SDL.window.vivante.window"
+#define SDL_PROP_WINDOW_VIVANTE_SURFACE_POINTER                   "SDL.window.vivante.surface"
+#define SDL_PROP_WINDOW_WINRT_WINDOW_POINTER                      "SDL.window.winrt.window"
+#define SDL_PROP_WINDOW_WIN32_HWND_POINTER                        "SDL.window.win32.hwnd"
+#define SDL_PROP_WINDOW_WIN32_HDC_POINTER                         "SDL.window.win32.hdc"
+#define SDL_PROP_WINDOW_WIN32_INSTANCE_POINTER                    "SDL.window.win32.instance"
+#define SDL_PROP_WINDOW_WAYLAND_DISPLAY_POINTER                   "SDL.window.wayland.display"
+#define SDL_PROP_WINDOW_WAYLAND_SURFACE_POINTER                   "SDL.window.wayland.surface"
+#define SDL_PROP_WINDOW_WAYLAND_EGL_WINDOW_POINTER                "SDL.window.wayland.egl_window"
+#define SDL_PROP_WINDOW_WAYLAND_XDG_SURFACE_POINTER               "SDL.window.wayland.xdg_surface"
+#define SDL_PROP_WINDOW_WAYLAND_XDG_TOPLEVEL_POINTER              "SDL.window.wayland.xdg_toplevel"
+#define SDL_PROP_WINDOW_WAYLAND_XDG_TOPLEVEL_EXPORT_HANDLE_STRING "SDL.window.wayland.xdg_toplevel_export_handle"
+#define SDL_PROP_WINDOW_WAYLAND_XDG_POPUP_POINTER                 "SDL.window.wayland.xdg_popup"
+#define SDL_PROP_WINDOW_WAYLAND_XDG_POSITIONER_POINTER            "SDL.window.wayland.xdg_positioner"
+#define SDL_PROP_WINDOW_X11_DISPLAY_POINTER                       "SDL.window.x11.display"
+#define SDL_PROP_WINDOW_X11_SCREEN_NUMBER                         "SDL.window.x11.screen"
+#define SDL_PROP_WINDOW_X11_WINDOW_NUMBER                         "SDL.window.x11.window"
 
 /**
  * Get the window flags.
@@ -1152,7 +1152,7 @@ extern DECLSPEC SDL_PropertiesID SDLCALL SDL_GetWindowProperties(SDL_Window *win
  * \sa SDL_MaximizeWindow
  * \sa SDL_MinimizeWindow
  * \sa SDL_SetWindowFullscreen
- * \sa SDL_SetWindowGrab
+ * \sa SDL_SetWindowMouseGrab
  * \sa SDL_ShowWindow
  */
 extern DECLSPEC SDL_WindowFlags SDLCALL SDL_GetWindowFlags(SDL_Window *window);
@@ -1777,28 +1777,6 @@ extern DECLSPEC int SDLCALL SDL_UpdateWindowSurfaceRects(SDL_Window *window, con
 extern DECLSPEC int SDLCALL SDL_DestroyWindowSurface(SDL_Window *window);
 
 /**
- * Set a window's input grab mode.
- *
- * When input is grabbed, the mouse is confined to the window. This function
- * will also grab the keyboard if `SDL_HINT_GRAB_KEYBOARD` is set. To grab the
- * keyboard without also grabbing the mouse, use SDL_SetWindowKeyboardGrab().
- *
- * If the caller enables a grab while another window is currently grabbed, the
- * other window loses its grab in favor of the caller's window.
- *
- * \param window the window for which the input grab mode should be set
- * \param grabbed SDL_TRUE to grab input or SDL_FALSE to release input
- * \returns 0 on success or a negative error code on failure; call
- *          SDL_GetError() for more information.
- *
- * \since This function is available since SDL 3.0.0.
- *
- * \sa SDL_GetGrabbedWindow
- * \sa SDL_GetWindowGrab
- */
-extern DECLSPEC int SDLCALL SDL_SetWindowGrab(SDL_Window *window, SDL_bool grabbed);
-
-/**
  * Set a window's keyboard grab mode.
  *
  * Keyboard grab enables capture of system keyboard shortcuts like Alt+Tab or
@@ -1826,7 +1804,6 @@ extern DECLSPEC int SDLCALL SDL_SetWindowGrab(SDL_Window *window, SDL_bool grabb
  *
  * \sa SDL_GetWindowKeyboardGrab
  * \sa SDL_SetWindowMouseGrab
- * \sa SDL_SetWindowGrab
  */
 extern DECLSPEC int SDLCALL SDL_SetWindowKeyboardGrab(SDL_Window *window, SDL_bool grabbed);
 
@@ -1844,21 +1821,8 @@ extern DECLSPEC int SDLCALL SDL_SetWindowKeyboardGrab(SDL_Window *window, SDL_bo
  *
  * \sa SDL_GetWindowMouseGrab
  * \sa SDL_SetWindowKeyboardGrab
- * \sa SDL_SetWindowGrab
  */
 extern DECLSPEC int SDLCALL SDL_SetWindowMouseGrab(SDL_Window *window, SDL_bool grabbed);
-
-/**
- * Get a window's input grab mode.
- *
- * \param window the window to query
- * \returns SDL_TRUE if input is grabbed, SDL_FALSE otherwise.
- *
- * \since This function is available since SDL 3.0.0.
- *
- * \sa SDL_SetWindowGrab
- */
-extern DECLSPEC SDL_bool SDLCALL SDL_GetWindowGrab(SDL_Window *window);
 
 /**
  * Get a window's keyboard grab mode.
@@ -1869,7 +1833,6 @@ extern DECLSPEC SDL_bool SDLCALL SDL_GetWindowGrab(SDL_Window *window);
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_SetWindowKeyboardGrab
- * \sa SDL_GetWindowGrab
  */
 extern DECLSPEC SDL_bool SDLCALL SDL_GetWindowKeyboardGrab(SDL_Window *window);
 
@@ -1882,7 +1845,6 @@ extern DECLSPEC SDL_bool SDLCALL SDL_GetWindowKeyboardGrab(SDL_Window *window);
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_SetWindowKeyboardGrab
- * \sa SDL_GetWindowGrab
  */
 extern DECLSPEC SDL_bool SDLCALL SDL_GetWindowMouseGrab(SDL_Window *window);
 
@@ -1893,8 +1855,8 @@ extern DECLSPEC SDL_bool SDLCALL SDL_GetWindowMouseGrab(SDL_Window *window);
  *
  * \since This function is available since SDL 3.0.0.
  *
- * \sa SDL_GetWindowGrab
- * \sa SDL_SetWindowGrab
+ * \sa SDL_SetWindowMouseGrab
+ * \sa SDL_SetWindowKeyboardGrab
  */
 extern DECLSPEC SDL_Window *SDLCALL SDL_GetGrabbedWindow(void);
 

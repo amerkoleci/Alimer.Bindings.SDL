@@ -75,6 +75,8 @@ public static partial class CsCodeGenerator
         { "SDL_CameraPosition", "SDL_CAMERA_POSITION" },
 
         { "SDL_IOStatus", "SDL_IO_STATUS" },
+        { "SDL_DATE_FORMAT", "SDL_DATE_FORMAT" },
+        { "SDL_TIME_FORMAT", "SDL_TIME_FORMAT" },
     };
 
     private static readonly Dictionary<string, string> s_knownEnumValueNames = new()

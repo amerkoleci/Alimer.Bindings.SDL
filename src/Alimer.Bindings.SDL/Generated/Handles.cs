@@ -93,6 +93,35 @@ public readonly partial struct SDL_IOStream(nint value) : IEquatable<SDL_IOStrea
 	private string DebuggerDisplay => $"{nameof(SDL_IOStream)} [0x{Value.ToString("X")}]";
 }
 
+public readonly partial struct SDL_KeyboardID(uint value) : IComparable, IComparable<SDL_KeyboardID>, IEquatable<SDL_KeyboardID>, IFormattable
+{
+	public readonly uint Value = value;
+	public static implicit operator uint(SDL_KeyboardID value) => value.Value;
+	public static implicit operator SDL_KeyboardID(uint value) => new(value);
+	public static bool operator ==(SDL_KeyboardID left, SDL_KeyboardID right) => left.Value == right.Value;
+	public static bool operator !=(SDL_KeyboardID left, SDL_KeyboardID right) => left.Value != right.Value;
+	public static bool operator <(SDL_KeyboardID left, SDL_KeyboardID right) => left.Value < right.Value;
+	public static bool operator <=(SDL_KeyboardID left, SDL_KeyboardID right) => left.Value <= right.Value;
+	public static bool operator >(SDL_KeyboardID left, SDL_KeyboardID right) => left.Value > right.Value;
+	public static bool operator >=(SDL_KeyboardID left, SDL_KeyboardID right) => left.Value >= right.Value;
+	public int CompareTo(object? obj)
+	{
+		if (obj is SDL_KeyboardID other)
+		{
+			return CompareTo(other);
+		}
+		return (obj is null) ? 1 : throw new ArgumentException($"obj is not an instance of csName.");
+	}
+	public int CompareTo(SDL_KeyboardID other) => Value.CompareTo(other.Value);
+	public bool Equals(SDL_KeyboardID other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_KeyboardID other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	public override string ToString() => Value.ToString();
+	public string ToString(string? format, IFormatProvider? formatProvider) => Value.ToString(format, formatProvider);
+}
+
 public readonly partial struct SDL_JoystickID(uint value) : IComparable, IComparable<SDL_JoystickID>, IEquatable<SDL_JoystickID>, IFormattable
 {
 	public readonly uint Value = value;

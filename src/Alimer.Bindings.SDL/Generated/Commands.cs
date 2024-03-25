@@ -368,6 +368,15 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_WriteS64BE")]
 	public static partial SDL_bool SDL_WriteS64BE(SDL_IOStream dst, long value);
 
+	[LibraryImport(LibName, EntryPoint = "SDL_HasKeyboard")]
+	public static partial SDL_bool SDL_HasKeyboard();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetKeyboards")]
+	public static partial SDL_KeyboardID* SDL_GetKeyboards(out int count);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetKeyboardInstanceName")]
+	public static partial byte* SDL_GetKeyboardInstanceName(SDL_KeyboardID instance_id);
+
 	[LibraryImport(LibName, EntryPoint = "SDL_GetKeyboardFocus")]
 	public static partial SDL_Window SDL_GetKeyboardFocus();
 
@@ -436,6 +445,9 @@ public unsafe partial class SDL
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UnlockJoysticks")]
 	public static partial void SDL_UnlockJoysticks();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HasJoystick")]
+	public static partial SDL_bool SDL_HasJoystick();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetJoysticks")]
 	public static partial SDL_JoystickID* SDL_GetJoysticks(out int count);
@@ -622,6 +634,9 @@ public unsafe partial class SDL
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetGamepadMapping")]
 	public static partial int SDL_SetGamepadMapping(SDL_JoystickID instance_id, byte* mapping);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HasGamepad")]
+	public static partial SDL_bool SDL_HasGamepad();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepads")]
 	public static partial SDL_JoystickID* SDL_GetGamepads(out int count);
@@ -811,6 +826,15 @@ public unsafe partial class SDL
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadAppleSFSymbolsNameForAxis")]
 	public static partial byte* SDL_GetGamepadAppleSFSymbolsNameForAxis(SDL_Gamepad gamepad, SDL_GamepadAxis axis);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_HasMouse")]
+	public static partial SDL_bool SDL_HasMouse();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetMice")]
+	public static partial SDL_MouseID* SDL_GetMice(out int count);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetMouseInstanceName")]
+	public static partial byte* SDL_GetMouseInstanceName(SDL_MouseID instance_id);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetMouseFocus")]
 	public static partial SDL_Window SDL_GetMouseFocus();
@@ -1214,17 +1238,11 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_DestroyWindowSurface")]
 	public static partial int SDL_DestroyWindowSurface(SDL_Window window);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowGrab")]
-	public static partial int SDL_SetWindowGrab(SDL_Window window, SDL_bool grabbed);
-
 	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowKeyboardGrab")]
 	public static partial int SDL_SetWindowKeyboardGrab(SDL_Window window, SDL_bool grabbed);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowMouseGrab")]
 	public static partial int SDL_SetWindowMouseGrab(SDL_Window window, SDL_bool grabbed);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowGrab")]
-	public static partial SDL_bool SDL_GetWindowGrab(SDL_Window window);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowKeyboardGrab")]
 	public static partial SDL_bool SDL_GetWindowKeyboardGrab(SDL_Window window);
@@ -1861,5 +1879,29 @@ public unsafe partial class SDL
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CloseCamera")]
 	public static partial void SDL_CloseCamera(SDL_Camera* camera);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetCurrentTime")]
+	public static partial int SDL_GetCurrentTime(long* ticks);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_TimeToDateTime")]
+	public static partial int SDL_TimeToDateTime(long ticks, SDL_DateTime* dt, SDL_bool localTime);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_DateTimeToTime")]
+	public static partial int SDL_DateTimeToTime(SDL_DateTime* dt, long* ticks);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_TimeToWindows")]
+	public static partial void SDL_TimeToWindows(long ticks, uint* dwLowDateTime, uint* dwHighDateTime);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_TimeFromWindows")]
+	public static partial long SDL_TimeFromWindows(uint dwLowDateTime, uint dwHighDateTime);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetDaysInMonth")]
+	public static partial int SDL_GetDaysInMonth(int year, int month);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetDayOfYear")]
+	public static partial int SDL_GetDayOfYear(int year, int month, int day);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetDayOfWeek")]
+	public static partial int SDL_GetDayOfWeek(int year, int month, int day);
 
 }

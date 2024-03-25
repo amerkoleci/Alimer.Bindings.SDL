@@ -217,12 +217,21 @@ public partial struct SDL_WindowEvent
 	public int data2;
 }
 
+public partial struct SDL_KeyboardDeviceEvent
+{
+	public SDL_EventType type;
+	public uint reserved;
+	public ulong timestamp;
+	public SDL_KeyboardID which;
+}
+
 public partial struct SDL_KeyboardEvent
 {
 	public SDL_EventType type;
 	public uint reserved;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
+	public SDL_KeyboardID which;
 	public byte state;
 	public byte repeat;
 	public byte padding2;
@@ -250,6 +259,14 @@ public partial struct SDL_TextInputEvent
 	public unsafe byte* text;
 }
 
+public partial struct SDL_MouseDeviceEvent
+{
+	public SDL_EventType type;
+	public uint reserved;
+	public ulong timestamp;
+	public SDL_MouseID which;
+}
+
 public partial struct SDL_MouseMotionEvent
 {
 	public SDL_EventType type;
@@ -262,19 +279,6 @@ public partial struct SDL_MouseMotionEvent
 	public float y;
 	public float xrel;
 	public float yrel;
-}
-
-public partial struct SDL_JoyBallEvent
-{
-	public SDL_EventType type;
-	public ulong timestamp;
-	public SDL_JoystickID which;
-	public byte ball;
-	public byte padding1;
-	public byte padding2;
-	public byte padding3;
-	public short xrel;
-	public short yrel;
 }
 
 public partial struct SDL_MouseButtonEvent
@@ -318,6 +322,20 @@ public partial struct SDL_JoyAxisEvent
 	public byte padding3;
 	public short value;
 	public ushort padding4;
+}
+
+public partial struct SDL_JoyBallEvent
+{
+	public SDL_EventType type;
+	public uint reserved;
+	public ulong timestamp;
+	public SDL_JoystickID which;
+	public byte ball;
+	public byte padding1;
+	public byte padding2;
+	public byte padding3;
+	public short xrel;
+	public short yrel;
 }
 
 public partial struct SDL_JoyHatEvent
@@ -561,17 +579,23 @@ public partial struct SDL_Event
 	[FieldOffset(0)]
 	public SDL_WindowEvent window;
 	[FieldOffset(0)]
+	public SDL_KeyboardDeviceEvent kdevice;
+	[FieldOffset(0)]
 	public SDL_KeyboardEvent key;
 	[FieldOffset(0)]
 	public SDL_TextEditingEvent edit;
 	[FieldOffset(0)]
 	public SDL_TextInputEvent text;
 	[FieldOffset(0)]
+	public SDL_MouseDeviceEvent mdevice;
+	[FieldOffset(0)]
 	public SDL_MouseMotionEvent motion;
 	[FieldOffset(0)]
 	public SDL_MouseButtonEvent button;
 	[FieldOffset(0)]
 	public SDL_MouseWheelEvent wheel;
+	[FieldOffset(0)]
+	public SDL_JoyDeviceEvent jdevice;
 	[FieldOffset(0)]
 	public SDL_JoyAxisEvent jaxis;
 	[FieldOffset(0)]
@@ -581,15 +605,13 @@ public partial struct SDL_Event
 	[FieldOffset(0)]
 	public SDL_JoyButtonEvent jbutton;
 	[FieldOffset(0)]
-	public SDL_JoyDeviceEvent jdevice;
-	[FieldOffset(0)]
 	public SDL_JoyBatteryEvent jbattery;
+	[FieldOffset(0)]
+	public SDL_GamepadDeviceEvent gdevice;
 	[FieldOffset(0)]
 	public SDL_GamepadAxisEvent gaxis;
 	[FieldOffset(0)]
 	public SDL_GamepadButtonEvent gbutton;
-	[FieldOffset(0)]
-	public SDL_GamepadDeviceEvent gdevice;
 	[FieldOffset(0)]
 	public SDL_GamepadTouchpadEvent gtouchpad;
 	[FieldOffset(0)]
@@ -806,5 +828,18 @@ public partial struct SDL_CameraSpec
 	public int height;
 	public int interval_numerator;
 	public int interval_denominator;
+}
+
+public partial struct SDL_DateTime
+{
+	public int year;
+	public int month;
+	public int day;
+	public int hour;
+	public int minute;
+	public int second;
+	public int nanosecond;
+	public int day_of_week;
+	public int utc_offset;
 }
 

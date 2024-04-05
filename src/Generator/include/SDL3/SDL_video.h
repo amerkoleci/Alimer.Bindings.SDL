@@ -29,6 +29,7 @@
 #define SDL_video_h_
 
 #include <SDL3/SDL_stdinc.h>
+#include <SDL3/SDL_error.h>
 #include <SDL3/SDL_pixels.h>
 #include <SDL3/SDL_properties.h>
 #include <SDL3/SDL_rect.h>
@@ -2111,6 +2112,9 @@ extern DECLSPEC int SDLCALL SDL_FlashWindow(SDL_Window *window, SDL_FlashOperati
 
 /**
  * Destroy a window.
+ *
+ * If the window has an associated SDL_Renderer, it will be implicitly
+ * destroyed as well.
  *
  * If `window` is NULL, this function will return immediately after setting
  * the SDL error message to "Invalid window". See SDL_GetError().

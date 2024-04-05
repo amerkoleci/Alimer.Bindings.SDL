@@ -376,7 +376,8 @@ public partial struct SDL_JoyBatteryEvent
 	public uint reserved;
 	public ulong timestamp;
 	public SDL_JoystickID which;
-	public SDL_JoystickPowerLevel level;
+	public SDL_PowerState state;
+	public int percent;
 }
 
 public partial struct SDL_GamepadAxisEvent

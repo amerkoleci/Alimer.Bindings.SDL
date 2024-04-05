@@ -422,9 +422,6 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_ClearComposition")]
 	public static partial void SDL_ClearComposition();
 
-	[LibraryImport(LibName, EntryPoint = "SDL_TextInputShown")]
-	public static partial SDL_bool SDL_TextInputShown();
-
 	[LibraryImport(LibName, EntryPoint = "SDL_SetTextInputRect")]
 	public static partial int SDL_SetTextInputRect(Rectangle* rect);
 
@@ -608,8 +605,11 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_CloseJoystick")]
 	public static partial void SDL_CloseJoystick(SDL_Joystick joystick);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickPowerLevel")]
-	public static partial SDL_JoystickPowerLevel SDL_GetJoystickPowerLevel(SDL_Joystick joystick);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickConnectionState")]
+	public static partial SDL_JoystickConnectionState SDL_GetJoystickConnectionState(SDL_Joystick joystick);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickPowerInfo")]
+	public static partial SDL_PowerState SDL_GetJoystickPowerInfo(SDL_Joystick joystick, int* percent);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_AddGamepadMapping")]
 	public static partial int SDL_AddGamepadMapping(byte* mapping);
@@ -725,8 +725,11 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadSteamHandle")]
 	public static partial ulong SDL_GetGamepadSteamHandle(SDL_Gamepad gamepad);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadPowerLevel")]
-	public static partial SDL_JoystickPowerLevel SDL_GetGamepadPowerLevel(SDL_Gamepad gamepad);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadConnectionState")]
+	public static partial SDL_JoystickConnectionState SDL_GetGamepadConnectionState(SDL_Gamepad gamepad);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadPowerInfo")]
+	public static partial SDL_PowerState SDL_GetGamepadPowerInfo(SDL_Gamepad gamepad, int* percent);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GamepadConnected")]
 	public static partial SDL_bool SDL_GamepadConnected(SDL_Gamepad gamepad);

@@ -40,6 +40,7 @@
 #define SDL_hints_h_
 
 #include <SDL3/SDL_stdinc.h>
+#include <SDL3/SDL_error.h>
 
 #include <SDL3/SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
@@ -414,6 +415,26 @@ extern "C" {
 #define SDL_HINT_JOYSTICK_DIRECTINPUT "SDL_JOYSTICK_DIRECTINPUT"
 
 /**
+ * A variable that specifies a dialog backend to use.
+ *
+ * By default, SDL will try all available dialog backends in a reasonable order until it finds one that can work, but this hint allows the app or user to force a specific target.
+ *
+ * If the specified target does not exist or is not available, the dialog-related function calls will fail.
+ *
+ * This hint currently only applies to platforms using the generic "Unix" dialog implementation, but may be extended to more platforms in the future. Note that some Unix and Unix-like platforms have their own implementation, such as macOS and Haiku.
+ *
+ * The variable can be set to the following values:
+ *   NULL          - Select automatically (default, all platforms)
+ *   "portal"      - Use XDG Portals through DBus (Unix only)
+ *   "zenity"      - Use the Zenity program (Unix only)
+ *
+ * More options may be added in the future.
+ *
+ * This hint can be set anytime.
+ */
+#define SDL_HINT_FILE_DIALOG_DRIVER "SDL_FILE_DIALOG_DRIVER"
+
+/**
  * Override for SDL_GetDisplayUsableBounds()
  *
  * If set, this hint will override the expected results for SDL_GetDisplayUsableBounds() for display index 0. Generally you don't want to do this, but this allows an embedded system to request that some of the screen be reserved for other uses when paired with a well-behaved application.
@@ -503,7 +524,7 @@ extern "C" {
  *
  * This hint can be set anytime.
  */
-#define SDL_HINT_FORCE_RAISEWINDOW    "SDL_HINT_FORCE_RAISEWINDOW"
+#define SDL_HINT_FORCE_RAISEWINDOW    "SDL_FORCE_RAISEWINDOW"
 
 /**
  * A variable controlling how 3D acceleration is used to accelerate the SDL screen surface.
@@ -1690,7 +1711,7 @@ extern "C" {
  *
  * This hint can be set anytime.
  */
-#define SDL_HINT_PEN_DELAY_MOUSE_BUTTON    "SDL_HINT_PEN_DELAY_MOUSE_BUTTON"
+#define SDL_HINT_PEN_DELAY_MOUSE_BUTTON    "SDL_PEN_DELAY_MOUSE_BUTTON"
 
 /**
  * A variable controlling whether to treat pen movement as separate from mouse movement
@@ -1707,7 +1728,7 @@ extern "C" {
  *
  * This hint can be set anytime.
  */
-#define SDL_HINT_PEN_NOT_MOUSE    "SDL_HINT_PEN_NOT_MOUSE"
+#define SDL_HINT_PEN_NOT_MOUSE    "SDL_PEN_NOT_MOUSE"
 
 /**
  * A variable controlling the use of a sentinel event when polling the event queue
@@ -2283,7 +2304,7 @@ extern "C" {
  *
  * This hint can be set anytime.
  */
-#define SDL_HINT_VITA_TOUCH_MOUSE_DEVICE    "SDL_HINT_VITA_TOUCH_MOUSE_DEVICE"
+#define SDL_HINT_VITA_TOUCH_MOUSE_DEVICE    "SDL_VITA_TOUCH_MOUSE_DEVICE"
 
 /**
  * A variable controlling how the fact chunk affects the loading of a WAVE file.
@@ -2381,6 +2402,17 @@ extern "C" {
 #define SDL_HINT_WINDOW_FRAME_USABLE_WHILE_CURSOR_HIDDEN    "SDL_WINDOW_FRAME_USABLE_WHILE_CURSOR_HIDDEN"
 
 /**
+ * A variable controlling whether SDL generates window-close events for Alt+F4 on Windows.
+ *
+ * The variable can be set to the following values:
+ *   "0"       - SDL will only do normal key handling for Alt+F4.
+ *   "1"       - SDL will generate a window-close event when it sees Alt+F4. (default)
+ *
+ * This hint can be set anytime.
+ */
+#define SDL_HINT_WINDOWS_CLOSE_ON_ALT_F4 "SDL_WINDOWS_CLOSE_ON_ALT_F4"
+
+/**
  * A variable controlling whether menus can be opened with their keyboard shortcut (Alt+mnemonic).
  *
  * If the mnemonics are enabled, then menus can be opened by pressing the Alt key and the corresponding mnemonic (for example, Alt+F opens the File menu). However, in case an invalid mnemonic is pressed, Windows makes an audible beep to convey that nothing happened. This is true even if the window has no menu at all!
@@ -2407,6 +2439,17 @@ extern "C" {
  * This hint can be set anytime.
  */
 #define SDL_HINT_WINDOWS_ENABLE_MESSAGELOOP "SDL_WINDOWS_ENABLE_MESSAGELOOP"
+
+/**
+ * A variable controlling whether raw keyboard events are used on Windows
+ *
+ * The variable can be set to the following values:
+ *   "0"       - The Windows message loop is used for keyboard events.
+ *   "1"       - Low latency raw keyboard events are used. (default)
+ *
+ * This hint can be set anytime.
+ */
+#define SDL_HINT_WINDOWS_RAW_KEYBOARD   "SDL_WINDOWS_RAW_KEYBOARD"
 
 /**
  * A variable controlling whether SDL uses Critical Sections for mutexes on Windows.
@@ -2441,17 +2484,6 @@ extern "C" {
  */
 #define SDL_HINT_WINDOWS_INTRESOURCE_ICON       "SDL_WINDOWS_INTRESOURCE_ICON"
 #define SDL_HINT_WINDOWS_INTRESOURCE_ICON_SMALL "SDL_WINDOWS_INTRESOURCE_ICON_SMALL"
-
-/**
- * A variable controlling whether SDL generates window-close events for Alt+F4 on Windows.
- *
- * The variable can be set to the following values:
- *   "0"       - SDL will only do normal key handling for Alt+F4.
- *   "1"       - SDL will generate a window-close event when it sees Alt+F4. (default)
- *
- * This hint can be set anytime.
- */
-#define SDL_HINT_WINDOWS_CLOSE_ON_ALT_F4 "SDL_WINDOWS_CLOSE_ON_ALT_F4"
 
 /**
  * A variable controlling whether SDL uses the D3D9Ex API introduced in Windows Vista, instead of normal D3D9.

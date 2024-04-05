@@ -22,6 +22,7 @@
 #ifndef SDL_dialog_h_
 #define SDL_dialog_h_
 
+#include <SDL3/SDL_error.h>
 #include <SDL3/SDL_video.h>
 
 #include <SDL3/SDL_begin_code.h>
@@ -36,7 +37,9 @@ extern "C" {
  * `name` is a user-readable label for the filter (for example, "Office document").
  *
  * `pattern` is a semicolon-separated list of file extensions (for example,
- * "doc;docx").
+ * "doc;docx"). File extensions may only contain alphanumeric characters,
+ * hyphens, underscores and periods. Alternatively, the whole string can be a
+ * single asterisk ("*"), which serves as an "All files" filter.
  *
  * \sa SDL_DialogFileCallback
  * \sa SDL_ShowOpenFileDialog

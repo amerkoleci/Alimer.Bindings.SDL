@@ -1218,22 +1218,16 @@ public enum SDL_JoystickType
 	Throttle = 9,
 }
 
-public enum SDL_JoystickPowerLevel
+public enum SDL_JoystickConnectionState
 {
-	/// <unmanaged>SDL_JOYSTICK_POWER_UNKNOWN</unmanaged>
-	Unknown = -1,
-	/// <unmanaged>SDL_JOYSTICK_POWER_EMPTY</unmanaged>
-	Empty = 0,
-	/// <unmanaged>SDL_JOYSTICK_POWER_LOW</unmanaged>
-	Low = 1,
-	/// <unmanaged>SDL_JOYSTICK_POWER_MEDIUM</unmanaged>
-	Medium = 2,
-	/// <unmanaged>SDL_JOYSTICK_POWER_FULL</unmanaged>
-	Full = 3,
-	/// <unmanaged>SDL_JOYSTICK_POWER_WIRED</unmanaged>
-	Wired = 4,
-	/// <unmanaged>SDL_JOYSTICK_POWER_MAX</unmanaged>
-	Max = 5,
+	/// <unmanaged>SDL_JOYSTICK_CONNECTION_INVALID</unmanaged>
+	Invalid = -1,
+	/// <unmanaged>SDL_JOYSTICK_CONNECTION_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_JOYSTICK_CONNECTION_WIRED</unmanaged>
+	Wired = 1,
+	/// <unmanaged>SDL_JOYSTICK_CONNECTION_WIRELESS</unmanaged>
+	Wireless = 2,
 }
 
 public enum SDL_GamepadType
@@ -1508,6 +1502,8 @@ public enum SDL_LogPriority
 
 public enum SDL_PowerState
 {
+	/// <unmanaged>SDL_POWERSTATE_ERROR</unmanaged>
+	Error = -1,
 	/// <unmanaged>SDL_POWERSTATE_UNKNOWN</unmanaged>
 	Unknown = 0,
 	/// <unmanaged>SDL_POWERSTATE_ON_BATTERY</unmanaged>

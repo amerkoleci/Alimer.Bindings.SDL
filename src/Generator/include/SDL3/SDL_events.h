@@ -320,7 +320,6 @@ typedef struct SDL_TextEditingEvent
     Sint32 length;      /**< The length of selected editing text */
 } SDL_TextEditingEvent;
 
-#define SDL_TEXTINPUTEVENT_TEXT_SIZE 64
 /**
  *  Keyboard text input event structure (event.text.*)
  *
@@ -421,7 +420,7 @@ typedef struct SDL_JoyAxisEvent
  */
 typedef struct SDL_JoyBallEvent
 {
-    Uint32 type;        /**< ::SDL_JOYBALLMOTION */
+    SDL_EventType type; /**< ::SDL_EVENT_JOYSTICK_BALL_MOTION */
     Uint32 reserved;
     Uint64 timestamp;   /**< In nanoseconds, populated using SDL_GetTicksNS() */
     SDL_JoystickID which; /**< The joystick instance id */
@@ -489,7 +488,8 @@ typedef struct SDL_JoyBatteryEvent
     Uint32 reserved;
     Uint64 timestamp;   /**< In nanoseconds, populated using SDL_GetTicksNS() */
     SDL_JoystickID which; /**< The joystick instance id */
-    SDL_JoystickPowerLevel level; /**< The joystick battery level */
+    SDL_PowerState state; /**< The joystick battery state */
+    int percent;          /**< The joystick battery percent charge remaining */
 } SDL_JoyBatteryEvent;
 
 /**

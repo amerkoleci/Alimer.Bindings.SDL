@@ -25,7 +25,8 @@ public static partial class CsCodeGenerator
         { "SDL_MessageBoxFlags", "SDL_MESSAGEBOX" },
         { "SDL_MessageBoxColorType", "SDL_MESSAGEBOX_COLOR" },
         { "SDL_JoystickType", "SDL_JOYSTICK_TYPE" },
-        { "SDL_JoystickPowerLevel", "SDL_JOYSTICK_POWER" },
+        { "SDL_JoystickConnectionState", "SDL_JOYSTICK_CONNECTION" },
+
         { "SDL_SystemCursor", "SDL_SYSTEM_CURSOR" },
         { "SDL_MouseWheelDirection", "SDL_MOUSEWHEEL" },
         { "SDL_TouchDeviceType", "SDL_TOUCH_DEVICE" },

@@ -297,7 +297,6 @@
 #define SDL_JoystickAttachVirtual SDL_AttachVirtualJoystick
 #define SDL_JoystickAttachVirtualEx SDL_AttachVirtualJoystickEx
 #define SDL_JoystickClose SDL_CloseJoystick
-#define SDL_JoystickCurrentPowerLevel SDL_GetJoystickPowerLevel
 #define SDL_JoystickDetachVirtual SDL_DetachVirtualJoystick
 #define SDL_JoystickFromInstanceID SDL_GetJoystickFromInstanceID
 #define SDL_JoystickFromPlayerIndex SDL_GetJoystickFromPlayerIndex
@@ -339,7 +338,6 @@
 /* ##SDL_keyboard.h */
 #define SDL_IsScreenKeyboardShown SDL_ScreenKeyboardShown
 #define SDL_IsTextInputActive SDL_TextInputActive
-#define SDL_IsTextInputShown SDL_TextInputShown
 
 /* ##SDL_keycode.h */
 #define KMOD_ALT SDL_KMOD_ALT
@@ -798,7 +796,6 @@
 #define SDL_JoystickAttachVirtual SDL_JoystickAttachVirtual_renamed_SDL_AttachVirtualJoystick
 #define SDL_JoystickAttachVirtualEx SDL_JoystickAttachVirtualEx_renamed_SDL_AttachVirtualJoystickEx
 #define SDL_JoystickClose SDL_JoystickClose_renamed_SDL_CloseJoystick
-#define SDL_JoystickCurrentPowerLevel SDL_JoystickCurrentPowerLevel_renamed_SDL_GetJoystickPowerLevel
 #define SDL_JoystickDetachVirtual SDL_JoystickDetachVirtual_renamed_SDL_DetachVirtualJoystick
 #define SDL_JoystickFromInstanceID SDL_JoystickFromInstanceID_renamed_SDL_GetJoystickFromInstanceID
 #define SDL_JoystickFromPlayerIndex SDL_JoystickFromPlayerIndex_renamed_SDL_GetJoystickFromPlayerIndex
@@ -840,7 +837,6 @@
 /* ##SDL_keyboard.h */
 #define SDL_IsScreenKeyboardShown SDL_IsScreenKeyboardShown_renamed_SDL_ScreenKeyboardShown
 #define SDL_IsTextInputActive SDL_IsTextInputActive_renamed_SDL_TextInputActive
-#define SDL_IsTextInputShown SDL_IsTextInputShown_renamed_SDL_TextInputShown
 
 /* ##SDL_keycode.h */
 #define KMOD_ALT KMOD_ALT_renamed_SDL_KMOD_ALT

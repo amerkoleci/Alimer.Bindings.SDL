@@ -393,10 +393,10 @@ public unsafe partial class SDL
 	public static partial void SDL_SetModState(SDL_Keymod modstate);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetKeyFromScancode")]
-	public static partial SDL_KeyCode SDL_GetKeyFromScancode(SDL_Scancode scancode);
+	public static partial int SDL_GetKeyFromScancode(SDL_Scancode scancode);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetScancodeFromKey")]
-	public static partial SDL_Scancode SDL_GetScancodeFromKey(SDL_KeyCode key);
+	public static partial SDL_Scancode SDL_GetScancodeFromKey(int key);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetScancodeName")]
 	public static partial byte* SDL_GetScancodeName(SDL_Scancode scancode);
@@ -405,10 +405,10 @@ public unsafe partial class SDL
 	public static partial SDL_Scancode SDL_GetScancodeFromName(byte* name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetKeyName")]
-	public static partial byte* SDL_GetKeyName(SDL_KeyCode key);
+	public static partial byte* SDL_GetKeyName(int key);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetKeyFromName")]
-	public static partial SDL_KeyCode SDL_GetKeyFromName(byte* name);
+	public static partial int SDL_GetKeyFromName(byte* name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_StartTextInput")]
 	public static partial void SDL_StartTextInput();
@@ -962,11 +962,8 @@ public unsafe partial class SDL
 	[LibraryImport(LibName, EntryPoint = "SDL_GetTouchDeviceType")]
 	public static partial SDL_TouchDeviceType SDL_GetTouchDeviceType(SDL_TouchID touchID);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_GetNumTouchFingers")]
-	public static partial int SDL_GetNumTouchFingers(SDL_TouchID touchID);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_GetTouchFinger")]
-	public static partial SDL_Finger* SDL_GetTouchFinger(SDL_TouchID touchID, int index);
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTouchFingers")]
+	public static partial SDL_Finger** SDL_GetTouchFingers(SDL_TouchID touchID, out int count);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogSetAllPriority")]
 	public static partial void SDL_LogSetAllPriority(SDL_LogPriority priority);
@@ -1485,7 +1482,7 @@ public unsafe partial class SDL
 	public static partial void SDL_PumpEvents();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_PeepEvents")]
-	public static partial int SDL_PeepEvents(SDL_Event* events, int numevents, SDL_eventaction action, SDL_EventType minType, SDL_EventType maxType);
+	public static partial int SDL_PeepEvents(SDL_Event* events, int numevents, SDL_EventAction action, SDL_EventType minType, SDL_EventType maxType);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_HasEvent")]
 	public static partial SDL_bool SDL_HasEvent(SDL_EventType type);

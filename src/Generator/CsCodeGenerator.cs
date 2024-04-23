@@ -44,7 +44,7 @@ public static partial class CsCodeGenerator
         { "SDL_FPoint", "PointF" },
         { "SDL_Rect", "Rectangle" },
         { "SDL_FRect", "RectangleF" },
-        { "SDL_Keycode", "SDL_KeyCode" },
+        { "SDL_Keycode", "int" },
         { "VkInstance", "nint" },
         { "VkSurfaceKHR", "ulong" },
         { "SDL_EGLDisplay", "nint" },
@@ -60,6 +60,7 @@ public static partial class CsCodeGenerator
         // Until we understand how to treat this
         { "SDL_BlitMap", "nint" },
         { "SDL_Time", "long" },
+        { "SDL_eventaction", "SDL_EventAction" },
     };
 
     private static readonly HashSet<string> s_knownTypes = new(StringComparer.OrdinalIgnoreCase)

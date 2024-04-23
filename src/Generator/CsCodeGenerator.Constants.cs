@@ -85,7 +85,7 @@ public static partial class CsCodeGenerator
     private static void GenerateConstants()
     {
         string visibility = s_options.PublicVisiblity ? "public" : "internal";
-        using var writer = new CodeWriter(Path.Combine(s_options.OutputPath, "Constants.cs"), false, s_options.Namespace, []);
+        using CodeWriter writer = new(Path.Combine(s_options.OutputPath, "Constants.cs"), false, s_options.Namespace, []);
         using (writer.PushBlock($"{visibility} static partial class {s_options.ClassName}"))
         {
             foreach (CppMacro cppMacro in s_collectedMacros)
@@ -191,6 +191,18 @@ public static partial class CsCodeGenerator
                 {
                     modifier = "static readonly";
                     csDataType = "SDL_AudioDeviceID";
+                }
+
+                if (cppMacro.Name.StartsWith("SDLK_"))
+                {
+                    modifier = "const";
+                    csDataType = "int";
+
+                    if(macroValue.StartsWith("SDL_SCANCODE_TO_KEYCODE"))
+                    {
+                        string enumValueName = GetEnumItemName("SDL_Scancode", cppMacro.Tokens[2].Text, "SDL_SCANCODE");
+                        macroValue = $"((int)SDL_Scancode.{enumValueName} | SDLK_SCANCODE_MASK)";
+                    }
                 }
 
                 //writer.WriteLine($"/// <unmanaged>{cppMacro.Name}</unmanaged>");

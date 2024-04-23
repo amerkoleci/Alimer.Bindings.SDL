@@ -33,6 +33,10 @@ public static partial class CsCodeGenerator
         "SDL_Event",
         "SDL_Keycode",
         "SDL_HapticEffect",
+        "SDL_EventAction",
+        "VkInstance_T",
+        "VkSurfaceKHR_T",
+        "VkAllocationCallbacks",
     };
 
     private static void CollectHandles(CppCompilation compilation)

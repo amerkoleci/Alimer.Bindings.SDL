@@ -580,69 +580,6 @@ public readonly partial struct SDL_AudioStream(nint value) : IEquatable<SDL_Audi
 	private string DebuggerDisplay => $"{nameof(SDL_AudioStream)} [0x{Value.ToString("X")}]";
 }
 
-[DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly partial struct VkInstance_T(nint value) : IEquatable<VkInstance_T>
-{
-	public readonly nint Value = value;
-	public bool IsNull => Value == 0;
-	public bool IsNotNull => Value != 0;
-	public static VkInstance_T Null => new(0);
-	public static implicit operator nint(VkInstance_T value) => value.Value;
-	public static implicit operator VkInstance_T(nint value) => new(value);
-	public static bool operator ==(VkInstance_T left, VkInstance_T right) => left.Value == right.Value;
-	public static bool operator !=(VkInstance_T left, VkInstance_T right) => left.Value != right.Value;
-	public static bool operator ==(VkInstance_T left, nint right) => left.Value == right;
-	public static bool operator !=(VkInstance_T left, nint right) => left.Value != right;
-	public bool Equals(VkInstance_T other) => Value.Equals(other.Value);
-	/// <inheritdoc/>
-	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is VkInstance_T other) && Equals(other);
-	/// <inheritdoc/>
-	public override int GetHashCode() => Value.GetHashCode();
-	private string DebuggerDisplay => $"{nameof(VkInstance_T)} [0x{Value.ToString("X")}]";
-}
-
-[DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly partial struct VkSurfaceKHR_T(nint value) : IEquatable<VkSurfaceKHR_T>
-{
-	public readonly nint Value = value;
-	public bool IsNull => Value == 0;
-	public bool IsNotNull => Value != 0;
-	public static VkSurfaceKHR_T Null => new(0);
-	public static implicit operator nint(VkSurfaceKHR_T value) => value.Value;
-	public static implicit operator VkSurfaceKHR_T(nint value) => new(value);
-	public static bool operator ==(VkSurfaceKHR_T left, VkSurfaceKHR_T right) => left.Value == right.Value;
-	public static bool operator !=(VkSurfaceKHR_T left, VkSurfaceKHR_T right) => left.Value != right.Value;
-	public static bool operator ==(VkSurfaceKHR_T left, nint right) => left.Value == right;
-	public static bool operator !=(VkSurfaceKHR_T left, nint right) => left.Value != right;
-	public bool Equals(VkSurfaceKHR_T other) => Value.Equals(other.Value);
-	/// <inheritdoc/>
-	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is VkSurfaceKHR_T other) && Equals(other);
-	/// <inheritdoc/>
-	public override int GetHashCode() => Value.GetHashCode();
-	private string DebuggerDisplay => $"{nameof(VkSurfaceKHR_T)} [0x{Value.ToString("X")}]";
-}
-
-[DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly partial struct VkAllocationCallbacks(nint value) : IEquatable<VkAllocationCallbacks>
-{
-	public readonly nint Value = value;
-	public bool IsNull => Value == 0;
-	public bool IsNotNull => Value != 0;
-	public static VkAllocationCallbacks Null => new(0);
-	public static implicit operator nint(VkAllocationCallbacks value) => value.Value;
-	public static implicit operator VkAllocationCallbacks(nint value) => new(value);
-	public static bool operator ==(VkAllocationCallbacks left, VkAllocationCallbacks right) => left.Value == right.Value;
-	public static bool operator !=(VkAllocationCallbacks left, VkAllocationCallbacks right) => left.Value != right.Value;
-	public static bool operator ==(VkAllocationCallbacks left, nint right) => left.Value == right;
-	public static bool operator !=(VkAllocationCallbacks left, nint right) => left.Value != right;
-	public bool Equals(VkAllocationCallbacks other) => Value.Equals(other.Value);
-	/// <inheritdoc/>
-	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is VkAllocationCallbacks other) && Equals(other);
-	/// <inheritdoc/>
-	public override int GetHashCode() => Value.GetHashCode();
-	private string DebuggerDisplay => $"{nameof(VkAllocationCallbacks)} [0x{Value.ToString("X")}]";
-}
-
 public readonly partial struct SDL_HapticID(uint value) : IComparable, IComparable<SDL_HapticID>, IEquatable<SDL_HapticID>, IFormattable
 {
 	public readonly uint Value = value;

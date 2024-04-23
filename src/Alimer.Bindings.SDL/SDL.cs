@@ -766,9 +766,9 @@ public static unsafe partial class SDL
     #endregion
 
     #region SDL_keycode.h
-    public static SDL_KeyCode SDL_SCANCODE_TO_KEYCODE(SDL_Scancode X)
+    public static int SDL_SCANCODE_TO_KEYCODE(SDL_Scancode X)
     {
-        return (SDL_KeyCode)((int)X | SDLK_SCANCODE_MASK);
+        return ((int)X | SDLK_SCANCODE_MASK);
     }
     #endregion
 
@@ -792,13 +792,13 @@ public static unsafe partial class SDL
         return SDL_GetScancodeFromName(text.GetUtf8Span());
     }
 
-    public static string SDL_GetKeyNameString(SDL_KeyCode key)
+    public static string SDL_GetKeyNameString(int key)
     {
         return GetStringOrEmpty(SDL_GetKeyName(key));
     }
 
 
-    public static SDL_KeyCode SDL_GetKeyFromName(ReadOnlySpan<byte> name)
+    public static int SDL_GetKeyFromName(ReadOnlySpan<byte> name)
     {
         fixed (byte* pName = name)
         {
@@ -806,7 +806,7 @@ public static unsafe partial class SDL
         }
     }
 
-    public static SDL_KeyCode SDL_GetKeyFromName(string text)
+    public static int SDL_GetKeyFromName(string text)
     {
         return SDL_GetKeyFromName(text.GetUtf8Span());
     }

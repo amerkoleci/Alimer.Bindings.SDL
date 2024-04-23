@@ -142,31 +142,33 @@ extern DECLSPEC char *SDLCALL SDL_GetPrefPath(const char *org, const char *app);
 /**
  * The type of the OS-provided default folder for a specific purpose.
  *
- * Note that the Trash folder isn't included here, because trashing files usually
- * involves extra OS-specific functionality to remember the file's original
- * location.
+ * Note that the Trash folder isn't included here, because trashing files
+ * usually involves extra OS-specific functionality to remember the file's
+ * original location.
  *
  * The folders supported per platform are:
  *
- * |             | Windows | macOS/iOS | tvOS | Unix (XDG) | Haiku | Emscripten |
- * | ----------- | ------- | --------- | ---- | ---------- | ----- | ---------- |
- * | HOME        | X       | X         |      | X          | X     | X          |
- * | DESKTOP     | X       | X         |      | X          | X     |            |
- * | DOCUMENTS   | X       | X         |      | X          |       |            |
- * | DOWNLOADS   | Vista+  | X         |      | X          |       |            |
- * | MUSIC       | X       | X         |      | X          |       |            |
- * | PICTURES    | X       | X         |      | X          |       |            |
- * | PUBLICSHARE |         | X         |      | X          |       |            |
- * | SAVEDGAMES  | Vista+  |           |      |            |       |            |
- * | SCREENSHOTS | Vista+  |           |      |            |       |            |
- * | TEMPLATES   | X       | X         |      | X          |       |            |
- * | VIDEOS      | X       | X*        |      | X          |       |            |
+ * |             | Windows | WinRT/UWP |macOS/iOS | tvOS | Unix (XDG) | Haiku | Emscripten |
+ * | ----------- | ------- | --------- |--------- | ---- | ---------- | ----- | ---------- |
+ * | HOME        | X       | X         | X        |      | X          | X     | X          |
+ * | DESKTOP     | X       | X         | X        |      | X          | X     |            |
+ * | DOCUMENTS   | X       | X         | X        |      | X          |       |            |
+ * | DOWNLOADS   | Vista+  | X         | X        |      | X          |       |            |
+ * | MUSIC       | X       | X         | X        |      | X          |       |            |
+ * | PICTURES    | X       | X         | X        |      | X          |       |            |
+ * | PUBLICSHARE |         |           | X        |      | X          |       |            |
+ * | SAVEDGAMES  | Vista+  |           |          |      |            |       |            |
+ * | SCREENSHOTS | Vista+  | X         |          |      |            |       |            |
+ * | TEMPLATES   | X       | X         | X        |      | X          |       |            |
+ * | VIDEOS      | X       | X         | X*       |      | X          |       |            |
  *
- * * Note that on macOS/iOS, the Videos folder is called "Movies".
+ * Note that on macOS/iOS, the Videos folder is called "Movies".
+ *
+ * \since This enum is available since SDL 3.0.0.
  *
  * \sa SDL_GetUserFolder
  */
-typedef enum
+typedef enum SDL_Folder
 {
     /** The folder which contains all of the current user's data, preferences,
       and documents. It usually contains most of the other folders. If a

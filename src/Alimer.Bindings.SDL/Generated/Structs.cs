@@ -34,7 +34,7 @@ public partial struct SDL_IOStreamInterface
 public partial struct SDL_Keysym
 {
 	public SDL_Scancode scancode;
-	public SDL_KeyCode sym;
+	public int sym;
 	public ushort mod;
 	public uint unused;
 }
@@ -97,7 +97,6 @@ public partial struct SDL_MessageBoxData
 
 public partial struct SDL_VirtualJoystickDesc
 {
-	public ushort version;
 	public ushort type;
 	public ushort naxes;
 	public ushort nbuttons;
@@ -456,9 +455,6 @@ public partial struct SDL_CameraDeviceEvent
 	public uint reserved;
 	public ulong timestamp;
 	public SDL_CameraDeviceID which;
-	public byte padding1;
-	public byte padding2;
-	public byte padding3;
 }
 
 public partial struct SDL_TouchFingerEvent

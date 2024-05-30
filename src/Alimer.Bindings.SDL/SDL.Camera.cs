@@ -7,7 +7,7 @@ namespace SDL;
 
 unsafe partial class SDL
 {
-    public static ReadOnlySpan<SDL_JoystickID> SDL_GetCameraDevices()
+    public static ReadOnlySpan<SDL_CameraDeviceID> SDL_GetCameraDevices()
     {
         SDL_CameraDeviceID* ptr = SDL_GetCameraDevices(out int count);
         return new(ptr, count);

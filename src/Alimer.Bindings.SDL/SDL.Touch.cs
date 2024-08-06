@@ -13,9 +13,4 @@ unsafe partial class SDL3
         SDL_TouchID* ptr = SDL_GetTouchDevices(out int count);
         return new(ptr, count);
     }
-
-    public static string SDL_GetTouchDeviceNameString(SDL_TouchID touchID)
-    {
-        return GetStringOrEmpty(SDL_GetTouchDeviceName(touchID));
-    }
 }

@@ -33,17 +33,6 @@ unsafe partial class SDL3
 
     public static int SDL_AUDIO_FRAMESIZE(in SDL_AudioSpec spec) => SDL_AUDIO_BYTESIZE(spec.format) * spec.channels;
 
-    public static string SDL_GetAudioDriverString(int index)
-    {
-        return GetStringOrEmpty(SDL_GetAudioDriver(index));
-    }
-
-
-    public static string SDL_GetCurrentAudioDriverString()
-    {
-        return GetStringOrEmpty(SDL_GetCurrentAudioDriver());
-    }
-
     public static ReadOnlySpan<SDL_AudioDeviceID> SDL_GetAudioPlaybackDevices()
     {
         SDL_AudioDeviceID* ptr = SDL_GetAudioPlaybackDevices(out int count);
@@ -54,26 +43,5 @@ unsafe partial class SDL3
     {
         SDL_AudioDeviceID* ptr = SDL_GetAudioRecordingDevices(out int count);
         return new(ptr, count);
-    }
-
-    public static string SDL_GetAudioDeviceNameString(SDL_AudioDeviceID deviceId)
-    {
-        return GetStringOrEmpty(SDL_GetAudioDeviceName(deviceId));
-    }
-
-    public static int SDL_LoadWAV(ReadOnlySpan<byte> path, SDL_AudioSpec* spec, byte** audio_buf, uint* audio_len)
-    {
-        fixed (byte* pPath = path)
-        {
-            return SDL_LoadWAV(pPath, spec, audio_buf, audio_len);
-        }
-    }
-
-    public static int SDL_LoadWAV(string path, SDL_AudioSpec* spec, byte** audio_buf, uint* audio_len)
-    {
-        fixed (byte* pPath = path.GetUtf8Span())
-        {
-            return SDL_LoadWAV(pPath, spec, audio_buf, audio_len);
-        }
     }
 }

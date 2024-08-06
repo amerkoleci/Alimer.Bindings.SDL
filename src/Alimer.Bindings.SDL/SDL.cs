@@ -7,7 +7,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using static SDL3.SDL3;
-using static SDL3.SDL_bool;
 
 namespace SDL3;
 
@@ -72,21 +71,6 @@ public enum SDL_WindowFlags : ulong
 #endregion
 
 public delegate void SDL_LogOutputFunction(SDL_LogCategory category, SDL_LogPriority priority, string description);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate IntPtr SDL_WindowsMessageHook(
-    IntPtr userdata,
-    IntPtr hWnd,
-    uint message,
-    ulong wParam,
-    long lParam
-);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public unsafe delegate int SDL_EventFilter(nint userdata, nint @event);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public unsafe delegate SDL_bool SDL_X11EventHook(nint userdata, nint xevent);
 
 // https://github.com/libsdl-org/SDL/blob/main/docs/README-migration.md
 
@@ -167,59 +151,7 @@ public static unsafe partial class SDL3
     [LibraryImport(LibName, EntryPoint = "SDL_free")]
     public static partial nint SDL_free(void* mem);
 
-    #region SDL_platform.h
-    public static ReadOnlySpan<byte> SDL_GetPlatformSpan()
-    {
-        return GetUtf8Span(SDL_GetPlatform());
-    }
-
-    public static string SDL_GetPlatformString()
-    {
-        return GetStringOrEmpty(SDL_GetPlatform())!;
-    }
-    #endregion
-
     #region SDL_hints.h
-    public static bool SDL_SetHint(ReadOnlySpan<byte> name, ReadOnlySpan<byte> value)
-    {
-        fixed (byte* pName = name)
-        fixed (byte* pValue = value)
-            return SDL_SetHint(pName, pValue);
-    }
-
-    public static bool SDL_SetHint(string name, string value)
-    {
-        fixed (byte* pName = name.GetUtf8Span())
-        {
-            fixed (byte* pValue = value.GetUtf8Span())
-            {
-                return SDL_SetHint(pName, pValue);
-            }
-        }
-    }
-
-    public static bool SDL_SetHintWithPriority(ReadOnlySpan<byte> name, ReadOnlySpan<byte> value, SDL_HintPriority priority)
-    {
-        fixed (byte* pName = name)
-        {
-            fixed (byte* pValue = value)
-            {
-                return SDL_SetHintWithPriority(pName, pValue, priority);
-            }
-        }
-    }
-
-    public static bool SDL_SetHintWithPriority(string name, string value, SDL_HintPriority priority)
-    {
-        fixed (byte* pName = name.GetUtf8Span())
-        {
-            fixed (byte* pValue = value.GetUtf8Span())
-            {
-                return SDL_SetHintWithPriority(pName, pValue, priority);
-            }
-        }
-    }
-
     public static bool SDL_SetHint(ReadOnlySpan<byte> name, bool value)
     {
         fixed (byte* pName = name)
@@ -230,26 +162,6 @@ public static unsafe partial class SDL3
     public static bool SDL_SetHint(string name, bool value)
     {
         return SDL_SetHint(name, value ? "1" : "0");
-    }
-    #endregion
-
-    #region SDL_error.h
-    public static string? SDL_GetErrorString()
-    {
-        return GetString(SDL_GetError());
-    }
-
-    public static int SDL_SetError(ReadOnlySpan<byte> name)
-    {
-        fixed (byte* pName = name)
-        {
-            return SDL_SetError(pName);
-        }
-    }
-
-    public static int SDL_SetError(string text)
-    {
-        return SDL_SetError(text.GetUtf8Span());
     }
     #endregion
 
@@ -284,21 +196,6 @@ public static unsafe partial class SDL3
     }
     #endregion
 
-    #region SDL_misc.h
-    public static int SDL_OpenURL(ReadOnlySpan<byte> name)
-    {
-        fixed (byte* pName = name)
-        {
-            return SDL_OpenURL(pName);
-        }
-    }
-
-    public static int SDL_OpenURL(string text)
-    {
-        return SDL_OpenURL(text.GetUtf8Span());
-    }
-    #endregion
-
     #region SDL_version.h, SDL_revision.h
 
     public static int SDL_VERSIONNUM(int major, int minor, int patch) =>
@@ -313,8 +210,6 @@ public static unsafe partial class SDL3
     public static readonly int SDL_VERSION = SDL_VERSIONNUM(SDL_MAJOR_VERSION, SDL_MINOR_VERSION, SDL_MICRO_VERSION);
 
     public static bool SDL_VERSION_ATLEAST(int X, int Y, int Z) => SDL_VERSION >= SDL_VERSIONNUM(X, Y, Z);
-
-    public static string SDL_GetRevisionString() => GetStringOrEmpty(SDL_GetRevision());
     #endregion
 
     #region SDL_video.h
@@ -335,48 +230,6 @@ public static unsafe partial class SDL3
         return (X & 0xFFFF0000) == SDL_WINDOWPOS_CENTERED_MASK;
     }
 
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate SDL_HitTestResult SDL_HitTest(IntPtr win, IntPtr area, IntPtr data);
-
-    public static SDL_Window SDL_CreateWindow(ReadOnlySpan<byte> title, int width, int height, SDL_WindowFlags flags)
-    {
-        fixed (byte* pName = title)
-        {
-            return SDL_CreateWindow(pName, width, height, flags);
-        }
-    }
-
-    public static SDL_Window SDL_CreateWindow(string title, int width, int height, SDL_WindowFlags flags)
-    {
-        fixed (byte* pName = title.GetUtf8Span())
-        {
-            return SDL_CreateWindow(pName, width, height, flags);
-        }
-    }
-
-    public static int SDL_SetWindowTitle(SDL_Window window, ReadOnlySpan<byte> name)
-    {
-        fixed (byte* pName = name)
-        {
-            return SDL_SetWindowTitle(window, pName);
-        }
-    }
-
-    public static int SDL_SetWindowTitle(SDL_Window window, string text)
-    {
-        return SDL_SetWindowTitle(window, text.GetUtf8Span());
-    }
-
-    public static int SDL_SetWindowFullscreen(SDL_Window window, bool fullscreen)
-    {
-        return SDL_SetWindowFullscreen(window, fullscreen ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE);
-    }
-
-    public static string SDL_GetCurrentVideoDriverString()
-    {
-        return GetStringOrEmpty(SDL_GetCurrentVideoDriver());
-    }
-
     public static ReadOnlySpan<SDL_DisplayID> SDL_GetDisplays()
     {
         SDL_DisplayID* displaysPtr = SDL_GetDisplays(out int count);
@@ -389,68 +242,11 @@ public static unsafe partial class SDL3
     //    return new(displaysModePtr, count);
     //}
 
-    public static string SDL_GetDisplayNameString(SDL_DisplayID displayID)
-    {
-        return GetStringOrEmpty(SDL_GetDisplayName(displayID));
-    }
-
-    public static string SDL_GetVideoDriverString(int index) => GetStringOrEmpty(SDL_GetVideoDriver(index));
-
     [LibraryImport(LibName)]
     public static partial SDL_DisplayID SDL_GetDisplayForPoint(in Point point);
 
     [LibraryImport(LibName)]
     public static partial SDL_DisplayID SDL_GetDisplayForRect(in Rectangle rect);
-
-    public static string SDL_GetWindowTitleString(SDL_Window window)
-    {
-        return GetStringOrEmpty(SDL_GetWindowTitle(window));
-    }
-
-    public static int SDL_GL_LoadLibrary(ReadOnlySpan<byte> name)
-    {
-        fixed (byte* pName = name)
-        {
-            return SDL_GL_LoadLibrary(pName);
-        }
-    }
-
-    public static delegate* unmanaged<void> SDL_GL_GetProcAddress(ReadOnlySpan<byte> proc)
-    {
-        fixed (byte* pName = proc)
-        {
-            return SDL_GL_GetProcAddress(pName);
-        }
-    }
-
-    public static delegate* unmanaged<void> SDL_GL_GetProcAddress(string proc)
-    {
-        return SDL_GL_GetProcAddress(proc.GetUtf8Span());
-    }
-
-    public static delegate* unmanaged<void> SDL_EGL_GetProcAddress(ReadOnlySpan<byte> proc)
-    {
-        fixed (byte* pName = proc)
-        {
-            return SDL_EGL_GetProcAddress(pName);
-        }
-    }
-
-    public static delegate* unmanaged<void> SDL_EGL_GetProcAddress(string proc)
-    {
-        return SDL_EGL_GetProcAddress(proc.GetUtf8Span());
-    }
-
-    public static bool SDL_GL_ExtensionSupported(ReadOnlySpan<byte> extension)
-    {
-        fixed (byte* pName = extension)
-            return SDL_GL_ExtensionSupported(pName);
-    }
-
-    public static bool SDL_GL_ExtensionSupported(string extension)
-    {
-        return SDL_GL_ExtensionSupported(extension.GetUtf8Span());
-    }
 
     public static int SDL_GL_SetAttribute(SDL_GLattr attr, bool value)
     {
@@ -463,166 +259,9 @@ public static unsafe partial class SDL3
     }
     #endregion
 
-    #region SDL_properties.h
-    public static int SDL_SetPointerProperty(SDL_PropertiesID properties, ReadOnlySpan<byte> name, nint value)
-    {
-        fixed (byte* pName = name)
-        {
-            return SDL_SetPointerProperty(properties, pName, value);
-        }
-    }
-
-    public static int SDL_SetPointerProperty(SDL_PropertiesID properties, string name, nint value)
-    {
-        return SDL_SetPointerProperty(properties, name.GetUtf8Span(), value);
-    }
-
-    public static int SDL_SetStringProperty(SDL_PropertiesID properties, ReadOnlySpan<byte> name, ReadOnlySpan<byte> value)
-    {
-        fixed (byte* pName = name)
-        fixed (byte* pValue = value)
-            return SDL_SetStringProperty(properties, pName, pValue);
-    }
-
-    public static int SDL_SetStringProperty(SDL_PropertiesID properties, string name, string? value)
-    {
-        return SDL_SetStringProperty(properties, name.GetUtf8Span(), value.GetUtf8Span());
-    }
-
-    public static int SDL_SetNumberProperty(SDL_PropertiesID properties, ReadOnlySpan<byte> name, long value)
-    {
-        fixed (byte* pName = name)
-        {
-            return SDL_SetNumberProperty(properties, pName, value);
-        }
-    }
-
-    public static int SDL_SetNumberProperty(SDL_PropertiesID properties, string name, long value)
-    {
-        return SDL_SetNumberProperty(properties, name.GetUtf8Span(), value);
-    }
-
-    public static int SDL_SetFloatProperty(SDL_PropertiesID properties, ReadOnlySpan<byte> name, float value)
-    {
-        fixed (byte* pName = name)
-        {
-            return SDL_SetFloatProperty(properties, pName, value);
-        }
-    }
-
-    public static int SDL_SetFloatProperty(SDL_PropertiesID properties, string name, float value)
-    {
-        return SDL_SetFloatProperty(properties, name.GetUtf8Span(), value);
-    }
-
-    public static int SDL_SetBooleanProperty(SDL_PropertiesID properties, ReadOnlySpan<byte> name, bool value)
-    {
-        fixed (byte* pName = name)
-        {
-            return SDL_SetBooleanProperty(properties, pName, value ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE);
-        }
-    }
-
-    public static int SDL_SetBooleanProperty(SDL_PropertiesID properties, string name, bool value)
-    {
-        return SDL_SetBooleanProperty(properties, name.GetUtf8Span(), value);
-    }
-
-    public static bool SDL_HasProperty(SDL_PropertiesID properties, ReadOnlySpan<byte> name)
-    {
-        fixed (byte* pName = name)
-        {
-            return SDL_HasProperty(properties, pName);
-        }
-    }
-
-    public static bool SDL_HasProperty(SDL_PropertiesID properties, string name)
-    {
-        return SDL_HasProperty(properties, name.GetUtf8Span());
-    }
-
-    public static SDL_PropertyType SDL_GetPropertyType(SDL_PropertiesID properties, ReadOnlySpan<byte> name)
-    {
-        fixed (byte* pName = name)
-        {
-            return SDL_GetPropertyType(properties, pName);
-        }
-    }
-
-    public static SDL_PropertyType SDL_GetPropertyType(SDL_PropertiesID properties, string name)
-    {
-        return SDL_GetPropertyType(properties, name.GetUtf8Span());
-    }
-
-    public static nint SDL_GetPointerProperty(SDL_PropertiesID properties, ReadOnlySpan<byte> name, nint defaultValue = 0)
-    {
-        fixed (byte* pName = name)
-        {
-            return SDL_GetPointerProperty(properties, pName, defaultValue);
-        }
-    }
-
-    public static nint SDL_GetPointerProperty(SDL_PropertiesID properties, string name, nint defaultValue = 0)
-    {
-        return SDL_GetPointerProperty(properties, name.GetUtf8Span(), defaultValue);
-    }
-
-    public static string? SDL_GetStringProperty(SDL_PropertiesID properties, ReadOnlySpan<byte> name, ReadOnlySpan<byte> defaultValue)
-    {
-        fixed (byte* pName = name)
-        fixed (byte* pDefaultValue = defaultValue)
-            return GetString(SDL_GetStringProperty(properties, pName, pDefaultValue));
-    }
-
-    public static string? SDL_GetStringProperty(SDL_PropertiesID properties, string name, string default_value = "")
-    {
-        return SDL_GetStringProperty(properties, name.GetUtf8Span(), default_value.GetUtf8Span());
-    }
-
-    public static long SDL_GetNumberProperty(SDL_PropertiesID properties, ReadOnlySpan<byte> name, long defaultValue = 0)
-    {
-        fixed (byte* pName = name)
-        {
-            return SDL_GetNumberProperty(properties, pName, defaultValue);
-        }
-    }
-
-    public static long SDL_GetNumberProperty(SDL_PropertiesID properties, string name, long defaultValue = 0)
-    {
-        return SDL_GetNumberProperty(properties, name.GetUtf8Span(), defaultValue);
-    }
-
-    public static float SDL_GetFloatProperty(SDL_PropertiesID properties, ReadOnlySpan<byte> name, float defaultValue = default)
-    {
-        fixed (byte* pName = name)
-        {
-            return SDL_GetFloatProperty(properties, pName, defaultValue);
-        }
-    }
-
-    public static float SDL_GetFloatProperty(SDL_PropertiesID properties, string name, float defaultValue = 0)
-    {
-        return SDL_GetFloatProperty(properties, name.GetUtf8Span(), defaultValue);
-    }
-
-    public static bool SDL_GetBooleanProperty(SDL_PropertiesID properties, ReadOnlySpan<byte> name, bool defaultValue = default)
-    {
-        fixed (byte* pName = name)
-        {
-            return SDL_GetBooleanProperty(properties, pName, defaultValue ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE);
-        }
-    }
-
-    public static bool SDL_GetBooleanProperty(SDL_PropertiesID properties, string name, bool defaultValue = false)
-    {
-        return SDL_GetBooleanProperty(properties, name.GetUtf8Span(), defaultValue);
-    }
-    #endregion
-
     [LibraryImport(LibName, EntryPoint = "SDL_PollEvent")]
     [return: MarshalAs(UnmanagedType.Bool)]
     public static partial bool SDL_PollEvent(out SDL_Event @event);
-
 
     #region SDL_vulkan.h
     public static int SDL_Vulkan_LoadLibrary()
@@ -630,36 +269,17 @@ public static unsafe partial class SDL3
         return SDL_Vulkan_LoadLibrary((byte*)null);
     }
 
-    public static int SDL_Vulkan_LoadLibrary(ReadOnlySpan<byte> path)
-    {
-        fixed (byte* pPath = path)
-        {
-            return SDL_Vulkan_LoadLibrary(pPath);
-        }
-    }
-
-    public static nint SDL_Vulkan_LoadLibrary(string path)
-    {
-        return SDL_Vulkan_LoadLibrary(path.GetUtf8Span());
-    }
-
-    [LibraryImport(LibName, EntryPoint = "SDL_Vulkan_GetInstanceExtensions")]
-    public static partial byte** SDL_Vulkan_GetInstanceExtensions(out int count);
-
     public static string[] SDL_Vulkan_GetInstanceExtensions()
     {
-        byte** strings = SDL_Vulkan_GetInstanceExtensions(out int count);
+        byte** strings = SDL_Vulkan_GetInstanceExtensions(out uint count);
         string[] names = new string[count];
         for (int i = 0; i < count; i++)
         {
-            names[i] = GetString(strings[i])!;
+            names[i] = ConvertToManaged(strings[i])!;
         }
 
         return names;
     }
-
-    [LibraryImport(LibName, EntryPoint = "SDL_Vulkan_CreateSurface")]
-    public static partial SDL_bool SDL_Vulkan_CreateSurface(SDL_Window window, nint instance, nint* allocator, ulong* surface);
     #endregion
 
     #region SDL_syswm.h
@@ -702,140 +322,17 @@ public static unsafe partial class SDL3
     public static ulong SDL_NS_TO_US(ulong NS) => NS / SDL_NS_PER_US;
     #endregion
 
-    #region SDL_system.h
-    /* Android */
-    public static string? SDL_GetAndroidInternalStoragePathString()
-    {
-        return GetString(SDL_GetAndroidInternalStoragePath());
-    }
-
-    public static string? SDL_GetAndroidExternalStoragePathString()
-    {
-        return GetString(SDL_GetAndroidExternalStoragePath());
-    }
-
-    public static unsafe bool SDL_RequestAndroidPermission(string permission, delegate* unmanaged<nint, byte*, SDL_bool, nint> cb, nint userdata)
-    {
-        fixed (byte* pPermission = permission.GetUtf8Span())
-        {
-            return SDL_RequestAndroidPermission(pPermission, cb, userdata) == (int)SDL_TRUE;
-        }
-    }
-
-    public static int SDL_ShowAndroidToast(string message, int duration, int gravity, int xOffset, int yOffset)
-    {
-        fixed (byte* pMessage = message.GetUtf8Span())
-        {
-            return SDL_ShowAndroidToast(pMessage, duration, gravity, xOffset, yOffset);
-        }
-    }
-    #endregion
 
     #region Marshal
-    /// <inheritdoc cref="MemoryMarshal.CreateReadOnlySpan{T}(ref T, int)" />
-    public static ReadOnlySpan<T> CreateReadOnlySpan<T>(scoped in T reference, int length) => MemoryMarshal.CreateReadOnlySpan(ref Unsafe.AsRef(in reference), length);
-
-    /// <summary>Returns a pointer to the element of the span at index zero.</summary>
-    /// <typeparam name="T">The type of items in <paramref name="span" />.</typeparam>
-    /// <param name="span">The span from which the pointer is retrieved.</param>
-    /// <returns>A pointer to the item at index zero of <paramref name="span" />.</returns>
+    /// <summary>Converts an unmanaged string to a managed version.</summary>
+    /// <param name="unmanaged">The unmanaged string to convert.</param>
+    /// <returns>A managed string.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T* GetPointerUnsafe<T>(this ReadOnlySpan<T> span)
-        where T : unmanaged => (T*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(span));
+    public static string? ConvertToManaged(byte* unmanaged) => Utf8CustomMarshaller.ConvertToManaged(unmanaged);
 
-    /// <inheritdoc cref="Unsafe.IsNullRef{T}(ref T)" />
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsNullRef<T>(in T source) => Unsafe.IsNullRef(ref Unsafe.AsRef(in source));
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ReadOnlySpan<byte> GetUtf8Span(this string? source)
-    {
-        ReadOnlySpan<byte> result;
-
-        if (source is not null)
-        {
-            int maxLength = Encoding.UTF8.GetMaxByteCount(source.Length);
-            byte[] bytes = new byte[maxLength + 1];
-
-            int length = Encoding.UTF8.GetBytes(source, bytes);
-            result = bytes.AsSpan(0, length);
-        }
-        else
-        {
-            result = null;
-        }
-
-        return result;
-    }
-
-    /// <summary>Gets a span for a null-terminated UTF8 character sequence.</summary>
-    /// <param name="source">The pointer to a null-terminated UTF8 character sequence.</param>
-    /// <param name="maxLength">The maximum length of <paramref name="source" /> or <c>-1</c> if the maximum length is unknown.</param>
-    /// <returns>A span that starts at <paramref name="source" /> and extends to <paramref name="maxLength" /> or the first null character, whichever comes first.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ReadOnlySpan<byte> GetUtf8Span(byte* source, int maxLength = -1)
-        => (source != null) ? GetUtf8Span(in source[0], maxLength) : null;
-
-    /// <summary>Gets a span for a null-terminated UTF8 character sequence.</summary>
-    /// <param name="source">The reference to a null-terminated UTF8 character sequence.</param>
-    /// <param name="maxLength">The maximum length of <paramref name="source" /> or <c>-1</c> if the maximum length is unknown.</param>
-    /// <returns>A span that starts at <paramref name="source" /> and extends to <paramref name="maxLength" /> or the first null character, whichever comes first.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ReadOnlySpan<byte> GetUtf8Span(ref readonly byte source, int maxLength = -1)
-    {
-        ReadOnlySpan<byte> result;
-
-        if (!IsNullRef(in source))
-        {
-            if (maxLength < 0)
-            {
-                maxLength = int.MaxValue;
-            }
-
-            result = CreateReadOnlySpan(in source, maxLength);
-            var length = result.IndexOf((byte)'\0');
-
-            if (length >= 0)
-            {
-                result = result.Slice(0, length);
-            }
-        }
-        else
-        {
-            result = null;
-        }
-
-        return result;
-    }
-
-    /// <summary>Gets a string for a given span.</summary>
-    /// <param name="span">The span for which to create the string.</param>
-    /// <returns>A string created from <paramref name="span" />.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? GetString(this ReadOnlySpan<byte> span) => span.GetPointerUnsafe() != null ? Encoding.UTF8.GetString(span) : null;
-
-    /// <summary>Gets a string for a given span.</summary>
-    /// <param name="span">The span for which to create the string.</param>
-    /// <returns>A string created from <paramref name="span" />.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string GetStringOrEmpty(this ReadOnlySpan<byte> span) => span.GetPointerUnsafe() != null ? Encoding.UTF8.GetString(span) : string.Empty;
-
-    /// <summary>Gets a string for a given span.</summary>
-    /// <param name="span">The span for which to create the string.</param>
-    /// <returns>A string created from <paramref name="span" />.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? GetString(byte* source, int maxLength = -1)
-    {
-        return GetUtf8Span(source, maxLength).GetString();
-    }
-
-    /// <summary>Gets a string for a given span.</summary>
-    /// <param name="span">The span for which to create the string.</param>
-    /// <returns>A string created from <paramref name="span" />.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string GetStringOrEmpty(byte* source, int maxLength = -1)
-    {
-        return GetUtf8Span(source, maxLength).GetStringOrEmpty();
-    }
+    /// <summary>Converts an unmanaged string to a managed version.</summary>
+    /// <param name="unmanaged">The unmanaged string to convert.</param>
+    /// <returns>A managed string.</returns>
+    public static string? ConvertToManaged(byte* unmanaged, int maxLength) => Utf8CustomMarshaller.ConvertToManaged(unmanaged, maxLength);
     #endregion
 }

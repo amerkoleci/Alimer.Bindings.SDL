@@ -23,12 +23,12 @@ public static unsafe class Program
             SDL_VERSIONNUM_MINOR(v),
             SDL_VERSIONNUM_MICRO(v));
 
-        string platform = SDL_GetPlatformString();
+        string platform = SDL_GetPlatform()!;
 
         // Init SDL
         if (SDL_Init(SDL_InitFlags.Timer | SDL_InitFlags.Video | SDL_InitFlags.Gamepad) != 0)
         {
-            var error = SDL_GetErrorString();
+            var error = SDL_GetError();
             throw new Exception($"Failed to start SDL2: {error}");
         }
 
@@ -56,7 +56,7 @@ public static unsafe class Program
 
         // create the window
         SDL_WindowFlags flags = SDL_WindowFlags.Resizable | SDL_WindowFlags.OpenGL | SDL_WindowFlags.Hidden;
-        SDL_Window window = SDL_CreateWindow("Hello World", 800, 600, flags);
+        SDL_Window window = SDL_CreateWindow("Hello World"u8, 800, 600, flags);
         SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
         SDL_GLContext gl_context = SDL_GL_CreateContext(window);
@@ -67,25 +67,25 @@ public static unsafe class Program
         var id = SDL_GetWindowID(window);
         SDL_GetWindowSizeInPixels(window, out int width, out int height);
 
-        nint hwnd = (nint)SDL_GetPointerProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_WIN32_HWND_POINTER);
+        nint hwnd = SDL_GetPointerProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_WIN32_HWND_POINTER, 0);
 
         var display = SDL_GetDisplayForWindow(window);
         display = SDL_GetDisplayForPoint(Point.Empty);
 
         SDL_DisplayID primary = SDL_GetPrimaryDisplay();
-        string dispName = SDL_GetDisplayNameString(primary);
+        string dispName = SDL_GetDisplayName(primary)!;
         int test3 = SDL_GetNumVideoDrivers();
         //var test2 = SDL_GetCurrentVideoDriver();
         ReadOnlySpan<SDL_DisplayID> displays = SDL_GetDisplays();
         for(int i = 0; i < displays.Length; i++)
         {
-            dispName = SDL_GetDisplayNameString(displays[i]);
+            dispName = SDL_GetDisplayName(displays[i])!;
         }
 
         var driversAudio = SDL_GetNumAudioDrivers();
         for (int i = 0; i < driversAudio; i++)
         {
-            dispName = SDL_GetAudioDriverString(i);
+            dispName = SDL_GetAudioDriver(i)!;
         }
 
         ReadOnlySpan<SDL_JoystickID> joystics = SDL_GetJoysticks();

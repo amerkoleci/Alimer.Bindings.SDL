@@ -187,11 +187,6 @@ unsafe partial class SDL3
         return SDL_COLORSPACERANGE(space) == SDL_ColorRange.Full;
     }
 
-    public static string SDL_GetPixelFormatNameString(SDL_PixelFormat format)
-    {
-        return GetStringOrEmpty(SDL_GetPixelFormatName(format));
-    }
-
     public static SDL_Surface* SDL_CreateSurfaceFrom<T>(T[] source, int width, int height, int pitch, SDL_PixelFormat format)
         where T : unmanaged
     {

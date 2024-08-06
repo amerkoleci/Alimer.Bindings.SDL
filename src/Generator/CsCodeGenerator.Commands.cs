@@ -38,8 +38,6 @@ public static partial class CsCodeGenerator
                 || cppFunction.Name == "SDL_GetLogOutputFunction"
                 || cppFunction.Name == "SDL_SetLogOutputFunction"
                 || cppFunction.Name == "SDL_EGL_SetEGLAttributeCallbacks"
-                || cppFunction.Name == "SDL_Vulkan_GetInstanceExtensions"
-                || cppFunction.Name == "SDL_Vulkan_CreateSurface"
                 || cppFunction.Name == "SDL_GUIDToString"
                 || cppFunction.Name == "SDL_GUIDFromString"
                 || cppFunction.Name == "SDL_SetPropertyWithCleanup"
@@ -88,7 +86,7 @@ public static partial class CsCodeGenerator
                 CppFunctionType functionType = pair.Value;
 
                 string returnCsName = GetCsTypeName(functionType.ReturnType);
-                string argumentsString = GetParameterSignature(functionType);
+                string argumentsString = GetParameterSignature(functionType, false);
 
                 writer.WriteLine($"[UnmanagedFunctionPointer(CallingConvention.Cdecl)]");
                 writer.WriteLine($"{visibility} unsafe delegate {returnCsName} {pair.Key}({argumentsString});");
@@ -105,16 +103,44 @@ public static partial class CsCodeGenerator
         }
     }
 
-    private static void WriteFunctionInvocation(CodeWriter writer, CppFunction cppFunction)
+    private static bool IsString(CppType cppType, out bool isConst)
     {
-        if (cppFunction.Name == "SDL_SendGamepadEffect")
+        if (cppType is CppPointerType cppPointerType)
         {
-
+            if (cppPointerType.ElementType is CppQualifiedType qualifiedType
+                && qualifiedType.ElementType is CppPrimitiveType qualifiedTypePrimitiveType)
+            {
+                if (qualifiedType.ElementType is CppPrimitiveType primitiveType)
+                {
+                    if (primitiveType.Kind == CppPrimitiveKind.Char
+                        && qualifiedType.Qualifier == CppTypeQualifier.Const)
+                    {
+                        isConst = true;
+                        return true;
+                    }
+                }
+            }
+            else if (cppPointerType.ElementType is CppPrimitiveType primitiveType
+                && primitiveType.Kind == CppPrimitiveKind.Char)
+            {
+                isConst = false;
+                return true;
+            }
         }
 
+        isConst = false;
+        return false;
+    }
+
+
+    private static void WriteFunctionInvocation(CodeWriter writer, CppFunction cppFunction)
+    {
         string returnCsName = GetCsTypeName(cppFunction.ReturnType);
-        string argumentsString = GetParameterSignature(cppFunction);
+        string argumentsString = GetParameterSignature(cppFunction, false);
         string functionName = cppFunction.Name;
+
+        bool stringReturnType = false;
+        bool freeReturnString = false;
 
         writer.WriteLine($"[LibraryImport(LibName, EntryPoint = \"{cppFunction.Name}\")]");
         if (returnCsName == "SDL_bool")
@@ -122,22 +148,87 @@ public static partial class CsCodeGenerator
             writer.WriteLine("[return: MarshalAs(UnmanagedType.Bool)]");
             returnCsName = "bool";
         }
+        else if (IsString(cppFunction.ReturnType, out bool isConstString))
+        {
+            stringReturnType = true;
+            freeReturnString = !isConstString;
+        }
 
-        writer.WriteLine($"public static partial {returnCsName} {functionName}({argumentsString});");
+        bool hasStringParameter = false;
+        foreach (CppParameter parameter in cppFunction.Parameters)
+        {
+            if (IsString(parameter.Type, out bool isConst))
+            {
+                hasStringParameter = true;
+                break;
+            }
+        }
+
+        string nativeFunctionName = functionName;
+        if (stringReturnType)
+        {
+            nativeFunctionName += "Ptr";
+        }
+
+        writer.WriteLine($"public static partial {returnCsName} {nativeFunctionName}({argumentsString});");
         writer.WriteLine();
+
+        if (stringReturnType)
+        {
+            string invokeArgumentsString = GetParameterSignature(cppFunction, true);
+
+            using (writer.PushBlock($"public static string? {functionName}({argumentsString})"))
+            {
+                if (freeReturnString)
+                {
+                    writer.WriteLine($"byte* resultPtr = {nativeFunctionName}({invokeArgumentsString});");
+                    writer.WriteLine($"string? result = ConvertToManaged(resultPtr);");
+                    writer.WriteLine($"SDL_free(resultPtr);");
+                    writer.WriteLine($"return result;");
+                }
+                else
+                {
+                    writer.WriteLine($"return ConvertToManaged({nativeFunctionName}({invokeArgumentsString}));");
+                }
+            }
+            writer.WriteLine();
+        }
+
+        if (hasStringParameter)
+        {
+            // ReadOnlySpan<byte>
+            argumentsString = GetParameterSignature(cppFunction, false, MarshalStringType.Byte);
+            writer.WriteLine($"[LibraryImport(LibName, EntryPoint = \"{cppFunction.Name}\")]");
+            if (returnCsName == "bool")
+                writer.WriteLine("[return: MarshalAs(UnmanagedType.Bool)]");
+            writer.WriteLine($"public static partial {returnCsName} {nativeFunctionName}({argumentsString});");
+            writer.WriteLine();
+
+            // ReadOnlySpan<char>
+            argumentsString = GetParameterSignature(cppFunction, false, MarshalStringType.Char);
+            writer.WriteLine($"[LibraryImport(LibName, EntryPoint = \"{cppFunction.Name}\")]");
+            if (returnCsName == "bool")
+                writer.WriteLine("[return: MarshalAs(UnmanagedType.Bool)]");
+            writer.WriteLine($"public static partial {returnCsName} {nativeFunctionName}({argumentsString});");
+            writer.WriteLine();
+        }
     }
 
-    public static string GetParameterSignature(CppFunction cppFunction, bool unsafeStrings = true)
+    private static string GetParameterSignature(CppFunction cppFunction, bool invocation, MarshalStringType marshalString = MarshalStringType.None)
     {
-        return GetParameterSignature(cppFunction.Name, cppFunction.Parameters, unsafeStrings);
+        return GetParameterSignature(cppFunction.Name, cppFunction.Parameters, invocation, marshalString);
     }
 
-    public static string GetParameterSignature(CppFunctionType cppFunctionType, bool unsafeStrings = true)
+    private static string GetParameterSignature(CppFunctionType cppFunctionType, bool invocation, MarshalStringType marshalString = MarshalStringType.None)
     {
-        return GetParameterSignature(cppFunctionType.FullName, cppFunctionType.Parameters, unsafeStrings);
+        return GetParameterSignature(cppFunctionType.FullName, cppFunctionType.Parameters, invocation, marshalString);
     }
 
-    private static string GetParameterSignature(string functionName, IEnumerable<CppParameter> parameters, bool unsafeStrings = true)
+    private static string GetParameterSignature(
+        string functionName,
+        IEnumerable<CppParameter> parameters,
+        bool invocation,
+        MarshalStringType marshalString)
     {
         var argumentBuilder = new StringBuilder();
         int index = 0;
@@ -165,11 +256,6 @@ public static partial class CsCodeGenerator
             else
             {
                 paramCsTypeName = GetCsTypeName(cppParameter.Type);
-
-                if (paramCsTypeName == "byte*" && unsafeStrings == false)
-                {
-                    paramCsName = "ReadOnlySpan<sbyte>";
-                }
             }
 
             if (functionName.Contains("Get", StringComparison.OrdinalIgnoreCase))
@@ -208,7 +294,27 @@ public static partial class CsCodeGenerator
                 }
             }
 
-            argumentBuilder.Append(paramCsTypeName).Append(' ').Append(paramCsName);
+            if (paramCsTypeName == "SDL_bool")
+            {
+                argumentBuilder.Append("[MarshalAs(UnmanagedType.Bool)] ");
+                paramCsTypeName = "bool";
+            }
+            else if (marshalString != MarshalStringType.None && IsString(cppParameter.Type, out _))
+            {
+                if (marshalString == MarshalStringType.Byte)
+                {
+                    paramCsTypeName = "ReadOnlySpan<byte>";
+                }
+                else
+                {
+                    paramCsTypeName = "[global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char>";
+                }
+            }
+
+            if (!invocation)
+                argumentBuilder.Append(paramCsTypeName).Append(' ');
+
+            argumentBuilder.Append(paramCsName);
 
             if (index < parameters.Count() - 1)
             {
@@ -227,17 +333,10 @@ public static partial class CsCodeGenerator
         foreach (CppParameter parameter in functionType.Parameters)
         {
             string paramCsType = GetCsTypeName(parameter.Type);
-            // Otherwise we get interop issues with non blittable types
-            if (paramCsType == "WGPUBool")
-                paramCsType = "uint";
             builder.Append(paramCsType).Append(", ");
         }
 
         string returnCsName = GetCsTypeName(functionType.ReturnType);
-        // Otherwise we get interop issues with non blittable types
-        if (returnCsName == "WGPUBool")
-            returnCsName = "uint";
-
         builder.Append(returnCsName);
 
         return $"delegate* unmanaged<{builder}>";
@@ -286,5 +385,12 @@ public static partial class CsCodeGenerator
 
         elementTypeDeclaration = null;
         return false;
+    }
+
+    private enum MarshalStringType
+    {
+        None,
+        Byte,
+        Char
     }
 }

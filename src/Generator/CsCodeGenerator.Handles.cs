@@ -84,7 +84,14 @@ public static partial class CsCodeGenerator
             if (s_ignoreHandles.Contains(cppClass.Name) || s_collectedHandles.ContainsKey(cppClass.Name))
                 continue;
 
-            s_collectedHandles.Add(cppClass.Name, "nint");
+            string handleName = cppClass.Name;
+            if (handleName == "SDL_GLContextState")
+            {
+                handleName = "SDL_GLContext";
+                AddCsMapping(cppClass.Name, handleName);
+            }
+
+            s_collectedHandles.Add(handleName, "nint");
         }
     }
 

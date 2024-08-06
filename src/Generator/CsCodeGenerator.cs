@@ -1,6 +1,7 @@
 // Copyright (c) Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
+using System.Text;
 using CppAst;
 
 namespace Generator;
@@ -69,12 +70,15 @@ public static partial class CsCodeGenerator
         // Vulkan
         { "VkAllocationCallbacks", "nint" },
         { "VkInstance", "nint" },
+        { "VkInstance_T", "nint" },
         { "VkPhysicalDevice", "nint" },
+        { "VkPhysicalDevice_T", "nint" },
         { "VkSurfaceKHR", "ulong" },
+        { "VkSurfaceKHR_T", "ulong" },
         // Until we understand how to treat this
         { "SDL_BlitMap", "nint" },
         { "SDL_Time", "long" },
-        
+
     };
 
     private static readonly HashSet<string> s_knownTypes = new(StringComparer.OrdinalIgnoreCase)
@@ -161,6 +165,10 @@ public static partial class CsCodeGenerator
             {
                 return GetCsTypeName(classElementType);
             }
+            else if (typedef.ElementType is CppPointerType cppPointerType)
+            {
+                return GetCsTypeName(cppPointerType);
+            }
 
             string typeDefCsName = GetCsCleanName(typedef.Name);
             return typeDefCsName;
@@ -193,6 +201,20 @@ public static partial class CsCodeGenerator
         if (type is CppArrayType arrayType)
         {
             return GetCsTypeName(arrayType.ElementType) + "*";
+        }
+
+        if (type is CppFunctionType functionType)
+        {
+            StringBuilder builder = new();
+            foreach (CppParameter parameter in functionType.Parameters)
+            {
+                string paramCsType = GetCsTypeName(parameter.Type);
+                builder.Append(paramCsType).Append(", ");
+            }
+
+            string returnCsName = GetCsTypeName(functionType.ReturnType);
+            builder.Append(returnCsName);
+            return $"delegate* unmanaged<{builder}>";
         }
 
         return string.Empty;
@@ -245,7 +267,7 @@ public static partial class CsCodeGenerator
 
             case CppPrimitiveKind.UnsignedLong:
                 return s_options.MapCLongToIntPtr ? "nuint" : "global::System.Runtime.InteropServices.CULong";
-            
+
             default:
                 return string.Empty;
         }

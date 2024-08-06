@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <VersionPrefix>3.6.0</VersionPrefix>
+    <VersionPrefix>3.7.0</VersionPrefix>
     <VersionSuffix Condition="'$(VersionSuffix)' == ''"></VersionSuffix>
   </PropertyGroup>
 

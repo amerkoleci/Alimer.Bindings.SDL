@@ -65,14 +65,4 @@ unsafe partial class SDL3
         SDL_HapticID* ptr = SDL_GetHaptics(out int count);
         return new(ptr, count);
     }
-
-    public static string SDL_GetHapticNameForIDString(SDL_HapticID instance_id)
-    {
-        return GetStringOrEmpty(SDL_GetHapticNameForID(instance_id));
-    }
-
-    public static string SDL_GetHapticNameString(SDL_Haptic haptic)
-    {
-        return GetStringOrEmpty(SDL_GetHapticName(haptic));
-    }
 }

@@ -854,45 +854,24 @@ public readonly partial struct SDL_Window(nint value) : IEquatable<SDL_Window>
 }
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly partial struct SDL_GLContextState(nint value) : IEquatable<SDL_GLContextState>
+public readonly partial struct SDL_GLContext(nint value) : IEquatable<SDL_GLContext>
 {
 	public readonly nint Value = value;
 	public bool IsNull => Value == 0;
 	public bool IsNotNull => Value != 0;
-	public static SDL_GLContextState Null => new(0);
-	public static implicit operator nint(SDL_GLContextState value) => value.Value;
-	public static implicit operator SDL_GLContextState(nint value) => new(value);
-	public static bool operator ==(SDL_GLContextState left, SDL_GLContextState right) => left.Value == right.Value;
-	public static bool operator !=(SDL_GLContextState left, SDL_GLContextState right) => left.Value != right.Value;
-	public static bool operator ==(SDL_GLContextState left, nint right) => left.Value == right;
-	public static bool operator !=(SDL_GLContextState left, nint right) => left.Value != right;
-	public bool Equals(SDL_GLContextState other) => Value.Equals(other.Value);
+	public static SDL_GLContext Null => new(0);
+	public static implicit operator nint(SDL_GLContext value) => value.Value;
+	public static implicit operator SDL_GLContext(nint value) => new(value);
+	public static bool operator ==(SDL_GLContext left, SDL_GLContext right) => left.Value == right.Value;
+	public static bool operator !=(SDL_GLContext left, SDL_GLContext right) => left.Value != right.Value;
+	public static bool operator ==(SDL_GLContext left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_GLContext left, nint right) => left.Value != right;
+	public bool Equals(SDL_GLContext other) => Value.Equals(other.Value);
 	/// <inheritdoc/>
-	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_GLContextState other) && Equals(other);
-	/// <inheritdoc/>
-	public override int GetHashCode() => Value.GetHashCode();
-	private string DebuggerDisplay => $"{nameof(SDL_GLContextState)} [0x{Value.ToString("X")}]";
-}
-
-[DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly partial struct VkPhysicalDevice_T(nint value) : IEquatable<VkPhysicalDevice_T>
-{
-	public readonly nint Value = value;
-	public bool IsNull => Value == 0;
-	public bool IsNotNull => Value != 0;
-	public static VkPhysicalDevice_T Null => new(0);
-	public static implicit operator nint(VkPhysicalDevice_T value) => value.Value;
-	public static implicit operator VkPhysicalDevice_T(nint value) => new(value);
-	public static bool operator ==(VkPhysicalDevice_T left, VkPhysicalDevice_T right) => left.Value == right.Value;
-	public static bool operator !=(VkPhysicalDevice_T left, VkPhysicalDevice_T right) => left.Value != right.Value;
-	public static bool operator ==(VkPhysicalDevice_T left, nint right) => left.Value == right;
-	public static bool operator !=(VkPhysicalDevice_T left, nint right) => left.Value != right;
-	public bool Equals(VkPhysicalDevice_T other) => Value.Equals(other.Value);
-	/// <inheritdoc/>
-	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is VkPhysicalDevice_T other) && Equals(other);
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_GLContext other) && Equals(other);
 	/// <inheritdoc/>
 	public override int GetHashCode() => Value.GetHashCode();
-	private string DebuggerDisplay => $"{nameof(VkPhysicalDevice_T)} [0x{Value.ToString("X")}]";
+	private string DebuggerDisplay => $"{nameof(SDL_GLContext)} [0x{Value.ToString("X")}]";
 }
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]

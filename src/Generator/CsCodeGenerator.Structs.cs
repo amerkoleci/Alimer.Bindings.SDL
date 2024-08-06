@@ -217,9 +217,6 @@ public static partial class CsCodeGenerator
                 foreach (CppParameter parameter in functionType.Parameters)
                 {
                     string paramCsType = GetCsTypeName(parameter.Type);
-                    // Otherwise we get interop issues with non blittable types
-                    if (paramCsType == "VkBool32")
-                        paramCsType = "uint";
                     builder.Append(paramCsType).Append(", ");
                 }
 

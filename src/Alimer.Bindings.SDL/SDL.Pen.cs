@@ -55,9 +55,4 @@ unsafe partial class SDL3
         SDL_PenID* ptr = SDL_GetPens(out int count);
         return new(ptr, count);
     }
-
-    public static string SDL_GetPenNameString(SDL_PenID instance_id)
-    {
-        return GetStringOrEmpty(SDL_GetPenName(instance_id));
-    }
 }

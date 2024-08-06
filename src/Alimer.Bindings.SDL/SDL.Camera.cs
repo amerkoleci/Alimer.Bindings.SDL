@@ -3,13 +3,13 @@
 
 using System.Runtime.InteropServices;
 
-namespace SDL;
+namespace SDL3;
 
-unsafe partial class SDL
+unsafe partial class SDL3
 {
-    public static ReadOnlySpan<SDL_CameraDeviceID> SDL_GetCameraDevices()
+    public static ReadOnlySpan<SDL_CameraID> SDL_GetCameras()
     {
-        SDL_CameraDeviceID* ptr = SDL_GetCameraDevices(out int count);
+        SDL_CameraID* ptr = SDL_GetCameras(out int count);
         return new(ptr, count);
     }
 
@@ -23,8 +23,8 @@ unsafe partial class SDL
         return GetStringOrEmpty(SDL_GetCurrentCameraDriver());
     }
 
-    public static string SDL_GetCameraDeviceNameString(SDL_CameraDeviceID instance_id)
+    public static string SDL_GetCameraNameString(SDL_CameraID instance_id)
     {
-        return GetStringOrEmpty(SDL_GetCameraDeviceName(instance_id));
+        return GetStringOrEmpty(SDL_GetCameraName(instance_id));
     }
 }

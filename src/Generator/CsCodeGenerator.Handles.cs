@@ -9,6 +9,13 @@ public static partial class CsCodeGenerator
 {
     private static readonly HashSet<string> s_ignoreHandles = new(StringComparer.OrdinalIgnoreCase)
     {
+        "SDL_bool",
+        "SDL_malloc_func",
+        "SDL_calloc_func",
+        "SDL_realloc_func",
+        "SDL_free_func",
+        "SDL_CompareCallback_r",
+        "SDL_iconv_t",
         "SDL_WindowsMessageHook",
         "SDL_LogOutputFunction",
         "MSG",
@@ -31,18 +38,27 @@ public static partial class CsCodeGenerator
         "SDL_blit",
         "SDL_WindowFlags",
         "SDL_Event",
-        "SDL_Keycode",
         "SDL_HapticEffect",
         "SDL_EventAction",
         "VkInstance_T",
         "VkSurfaceKHR_T",
+        "VkPhysicalDevice",
         "VkAllocationCallbacks",
+        "SDL_TLSID",
+        "SDL_ThreadFunction",
+        "SDL_MouseButtonFlags",
+        "SDL_PenCapabilityFlags",
     };
+
+    private static readonly HashSet<string> s_generatedPointerHandles = [];
 
     private static void CollectHandles(CppCompilation compilation)
     {
         foreach (CppTypedef typedef in compilation.Typedefs)
         {
+            if (s_csNameMappings.ContainsKey(typedef.Name))
+                continue;
+
             if (s_ignoreHandles.Contains(typedef.Name) || s_collectedHandles.ContainsKey(typedef.Name))
                 continue;
 
@@ -72,7 +88,6 @@ public static partial class CsCodeGenerator
         }
     }
 
-
     private static void GenerateHandles()
     {
         string visibility = s_options.PublicVisiblity ? "public" : "internal";
@@ -83,21 +98,117 @@ public static partial class CsCodeGenerator
             s_options.Namespace, ["System.Diagnostics", "System.Diagnostics.CodeAnalysis"]
             );
 
+        // First generate primitive types
         foreach (KeyValuePair<string, string> handlePair in s_collectedHandles)
         {
             string csName = handlePair.Key;
+            if (s_csNameMappings.ContainsKey(csName))
+                continue;
+
             string elementTypeName = handlePair.Value;
             bool isPrimitive = elementTypeName != "nint";
-            string typeDeclaration;
+            if (!isPrimitive)
+                continue;
+
+            bool generateEnum = false;
+            if (csName.EndsWith("Flags")
+                || csName == "SDL_BlendMode"
+                || csName == "SDL_Keymod")
+            {
+                writer.WriteLine("[Flags]");
+                generateEnum = true;
+            }
+            if (csName == "SDL_Keycode")
+            {
+                generateEnum = true;
+            }
+
+            using (writer.PushBlock($"public enum {csName} : {elementTypeName}"))
+            {
+                if (generateEnum)
+                {
+                    string constantPrefix = string.Empty;
+
+                    if (csName == "SDL_InitFlags")
+                    {
+                        constantPrefix = "SDL_INIT_";
+                    }
+                    else if (csName == "SDL_BlendMode")
+                    {
+                        constantPrefix = "SDL_BLENDMODE_";
+                    }
+                    else if (csName == "SDL_GlobFlags")
+                    {
+                        constantPrefix = "SDL_GLOB_";
+                    }
+                    else if (csName == "SDL_Keycode")
+                    {
+                        constantPrefix = "SDLK_";
+                    }
+                    else if (csName == "SDL_Keymod")
+                    {
+                        constantPrefix = "SDL_KMOD_";
+                    }
+                    else if (csName == "SDL_MessageBoxFlags")
+                    {
+                        constantPrefix = "SDL_MESSAGEBOX_";
+                    }
+                    else if (csName == "SDL_MessageBoxButtonFlags")
+                    {
+                        constantPrefix = "SDL_MESSAGEBOX_BUTTON_";
+                    }
+                    else if (csName == "SDL_PenCapabilityFlags")
+                    {
+                        constantPrefix = "SDL_PEN_";
+                    }
+                    else if (csName == "SDL_SurfaceFlags")
+                    {
+                        constantPrefix = "SDL_SURFACE_";
+                    }
+
+                    if (!string.IsNullOrEmpty(constantPrefix))
+                    {
+                        foreach (CppMacro macro in s_collectedMacros)
+                        {
+                            if (!macro.Name.StartsWith(constantPrefix))
+                                continue;
+
+                            if (csName == "SDL_MessageBoxFlags")
+                            {
+                                if (macro.Name.StartsWith("SDL_MESSAGEBOX_BUTTON_"))
+                                    continue;
+                            }
+                            else if (csName == "SDL_Keycode")
+                            {
+                                if (macro.Name == "SDLK_SCANCODE_MASK")
+                                    continue;
+                            }
+
+                            string enumItemName = GetEnumItemName(csName, macro.Name, constantPrefix);
+                            writer.WriteLine($"{enumItemName} = SDL3.{macro.Name},");
+                        }
+                    }
+                }
+            }
+            writer.WriteLine();
+        }
+
+
+        foreach (KeyValuePair<string, string> handlePair in s_collectedHandles)
+        {
+            string csName = handlePair.Key;
+            if (s_csNameMappings.ContainsKey(csName))
+                continue;
+
+            string elementTypeName = handlePair.Value;
+            bool isPrimitive = elementTypeName != "nint";
             if (isPrimitive)
-            {
-                typeDeclaration = $"{visibility} readonly partial struct {csName}({elementTypeName} value) : IComparable, IComparable<{csName}>, IEquatable<{csName}>, IFormattable";
-            }
-            else
-            {
-                writer.WriteLine($"[DebuggerDisplay(\"{{DebuggerDisplay,nq}}\")]");
-                typeDeclaration = $"{visibility} readonly partial struct {csName}({elementTypeName} value) : IEquatable<{csName}>";
-            }
+                continue;
+
+            writer.WriteLine($"[DebuggerDisplay(\"{{DebuggerDisplay,nq}}\")]");
+            string typeDeclaration = $"{visibility} readonly partial struct {csName}({elementTypeName} value) : IEquatable<{csName}>";
+            s_generatedPointerHandles.Add(csName);
+
             using (writer.PushBlock(typeDeclaration))
             {
                 writer.WriteLine($"public readonly {elementTypeName} Value = value;");

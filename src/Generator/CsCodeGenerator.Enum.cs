@@ -14,7 +14,7 @@ public static partial class CsCodeGenerator
     {
         { "SDL_PropertyType", "SDL_PROPERTY_TYPE" },
         { "SDL_Scancode", "SDL_SCANCODE" },
-        { "SDL_KeyCode", "SDLK" },
+        { "SDL_Keycode", "SDLK" },
         { "SDL_Keymod", "SDL_KMOD" },
         { "SDL_GamepadType", "SDL_GAMEPAD_TYPE" },
         { "SDL_GamepadButton", "SDL_GAMEPAD_BUTTON" },
@@ -53,6 +53,7 @@ public static partial class CsCodeGenerator
         { "SDL_GamepadButtonLabel", "SDL_GAMEPAD_BUTTON_LABEL" },
         { "SDL_PenAxis", "SDL_PEN_AXIS" },
         { "SDL_PenSubtype", "SDL_PEN_TYPE" },
+        { "SDL_AudioFormat", "SDL_AUDIO" },
 
         // SDL_pixels.h
         { "SDL_PixelType", "SDL_PIXELTYPE" },
@@ -60,7 +61,7 @@ public static partial class CsCodeGenerator
         { "SDL_PackedOrder", "SDL_PACKEDORDER" },
         { "SDL_ArrayOrder", "SDL_ARRAYORDER" },
         { "SDL_PackedLayout", "SDL_PACKEDLAYOUT" },
-        { "SDL_PixelFormatEnum", "SDL_PIXELFORMAT" },
+        { "SDL_PixelFormat", "SDL_PIXELFORMAT" },
         { "SDL_ColorType", "SDL_COLOR_TYPE" },
         { "SDL_ColorRange", "SDL_COLOR_RANGE" },
         { "SDL_ColorPrimaries", "SDL_COLOR_PRIMARIES" },
@@ -78,6 +79,9 @@ public static partial class CsCodeGenerator
         { "SDL_IOStatus", "SDL_IO_STATUS" },
         { "SDL_DateFormat", "SDL_DATE_FORMAT" },
         { "SDL_TimeFormat", "SDL_TIME_FORMAT" },
+
+        { "SDL_WinRT_Path", "SDL_WINRT_PATH" },
+        { "SDL_WinRT_DeviceFamily", "SDL_WINRT_DEVICEFAMILY" },
     };
 
     private static readonly Dictionary<string, string> s_knownEnumValueNames = new()
@@ -91,6 +95,8 @@ public static partial class CsCodeGenerator
         { "SDL_GETEVENT", "GetEvent" },
         { "SDL_PEN_NUM_AXES", "NumAxes" },
     };
+
+    private static readonly HashSet<string> s_enumConstants = [];
 
     private static readonly HashSet<string> s_ignoredParts = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -142,6 +148,12 @@ public static partial class CsCodeGenerator
         "ArrayU32",
         "ArrayF16",
         "ArrayF32",
+        "CaseInsensitive",
+        "LeftParen",
+        "RightParen",
+        "BackSlash",
+        "PlusMinus",
+        "CapsLock",
     };
 
     public static void CollectEnums(CppCompilation compilation)
@@ -180,19 +192,24 @@ public static partial class CsCodeGenerator
                 writer.WriteLine("[Flags]");
             }
 
-            string csName = GetCsCleanName(cppEnum.Name);
+            string enumCsName = GetCsCleanName(cppEnum.Name);
             string enumNamePrefix = GetEnumNamePrefix(cppEnum.Name);
 
-            createdEnums.Add(csName, cppEnum.Name);
+            createdEnums.Add(enumCsName, cppEnum.Name);
 
             string baseTypeName = string.Empty;
-            if (csName == "SDL_WindowFlags")
+            if (enumCsName == "SDL_WindowFlags")
+            {
+                baseTypeName = " : ulong";
+            }
+            else if (enumCsName == "SDL_AudioFormat"
+                || enumCsName == "SDL_PixelFormat")
             {
                 baseTypeName = " : uint";
             }
 
             bool noneAdded = false;
-            using (writer.PushBlock($"{visibility} enum {csName}{baseTypeName}"))
+            using (writer.PushBlock($"{visibility} enum {enumCsName}{baseTypeName}"))
             {
                 if (isBitmask &&
                     !cppEnum.Items.Any(enumItem => GetEnumItemName(cppEnum.Name, enumItem.Name, enumNamePrefix) == "None"))
@@ -225,23 +242,15 @@ public static partial class CsCodeGenerator
                         continue;
                     }
 
-                    if (cppEnum.Name == "SDL_EventType" && enumItemName == "DisplayFirst")
-                    {
-                    }
-
                     if (enumItemName != "Count" && s_options.EnumWriteUnmanagedTag)
                     {
                         writer.WriteLine($"/// <unmanaged>{enumItem.Name}</unmanaged>");
                     }
 
-                    if (csName == "SDL_Colorspace")
-                    {
-                        
-                    }
-
                     if (enumItem.ValueExpression is CppRawExpression rawExpression)
                     {
-                        if (string.IsNullOrEmpty(rawExpression.Text) || csName == "SDL_Colorspace")
+                        if (string.IsNullOrEmpty(rawExpression.Text)
+                            || enumCsName == "SDL_Colorspace")
                         {
                             writer.WriteLine($"{enumItemName} = {enumItem.Value},");
                         }
@@ -269,6 +278,8 @@ public static partial class CsCodeGenerator
                     {
                         writer.WriteLine($"{enumItemName} = {enumItem.Value},");
                     }
+
+                    s_enumConstants.Add($"{enumCsName} {enumItem.Name} = {enumCsName}.{enumItemName}");
                 }
             }
 
@@ -367,7 +378,7 @@ public static partial class CsCodeGenerator
         string enumItemName = GetPrettyEnumName(cppEnumItemName, enumNamePrefix);
         if (char.IsNumber(enumItemName[0]))
         {
-            if (enumName == "SDL_KeyCode")
+            if (enumName == "SDL_Keycode")
             {
                 return $"D{enumItemName}";
             }

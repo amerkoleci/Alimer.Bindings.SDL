@@ -13,174 +13,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 
 #pragma warning disable CS0649
-namespace SDL;
+namespace SDL3;
 
-public partial struct SDL_PenCapabilityInfo
+public partial struct SDL_AtomicInt
 {
-	public float max_tilt;
-	public uint wacom_id;
-	public sbyte num_buttons;
-}
-
-public partial struct SDL_IOStreamInterface
-{
-	public unsafe delegate* unmanaged<nint, long> size;
-	public unsafe delegate* unmanaged<nint, long, int, long> seek;
-	public unsafe delegate* unmanaged<nint, nint, nuint, SDL_IOStatus*, nuint> read;
-	public unsafe delegate* unmanaged<nint, void*, nuint, SDL_IOStatus*, nuint> write;
-	public unsafe delegate* unmanaged<nint, int> close;
-}
-
-public partial struct SDL_Keysym
-{
-	public SDL_Scancode scancode;
-	public int sym;
-	public ushort mod;
-	public uint unused;
-}
-
-public partial struct SDL_MessageBoxButtonData
-{
-	public uint flags;
-	public int buttonID;
-	public unsafe byte* text;
-}
-
-public partial struct SDL_MessageBoxColor
-{
-	public byte r;
-	public byte g;
-	public byte b;
-}
-
-public partial struct SDL_MessageBoxColorScheme
-{
-	public colors__FixedBuffer colors;
-
-	public unsafe struct colors__FixedBuffer
-	{
-		public SDL_MessageBoxColor e0;
-		public SDL_MessageBoxColor e1;
-		public SDL_MessageBoxColor e2;
-		public SDL_MessageBoxColor e3;
-		public SDL_MessageBoxColor e4;
-
-		[UnscopedRef]
-		public ref SDL_MessageBoxColor this[int index]
-		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get
-			{
-				return ref AsSpan()[index];
-			}
-		}
-
-		[UnscopedRef]
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public Span<SDL_MessageBoxColor> AsSpan()
-		{
-			return MemoryMarshal.CreateSpan(ref e0, 5);
-		}
-	}
-}
-
-public partial struct SDL_MessageBoxData
-{
-	public uint flags;
-	public SDL_Window window;
-	public unsafe byte* title;
-	public unsafe byte* message;
-	public int numbuttons;
-	public unsafe SDL_MessageBoxButtonData* buttons;
-	public unsafe SDL_MessageBoxColorScheme* colorScheme;
-}
-
-public partial struct SDL_VirtualJoystickDesc
-{
-	public ushort type;
-	public ushort naxes;
-	public ushort nbuttons;
-	public ushort nhats;
-	public ushort vendor_id;
-	public ushort product_id;
-	public ushort padding;
-	public uint button_mask;
-	public uint axis_mask;
-	public unsafe byte* name;
-	public nint userdata;
-	public unsafe delegate* unmanaged<nint, void> Update;
-	public unsafe delegate* unmanaged<nint, int, void> SetPlayerIndex;
-	public unsafe delegate* unmanaged<nint, ushort, ushort, int> Rumble;
-	public unsafe delegate* unmanaged<nint, ushort, ushort, int> RumbleTriggers;
-	public unsafe delegate* unmanaged<nint, byte, byte, byte, int> SetLED;
-	public unsafe delegate* unmanaged<nint, void*, int, int> SendEffect;
-}
-
-public partial struct SDL_GamepadBinding
-{
-	public SDL_GamepadBindingType input_type;
-	public SDL_GamepadBinding_input input;
-	
-	[StructLayout(LayoutKind.Explicit)]
-	public partial struct SDL_GamepadBinding_input
-	{
-		[FieldOffset(0)]
-		public int button;
-		[FieldOffset(0)]
-		public SDL_GamepadBinding_axis axis;
-		
-		public partial struct SDL_GamepadBinding_axis
-		{
-			public int axis;
-			public int axis_min;
-			public int axis_max;
-		}
-		[FieldOffset(0)]
-		public SDL_GamepadBinding_hat hat;
-		
-		public partial struct SDL_GamepadBinding_hat
-		{
-			public int hat;
-			public int hat_mask;
-		}
-	}
-	public SDL_GamepadBindingType output_type;
-	public SDL_GamepadBinding_output output;
-	
-	[StructLayout(LayoutKind.Explicit)]
-	public partial struct SDL_GamepadBinding_output
-	{
-		[FieldOffset(0)]
-		public SDL_GamepadButton button;
-		[FieldOffset(0)]
-		public SDL_GamepadBinding_axis axis;
-		
-		public partial struct SDL_GamepadBinding_axis
-		{
-			public SDL_GamepadAxis axis;
-			public int axis_min;
-			public int axis_max;
-		}
-	}
-}
-
-public partial struct SDL_Finger
-{
-	public SDL_FingerID id;
-	public float x;
-	public float y;
-	public float pressure;
-}
-
-public partial struct SDL_DisplayMode
-{
-	public SDL_DisplayID displayID;
-	public SDL_PixelFormatEnum format;
-	public int w;
-	public int h;
-	public float pixel_density;
-	public float refresh_rate;
-	public nint driverdata;
+	public int value;
 }
 
 public partial struct SDL_AudioSpec
@@ -188,6 +25,22 @@ public partial struct SDL_AudioSpec
 	public SDL_AudioFormat format;
 	public int channels;
 	public int freq;
+}
+
+public partial struct SDL_CameraSpec
+{
+	public SDL_PixelFormat format;
+	public SDL_Colorspace colorspace;
+	public int width;
+	public int height;
+	public int framerate_numerator;
+	public int framerate_denominator;
+}
+
+public partial struct SDL_DialogFileFilter
+{
+	public unsafe byte* name;
+	public unsafe byte* pattern;
 }
 
 public partial struct SDL_CommonEvent
@@ -204,6 +57,7 @@ public partial struct SDL_DisplayEvent
 	public ulong timestamp;
 	public SDL_DisplayID displayID;
 	public int data1;
+	public int data2;
 }
 
 public partial struct SDL_WindowEvent
@@ -231,11 +85,12 @@ public partial struct SDL_KeyboardEvent
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public SDL_KeyboardID which;
+	public SDL_Scancode scancode;
+	public SDL_Keycode key;
+	public SDL_Keymod mod;
+	public ushort raw;
 	public byte state;
 	public byte repeat;
-	public byte padding2;
-	public byte padding3;
-	public SDL_Keysym keysym;
 }
 
 public partial struct SDL_TextEditingEvent
@@ -247,6 +102,18 @@ public partial struct SDL_TextEditingEvent
 	public unsafe byte* text;
 	public int start;
 	public int length;
+}
+
+public partial struct SDL_TextEditingCandidatesEvent
+{
+	public SDL_EventType type;
+	public uint reserved;
+	public ulong timestamp;
+	public SDL_WindowID windowID;
+	public unsafe byte** candidates;
+	public int num_candidates;
+	public int selected_candidate;
+	public SDL_bool horizontal;
 }
 
 public partial struct SDL_TextInputEvent
@@ -273,7 +140,7 @@ public partial struct SDL_MouseMotionEvent
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public SDL_MouseID which;
-	public uint state;
+	public SDL_MouseButtonFlags state;
 	public float x;
 	public float y;
 	public float xrel;
@@ -443,7 +310,7 @@ public partial struct SDL_AudioDeviceEvent
 	public uint reserved;
 	public ulong timestamp;
 	public SDL_AudioDeviceID which;
-	public byte iscapture;
+	public byte recording;
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;
@@ -454,7 +321,7 @@ public partial struct SDL_CameraDeviceEvent
 	public SDL_EventType type;
 	public uint reserved;
 	public ulong timestamp;
-	public SDL_CameraDeviceID which;
+	public SDL_CameraID which;
 }
 
 public partial struct SDL_TouchFingerEvent
@@ -582,6 +449,8 @@ public partial struct SDL_Event
 	[FieldOffset(0)]
 	public SDL_TextEditingEvent edit;
 	[FieldOffset(0)]
+	public SDL_TextEditingCandidatesEvent edit_candidates;
+	[FieldOffset(0)]
 	public SDL_TextInputEvent text;
 	[FieldOffset(0)]
 	public SDL_MouseDeviceEvent mdevice;
@@ -637,6 +506,63 @@ public partial struct SDL_Event
 	public SDL_ClipboardEvent clipboard;
 	[FieldOffset(0)]
 	public unsafe fixed byte padding[128];
+}
+
+public partial struct SDL_PathInfo
+{
+	public SDL_PathType type;
+	public ulong size;
+	public long create_time;
+	public long modify_time;
+	public long access_time;
+}
+
+public partial struct SDL_GamepadBinding
+{
+	public SDL_GamepadBindingType input_type;
+	public SDL_GamepadBinding_input input;
+	
+	[StructLayout(LayoutKind.Explicit)]
+	public partial struct SDL_GamepadBinding_input
+	{
+		[FieldOffset(0)]
+		public int button;
+		[FieldOffset(0)]
+		public SDL_GamepadBinding_axis axis;
+		
+		public partial struct SDL_GamepadBinding_axis
+		{
+			public int axis;
+			public int axis_min;
+			public int axis_max;
+		}
+		[FieldOffset(0)]
+		public SDL_GamepadBinding_hat hat;
+		
+		public partial struct SDL_GamepadBinding_hat
+		{
+			public int hat;
+			public int hat_mask;
+		}
+	}
+	public SDL_GamepadBindingType output_type;
+	public SDL_GamepadBinding_output output;
+	
+	[StructLayout(LayoutKind.Explicit)]
+	public partial struct SDL_GamepadBinding_output
+	{
+		[FieldOffset(0)]
+		public SDL_GamepadButton button;
+		[FieldOffset(0)]
+		public SDL_GamepadBinding_axis axis;
+		
+		public partial struct SDL_GamepadBinding_axis
+		{
+			public SDL_GamepadAxis axis;
+			public int axis_min;
+			public int axis_max;
+		}
+	}
 }
 
 public partial struct SDL_HapticDirection
@@ -755,6 +681,143 @@ public partial struct SDL_HapticEffect
 	public SDL_HapticCustom custom;
 }
 
+public partial struct SDL_hid_device_info
+{
+	public unsafe byte* path;
+	public ushort vendor_id;
+	public ushort product_id;
+	public unsafe char* serial_number;
+	public ushort release_number;
+	public unsafe char* manufacturer_string;
+	public unsafe char* product_string;
+	public ushort usage_page;
+	public ushort usage;
+	public int interface_number;
+	public int interface_class;
+	public int interface_subclass;
+	public int interface_protocol;
+	public SDL_hid_bus_type bus_type;
+	public unsafe SDL_hid_device_info* next;
+}
+
+public partial struct SDL_IOStreamInterface
+{
+	public unsafe delegate* unmanaged<nint, long> size;
+	public unsafe delegate* unmanaged<nint, long, SDL_IOWhence, long> seek;
+	public unsafe delegate* unmanaged<nint, nint, nuint, SDL_IOStatus*, nuint> read;
+	public unsafe delegate* unmanaged<nint, void*, nuint, SDL_IOStatus*, nuint> write;
+	public unsafe delegate* unmanaged<nint, int> close;
+}
+
+public partial struct SDL_VirtualJoystickTouchpadDesc
+{
+	public ushort nfingers;
+	public unsafe fixed ushort padding[3];
+}
+
+public partial struct SDL_VirtualJoystickSensorDesc
+{
+	public SDL_SensorType type;
+	public float rate;
+}
+
+public partial struct SDL_VirtualJoystickDesc
+{
+	public ushort type;
+	public ushort padding;
+	public ushort vendor_id;
+	public ushort product_id;
+	public ushort naxes;
+	public ushort nbuttons;
+	public ushort nballs;
+	public ushort nhats;
+	public ushort ntouchpads;
+	public ushort nsensors;
+	public unsafe fixed ushort padding2[2];
+	public uint button_mask;
+	public uint axis_mask;
+	public unsafe byte* name;
+	public unsafe SDL_VirtualJoystickTouchpadDesc* touchpads;
+	public unsafe SDL_VirtualJoystickSensorDesc* sensors;
+	public nint userdata;
+	public unsafe delegate* unmanaged<nint, nint> Update;
+	public unsafe delegate* unmanaged<nint, int, nint> SetPlayerIndex;
+	public unsafe delegate* unmanaged<nint, ushort, ushort, int> Rumble;
+	public unsafe delegate* unmanaged<nint, ushort, ushort, int> RumbleTriggers;
+	public unsafe delegate* unmanaged<nint, byte, byte, byte, int> SetLED;
+	public unsafe delegate* unmanaged<nint, void*, int, int> SendEffect;
+	public unsafe delegate* unmanaged<nint, SDL_bool, int> SetSensorsEnabled;
+}
+
+public partial struct SDL_Locale
+{
+	public unsafe byte* language;
+	public unsafe byte* country;
+}
+
+public partial struct SDL_MessageBoxButtonData
+{
+	public SDL_MessageBoxButtonFlags flags;
+	public int buttonID;
+	public unsafe byte* text;
+}
+
+public partial struct SDL_MessageBoxColor
+{
+	public byte r;
+	public byte g;
+	public byte b;
+}
+
+public partial struct SDL_MessageBoxColorScheme
+{
+	public colors__FixedBuffer colors;
+
+	public unsafe struct colors__FixedBuffer
+	{
+		public SDL_MessageBoxColor e0;
+		public SDL_MessageBoxColor e1;
+		public SDL_MessageBoxColor e2;
+		public SDL_MessageBoxColor e3;
+		public SDL_MessageBoxColor e4;
+
+		[UnscopedRef]
+		public ref SDL_MessageBoxColor this[int index]
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get
+			{
+				return ref AsSpan()[index];
+			}
+		}
+
+		[UnscopedRef]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public Span<SDL_MessageBoxColor> AsSpan()
+		{
+			return MemoryMarshal.CreateSpan(ref e0, 5);
+		}
+	}
+}
+
+public partial struct SDL_MessageBoxData
+{
+	public SDL_MessageBoxFlags flags;
+	public SDL_Window window;
+	public unsafe byte* title;
+	public unsafe byte* message;
+	public int numbuttons;
+	public unsafe SDL_MessageBoxButtonData* buttons;
+	public unsafe SDL_MessageBoxColorScheme* colorScheme;
+}
+
+public partial struct SDL_PenCapabilityInfo
+{
+	public float max_tilt;
+	public uint wacom_id;
+	public sbyte num_buttons;
+}
+
 public partial struct SDL_Color
 {
 	public byte r;
@@ -779,10 +842,9 @@ public partial struct SDL_Palette
 	public int refcount;
 }
 
-public partial struct SDL_PixelFormat
+public partial struct SDL_PixelFormatDetails
 {
-	public SDL_PixelFormatEnum format;
-	public unsafe SDL_Palette* palette;
+	public SDL_PixelFormat format;
 	public byte bits_per_pixel;
 	public byte bytes_per_pixel;
 	public unsafe fixed byte padding[2];
@@ -790,41 +852,76 @@ public partial struct SDL_PixelFormat
 	public uint Gmask;
 	public uint Bmask;
 	public uint Amask;
-	public byte Rloss;
-	public byte Gloss;
-	public byte Bloss;
-	public byte Aloss;
+	public byte Rbits;
+	public byte Gbits;
+	public byte Bbits;
+	public byte Abits;
 	public byte Rshift;
 	public byte Gshift;
 	public byte Bshift;
 	public byte Ashift;
-	public int refcount;
-	public unsafe SDL_PixelFormat* next;
+}
+
+public partial struct SDL_Point
+{
+	public int x;
+	public int y;
+}
+
+public partial struct SDL_FPoint
+{
+	public float x;
+	public float y;
+}
+
+public partial struct SDL_Rect
+{
+	public int x;
+	public int y;
+	public int w;
+	public int h;
+}
+
+public partial struct SDL_FRect
+{
+	public float x;
+	public float y;
+	public float w;
+	public float h;
+}
+
+public partial struct SDL_Vertex
+{
+	public PointF position;
+	public SDL_FColor color;
+	public PointF tex_coord;
+}
+
+public partial struct SDL_StorageInterface
+{
+	public unsafe delegate* unmanaged<nint, int> close;
+	public unsafe delegate* unmanaged<nint, SDL_bool> ready;
+	public unsafe delegate* unmanaged<nint, byte*, delegate* unmanaged<nint, byte*, byte*, int>, nint, int> enumerate;
+	public unsafe delegate* unmanaged<nint, byte*, SDL_PathInfo*, int> info;
+	public unsafe delegate* unmanaged<nint, byte*, nint, ulong, int> read_file;
+	public unsafe delegate* unmanaged<nint, byte*, void*, ulong, int> write_file;
+	public unsafe delegate* unmanaged<nint, byte*, int> mkdir;
+	public unsafe delegate* unmanaged<nint, byte*, int> remove;
+	public unsafe delegate* unmanaged<nint, byte*, byte*, int> rename;
+	public unsafe delegate* unmanaged<nint, byte*, byte*, int> copy;
+	public unsafe delegate* unmanaged<nint, ulong> space_remaining;
 }
 
 public partial struct SDL_Surface
 {
-	public uint flags;
-	public unsafe SDL_PixelFormat* format;
+	public SDL_SurfaceFlags flags;
+	public SDL_PixelFormat format;
 	public int w;
 	public int h;
 	public int pitch;
 	public nint pixels;
-	public nint reserved;
-	public int locked;
-	public nint list_blitmap;
-	public Rectangle clip_rect;
-	public unsafe nint* map;
 	public int refcount;
-}
-
-public partial struct SDL_CameraSpec
-{
-	public SDL_PixelFormatEnum format;
-	public int width;
-	public int height;
-	public int interval_numerator;
-	public int interval_denominator;
+	public SDL_SurfaceData @internal;
 }
 
 public partial struct SDL_DateTime
@@ -838,5 +935,26 @@ public partial struct SDL_DateTime
 	public int nanosecond;
 	public int day_of_week;
 	public int utc_offset;
+}
+
+public partial struct SDL_Finger
+{
+	public SDL_FingerID id;
+	public float x;
+	public float y;
+	public float pressure;
+}
+
+public partial struct SDL_DisplayMode
+{
+	public SDL_DisplayID displayID;
+	public SDL_PixelFormat format;
+	public int w;
+	public int h;
+	public float pixel_density;
+	public float refresh_rate;
+	public int refresh_rate_numerator;
+	public int refresh_rate_denominator;
+	public SDL_DisplayModeData @internal;
 }
 

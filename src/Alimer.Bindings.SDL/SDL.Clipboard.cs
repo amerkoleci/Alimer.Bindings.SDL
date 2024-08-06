@@ -3,12 +3,12 @@
 
 using System.Runtime.InteropServices;
 
-namespace SDL;
+namespace SDL3;
 
 public delegate void ClipboardDataCallback(nint userData, string mimeType, out nuint size);
 public delegate void ClipboardCleanupCallback(nint userData);
 
-unsafe partial class SDL
+unsafe partial class SDL3
 {
     public static int SDL_SetClipboardText(ReadOnlySpan<byte> name)
     {
@@ -53,7 +53,7 @@ unsafe partial class SDL
     {
         fixed (byte* pName = mimeType)
         {
-            return SDL_GetClipboardData(pName, size);
+            return (nint)SDL_GetClipboardData(pName, size);
         }
     }
 
@@ -66,87 +66,12 @@ unsafe partial class SDL
     {
         fixed (byte* pName = mimeType)
         {
-            return SDL_HasClipboardData(pName) == SDL_bool.SDL_TRUE;
+            return SDL_HasClipboardData(pName);
         }
     }
 
     public static bool SDL_HasClipboardData(string mimeType)
     {
         return SDL_HasClipboardData(mimeType.GetUtf8Span());
-    }
-
-    private static ClipboardDataCallback? s_clipboardDataCallback;
-    private static ClipboardCleanupCallback? s_clipboardCleanupCallback;
-
-    public static void SDL_SetClipboardData(
-        ClipboardDataCallback? callback,
-        ClipboardCleanupCallback? cleanup,
-        nint userData)
-    {
-        s_clipboardDataCallback = callback;
-        s_clipboardCleanupCallback = cleanup;
-
-        Internal_SDL_SetClipboardData(
-            callback != null ? &OnNativeClipboardCallback : null,
-            cleanup != null ? &OnNativeCleanupCallback : null,
-            userData,
-            null,
-            0);
-    }
-
-    public static void SDL_SetClipboardData(
-        ClipboardDataCallback? callback,
-        ClipboardCleanupCallback? cleanup,
-        nint userData,
-        string[] mimeTypes)
-    {
-        s_clipboardDataCallback = callback;
-        s_clipboardCleanupCallback = cleanup;
-
-        byte** mimeTypesPtr = stackalloc byte*[mimeTypes.Length];
-        for(int i  = 0; i < mimeTypes.Length; i++)
-        {
-            mimeTypesPtr[i] = Utf8EncodeHeap(mimeTypes[i]);
-        }
-
-        Internal_SDL_SetClipboardData(
-            callback != null ? &OnNativeClipboardCallback : null,
-            cleanup != null ? &OnNativeCleanupCallback : null,
-            userData,
-            mimeTypesPtr,
-            (nuint)mimeTypes.Length);
-
-        for (int i = 0; i < mimeTypes.Length; i++)
-        {
-            NativeMemory.Free(mimeTypesPtr[i]);
-        }
-    }
-
-    [LibraryImport(LibName, EntryPoint = nameof(SDL_SetClipboardData))]
-    private static partial void Internal_SDL_SetClipboardData(
-        delegate* unmanaged<nint, sbyte*, nuint*, void> callback,
-        delegate* unmanaged<nint, void> cleanup,
-        nint userdata,
-        byte** mime_types, nuint num_mime_types);
-
-    [UnmanagedCallersOnly]
-    private static void OnNativeClipboardCallback(nint userdata, sbyte* mimeTypePtr, nuint* size)
-    {
-        string mimeType = new(mimeTypePtr);
-
-        if (s_clipboardDataCallback != null)
-        {
-            s_clipboardDataCallback(userdata, mimeType, out nuint sizeCallback);
-            *size = sizeCallback;
-        }
-    }
-
-    [UnmanagedCallersOnly]
-    private static void OnNativeCleanupCallback(nint userdata)
-    {
-        if (s_clipboardCleanupCallback != null)
-        {
-            s_clipboardCleanupCallback(userdata);
-        }
     }
 }

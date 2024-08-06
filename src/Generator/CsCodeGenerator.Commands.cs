@@ -8,33 +8,6 @@ namespace Generator;
 
 public static partial class CsCodeGenerator
 {
-    private static string GetFunctionPointerSignature(CppFunction function)
-    {
-        return GetFunctionPointerSignature(function.ReturnType, function.Parameters);
-    }
-
-    private static string GetFunctionPointerSignature(CppType returnType, CppContainerList<CppParameter> parameters)
-    {
-        StringBuilder builder = new();
-        foreach (CppParameter parameter in parameters)
-        {
-            string paramCsType = GetCsTypeName(parameter.Type, false);
-
-            //if (CanBeUsedAsOutput(parameter.Type, out CppTypeDeclaration? cppTypeDeclaration))
-            //{
-            //    builder.Append("out ");
-            //    paramCsType = GetCsTypeName(cppTypeDeclaration, false);
-            //}
-
-            builder.Append(paramCsType).Append(", ");
-        }
-
-        string returnCsName = GetCsTypeName(returnType, false);
-        builder.Append(returnCsName);
-
-        return $"delegate* unmanaged<{builder}>";
-    }
-
     private static void CollectCommands(CppCompilation compilation)
     {
         foreach (CppTypedef typedef in compilation.Typedefs)
@@ -77,11 +50,20 @@ public static partial class CsCodeGenerator
                 continue;
             }
 
-            // TODO: Handle marshal
-            if (cppFunction.Name == "SDL_GetEventFilter")
+            // Avoid generating function with va_list arguments
+            bool ignoreFunction = false;
+            foreach (CppParameter? parameter in cppFunction.Parameters)
             {
-                continue;
+                string paramCsType = GetCsTypeName(parameter.Type);
+                if (paramCsType == "va_list")
+                {
+                    ignoreFunction = true;
+                    break;
+                }
             }
+
+            if (ignoreFunction)
+                continue;
 
             s_collectedFunctions.Add(cppFunction);
         }
@@ -99,185 +81,50 @@ public static partial class CsCodeGenerator
             );
 
         // Generate callback
-        foreach (KeyValuePair<string, CppFunctionType> pair in s_collectedCallbackTypedes)
+        if (s_options.GenerateCallbackTypes)
         {
-            CppFunctionType functionType = pair.Value;
-            //string functionPointerSignature = GetFunctionPointerSignature(functionType);
-            //AddCsMapping(typedef.Name, functionPointerSignature);
+            foreach (KeyValuePair<string, CppFunctionType> pair in s_collectedCallbackTypedes)
+            {
+                CppFunctionType functionType = pair.Value;
 
-            string returnCsName = GetCsTypeName(functionType.ReturnType, false);
-            string argumentsString = GetParameterSignature(functionType);
+                string returnCsName = GetCsTypeName(functionType.ReturnType);
+                string argumentsString = GetParameterSignature(functionType);
 
-            writer.WriteLine($"[UnmanagedFunctionPointer(CallingConvention.Cdecl)]");
-            writer.WriteLine($"{visibility} unsafe delegate {returnCsName} {pair.Key}({argumentsString});");
-            writer.WriteLine();
+                writer.WriteLine($"[UnmanagedFunctionPointer(CallingConvention.Cdecl)]");
+                writer.WriteLine($"{visibility} unsafe delegate {returnCsName} {pair.Key}({argumentsString});");
+                writer.WriteLine();
+            }
         }
 
         using (writer.PushBlock($"{visibility} unsafe partial class {s_options.ClassName}"))
         {
             foreach (CppFunction cppFunction in s_collectedFunctions)
             {
-                string name = cppFunction.Name;
-                if (s_options.GenerateFunctionPointers)
-                {
-                    string functionPointerSignature = GetFunctionPointerSignature(cppFunction);
-                    writer.WriteLine($"private static {functionPointerSignature} {name}_ptr;");
-                }
-
                 WriteFunctionInvocation(writer, cppFunction);
-            }
-
-            if (s_options.GenerateFunctionPointers)
-            {
-                WriteCommands(writer, "GenLoadCommands", s_collectedFunctions);
-            }
-        }
-    }
-
-    private static void WriteCommands(CodeWriter writer, string name, List<CppFunction> commands)
-    {
-        using (writer.PushBlock($"private static void {name}()"))
-        {
-            foreach (CppFunction instanceCommand in commands)
-            {
-                string commandName = instanceCommand.Name;
-                string functionPointerSignature = GetFunctionPointerSignature(instanceCommand);
-
-                if (commandName.EndsWith("Drop"))
-                {
-                    //commandName = commandName.Replace("Drop", "Release");
-                    writer.WriteLine($"{commandName}_ptr = ({functionPointerSignature}) LoadFunctionPointer(\"{commandName}\");");
-                }
-                else
-                {
-                    writer.WriteLine($"{commandName}_ptr = ({functionPointerSignature}) LoadFunctionPointer(nameof({commandName}));");
-                }
             }
         }
     }
 
     private static void WriteFunctionInvocation(CodeWriter writer, CppFunction cppFunction)
     {
-        string returnCsName = GetCsTypeName(cppFunction.ReturnType, false);
+        if (cppFunction.Name == "SDL_SendGamepadEffect")
+        {
+
+        }
+
+        string returnCsName = GetCsTypeName(cppFunction.ReturnType);
         string argumentsString = GetParameterSignature(cppFunction);
         string functionName = cppFunction.Name;
 
-        string modifier = "public";
-        if (cppFunction.Name == "SDL_PollEvent")
+        writer.WriteLine($"[LibraryImport(LibName, EntryPoint = \"{cppFunction.Name}\")]");
+        if (returnCsName == "SDL_bool")
         {
-            modifier = "private";
-            functionName += "Private";
+            writer.WriteLine("[return: MarshalAs(UnmanagedType.Bool)]");
+            returnCsName = "bool";
         }
 
-        modifier += " static";
-        if (!s_options.GenerateFunctionPointers)
-        {
-            if (s_options.UseDllImport)
-            {
-                modifier += " extern";
-                writer.WriteLine($"[DllImport(LibName, CallingConvention = CallingConvention.Cdecl, EntryPoint = \"{cppFunction.Name}\")]");
-            }
-            else
-            {
-                modifier += " partial";
-                writer.WriteLine($"[LibraryImport(LibName, EntryPoint = \"{cppFunction.Name}\")]");
-            }
-        }
-
-        if (s_options.GenerateFunctionPointers)
-        {
-            using (writer.PushBlock($"{modifier} {returnCsName} {functionName}({argumentsString})"))
-            {
-                if (returnCsName != "void")
-                {
-                    writer.Write("return ");
-                }
-
-                writer.Write($"{cppFunction.Name}_ptr(");
-
-                int index = 0;
-                foreach (CppParameter cppParameter in cppFunction.Parameters)
-                {
-                    string paramCsName = GetParameterName(cppParameter.Name);
-
-                    //if (CanBeUsedAsOutput(cppParameter.Type, out CppTypeDeclaration? cppTypeDeclaration))
-                    //{
-                    //    writer.Write("out ");
-                    //}
-
-                    writer.Write($"{paramCsName}");
-
-                    if (index < cppFunction.Parameters.Count - 1)
-                    {
-                        writer.Write(", ");
-                    }
-
-                    index++;
-                }
-
-                writer.WriteLine(");");
-            }
-        }
-        else
-        {
-            writer.WriteLine($"{modifier} {returnCsName} {functionName}({argumentsString});");
-        }
-
+        writer.WriteLine($"public static partial {returnCsName} {functionName}({argumentsString});");
         writer.WriteLine();
-
-        if (returnCsName == "void" &&
-            (cppFunction.Name.EndsWith("SetLabel") ||
-            cppFunction.Name.EndsWith("InsertDebugMarker") ||
-            cppFunction.Name.EndsWith("PushDebugGroup")
-            ))
-        {
-            IEnumerable<CppParameter> parameters = cppFunction.Parameters.Take(cppFunction.Parameters.Count - 1);
-            string paramCsName = GetParameterName(cppFunction.Parameters.Last().Name);
-            argumentsString = GetParameterSignature(cppFunction.Name, parameters);
-
-            using (writer.PushBlock($"public static void {cppFunction.Name}({argumentsString}, ReadOnlySpan<sbyte> {paramCsName})"))
-            {
-                string pointerName = "p" + char.ToUpperInvariant(paramCsName[0]) + paramCsName.Substring(1);
-                using (writer.PushBlock($"fixed (sbyte* {pointerName} = {paramCsName})"))
-                {
-                    if (s_options.GenerateFunctionPointers)
-                    {
-                        writer.Write($"{cppFunction.Name}_ptr(");
-                    }
-                    else
-                    {
-                        writer.Write($"{cppFunction.Name}(");
-                    }
-
-                    int index = 0;
-                    foreach (CppParameter cppParameter in parameters)
-                    {
-                        string localParamCsName = GetParameterName(cppParameter.Name);
-
-                        writer.Write($"{localParamCsName}");
-
-                        if (index < cppFunction.Parameters.Count - 1)
-                        {
-                            writer.Write(", ");
-                        }
-
-                        index++;
-                    }
-
-                    writer.Write(pointerName);
-                    writer.WriteLine(");");
-                }
-            }
-
-            writer.WriteLine();
-
-            using (writer.PushBlock($"public static void {cppFunction.Name}({argumentsString}, string? {paramCsName} = default)"))
-            {
-                string instanceParamName = GetParameterName(cppFunction.Parameters[0].Name);
-                writer.WriteLine($"{cppFunction.Name}({instanceParamName}, {paramCsName}.GetUtf8Span());");
-            }
-            writer.WriteLine();
-        }
     }
 
     public static string GetParameterSignature(CppFunction cppFunction, bool unsafeStrings = true)
@@ -298,12 +145,31 @@ public static partial class CsCodeGenerator
         foreach (CppParameter cppParameter in parameters)
         {
             string direction = string.Empty;
-            string paramCsTypeName = GetCsTypeName(cppParameter.Type, false);
+            string paramCsTypeName;
             string paramCsName = GetParameterName(cppParameter.Name);
 
-            if (paramCsTypeName == "sbyte*" && unsafeStrings == false)
+            // Callback parameters
+            if (cppParameter.Type is CppTypedef typedef
+                && typedef.ElementType is CppPointerType pointerType
+                && pointerType.ElementType is CppFunctionType functionType)
             {
-                paramCsName = "ReadOnlySpan<sbyte>";
+                paramCsTypeName = GetCallbackMemberSignature(functionType);
+            }
+            else if (cppParameter.Type is CppPointerType cppParameterPointerType
+                && cppParameterPointerType.ElementType is CppTypedef cppParameterPointerElementType
+                && cppParameterPointerElementType.ElementType is CppPointerType cppParameterPointerElementTypeDef
+                && cppParameterPointerElementTypeDef.ElementType is CppFunctionType cppParameterPointerFunctionType)
+            {
+                paramCsTypeName = GetCallbackMemberSignature(cppParameterPointerFunctionType);
+            }
+            else
+            {
+                paramCsTypeName = GetCsTypeName(cppParameter.Type);
+
+                if (paramCsTypeName == "byte*" && unsafeStrings == false)
+                {
+                    paramCsName = "ReadOnlySpan<sbyte>";
+                }
             }
 
             if (functionName.Contains("Get", StringComparison.OrdinalIgnoreCase))
@@ -325,7 +191,7 @@ public static partial class CsCodeGenerator
                 || functionName == "SDL_HasEvents"
                 || functionName == "SDL_FlushEvents")
             {
-                if(cppParameter.Name == "minType" || cppParameter.Name == "maxType")
+                if (cppParameter.Name == "minType" || cppParameter.Name == "maxType")
                 {
                     paramCsTypeName = "SDL_EventType";
                 }
@@ -344,19 +210,6 @@ public static partial class CsCodeGenerator
 
             argumentBuilder.Append(paramCsTypeName).Append(' ').Append(paramCsName);
 
-            //if (paramCsTypeName == "nint" && paramCsName == "userdata")
-            //{
-            //    argumentBuilder.Append(" = 0");
-            //}
-
-            if (functionName == "SDL_GetWindowWMInfo")
-            {
-                if (paramCsName == "version")
-                {
-                    argumentBuilder.Append(" = SDL_SYSWM_CURRENT_VERSION");
-                }
-            }
-
             if (index < parameters.Count() - 1)
             {
                 argumentBuilder.Append(", ");
@@ -368,13 +221,34 @@ public static partial class CsCodeGenerator
         return argumentBuilder.ToString();
     }
 
+    private static string GetCallbackMemberSignature(CppFunctionType functionType)
+    {
+        StringBuilder builder = new();
+        foreach (CppParameter parameter in functionType.Parameters)
+        {
+            string paramCsType = GetCsTypeName(parameter.Type);
+            // Otherwise we get interop issues with non blittable types
+            if (paramCsType == "WGPUBool")
+                paramCsType = "uint";
+            builder.Append(paramCsType).Append(", ");
+        }
+
+        string returnCsName = GetCsTypeName(functionType.ReturnType);
+        // Otherwise we get interop issues with non blittable types
+        if (returnCsName == "WGPUBool")
+            returnCsName = "uint";
+
+        builder.Append(returnCsName);
+
+        return $"delegate* unmanaged<{builder}>";
+    }
+
     private static string GetParameterName(string name)
     {
-        if (name == "event")
-            return "@event";
+        name = NormalizeFieldName(name);
 
-        if (name == "object")
-            return "@object";
+        if (name.Length <= 1)
+            return name;
 
         if (name.StartsWith('p')
             && char.IsUpper(name[1]))

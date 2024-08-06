@@ -1,10 +1,9 @@
 ﻿// Copyright (c) Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
-using static SDL.SDL;
-using static SDL.SDL_bool;
+using static SDL3.SDL3;
 
-namespace SDL;
+namespace SDL3;
 
 public enum SDL_HapticEffectType : ushort
 {
@@ -33,7 +32,7 @@ public enum SDL_HapticDirectionType : byte
     SteeringAxis = SDL_HAPTIC_STEERING_AXIS,
 }
 
-unsafe partial class SDL
+unsafe partial class SDL3
 {
     /* SDL_HapticEffect type */
     public const ushort SDL_HAPTIC_CONSTANT = (1 << 0);
@@ -67,9 +66,9 @@ unsafe partial class SDL
         return new(ptr, count);
     }
 
-    public static string SDL_GetHapticInstanceNameString(SDL_HapticID instance_id)
+    public static string SDL_GetHapticNameForIDString(SDL_HapticID instance_id)
     {
-        return GetStringOrEmpty(SDL_GetHapticInstanceName(instance_id));
+        return GetStringOrEmpty(SDL_GetHapticNameForID(instance_id));
     }
 
     public static string SDL_GetHapticNameString(SDL_Haptic haptic)

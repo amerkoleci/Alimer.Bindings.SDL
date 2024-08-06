@@ -9,38 +9,740 @@
 
 using System;
 
-namespace SDL;
+namespace SDL3;
 
-public enum SDL_PropertyType
+public enum SDL_AudioFormat : uint
 {
-	/// <unmanaged>SDL_PROPERTY_TYPE_INVALID</unmanaged>
-	Invalid = 0,
-	/// <unmanaged>SDL_PROPERTY_TYPE_POINTER</unmanaged>
-	Pointer = 1,
-	/// <unmanaged>SDL_PROPERTY_TYPE_STRING</unmanaged>
-	String = 2,
-	/// <unmanaged>SDL_PROPERTY_TYPE_NUMBER</unmanaged>
-	Number = 3,
-	/// <unmanaged>SDL_PROPERTY_TYPE_FLOAT</unmanaged>
-	Float = 4,
-	/// <unmanaged>SDL_PROPERTY_TYPE_BOOLEAN</unmanaged>
-	Boolean = 5,
+	/// <unmanaged>SDL_AUDIO_U8</unmanaged>
+	U8 = 0x0008u,
+	/// <unmanaged>SDL_AUDIO_S8</unmanaged>
+	S8 = 0x8008u,
+	/// <unmanaged>SDL_AUDIO_S16LE</unmanaged>
+	S16le = 0x8010u,
+	/// <unmanaged>SDL_AUDIO_S16BE</unmanaged>
+	S16be = 0x9010u,
+	/// <unmanaged>SDL_AUDIO_S32LE</unmanaged>
+	S32le = 0x8020u,
+	/// <unmanaged>SDL_AUDIO_S32BE</unmanaged>
+	S32be = 0x9020u,
+	/// <unmanaged>SDL_AUDIO_F32LE</unmanaged>
+	F32le = 0x8120u,
+	/// <unmanaged>SDL_AUDIO_F32BE</unmanaged>
+	F32be = 0x9120u,
 }
 
-public enum SDL_errorcode
+public enum SDL_BlendOperation
 {
-	/// <unmanaged>SDL_ENOMEM</unmanaged>
-	Enomem = 0,
-	/// <unmanaged>SDL_EFREAD</unmanaged>
-	Efread = 1,
-	/// <unmanaged>SDL_EFWRITE</unmanaged>
-	Efwrite = 2,
-	/// <unmanaged>SDL_EFSEEK</unmanaged>
-	Efseek = 3,
-	/// <unmanaged>SDL_UNSUPPORTED</unmanaged>
-	Unsupported = 4,
-	/// <unmanaged>SDL_LASTERROR</unmanaged>
-	Lasterror = 5,
+	/// <unmanaged>SDL_BLENDOPERATION_ADD</unmanaged>
+	Add = 0x1,
+	/// <unmanaged>SDL_BLENDOPERATION_SUBTRACT</unmanaged>
+	Subtract = 0x2,
+	/// <unmanaged>SDL_BLENDOPERATION_REV_SUBTRACT</unmanaged>
+	RevSubtract = 0x3,
+	/// <unmanaged>SDL_BLENDOPERATION_MINIMUM</unmanaged>
+	Minimum = 0x4,
+	/// <unmanaged>SDL_BLENDOPERATION_MAXIMUM</unmanaged>
+	Maximum = 0x5,
+}
+
+public enum SDL_BlendFactor
+{
+	/// <unmanaged>SDL_BLENDFACTOR_ZERO</unmanaged>
+	Zero = 0x1,
+	/// <unmanaged>SDL_BLENDFACTOR_ONE</unmanaged>
+	One = 0x2,
+	/// <unmanaged>SDL_BLENDFACTOR_SRC_COLOR</unmanaged>
+	SrcColor = 0x3,
+	/// <unmanaged>SDL_BLENDFACTOR_ONE_MINUS_SRC_COLOR</unmanaged>
+	OneMinusSrcColor = 0x4,
+	/// <unmanaged>SDL_BLENDFACTOR_SRC_ALPHA</unmanaged>
+	SrcAlpha = 0x5,
+	/// <unmanaged>SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA</unmanaged>
+	OneMinusSrcAlpha = 0x6,
+	/// <unmanaged>SDL_BLENDFACTOR_DST_COLOR</unmanaged>
+	DstColor = 0x7,
+	/// <unmanaged>SDL_BLENDFACTOR_ONE_MINUS_DST_COLOR</unmanaged>
+	OneMinusDstColor = 0x8,
+	/// <unmanaged>SDL_BLENDFACTOR_DST_ALPHA</unmanaged>
+	DstAlpha = 0x9,
+	/// <unmanaged>SDL_BLENDFACTOR_ONE_MINUS_DST_ALPHA</unmanaged>
+	OneMinusDstAlpha = 0xA,
+}
+
+public enum SDL_CameraPosition
+{
+	/// <unmanaged>SDL_CAMERA_POSITION_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_CAMERA_POSITION_FRONT_FACING</unmanaged>
+	FrontFacing = 1,
+	/// <unmanaged>SDL_CAMERA_POSITION_BACK_FACING</unmanaged>
+	BackFacing = 2,
+}
+
+public enum SDL_EventType
+{
+	/// <unmanaged>SDL_EVENT_FIRST</unmanaged>
+	First = 0,
+	/// <unmanaged>SDL_EVENT_QUIT</unmanaged>
+	Quit = 0x100,
+	/// <unmanaged>SDL_EVENT_TERMINATING</unmanaged>
+	Terminating = 257,
+	/// <unmanaged>SDL_EVENT_LOW_MEMORY</unmanaged>
+	LowMemory = 258,
+	/// <unmanaged>SDL_EVENT_WILL_ENTER_BACKGROUND</unmanaged>
+	WillEnterBackground = 259,
+	/// <unmanaged>SDL_EVENT_DID_ENTER_BACKGROUND</unmanaged>
+	DidEnterBackground = 260,
+	/// <unmanaged>SDL_EVENT_WILL_ENTER_FOREGROUND</unmanaged>
+	WillEnterForeground = 261,
+	/// <unmanaged>SDL_EVENT_DID_ENTER_FOREGROUND</unmanaged>
+	DidEnterForeground = 262,
+	/// <unmanaged>SDL_EVENT_LOCALE_CHANGED</unmanaged>
+	LocaleChanged = 263,
+	/// <unmanaged>SDL_EVENT_SYSTEM_THEME_CHANGED</unmanaged>
+	SystemThemeChanged = 264,
+	/// <unmanaged>SDL_EVENT_DISPLAY_ORIENTATION</unmanaged>
+	DisplayOrientation = 0x151,
+	/// <unmanaged>SDL_EVENT_DISPLAY_ADDED</unmanaged>
+	DisplayAdded = 338,
+	/// <unmanaged>SDL_EVENT_DISPLAY_REMOVED</unmanaged>
+	DisplayRemoved = 339,
+	/// <unmanaged>SDL_EVENT_DISPLAY_MOVED</unmanaged>
+	DisplayMoved = 340,
+	/// <unmanaged>SDL_EVENT_DISPLAY_DESKTOP_MODE_CHANGED</unmanaged>
+	DisplayDesktopModeChanged = 341,
+	/// <unmanaged>SDL_EVENT_DISPLAY_CURRENT_MODE_CHANGED</unmanaged>
+	DisplayCurrentModeChanged = 342,
+	/// <unmanaged>SDL_EVENT_DISPLAY_CONTENT_SCALE_CHANGED</unmanaged>
+	DisplayContentScaleChanged = 343,
+	/// <unmanaged>SDL_EVENT_DISPLAY_FIRST</unmanaged>
+	DisplayFirst = DisplayOrientation,
+	/// <unmanaged>SDL_EVENT_DISPLAY_LAST</unmanaged>
+	DisplayLast = DisplayContentScaleChanged,
+	/// <unmanaged>SDL_EVENT_WINDOW_SHOWN</unmanaged>
+	WindowShown = 0x202,
+	/// <unmanaged>SDL_EVENT_WINDOW_HIDDEN</unmanaged>
+	WindowHidden = 515,
+	/// <unmanaged>SDL_EVENT_WINDOW_EXPOSED</unmanaged>
+	WindowExposed = 516,
+	/// <unmanaged>SDL_EVENT_WINDOW_MOVED</unmanaged>
+	WindowMoved = 517,
+	/// <unmanaged>SDL_EVENT_WINDOW_RESIZED</unmanaged>
+	WindowResized = 518,
+	/// <unmanaged>SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED</unmanaged>
+	WindowPixelSizeChanged = 519,
+	/// <unmanaged>SDL_EVENT_WINDOW_METAL_VIEW_RESIZED</unmanaged>
+	WindowMetalViewResized = 520,
+	/// <unmanaged>SDL_EVENT_WINDOW_MINIMIZED</unmanaged>
+	WindowMinimized = 521,
+	/// <unmanaged>SDL_EVENT_WINDOW_MAXIMIZED</unmanaged>
+	WindowMaximized = 522,
+	/// <unmanaged>SDL_EVENT_WINDOW_RESTORED</unmanaged>
+	WindowRestored = 523,
+	/// <unmanaged>SDL_EVENT_WINDOW_MOUSE_ENTER</unmanaged>
+	WindowMouseEnter = 524,
+	/// <unmanaged>SDL_EVENT_WINDOW_MOUSE_LEAVE</unmanaged>
+	WindowMouseLeave = 525,
+	/// <unmanaged>SDL_EVENT_WINDOW_FOCUS_GAINED</unmanaged>
+	WindowFocusGained = 526,
+	/// <unmanaged>SDL_EVENT_WINDOW_FOCUS_LOST</unmanaged>
+	WindowFocusLost = 527,
+	/// <unmanaged>SDL_EVENT_WINDOW_CLOSE_REQUESTED</unmanaged>
+	WindowCloseRequested = 528,
+	/// <unmanaged>SDL_EVENT_WINDOW_HIT_TEST</unmanaged>
+	WindowHitTest = 529,
+	/// <unmanaged>SDL_EVENT_WINDOW_ICCPROF_CHANGED</unmanaged>
+	WindowIccprofChanged = 530,
+	/// <unmanaged>SDL_EVENT_WINDOW_DISPLAY_CHANGED</unmanaged>
+	WindowDisplayChanged = 531,
+	/// <unmanaged>SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED</unmanaged>
+	WindowDisplayScaleChanged = 532,
+	/// <unmanaged>SDL_EVENT_WINDOW_SAFE_AREA_CHANGED</unmanaged>
+	WindowSafeAreaChanged = 533,
+	/// <unmanaged>SDL_EVENT_WINDOW_OCCLUDED</unmanaged>
+	WindowOccluded = 534,
+	/// <unmanaged>SDL_EVENT_WINDOW_ENTER_FULLSCREEN</unmanaged>
+	WindowEnterFullscreen = 535,
+	/// <unmanaged>SDL_EVENT_WINDOW_LEAVE_FULLSCREEN</unmanaged>
+	WindowLeaveFullscreen = 536,
+	/// <unmanaged>SDL_EVENT_WINDOW_DESTROYED</unmanaged>
+	WindowDestroyed = 537,
+	/// <unmanaged>SDL_EVENT_WINDOW_PEN_ENTER</unmanaged>
+	WindowPenEnter = 538,
+	/// <unmanaged>SDL_EVENT_WINDOW_PEN_LEAVE</unmanaged>
+	WindowPenLeave = 539,
+	/// <unmanaged>SDL_EVENT_WINDOW_HDR_STATE_CHANGED</unmanaged>
+	WindowHdrStateChanged = 540,
+	/// <unmanaged>SDL_EVENT_WINDOW_FIRST</unmanaged>
+	WindowFirst = WindowShown,
+	/// <unmanaged>SDL_EVENT_WINDOW_LAST</unmanaged>
+	WindowLast = WindowHdrStateChanged,
+	/// <unmanaged>SDL_EVENT_KEY_DOWN</unmanaged>
+	KeyDown = 0x300,
+	/// <unmanaged>SDL_EVENT_KEY_UP</unmanaged>
+	KeyUp = 769,
+	/// <unmanaged>SDL_EVENT_TEXT_EDITING</unmanaged>
+	TextEditing = 770,
+	/// <unmanaged>SDL_EVENT_TEXT_INPUT</unmanaged>
+	TextInput = 771,
+	/// <unmanaged>SDL_EVENT_KEYMAP_CHANGED</unmanaged>
+	KeymapChanged = 772,
+	/// <unmanaged>SDL_EVENT_KEYBOARD_ADDED</unmanaged>
+	KeyboardAdded = 773,
+	/// <unmanaged>SDL_EVENT_KEYBOARD_REMOVED</unmanaged>
+	KeyboardRemoved = 774,
+	/// <unmanaged>SDL_EVENT_TEXT_EDITING_CANDIDATES</unmanaged>
+	TextEditingCandidates = 775,
+	/// <unmanaged>SDL_EVENT_MOUSE_MOTION</unmanaged>
+	MouseMotion = 0x400,
+	/// <unmanaged>SDL_EVENT_MOUSE_BUTTON_DOWN</unmanaged>
+	MouseButtonDown = 1025,
+	/// <unmanaged>SDL_EVENT_MOUSE_BUTTON_UP</unmanaged>
+	MouseButtonUp = 1026,
+	/// <unmanaged>SDL_EVENT_MOUSE_WHEEL</unmanaged>
+	MouseWheel = 1027,
+	/// <unmanaged>SDL_EVENT_MOUSE_ADDED</unmanaged>
+	MouseAdded = 1028,
+	/// <unmanaged>SDL_EVENT_MOUSE_REMOVED</unmanaged>
+	MouseRemoved = 1029,
+	/// <unmanaged>SDL_EVENT_JOYSTICK_AXIS_MOTION</unmanaged>
+	JoystickAxisMotion = 0x600,
+	/// <unmanaged>SDL_EVENT_JOYSTICK_BALL_MOTION</unmanaged>
+	JoystickBallMotion = 1537,
+	/// <unmanaged>SDL_EVENT_JOYSTICK_HAT_MOTION</unmanaged>
+	JoystickHatMotion = 1538,
+	/// <unmanaged>SDL_EVENT_JOYSTICK_BUTTON_DOWN</unmanaged>
+	JoystickButtonDown = 1539,
+	/// <unmanaged>SDL_EVENT_JOYSTICK_BUTTON_UP</unmanaged>
+	JoystickButtonUp = 1540,
+	/// <unmanaged>SDL_EVENT_JOYSTICK_ADDED</unmanaged>
+	JoystickAdded = 1541,
+	/// <unmanaged>SDL_EVENT_JOYSTICK_REMOVED</unmanaged>
+	JoystickRemoved = 1542,
+	/// <unmanaged>SDL_EVENT_JOYSTICK_BATTERY_UPDATED</unmanaged>
+	JoystickBatteryUpdated = 1543,
+	/// <unmanaged>SDL_EVENT_JOYSTICK_UPDATE_COMPLETE</unmanaged>
+	JoystickUpdateComplete = 1544,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_AXIS_MOTION</unmanaged>
+	GamepadAxisMotion = 0x650,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_BUTTON_DOWN</unmanaged>
+	GamepadButtonDown = 1617,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_BUTTON_UP</unmanaged>
+	GamepadButtonUp = 1618,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_ADDED</unmanaged>
+	GamepadAdded = 1619,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_REMOVED</unmanaged>
+	GamepadRemoved = 1620,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_REMAPPED</unmanaged>
+	GamepadRemapped = 1621,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_TOUCHPAD_DOWN</unmanaged>
+	GamepadTouchpadDown = 1622,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_TOUCHPAD_MOTION</unmanaged>
+	GamepadTouchpadMotion = 1623,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_TOUCHPAD_UP</unmanaged>
+	GamepadTouchpadUp = 1624,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_SENSOR_UPDATE</unmanaged>
+	GamepadSensorUpdate = 1625,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_UPDATE_COMPLETE</unmanaged>
+	GamepadUpdateComplete = 1626,
+	/// <unmanaged>SDL_EVENT_GAMEPAD_STEAM_HANDLE_UPDATED</unmanaged>
+	GamepadSteamHandleUpdated = 1627,
+	/// <unmanaged>SDL_EVENT_FINGER_DOWN</unmanaged>
+	FingerDown = 0x700,
+	/// <unmanaged>SDL_EVENT_FINGER_UP</unmanaged>
+	FingerUp = 1793,
+	/// <unmanaged>SDL_EVENT_FINGER_MOTION</unmanaged>
+	FingerMotion = 1794,
+	/// <unmanaged>SDL_EVENT_CLIPBOARD_UPDATE</unmanaged>
+	ClipboardUpdate = 0x900,
+	/// <unmanaged>SDL_EVENT_DROP_FILE</unmanaged>
+	DropFile = 0x1000,
+	/// <unmanaged>SDL_EVENT_DROP_TEXT</unmanaged>
+	DropText = 4097,
+	/// <unmanaged>SDL_EVENT_DROP_BEGIN</unmanaged>
+	DropBegin = 4098,
+	/// <unmanaged>SDL_EVENT_DROP_COMPLETE</unmanaged>
+	DropComplete = 4099,
+	/// <unmanaged>SDL_EVENT_DROP_POSITION</unmanaged>
+	DropPosition = 4100,
+	/// <unmanaged>SDL_EVENT_AUDIO_DEVICE_ADDED</unmanaged>
+	AudioDeviceAdded = 0x1100,
+	/// <unmanaged>SDL_EVENT_AUDIO_DEVICE_REMOVED</unmanaged>
+	AudioDeviceRemoved = 4353,
+	/// <unmanaged>SDL_EVENT_AUDIO_DEVICE_FORMAT_CHANGED</unmanaged>
+	AudioDeviceFormatChanged = 4354,
+	/// <unmanaged>SDL_EVENT_SENSOR_UPDATE</unmanaged>
+	SensorUpdate = 0x1200,
+	/// <unmanaged>SDL_EVENT_PEN_DOWN</unmanaged>
+	PenDown = 0x1300,
+	/// <unmanaged>SDL_EVENT_PEN_UP</unmanaged>
+	PenUp = 4865,
+	/// <unmanaged>SDL_EVENT_PEN_MOTION</unmanaged>
+	PenMotion = 4866,
+	/// <unmanaged>SDL_EVENT_PEN_BUTTON_DOWN</unmanaged>
+	PenButtonDown = 4867,
+	/// <unmanaged>SDL_EVENT_PEN_BUTTON_UP</unmanaged>
+	PenButtonUp = 4868,
+	/// <unmanaged>SDL_EVENT_CAMERA_DEVICE_ADDED</unmanaged>
+	CameraDeviceAdded = 0x1400,
+	/// <unmanaged>SDL_EVENT_CAMERA_DEVICE_REMOVED</unmanaged>
+	CameraDeviceRemoved = 5121,
+	/// <unmanaged>SDL_EVENT_CAMERA_DEVICE_APPROVED</unmanaged>
+	CameraDeviceApproved = 5122,
+	/// <unmanaged>SDL_EVENT_CAMERA_DEVICE_DENIED</unmanaged>
+	CameraDeviceDenied = 5123,
+	/// <unmanaged>SDL_EVENT_RENDER_TARGETS_RESET</unmanaged>
+	RenderTargetsReset = 0x2000,
+	/// <unmanaged>SDL_EVENT_RENDER_DEVICE_RESET</unmanaged>
+	RenderDeviceReset = 8193,
+	/// <unmanaged>SDL_EVENT_POLL_SENTINEL</unmanaged>
+	PollSentinel = 0x7F00,
+	/// <unmanaged>SDL_EVENT_USER</unmanaged>
+	User = 0x8000,
+	/// <unmanaged>SDL_EVENT_LAST</unmanaged>
+	Last = 0xFFFF,
+	/// <unmanaged>SDL_EVENT_ENUM_PADDING</unmanaged>
+	EnumPadding = 0x7FFFFFFF,
+}
+
+public enum SDL_EventAction
+{
+	/// <unmanaged>SDL_ADDEVENT</unmanaged>
+	AddEvent = 0,
+	/// <unmanaged>SDL_PEEKEVENT</unmanaged>
+	PeekEvent = 1,
+	/// <unmanaged>SDL_GETEVENT</unmanaged>
+	GetEvent = 2,
+}
+
+public enum SDL_Folder
+{
+	/// <unmanaged>SDL_FOLDER_HOME</unmanaged>
+	SDL_FOLDER_HOME = 0,
+	/// <unmanaged>SDL_FOLDER_DESKTOP</unmanaged>
+	SDL_FOLDER_DESKTOP = 1,
+	/// <unmanaged>SDL_FOLDER_DOCUMENTS</unmanaged>
+	SDL_FOLDER_DOCUMENTS = 2,
+	/// <unmanaged>SDL_FOLDER_DOWNLOADS</unmanaged>
+	SDL_FOLDER_DOWNLOADS = 3,
+	/// <unmanaged>SDL_FOLDER_MUSIC</unmanaged>
+	SDL_FOLDER_MUSIC = 4,
+	/// <unmanaged>SDL_FOLDER_PICTURES</unmanaged>
+	SDL_FOLDER_PICTURES = 5,
+	/// <unmanaged>SDL_FOLDER_PUBLICSHARE</unmanaged>
+	SDL_FOLDER_PUBLICSHARE = 6,
+	/// <unmanaged>SDL_FOLDER_SAVEDGAMES</unmanaged>
+	SDL_FOLDER_SAVEDGAMES = 7,
+	/// <unmanaged>SDL_FOLDER_SCREENSHOTS</unmanaged>
+	SDL_FOLDER_SCREENSHOTS = 8,
+	/// <unmanaged>SDL_FOLDER_TEMPLATES</unmanaged>
+	SDL_FOLDER_TEMPLATES = 9,
+	/// <unmanaged>SDL_FOLDER_VIDEOS</unmanaged>
+	SDL_FOLDER_VIDEOS = 10,
+	/// <unmanaged>SDL_FOLDER_TOTAL</unmanaged>
+	SDL_FOLDER_TOTAL = 11,
+}
+
+public enum SDL_PathType
+{
+	/// <unmanaged>SDL_PATHTYPE_NONE</unmanaged>
+	SDL_PATHTYPE_NONE = 0,
+	/// <unmanaged>SDL_PATHTYPE_FILE</unmanaged>
+	SDL_PATHTYPE_FILE = 1,
+	/// <unmanaged>SDL_PATHTYPE_DIRECTORY</unmanaged>
+	SDL_PATHTYPE_DIRECTORY = 2,
+	/// <unmanaged>SDL_PATHTYPE_OTHER</unmanaged>
+	SDL_PATHTYPE_OTHER = 3,
+}
+
+public enum SDL_GamepadType
+{
+	/// <unmanaged>SDL_GAMEPAD_TYPE_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_STANDARD</unmanaged>
+	Standard = 1,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_XBOX360</unmanaged>
+	Xbox360 = 2,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_XBOXONE</unmanaged>
+	Xboxone = 3,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_PS3</unmanaged>
+	Ps3 = 4,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_PS4</unmanaged>
+	Ps4 = 5,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_PS5</unmanaged>
+	Ps5 = 6,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_PRO</unmanaged>
+	NintendoSwitchPro = 7,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_LEFT</unmanaged>
+	NintendoSwitchJoyconLeft = 8,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT</unmanaged>
+	NintendoSwitchJoyconRight = 9,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_PAIR</unmanaged>
+	NintendoSwitchJoyconPair = 10,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_MAX</unmanaged>
+	Max = 11,
+}
+
+public enum SDL_GamepadButton
+{
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_INVALID</unmanaged>
+	Invalid = -1,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_SOUTH</unmanaged>
+	South = 0,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_EAST</unmanaged>
+	East = 1,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_WEST</unmanaged>
+	West = 2,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_NORTH</unmanaged>
+	North = 3,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_BACK</unmanaged>
+	Back = 4,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_GUIDE</unmanaged>
+	Guide = 5,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_START</unmanaged>
+	Start = 6,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LEFT_STICK</unmanaged>
+	LeftStick = 7,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_RIGHT_STICK</unmanaged>
+	RightStick = 8,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LEFT_SHOULDER</unmanaged>
+	LeftShoulder = 9,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER</unmanaged>
+	RightShoulder = 10,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_DPAD_UP</unmanaged>
+	DpadUp = 11,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_DPAD_DOWN</unmanaged>
+	DpadDown = 12,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_DPAD_LEFT</unmanaged>
+	DpadLeft = 13,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_DPAD_RIGHT</unmanaged>
+	DpadRight = 14,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC1</unmanaged>
+	Misc1 = 15,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_RIGHT_PADDLE1</unmanaged>
+	RightPaddle1 = 16,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LEFT_PADDLE1</unmanaged>
+	LeftPaddle1 = 17,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_RIGHT_PADDLE2</unmanaged>
+	RightPaddle2 = 18,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LEFT_PADDLE2</unmanaged>
+	LeftPaddle2 = 19,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_TOUCHPAD</unmanaged>
+	Touchpad = 20,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC2</unmanaged>
+	Misc2 = 21,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC3</unmanaged>
+	Misc3 = 22,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC4</unmanaged>
+	Misc4 = 23,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC5</unmanaged>
+	Misc5 = 24,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC6</unmanaged>
+	Misc6 = 25,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_MAX</unmanaged>
+	Max = 26,
+}
+
+public enum SDL_GamepadButtonLabel
+{
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_A</unmanaged>
+	A = 1,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_B</unmanaged>
+	B = 2,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_X</unmanaged>
+	X = 3,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_Y</unmanaged>
+	Y = 4,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_CROSS</unmanaged>
+	Cross = 5,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_CIRCLE</unmanaged>
+	Circle = 6,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_SQUARE</unmanaged>
+	Square = 7,
+	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_TRIANGLE</unmanaged>
+	Triangle = 8,
+}
+
+public enum SDL_GamepadAxis
+{
+	/// <unmanaged>SDL_GAMEPAD_AXIS_INVALID</unmanaged>
+	Invalid = -1,
+	/// <unmanaged>SDL_GAMEPAD_AXIS_LEFTX</unmanaged>
+	Leftx = 0,
+	/// <unmanaged>SDL_GAMEPAD_AXIS_LEFTY</unmanaged>
+	Lefty = 1,
+	/// <unmanaged>SDL_GAMEPAD_AXIS_RIGHTX</unmanaged>
+	Rightx = 2,
+	/// <unmanaged>SDL_GAMEPAD_AXIS_RIGHTY</unmanaged>
+	Righty = 3,
+	/// <unmanaged>SDL_GAMEPAD_AXIS_LEFT_TRIGGER</unmanaged>
+	LeftTrigger = 4,
+	/// <unmanaged>SDL_GAMEPAD_AXIS_RIGHT_TRIGGER</unmanaged>
+	RightTrigger = 5,
+	/// <unmanaged>SDL_GAMEPAD_AXIS_MAX</unmanaged>
+	Max = 6,
+}
+
+public enum SDL_GamepadBindingType
+{
+	/// <unmanaged>SDL_GAMEPAD_BINDTYPE_NONE</unmanaged>
+	None = 0,
+	/// <unmanaged>SDL_GAMEPAD_BINDTYPE_BUTTON</unmanaged>
+	Button = 1,
+	/// <unmanaged>SDL_GAMEPAD_BINDTYPE_AXIS</unmanaged>
+	Axis = 2,
+	/// <unmanaged>SDL_GAMEPAD_BINDTYPE_HAT</unmanaged>
+	Hat = 3,
+}
+
+public enum SDL_hid_bus_type
+{
+	/// <unmanaged>SDL_HID_API_BUS_UNKNOWN</unmanaged>
+	SDL_HID_API_BUS_UNKNOWN = 0x00,
+	/// <unmanaged>SDL_HID_API_BUS_USB</unmanaged>
+	SDL_HID_API_BUS_USB = 0x01,
+	/// <unmanaged>SDL_HID_API_BUS_BLUETOOTH</unmanaged>
+	SDL_HID_API_BUS_BLUETOOTH = 0x02,
+	/// <unmanaged>SDL_HID_API_BUS_I2C</unmanaged>
+	SDL_HID_API_BUS_I2C = 0x03,
+	/// <unmanaged>SDL_HID_API_BUS_SPI</unmanaged>
+	SDL_HID_API_BUS_SPI = 0x04,
+}
+
+public enum SDL_HintPriority
+{
+	/// <unmanaged>SDL_HINT_NORMAL</unmanaged>
+	Normal = 1,
+	/// <unmanaged>SDL_HINT_OVERRIDE</unmanaged>
+	Override = 2,
+}
+
+public enum SDL_IOStatus
+{
+	/// <unmanaged>SDL_IO_STATUS_READY</unmanaged>
+	Ready = 0,
+	/// <unmanaged>SDL_IO_STATUS_ERROR</unmanaged>
+	Error = 1,
+	/// <unmanaged>SDL_IO_STATUS_EOF</unmanaged>
+	Eof = 2,
+	/// <unmanaged>SDL_IO_STATUS_NOT_READY</unmanaged>
+	NotReady = 3,
+	/// <unmanaged>SDL_IO_STATUS_READONLY</unmanaged>
+	Readonly = 4,
+	/// <unmanaged>SDL_IO_STATUS_WRITEONLY</unmanaged>
+	Writeonly = 5,
+}
+
+public enum SDL_IOWhence
+{
+	/// <unmanaged>SDL_IO_SEEK_SET</unmanaged>
+	SDL_IO_SEEK_SET = 0,
+	/// <unmanaged>SDL_IO_SEEK_CUR</unmanaged>
+	SDL_IO_SEEK_CUR = 1,
+	/// <unmanaged>SDL_IO_SEEK_END</unmanaged>
+	SDL_IO_SEEK_END = 2,
+}
+
+public enum SDL_JoystickType
+{
+	/// <unmanaged>SDL_JOYSTICK_TYPE_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_JOYSTICK_TYPE_GAMEPAD</unmanaged>
+	Gamepad = 1,
+	/// <unmanaged>SDL_JOYSTICK_TYPE_WHEEL</unmanaged>
+	Wheel = 2,
+	/// <unmanaged>SDL_JOYSTICK_TYPE_ARCADE_STICK</unmanaged>
+	ArcadeStick = 3,
+	/// <unmanaged>SDL_JOYSTICK_TYPE_FLIGHT_STICK</unmanaged>
+	FlightStick = 4,
+	/// <unmanaged>SDL_JOYSTICK_TYPE_DANCE_PAD</unmanaged>
+	DancePad = 5,
+	/// <unmanaged>SDL_JOYSTICK_TYPE_GUITAR</unmanaged>
+	Guitar = 6,
+	/// <unmanaged>SDL_JOYSTICK_TYPE_DRUM_KIT</unmanaged>
+	DrumKit = 7,
+	/// <unmanaged>SDL_JOYSTICK_TYPE_ARCADE_PAD</unmanaged>
+	ArcadePad = 8,
+	/// <unmanaged>SDL_JOYSTICK_TYPE_THROTTLE</unmanaged>
+	Throttle = 9,
+}
+
+public enum SDL_JoystickConnectionState
+{
+	/// <unmanaged>SDL_JOYSTICK_CONNECTION_INVALID</unmanaged>
+	Invalid = -1,
+	/// <unmanaged>SDL_JOYSTICK_CONNECTION_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_JOYSTICK_CONNECTION_WIRED</unmanaged>
+	Wired = 1,
+	/// <unmanaged>SDL_JOYSTICK_CONNECTION_WIRELESS</unmanaged>
+	Wireless = 2,
+}
+
+public enum SDL_TextInputType
+{
+	/// <unmanaged>SDL_TEXTINPUT_TYPE_TEXT</unmanaged>
+	SDL_TEXTINPUT_TYPE_TEXT = 0,
+	/// <unmanaged>SDL_TEXTINPUT_TYPE_TEXT_NAME</unmanaged>
+	SDL_TEXTINPUT_TYPE_TEXT_NAME = 1,
+	/// <unmanaged>SDL_TEXTINPUT_TYPE_TEXT_EMAIL</unmanaged>
+	SDL_TEXTINPUT_TYPE_TEXT_EMAIL = 2,
+	/// <unmanaged>SDL_TEXTINPUT_TYPE_TEXT_USERNAME</unmanaged>
+	SDL_TEXTINPUT_TYPE_TEXT_USERNAME = 3,
+	/// <unmanaged>SDL_TEXTINPUT_TYPE_TEXT_PASSWORD_HIDDEN</unmanaged>
+	SDL_TEXTINPUT_TYPE_TEXT_PASSWORD_HIDDEN = 4,
+	/// <unmanaged>SDL_TEXTINPUT_TYPE_TEXT_PASSWORD_VISIBLE</unmanaged>
+	SDL_TEXTINPUT_TYPE_TEXT_PASSWORD_VISIBLE = 5,
+	/// <unmanaged>SDL_TEXTINPUT_TYPE_NUMBER</unmanaged>
+	SDL_TEXTINPUT_TYPE_NUMBER = 6,
+	/// <unmanaged>SDL_TEXTINPUT_TYPE_NUMBER_PASSWORD_HIDDEN</unmanaged>
+	SDL_TEXTINPUT_TYPE_NUMBER_PASSWORD_HIDDEN = 7,
+	/// <unmanaged>SDL_TEXTINPUT_TYPE_NUMBER_PASSWORD_VISIBLE</unmanaged>
+	SDL_TEXTINPUT_TYPE_NUMBER_PASSWORD_VISIBLE = 8,
+}
+
+public enum SDL_Capitalization
+{
+	/// <unmanaged>SDL_CAPITALIZE_NONE</unmanaged>
+	SDL_CAPITALIZE_NONE = 0,
+	/// <unmanaged>SDL_CAPITALIZE_SENTENCES</unmanaged>
+	SDL_CAPITALIZE_SENTENCES = 1,
+	/// <unmanaged>SDL_CAPITALIZE_WORDS</unmanaged>
+	SDL_CAPITALIZE_WORDS = 2,
+	/// <unmanaged>SDL_CAPITALIZE_LETTERS</unmanaged>
+	SDL_CAPITALIZE_LETTERS = 3,
+}
+
+public enum SDL_LogCategory
+{
+	/// <unmanaged>SDL_LOG_CATEGORY_APPLICATION</unmanaged>
+	Application = 0,
+	/// <unmanaged>SDL_LOG_CATEGORY_ERROR</unmanaged>
+	Error = 1,
+	/// <unmanaged>SDL_LOG_CATEGORY_ASSERT</unmanaged>
+	Assert = 2,
+	/// <unmanaged>SDL_LOG_CATEGORY_SYSTEM</unmanaged>
+	System = 3,
+	/// <unmanaged>SDL_LOG_CATEGORY_AUDIO</unmanaged>
+	Audio = 4,
+	/// <unmanaged>SDL_LOG_CATEGORY_VIDEO</unmanaged>
+	Video = 5,
+	/// <unmanaged>SDL_LOG_CATEGORY_RENDER</unmanaged>
+	Render = 6,
+	/// <unmanaged>SDL_LOG_CATEGORY_INPUT</unmanaged>
+	Input = 7,
+	/// <unmanaged>SDL_LOG_CATEGORY_TEST</unmanaged>
+	Test = 8,
+	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED1</unmanaged>
+	Reserved1 = 9,
+	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED2</unmanaged>
+	Reserved2 = 10,
+	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED3</unmanaged>
+	Reserved3 = 11,
+	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED4</unmanaged>
+	Reserved4 = 12,
+	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED5</unmanaged>
+	Reserved5 = 13,
+	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED6</unmanaged>
+	Reserved6 = 14,
+	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED7</unmanaged>
+	Reserved7 = 15,
+	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED8</unmanaged>
+	Reserved8 = 16,
+	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED9</unmanaged>
+	Reserved9 = 17,
+	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED10</unmanaged>
+	Reserved10 = 18,
+	/// <unmanaged>SDL_LOG_CATEGORY_CUSTOM</unmanaged>
+	Custom = 19,
+}
+
+public enum SDL_LogPriority
+{
+	/// <unmanaged>SDL_LOG_PRIORITY_VERBOSE</unmanaged>
+	Verbose = 1,
+	/// <unmanaged>SDL_LOG_PRIORITY_DEBUG</unmanaged>
+	Debug = 2,
+	/// <unmanaged>SDL_LOG_PRIORITY_INFO</unmanaged>
+	Info = 3,
+	/// <unmanaged>SDL_LOG_PRIORITY_WARN</unmanaged>
+	Warn = 4,
+	/// <unmanaged>SDL_LOG_PRIORITY_ERROR</unmanaged>
+	Error = 5,
+	/// <unmanaged>SDL_LOG_PRIORITY_CRITICAL</unmanaged>
+	Critical = 6,
+	/// <unmanaged>SDL_NUM_LOG_PRIORITIES</unmanaged>
+	SDL_NUM_LOG_PRIORITIES = 7,
+}
+
+public enum SDL_MessageBoxColorType
+{
+	/// <unmanaged>SDL_MESSAGEBOX_COLOR_BACKGROUND</unmanaged>
+	Background = 0,
+	/// <unmanaged>SDL_MESSAGEBOX_COLOR_TEXT</unmanaged>
+	Text = 1,
+	/// <unmanaged>SDL_MESSAGEBOX_COLOR_BUTTON_BORDER</unmanaged>
+	ButtonBorder = 2,
+	/// <unmanaged>SDL_MESSAGEBOX_COLOR_BUTTON_BACKGROUND</unmanaged>
+	ButtonBackground = 3,
+	/// <unmanaged>SDL_MESSAGEBOX_COLOR_BUTTON_SELECTED</unmanaged>
+	ButtonSelected = 4,
+	/// <unmanaged>SDL_MESSAGEBOX_COLOR_MAX</unmanaged>
+	Max = 5,
+}
+
+public enum SDL_SystemCursor
+{
+	/// <unmanaged>SDL_SYSTEM_CURSOR_TEXT</unmanaged>
+	Text = 1,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_WAIT</unmanaged>
+	Wait = 2,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_CROSSHAIR</unmanaged>
+	Crosshair = 3,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_PROGRESS</unmanaged>
+	Progress = 4,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_NWSE_RESIZE</unmanaged>
+	NwseResize = 5,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_NESW_RESIZE</unmanaged>
+	NeswResize = 6,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_EW_RESIZE</unmanaged>
+	EwResize = 7,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_NS_RESIZE</unmanaged>
+	NsResize = 8,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_MOVE</unmanaged>
+	Move = 9,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_NOT_ALLOWED</unmanaged>
+	NotAllowed = 10,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_POINTER</unmanaged>
+	Pointer = 11,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_NW_RESIZE</unmanaged>
+	NwResize = 12,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_N_RESIZE</unmanaged>
+	NResize = 13,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_NE_RESIZE</unmanaged>
+	NeResize = 14,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_E_RESIZE</unmanaged>
+	EResize = 15,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_SE_RESIZE</unmanaged>
+	SeResize = 16,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_S_RESIZE</unmanaged>
+	SResize = 17,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_SW_RESIZE</unmanaged>
+	SwResize = 18,
+	/// <unmanaged>SDL_SYSTEM_CURSOR_W_RESIZE</unmanaged>
+	WResize = 19,
+	/// <unmanaged>SDL_NUM_SYSTEM_CURSORS</unmanaged>
+	SDL_NUM_SYSTEM_CURSORS = 20,
+}
+
+public enum SDL_MouseWheelDirection
+{
+	/// <unmanaged>SDL_MOUSEWHEEL_NORMAL</unmanaged>
+	Normal = 0,
+	/// <unmanaged>SDL_MOUSEWHEEL_FLIPPED</unmanaged>
+	Flipped = 1,
 }
 
 public enum SDL_PenAxis
@@ -81,28 +783,460 @@ public enum SDL_PenSubtype
 	Last = Airbrush,
 }
 
-[Flags]
-public enum SDL_InitFlags
+public enum SDL_PixelType
 {
+	/// <unmanaged>SDL_PIXELTYPE_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_PIXELTYPE_INDEX1</unmanaged>
+	Index1 = 1,
+	/// <unmanaged>SDL_PIXELTYPE_INDEX4</unmanaged>
+	Index4 = 2,
+	/// <unmanaged>SDL_PIXELTYPE_INDEX8</unmanaged>
+	Index8 = 3,
+	/// <unmanaged>SDL_PIXELTYPE_PACKED8</unmanaged>
+	Packed8 = 4,
+	/// <unmanaged>SDL_PIXELTYPE_PACKED16</unmanaged>
+	Packed16 = 5,
+	/// <unmanaged>SDL_PIXELTYPE_PACKED32</unmanaged>
+	Packed32 = 6,
+	/// <unmanaged>SDL_PIXELTYPE_ARRAYU8</unmanaged>
+	ArrayU8 = 7,
+	/// <unmanaged>SDL_PIXELTYPE_ARRAYU16</unmanaged>
+	ArrayU16 = 8,
+	/// <unmanaged>SDL_PIXELTYPE_ARRAYU32</unmanaged>
+	ArrayU32 = 9,
+	/// <unmanaged>SDL_PIXELTYPE_ARRAYF16</unmanaged>
+	ArrayF16 = 10,
+	/// <unmanaged>SDL_PIXELTYPE_ARRAYF32</unmanaged>
+	ArrayF32 = 11,
+	/// <unmanaged>SDL_PIXELTYPE_INDEX2</unmanaged>
+	Index2 = 12,
+}
+
+public enum SDL_BitmapOrder
+{
+	/// <unmanaged>SDL_BITMAPORDER_NONE</unmanaged>
 	None = 0,
-	/// <unmanaged>SDL_INIT_TIMER</unmanaged>
-	Timer = 0x00000001,
-	/// <unmanaged>SDL_INIT_AUDIO</unmanaged>
-	Audio = 0x00000010,
-	/// <unmanaged>SDL_INIT_VIDEO</unmanaged>
-	Video = 0x00000020,
-	/// <unmanaged>SDL_INIT_JOYSTICK</unmanaged>
-	Joystick = 0x00000200,
-	/// <unmanaged>SDL_INIT_HAPTIC</unmanaged>
-	Haptic = 0x00001000,
-	/// <unmanaged>SDL_INIT_GAMEPAD</unmanaged>
-	Gamepad = 0x00002000,
-	/// <unmanaged>SDL_INIT_EVENTS</unmanaged>
-	Events = 0x00004000,
-	/// <unmanaged>SDL_INIT_SENSOR</unmanaged>
-	Sensor = 0x00008000,
-	/// <unmanaged>SDL_INIT_CAMERA</unmanaged>
-	Camera = 0x00010000,
+	/// <unmanaged>SDL_BITMAPORDER_4321</unmanaged>
+	_4321 = 1,
+	/// <unmanaged>SDL_BITMAPORDER_1234</unmanaged>
+	_1234 = 2,
+}
+
+public enum SDL_PackedOrder
+{
+	/// <unmanaged>SDL_PACKEDORDER_NONE</unmanaged>
+	None = 0,
+	/// <unmanaged>SDL_PACKEDORDER_XRGB</unmanaged>
+	Xrgb = 1,
+	/// <unmanaged>SDL_PACKEDORDER_RGBX</unmanaged>
+	Rgbx = 2,
+	/// <unmanaged>SDL_PACKEDORDER_ARGB</unmanaged>
+	Argb = 3,
+	/// <unmanaged>SDL_PACKEDORDER_RGBA</unmanaged>
+	Rgba = 4,
+	/// <unmanaged>SDL_PACKEDORDER_XBGR</unmanaged>
+	Xbgr = 5,
+	/// <unmanaged>SDL_PACKEDORDER_BGRX</unmanaged>
+	Bgrx = 6,
+	/// <unmanaged>SDL_PACKEDORDER_ABGR</unmanaged>
+	Abgr = 7,
+	/// <unmanaged>SDL_PACKEDORDER_BGRA</unmanaged>
+	Bgra = 8,
+}
+
+public enum SDL_ArrayOrder
+{
+	/// <unmanaged>SDL_ARRAYORDER_NONE</unmanaged>
+	None = 0,
+	/// <unmanaged>SDL_ARRAYORDER_RGB</unmanaged>
+	Rgb = 1,
+	/// <unmanaged>SDL_ARRAYORDER_RGBA</unmanaged>
+	Rgba = 2,
+	/// <unmanaged>SDL_ARRAYORDER_ARGB</unmanaged>
+	Argb = 3,
+	/// <unmanaged>SDL_ARRAYORDER_BGR</unmanaged>
+	Bgr = 4,
+	/// <unmanaged>SDL_ARRAYORDER_BGRA</unmanaged>
+	Bgra = 5,
+	/// <unmanaged>SDL_ARRAYORDER_ABGR</unmanaged>
+	Abgr = 6,
+}
+
+public enum SDL_PackedLayout
+{
+	/// <unmanaged>SDL_PACKEDLAYOUT_NONE</unmanaged>
+	None = 0,
+	/// <unmanaged>SDL_PACKEDLAYOUT_332</unmanaged>
+	_332 = 1,
+	/// <unmanaged>SDL_PACKEDLAYOUT_4444</unmanaged>
+	_4444 = 2,
+	/// <unmanaged>SDL_PACKEDLAYOUT_1555</unmanaged>
+	_1555 = 3,
+	/// <unmanaged>SDL_PACKEDLAYOUT_5551</unmanaged>
+	_5551 = 4,
+	/// <unmanaged>SDL_PACKEDLAYOUT_565</unmanaged>
+	_565 = 5,
+	/// <unmanaged>SDL_PACKEDLAYOUT_8888</unmanaged>
+	_8888 = 6,
+	/// <unmanaged>SDL_PACKEDLAYOUT_2101010</unmanaged>
+	_2101010 = 7,
+	/// <unmanaged>SDL_PACKEDLAYOUT_1010102</unmanaged>
+	_1010102 = 8,
+}
+
+public enum SDL_PixelFormat : uint
+{
+	/// <unmanaged>SDL_PIXELFORMAT_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_PIXELFORMAT_INDEX1LSB</unmanaged>
+	Index1lsb = 0x11100100u,
+	/// <unmanaged>SDL_PIXELFORMAT_INDEX1MSB</unmanaged>
+	Index1msb = 0x11200100u,
+	/// <unmanaged>SDL_PIXELFORMAT_INDEX2LSB</unmanaged>
+	Index2lsb = 0x1c100200u,
+	/// <unmanaged>SDL_PIXELFORMAT_INDEX2MSB</unmanaged>
+	Index2msb = 0x1c200200u,
+	/// <unmanaged>SDL_PIXELFORMAT_INDEX4LSB</unmanaged>
+	Index4lsb = 0x12100400u,
+	/// <unmanaged>SDL_PIXELFORMAT_INDEX4MSB</unmanaged>
+	Index4msb = 0x12200400u,
+	/// <unmanaged>SDL_PIXELFORMAT_INDEX8</unmanaged>
+	Index8 = 0x13000801u,
+	/// <unmanaged>SDL_PIXELFORMAT_RGB332</unmanaged>
+	Rgb332 = 0x14110801u,
+	/// <unmanaged>SDL_PIXELFORMAT_XRGB4444</unmanaged>
+	Xrgb4444 = 0x15120c02u,
+	/// <unmanaged>SDL_PIXELFORMAT_XBGR4444</unmanaged>
+	Xbgr4444 = 0x15520c02u,
+	/// <unmanaged>SDL_PIXELFORMAT_XRGB1555</unmanaged>
+	Xrgb1555 = 0x15130f02u,
+	/// <unmanaged>SDL_PIXELFORMAT_XBGR1555</unmanaged>
+	Xbgr1555 = 0x15530f02u,
+	/// <unmanaged>SDL_PIXELFORMAT_ARGB4444</unmanaged>
+	Argb4444 = 0x15321002u,
+	/// <unmanaged>SDL_PIXELFORMAT_RGBA4444</unmanaged>
+	Rgba4444 = 0x15421002u,
+	/// <unmanaged>SDL_PIXELFORMAT_ABGR4444</unmanaged>
+	Abgr4444 = 0x15721002u,
+	/// <unmanaged>SDL_PIXELFORMAT_BGRA4444</unmanaged>
+	Bgra4444 = 0x15821002u,
+	/// <unmanaged>SDL_PIXELFORMAT_ARGB1555</unmanaged>
+	Argb1555 = 0x15331002u,
+	/// <unmanaged>SDL_PIXELFORMAT_RGBA5551</unmanaged>
+	Rgba5551 = 0x15441002u,
+	/// <unmanaged>SDL_PIXELFORMAT_ABGR1555</unmanaged>
+	Abgr1555 = 0x15731002u,
+	/// <unmanaged>SDL_PIXELFORMAT_BGRA5551</unmanaged>
+	Bgra5551 = 0x15841002u,
+	/// <unmanaged>SDL_PIXELFORMAT_RGB565</unmanaged>
+	Rgb565 = 0x15151002u,
+	/// <unmanaged>SDL_PIXELFORMAT_BGR565</unmanaged>
+	Bgr565 = 0x15551002u,
+	/// <unmanaged>SDL_PIXELFORMAT_RGB24</unmanaged>
+	Rgb24 = 0x17101803u,
+	/// <unmanaged>SDL_PIXELFORMAT_BGR24</unmanaged>
+	Bgr24 = 0x17401803u,
+	/// <unmanaged>SDL_PIXELFORMAT_XRGB8888</unmanaged>
+	Xrgb8888 = 0x16161804u,
+	/// <unmanaged>SDL_PIXELFORMAT_RGBX8888</unmanaged>
+	Rgbx8888 = 0x16261804u,
+	/// <unmanaged>SDL_PIXELFORMAT_XBGR8888</unmanaged>
+	Xbgr8888 = 0x16561804u,
+	/// <unmanaged>SDL_PIXELFORMAT_BGRX8888</unmanaged>
+	Bgrx8888 = 0x16661804u,
+	/// <unmanaged>SDL_PIXELFORMAT_ARGB8888</unmanaged>
+	Argb8888 = 0x16362004u,
+	/// <unmanaged>SDL_PIXELFORMAT_RGBA8888</unmanaged>
+	Rgba8888 = 0x16462004u,
+	/// <unmanaged>SDL_PIXELFORMAT_ABGR8888</unmanaged>
+	Abgr8888 = 0x16762004u,
+	/// <unmanaged>SDL_PIXELFORMAT_BGRA8888</unmanaged>
+	Bgra8888 = 0x16862004u,
+	/// <unmanaged>SDL_PIXELFORMAT_XRGB2101010</unmanaged>
+	Xrgb2101010 = 0x16172004u,
+	/// <unmanaged>SDL_PIXELFORMAT_XBGR2101010</unmanaged>
+	Xbgr2101010 = 0x16572004u,
+	/// <unmanaged>SDL_PIXELFORMAT_ARGB2101010</unmanaged>
+	Argb2101010 = 0x16372004u,
+	/// <unmanaged>SDL_PIXELFORMAT_ABGR2101010</unmanaged>
+	Abgr2101010 = 0x16772004u,
+	/// <unmanaged>SDL_PIXELFORMAT_RGB48</unmanaged>
+	Rgb48 = 0x18103006u,
+	/// <unmanaged>SDL_PIXELFORMAT_BGR48</unmanaged>
+	Bgr48 = 0x18403006u,
+	/// <unmanaged>SDL_PIXELFORMAT_RGBA64</unmanaged>
+	Rgba64 = 0x18204008u,
+	/// <unmanaged>SDL_PIXELFORMAT_ARGB64</unmanaged>
+	Argb64 = 0x18304008u,
+	/// <unmanaged>SDL_PIXELFORMAT_BGRA64</unmanaged>
+	Bgra64 = 0x18504008u,
+	/// <unmanaged>SDL_PIXELFORMAT_ABGR64</unmanaged>
+	Abgr64 = 0x18604008u,
+	/// <unmanaged>SDL_PIXELFORMAT_RGB48_FLOAT</unmanaged>
+	Rgb48Float = 0x1a103006u,
+	/// <unmanaged>SDL_PIXELFORMAT_BGR48_FLOAT</unmanaged>
+	Bgr48Float = 0x1a403006u,
+	/// <unmanaged>SDL_PIXELFORMAT_RGBA64_FLOAT</unmanaged>
+	Rgba64Float = 0x1a204008u,
+	/// <unmanaged>SDL_PIXELFORMAT_ARGB64_FLOAT</unmanaged>
+	Argb64Float = 0x1a304008u,
+	/// <unmanaged>SDL_PIXELFORMAT_BGRA64_FLOAT</unmanaged>
+	Bgra64Float = 0x1a504008u,
+	/// <unmanaged>SDL_PIXELFORMAT_ABGR64_FLOAT</unmanaged>
+	Abgr64Float = 0x1a604008u,
+	/// <unmanaged>SDL_PIXELFORMAT_RGB96_FLOAT</unmanaged>
+	Rgb96Float = 0x1b10600cu,
+	/// <unmanaged>SDL_PIXELFORMAT_BGR96_FLOAT</unmanaged>
+	Bgr96Float = 0x1b40600cu,
+	/// <unmanaged>SDL_PIXELFORMAT_RGBA128_FLOAT</unmanaged>
+	Rgba128Float = 0x1b208010u,
+	/// <unmanaged>SDL_PIXELFORMAT_ARGB128_FLOAT</unmanaged>
+	Argb128Float = 0x1b308010u,
+	/// <unmanaged>SDL_PIXELFORMAT_BGRA128_FLOAT</unmanaged>
+	Bgra128Float = 0x1b508010u,
+	/// <unmanaged>SDL_PIXELFORMAT_ABGR128_FLOAT</unmanaged>
+	Abgr128Float = 0x1b608010u,
+	/// <unmanaged>SDL_PIXELFORMAT_YV12</unmanaged>
+	Yv12 = 0x32315659u,
+	/// <unmanaged>SDL_PIXELFORMAT_IYUV</unmanaged>
+	Iyuv = 0x56555949u,
+	/// <unmanaged>SDL_PIXELFORMAT_YUY2</unmanaged>
+	Yuy2 = 0x32595559u,
+	/// <unmanaged>SDL_PIXELFORMAT_UYVY</unmanaged>
+	Uyvy = 0x59565955u,
+	/// <unmanaged>SDL_PIXELFORMAT_YVYU</unmanaged>
+	Yvyu = 0x55595659u,
+	/// <unmanaged>SDL_PIXELFORMAT_NV12</unmanaged>
+	Nv12 = 0x3231564eu,
+	/// <unmanaged>SDL_PIXELFORMAT_NV21</unmanaged>
+	Nv21 = 0x3132564eu,
+	/// <unmanaged>SDL_PIXELFORMAT_P010</unmanaged>
+	P010 = 0x30313050u,
+	/// <unmanaged>SDL_PIXELFORMAT_EXTERNAL_OES</unmanaged>
+	ExternalOes = 0x2053454fu,
+}
+
+public enum SDL_ColorType
+{
+	/// <unmanaged>SDL_COLOR_TYPE_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_COLOR_TYPE_RGB</unmanaged>
+	Rgb = 1,
+	/// <unmanaged>SDL_COLOR_TYPE_YCBCR</unmanaged>
+	Ycbcr = 2,
+}
+
+public enum SDL_ColorRange
+{
+	/// <unmanaged>SDL_COLOR_RANGE_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_COLOR_RANGE_LIMITED</unmanaged>
+	Limited = 1,
+	/// <unmanaged>SDL_COLOR_RANGE_FULL</unmanaged>
+	Full = 2,
+}
+
+public enum SDL_ColorPrimaries
+{
+	/// <unmanaged>SDL_COLOR_PRIMARIES_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_BT709</unmanaged>
+	Bt709 = 1,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_UNSPECIFIED</unmanaged>
+	Unspecified = 2,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_BT470M</unmanaged>
+	Bt470m = 4,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_BT470BG</unmanaged>
+	Bt470bg = 5,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_BT601</unmanaged>
+	Bt601 = 6,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_SMPTE240</unmanaged>
+	Smpte240 = 7,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_GENERIC_FILM</unmanaged>
+	GenericFilm = 8,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_BT2020</unmanaged>
+	Bt2020 = 9,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_XYZ</unmanaged>
+	Xyz = 10,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_SMPTE431</unmanaged>
+	Smpte431 = 11,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_SMPTE432</unmanaged>
+	Smpte432 = 12,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_EBU3213</unmanaged>
+	Ebu3213 = 22,
+	/// <unmanaged>SDL_COLOR_PRIMARIES_CUSTOM</unmanaged>
+	Custom = 31,
+}
+
+public enum SDL_TransferCharacteristics
+{
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_BT709</unmanaged>
+	Bt709 = 1,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_UNSPECIFIED</unmanaged>
+	Unspecified = 2,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_GAMMA22</unmanaged>
+	Gamma22 = 4,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_GAMMA28</unmanaged>
+	Gamma28 = 5,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_BT601</unmanaged>
+	Bt601 = 6,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_SMPTE240</unmanaged>
+	Smpte240 = 7,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_LINEAR</unmanaged>
+	Linear = 8,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_LOG100</unmanaged>
+	Log100 = 9,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_LOG100_SQRT10</unmanaged>
+	Log100Sqrt10 = 10,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_IEC61966</unmanaged>
+	Iec61966 = 11,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_BT1361</unmanaged>
+	Bt1361 = 12,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_SRGB</unmanaged>
+	Srgb = 13,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_BT2020_10BIT</unmanaged>
+	Bt202010bit = 14,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_BT2020_12BIT</unmanaged>
+	Bt202012bit = 15,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_PQ</unmanaged>
+	Pq = 16,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_SMPTE428</unmanaged>
+	Smpte428 = 17,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_HLG</unmanaged>
+	Hlg = 18,
+	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_CUSTOM</unmanaged>
+	Custom = 31,
+}
+
+public enum SDL_MatrixCoefficients
+{
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_IDENTITY</unmanaged>
+	Identity = 0,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_BT709</unmanaged>
+	Bt709 = 1,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_UNSPECIFIED</unmanaged>
+	Unspecified = 2,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_FCC</unmanaged>
+	Fcc = 4,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_BT470BG</unmanaged>
+	Bt470bg = 5,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_BT601</unmanaged>
+	Bt601 = 6,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_SMPTE240</unmanaged>
+	Smpte240 = 7,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_YCGCO</unmanaged>
+	Ycgco = 8,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_BT2020_NCL</unmanaged>
+	Bt2020Ncl = 9,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_BT2020_CL</unmanaged>
+	Bt2020Cl = 10,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_SMPTE2085</unmanaged>
+	Smpte2085 = 11,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_CHROMA_DERIVED_NCL</unmanaged>
+	ChromaDerivedNcl = 12,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_CHROMA_DERIVED_CL</unmanaged>
+	ChromaDerivedCl = 13,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_ICTCP</unmanaged>
+	Ictcp = 14,
+	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_CUSTOM</unmanaged>
+	Custom = 31,
+}
+
+public enum SDL_ChromaLocation
+{
+	/// <unmanaged>SDL_CHROMA_LOCATION_NONE</unmanaged>
+	None = 0,
+	/// <unmanaged>SDL_CHROMA_LOCATION_LEFT</unmanaged>
+	Left = 1,
+	/// <unmanaged>SDL_CHROMA_LOCATION_CENTER</unmanaged>
+	Center = 2,
+	/// <unmanaged>SDL_CHROMA_LOCATION_TOPLEFT</unmanaged>
+	Topleft = 3,
+}
+
+public enum SDL_Colorspace
+{
+	/// <unmanaged>SDL_COLORSPACE_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_COLORSPACE_SRGB</unmanaged>
+	Srgb = 301991328,
+	/// <unmanaged>SDL_COLORSPACE_SRGB_LINEAR</unmanaged>
+	SrgbLinear = 301991168,
+	/// <unmanaged>SDL_COLORSPACE_HDR10</unmanaged>
+	Hdr10 = 301999616,
+	/// <unmanaged>SDL_COLORSPACE_JPEG</unmanaged>
+	Jpeg = 570426566,
+	/// <unmanaged>SDL_COLORSPACE_BT601_LIMITED</unmanaged>
+	Bt601Limited = 554703046,
+	/// <unmanaged>SDL_COLORSPACE_BT601_FULL</unmanaged>
+	Bt601Full = 571480262,
+	/// <unmanaged>SDL_COLORSPACE_BT709_LIMITED</unmanaged>
+	Bt709Limited = 554697761,
+	/// <unmanaged>SDL_COLORSPACE_BT709_FULL</unmanaged>
+	Bt709Full = 571474977,
+	/// <unmanaged>SDL_COLORSPACE_BT2020_LIMITED</unmanaged>
+	Bt2020Limited = 554706441,
+	/// <unmanaged>SDL_COLORSPACE_BT2020_FULL</unmanaged>
+	Bt2020Full = 571483657,
+}
+
+public enum SDL_PowerState
+{
+	/// <unmanaged>SDL_POWERSTATE_ERROR</unmanaged>
+	Error = -1,
+	/// <unmanaged>SDL_POWERSTATE_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <unmanaged>SDL_POWERSTATE_ON_BATTERY</unmanaged>
+	OnBattery = 1,
+	/// <unmanaged>SDL_POWERSTATE_NO_BATTERY</unmanaged>
+	NoBattery = 2,
+	/// <unmanaged>SDL_POWERSTATE_CHARGING</unmanaged>
+	Charging = 3,
+	/// <unmanaged>SDL_POWERSTATE_CHARGED</unmanaged>
+	Charged = 4,
+}
+
+public enum SDL_PropertyType
+{
+	/// <unmanaged>SDL_PROPERTY_TYPE_INVALID</unmanaged>
+	Invalid = 0,
+	/// <unmanaged>SDL_PROPERTY_TYPE_POINTER</unmanaged>
+	Pointer = 1,
+	/// <unmanaged>SDL_PROPERTY_TYPE_STRING</unmanaged>
+	String = 2,
+	/// <unmanaged>SDL_PROPERTY_TYPE_NUMBER</unmanaged>
+	Number = 3,
+	/// <unmanaged>SDL_PROPERTY_TYPE_FLOAT</unmanaged>
+	Float = 4,
+	/// <unmanaged>SDL_PROPERTY_TYPE_BOOLEAN</unmanaged>
+	Boolean = 5,
+}
+
+public enum SDL_TextureAccess
+{
+	/// <unmanaged>SDL_TEXTUREACCESS_STATIC</unmanaged>
+	SDL_TEXTUREACCESS_STATIC = 0,
+	/// <unmanaged>SDL_TEXTUREACCESS_STREAMING</unmanaged>
+	SDL_TEXTUREACCESS_STREAMING = 1,
+	/// <unmanaged>SDL_TEXTUREACCESS_TARGET</unmanaged>
+	SDL_TEXTUREACCESS_TARGET = 2,
+}
+
+public enum SDL_RendererLogicalPresentation
+{
+	/// <unmanaged>SDL_LOGICAL_PRESENTATION_DISABLED</unmanaged>
+	SDL_LOGICAL_PRESENTATION_DISABLED = 0,
+	/// <unmanaged>SDL_LOGICAL_PRESENTATION_STRETCH</unmanaged>
+	SDL_LOGICAL_PRESENTATION_STRETCH = 1,
+	/// <unmanaged>SDL_LOGICAL_PRESENTATION_LETTERBOX</unmanaged>
+	SDL_LOGICAL_PRESENTATION_LETTERBOX = 2,
+	/// <unmanaged>SDL_LOGICAL_PRESENTATION_OVERSCAN</unmanaged>
+	SDL_LOGICAL_PRESENTATION_OVERSCAN = 3,
+	/// <unmanaged>SDL_LOGICAL_PRESENTATION_INTEGER_SCALE</unmanaged>
+	SDL_LOGICAL_PRESENTATION_INTEGER_SCALE = 4,
 }
 
 public enum SDL_Scancode
@@ -438,9 +1572,9 @@ public enum SDL_Scancode
 	/// <unmanaged>SDL_SCANCODE_CURRENCYSUBUNIT</unmanaged>
 	Currencysubunit = 181,
 	/// <unmanaged>SDL_SCANCODE_KP_LEFTPAREN</unmanaged>
-	KpLeftparen = 182,
+	KpLeftParen = 182,
 	/// <unmanaged>SDL_SCANCODE_KP_RIGHTPAREN</unmanaged>
-	KpRightparen = 183,
+	KpRightParen = 183,
 	/// <unmanaged>SDL_SCANCODE_KP_LEFTBRACE</unmanaged>
 	KpLeftbrace = 184,
 	/// <unmanaged>SDL_SCANCODE_KP_RIGHTBRACE</unmanaged>
@@ -504,7 +1638,7 @@ public enum SDL_Scancode
 	/// <unmanaged>SDL_SCANCODE_KP_MEMDIVIDE</unmanaged>
 	KpMemdivide = 214,
 	/// <unmanaged>SDL_SCANCODE_KP_PLUSMINUS</unmanaged>
-	KpPlusminus = 215,
+	KpPlusMinus = 215,
 	/// <unmanaged>SDL_SCANCODE_KP_CLEAR</unmanaged>
 	KpClear = 216,
 	/// <unmanaged>SDL_SCANCODE_KP_CLEARENTRY</unmanaged>
@@ -535,64 +1669,64 @@ public enum SDL_Scancode
 	RightGui = 231,
 	/// <unmanaged>SDL_SCANCODE_MODE</unmanaged>
 	Mode = 257,
-	/// <unmanaged>SDL_SCANCODE_AUDIONEXT</unmanaged>
-	AudioNext = 258,
-	/// <unmanaged>SDL_SCANCODE_AUDIOPREV</unmanaged>
-	AudioPrev = 259,
-	/// <unmanaged>SDL_SCANCODE_AUDIOSTOP</unmanaged>
-	AudioStop = 260,
-	/// <unmanaged>SDL_SCANCODE_AUDIOPLAY</unmanaged>
-	AudioPlay = 261,
-	/// <unmanaged>SDL_SCANCODE_AUDIOMUTE</unmanaged>
-	AudioMute = 262,
-	/// <unmanaged>SDL_SCANCODE_MEDIASELECT</unmanaged>
-	MediaSelect = 263,
-	/// <unmanaged>SDL_SCANCODE_WWW</unmanaged>
-	Www = 264,
-	/// <unmanaged>SDL_SCANCODE_MAIL</unmanaged>
-	Mail = 265,
-	/// <unmanaged>SDL_SCANCODE_CALCULATOR</unmanaged>
-	Calculator = 266,
-	/// <unmanaged>SDL_SCANCODE_COMPUTER</unmanaged>
-	Computer = 267,
-	/// <unmanaged>SDL_SCANCODE_AC_SEARCH</unmanaged>
-	AcSearch = 268,
-	/// <unmanaged>SDL_SCANCODE_AC_HOME</unmanaged>
-	AcHome = 269,
-	/// <unmanaged>SDL_SCANCODE_AC_BACK</unmanaged>
-	AcBack = 270,
-	/// <unmanaged>SDL_SCANCODE_AC_FORWARD</unmanaged>
-	AcForward = 271,
-	/// <unmanaged>SDL_SCANCODE_AC_STOP</unmanaged>
-	AcStop = 272,
-	/// <unmanaged>SDL_SCANCODE_AC_REFRESH</unmanaged>
-	AcRefresh = 273,
-	/// <unmanaged>SDL_SCANCODE_AC_BOOKMARKS</unmanaged>
-	AcBookmarks = 274,
-	/// <unmanaged>SDL_SCANCODE_BRIGHTNESSDOWN</unmanaged>
-	Brightnessdown = 275,
-	/// <unmanaged>SDL_SCANCODE_BRIGHTNESSUP</unmanaged>
-	Brightnessup = 276,
-	/// <unmanaged>SDL_SCANCODE_DISPLAYSWITCH</unmanaged>
-	DisplaySwitch = 277,
-	/// <unmanaged>SDL_SCANCODE_KBDILLUMTOGGLE</unmanaged>
-	Kbdillumtoggle = 278,
-	/// <unmanaged>SDL_SCANCODE_KBDILLUMDOWN</unmanaged>
-	Kbdillumdown = 279,
-	/// <unmanaged>SDL_SCANCODE_KBDILLUMUP</unmanaged>
-	Kbdillumup = 280,
-	/// <unmanaged>SDL_SCANCODE_EJECT</unmanaged>
-	Eject = 281,
 	/// <unmanaged>SDL_SCANCODE_SLEEP</unmanaged>
-	Sleep = 282,
-	/// <unmanaged>SDL_SCANCODE_APP1</unmanaged>
-	App1 = 283,
-	/// <unmanaged>SDL_SCANCODE_APP2</unmanaged>
-	App2 = 284,
-	/// <unmanaged>SDL_SCANCODE_AUDIOREWIND</unmanaged>
-	Audiorewind = 285,
-	/// <unmanaged>SDL_SCANCODE_AUDIOFASTFORWARD</unmanaged>
-	Audiofastforward = 286,
+	Sleep = 258,
+	/// <unmanaged>SDL_SCANCODE_WAKE</unmanaged>
+	Wake = 259,
+	/// <unmanaged>SDL_SCANCODE_CHANNEL_INCREMENT</unmanaged>
+	ChannelIncrement = 260,
+	/// <unmanaged>SDL_SCANCODE_CHANNEL_DECREMENT</unmanaged>
+	ChannelDecrement = 261,
+	/// <unmanaged>SDL_SCANCODE_MEDIA_PLAY</unmanaged>
+	MediaPlay = 262,
+	/// <unmanaged>SDL_SCANCODE_MEDIA_PAUSE</unmanaged>
+	MediaPause = 263,
+	/// <unmanaged>SDL_SCANCODE_MEDIA_RECORD</unmanaged>
+	MediaRecord = 264,
+	/// <unmanaged>SDL_SCANCODE_MEDIA_FAST_FORWARD</unmanaged>
+	MediaFastForward = 265,
+	/// <unmanaged>SDL_SCANCODE_MEDIA_REWIND</unmanaged>
+	MediaRewind = 266,
+	/// <unmanaged>SDL_SCANCODE_MEDIA_NEXT_TRACK</unmanaged>
+	MediaNextTrack = 267,
+	/// <unmanaged>SDL_SCANCODE_MEDIA_PREVIOUS_TRACK</unmanaged>
+	MediaPreviousTrack = 268,
+	/// <unmanaged>SDL_SCANCODE_MEDIA_STOP</unmanaged>
+	MediaStop = 269,
+	/// <unmanaged>SDL_SCANCODE_MEDIA_EJECT</unmanaged>
+	MediaEject = 270,
+	/// <unmanaged>SDL_SCANCODE_MEDIA_PLAY_PAUSE</unmanaged>
+	MediaPlayPause = 271,
+	/// <unmanaged>SDL_SCANCODE_MEDIA_SELECT</unmanaged>
+	MediaSelect = 272,
+	/// <unmanaged>SDL_SCANCODE_AC_NEW</unmanaged>
+	AcNew = 273,
+	/// <unmanaged>SDL_SCANCODE_AC_OPEN</unmanaged>
+	AcOpen = 274,
+	/// <unmanaged>SDL_SCANCODE_AC_CLOSE</unmanaged>
+	AcClose = 275,
+	/// <unmanaged>SDL_SCANCODE_AC_EXIT</unmanaged>
+	AcExit = 276,
+	/// <unmanaged>SDL_SCANCODE_AC_SAVE</unmanaged>
+	AcSave = 277,
+	/// <unmanaged>SDL_SCANCODE_AC_PRINT</unmanaged>
+	AcPrint = 278,
+	/// <unmanaged>SDL_SCANCODE_AC_PROPERTIES</unmanaged>
+	AcProperties = 279,
+	/// <unmanaged>SDL_SCANCODE_AC_SEARCH</unmanaged>
+	AcSearch = 280,
+	/// <unmanaged>SDL_SCANCODE_AC_HOME</unmanaged>
+	AcHome = 281,
+	/// <unmanaged>SDL_SCANCODE_AC_BACK</unmanaged>
+	AcBack = 282,
+	/// <unmanaged>SDL_SCANCODE_AC_FORWARD</unmanaged>
+	AcForward = 283,
+	/// <unmanaged>SDL_SCANCODE_AC_STOP</unmanaged>
+	AcStop = 284,
+	/// <unmanaged>SDL_SCANCODE_AC_REFRESH</unmanaged>
+	AcRefresh = 285,
+	/// <unmanaged>SDL_SCANCODE_AC_BOOKMARKS</unmanaged>
+	AcBookmarks = 286,
 	/// <unmanaged>SDL_SCANCODE_SOFTLEFT</unmanaged>
 	Softleft = 287,
 	/// <unmanaged>SDL_SCANCODE_SOFTRIGHT</unmanaged>
@@ -603,425 +1737,6 @@ public enum SDL_Scancode
 	Endcall = 290,
 	/// <unmanaged>SDL_NUM_SCANCODES</unmanaged>
 	NumScancodes = 512,
-}
-
-public enum SDL_IOStatus
-{
-	/// <unmanaged>SDL_IO_STATUS_READY</unmanaged>
-	Ready = 0,
-	/// <unmanaged>SDL_IO_STATUS_ERROR</unmanaged>
-	Error = 1,
-	/// <unmanaged>SDL_IO_STATUS_EOF</unmanaged>
-	Eof = 2,
-	/// <unmanaged>SDL_IO_STATUS_NOT_READY</unmanaged>
-	NotReady = 3,
-	/// <unmanaged>SDL_IO_STATUS_READONLY</unmanaged>
-	Readonly = 4,
-	/// <unmanaged>SDL_IO_STATUS_WRITEONLY</unmanaged>
-	Writeonly = 5,
-}
-
-[Flags]
-public enum SDL_Keymod
-{
-	/// <unmanaged>SDL_KMOD_NONE</unmanaged>
-	None = 0x0000,
-	/// <unmanaged>SDL_KMOD_LSHIFT</unmanaged>
-	LeftShirt = 0x0001,
-	/// <unmanaged>SDL_KMOD_RSHIFT</unmanaged>
-	RightShirt = 0x0002,
-	/// <unmanaged>SDL_KMOD_LCTRL</unmanaged>
-	LeftControl = 0x0040,
-	/// <unmanaged>SDL_KMOD_RCTRL</unmanaged>
-	RightControl = 0x0080,
-	/// <unmanaged>SDL_KMOD_LALT</unmanaged>
-	LeftAlt = 0x0100,
-	/// <unmanaged>SDL_KMOD_RALT</unmanaged>
-	RightAlt = 0x0200,
-	/// <unmanaged>SDL_KMOD_LGUI</unmanaged>
-	LeftGui = 0x0400,
-	/// <unmanaged>SDL_KMOD_RGUI</unmanaged>
-	RightGui = 0x0800,
-	/// <unmanaged>SDL_KMOD_NUM</unmanaged>
-	Num = 0x1000,
-	/// <unmanaged>SDL_KMOD_CAPS</unmanaged>
-	Caps = 0x2000,
-	/// <unmanaged>SDL_KMOD_MODE</unmanaged>
-	Mode = 0x4000,
-	/// <unmanaged>SDL_KMOD_SCROLL</unmanaged>
-	Scroll = 0x8000,
-	/// <unmanaged>SDL_KMOD_CTRL</unmanaged>
-	Ctrl = LeftControl | RightControl,
-	/// <unmanaged>SDL_KMOD_SHIFT</unmanaged>
-	Shift = LeftShirt | RightShirt,
-	/// <unmanaged>SDL_KMOD_ALT</unmanaged>
-	Alt = LeftAlt | RightAlt,
-	/// <unmanaged>SDL_KMOD_GUI</unmanaged>
-	Gui = LeftGui | RightGui,
-}
-
-[Flags]
-public enum SDL_MessageBoxFlags
-{
-	None = 0,
-	/// <unmanaged>SDL_MESSAGEBOX_ERROR</unmanaged>
-	Error = 0x00000010,
-	/// <unmanaged>SDL_MESSAGEBOX_WARNING</unmanaged>
-	Warning = 0x00000020,
-	/// <unmanaged>SDL_MESSAGEBOX_INFORMATION</unmanaged>
-	Information = 0x00000040,
-	/// <unmanaged>SDL_MESSAGEBOX_BUTTONS_LEFT_TO_RIGHT</unmanaged>
-	ButtonsLeftToRight = 0x00000080,
-	/// <unmanaged>SDL_MESSAGEBOX_BUTTONS_RIGHT_TO_LEFT</unmanaged>
-	ButtonsRightToLeft = 0x00000100,
-}
-
-[Flags]
-public enum SDL_MessageBoxButtonFlags
-{
-	None = 0,
-	/// <unmanaged>SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT</unmanaged>
-	ReturnKeyDefault = 0x00000001,
-	/// <unmanaged>SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT</unmanaged>
-	EscapeKeyDefault = 0x00000002,
-}
-
-public enum SDL_MessageBoxColorType
-{
-	/// <unmanaged>SDL_MESSAGEBOX_COLOR_BACKGROUND</unmanaged>
-	Background = 0,
-	/// <unmanaged>SDL_MESSAGEBOX_COLOR_TEXT</unmanaged>
-	Text = 1,
-	/// <unmanaged>SDL_MESSAGEBOX_COLOR_BUTTON_BORDER</unmanaged>
-	ButtonBorder = 2,
-	/// <unmanaged>SDL_MESSAGEBOX_COLOR_BUTTON_BACKGROUND</unmanaged>
-	ButtonBackground = 3,
-	/// <unmanaged>SDL_MESSAGEBOX_COLOR_BUTTON_SELECTED</unmanaged>
-	ButtonSelected = 4,
-	/// <unmanaged>SDL_MESSAGEBOX_COLOR_MAX</unmanaged>
-	Max = 5,
-}
-
-public enum SDL_JoystickType
-{
-	/// <unmanaged>SDL_JOYSTICK_TYPE_UNKNOWN</unmanaged>
-	Unknown = 0,
-	/// <unmanaged>SDL_JOYSTICK_TYPE_GAMEPAD</unmanaged>
-	Gamepad = 1,
-	/// <unmanaged>SDL_JOYSTICK_TYPE_WHEEL</unmanaged>
-	Wheel = 2,
-	/// <unmanaged>SDL_JOYSTICK_TYPE_ARCADE_STICK</unmanaged>
-	ArcadeStick = 3,
-	/// <unmanaged>SDL_JOYSTICK_TYPE_FLIGHT_STICK</unmanaged>
-	FlightStick = 4,
-	/// <unmanaged>SDL_JOYSTICK_TYPE_DANCE_PAD</unmanaged>
-	DancePad = 5,
-	/// <unmanaged>SDL_JOYSTICK_TYPE_GUITAR</unmanaged>
-	Guitar = 6,
-	/// <unmanaged>SDL_JOYSTICK_TYPE_DRUM_KIT</unmanaged>
-	DrumKit = 7,
-	/// <unmanaged>SDL_JOYSTICK_TYPE_ARCADE_PAD</unmanaged>
-	ArcadePad = 8,
-	/// <unmanaged>SDL_JOYSTICK_TYPE_THROTTLE</unmanaged>
-	Throttle = 9,
-}
-
-public enum SDL_JoystickConnectionState
-{
-	/// <unmanaged>SDL_JOYSTICK_CONNECTION_INVALID</unmanaged>
-	Invalid = -1,
-	/// <unmanaged>SDL_JOYSTICK_CONNECTION_UNKNOWN</unmanaged>
-	Unknown = 0,
-	/// <unmanaged>SDL_JOYSTICK_CONNECTION_WIRED</unmanaged>
-	Wired = 1,
-	/// <unmanaged>SDL_JOYSTICK_CONNECTION_WIRELESS</unmanaged>
-	Wireless = 2,
-}
-
-public enum SDL_GamepadType
-{
-	/// <unmanaged>SDL_GAMEPAD_TYPE_UNKNOWN</unmanaged>
-	Unknown = 0,
-	/// <unmanaged>SDL_GAMEPAD_TYPE_STANDARD</unmanaged>
-	Standard = 1,
-	/// <unmanaged>SDL_GAMEPAD_TYPE_XBOX360</unmanaged>
-	Xbox360 = 2,
-	/// <unmanaged>SDL_GAMEPAD_TYPE_XBOXONE</unmanaged>
-	Xboxone = 3,
-	/// <unmanaged>SDL_GAMEPAD_TYPE_PS3</unmanaged>
-	Ps3 = 4,
-	/// <unmanaged>SDL_GAMEPAD_TYPE_PS4</unmanaged>
-	Ps4 = 5,
-	/// <unmanaged>SDL_GAMEPAD_TYPE_PS5</unmanaged>
-	Ps5 = 6,
-	/// <unmanaged>SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_PRO</unmanaged>
-	NintendoSwitchPro = 7,
-	/// <unmanaged>SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_LEFT</unmanaged>
-	NintendoSwitchJoyconLeft = 8,
-	/// <unmanaged>SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT</unmanaged>
-	NintendoSwitchJoyconRight = 9,
-	/// <unmanaged>SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_PAIR</unmanaged>
-	NintendoSwitchJoyconPair = 10,
-	/// <unmanaged>SDL_GAMEPAD_TYPE_MAX</unmanaged>
-	Max = 11,
-}
-
-public enum SDL_GamepadButton
-{
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_INVALID</unmanaged>
-	Invalid = -1,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_SOUTH</unmanaged>
-	South = 0,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_EAST</unmanaged>
-	East = 1,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_WEST</unmanaged>
-	West = 2,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_NORTH</unmanaged>
-	North = 3,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_BACK</unmanaged>
-	Back = 4,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_GUIDE</unmanaged>
-	Guide = 5,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_START</unmanaged>
-	Start = 6,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_LEFT_STICK</unmanaged>
-	LeftStick = 7,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_RIGHT_STICK</unmanaged>
-	RightStick = 8,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_LEFT_SHOULDER</unmanaged>
-	LeftShoulder = 9,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER</unmanaged>
-	RightShoulder = 10,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_DPAD_UP</unmanaged>
-	DpadUp = 11,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_DPAD_DOWN</unmanaged>
-	DpadDown = 12,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_DPAD_LEFT</unmanaged>
-	DpadLeft = 13,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_DPAD_RIGHT</unmanaged>
-	DpadRight = 14,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC1</unmanaged>
-	Misc1 = 15,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_RIGHT_PADDLE1</unmanaged>
-	RightPaddle1 = 16,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_LEFT_PADDLE1</unmanaged>
-	LeftPaddle1 = 17,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_RIGHT_PADDLE2</unmanaged>
-	RightPaddle2 = 18,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_LEFT_PADDLE2</unmanaged>
-	LeftPaddle2 = 19,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_TOUCHPAD</unmanaged>
-	Touchpad = 20,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC2</unmanaged>
-	Misc2 = 21,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC3</unmanaged>
-	Misc3 = 22,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC4</unmanaged>
-	Misc4 = 23,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC5</unmanaged>
-	Misc5 = 24,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC6</unmanaged>
-	Misc6 = 25,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_MAX</unmanaged>
-	Max = 26,
-}
-
-public enum SDL_GamepadButtonLabel
-{
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_UNKNOWN</unmanaged>
-	Unknown = 0,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_A</unmanaged>
-	A = 1,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_B</unmanaged>
-	B = 2,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_X</unmanaged>
-	X = 3,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_Y</unmanaged>
-	Y = 4,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_CROSS</unmanaged>
-	Cross = 5,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_CIRCLE</unmanaged>
-	Circle = 6,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_SQUARE</unmanaged>
-	Square = 7,
-	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_TRIANGLE</unmanaged>
-	Triangle = 8,
-}
-
-public enum SDL_GamepadAxis
-{
-	/// <unmanaged>SDL_GAMEPAD_AXIS_INVALID</unmanaged>
-	Invalid = -1,
-	/// <unmanaged>SDL_GAMEPAD_AXIS_LEFTX</unmanaged>
-	Leftx = 0,
-	/// <unmanaged>SDL_GAMEPAD_AXIS_LEFTY</unmanaged>
-	Lefty = 1,
-	/// <unmanaged>SDL_GAMEPAD_AXIS_RIGHTX</unmanaged>
-	Rightx = 2,
-	/// <unmanaged>SDL_GAMEPAD_AXIS_RIGHTY</unmanaged>
-	Righty = 3,
-	/// <unmanaged>SDL_GAMEPAD_AXIS_LEFT_TRIGGER</unmanaged>
-	LeftTrigger = 4,
-	/// <unmanaged>SDL_GAMEPAD_AXIS_RIGHT_TRIGGER</unmanaged>
-	RightTrigger = 5,
-	/// <unmanaged>SDL_GAMEPAD_AXIS_MAX</unmanaged>
-	Max = 6,
-}
-
-public enum SDL_GamepadBindingType
-{
-	/// <unmanaged>SDL_GAMEPAD_BINDTYPE_NONE</unmanaged>
-	None = 0,
-	/// <unmanaged>SDL_GAMEPAD_BINDTYPE_BUTTON</unmanaged>
-	Button = 1,
-	/// <unmanaged>SDL_GAMEPAD_BINDTYPE_AXIS</unmanaged>
-	Axis = 2,
-	/// <unmanaged>SDL_GAMEPAD_BINDTYPE_HAT</unmanaged>
-	Hat = 3,
-}
-
-public enum SDL_SystemCursor
-{
-	/// <unmanaged>SDL_SYSTEM_CURSOR_ARROW</unmanaged>
-	Arrow = 0,
-	/// <unmanaged>SDL_SYSTEM_CURSOR_IBEAM</unmanaged>
-	Ibeam = 1,
-	/// <unmanaged>SDL_SYSTEM_CURSOR_WAIT</unmanaged>
-	Wait = 2,
-	/// <unmanaged>SDL_SYSTEM_CURSOR_CROSSHAIR</unmanaged>
-	Crosshair = 3,
-	/// <unmanaged>SDL_SYSTEM_CURSOR_WAITARROW</unmanaged>
-	Waitarrow = 4,
-	/// <unmanaged>SDL_SYSTEM_CURSOR_SIZENWSE</unmanaged>
-	Sizenwse = 5,
-	/// <unmanaged>SDL_SYSTEM_CURSOR_SIZENESW</unmanaged>
-	Sizenesw = 6,
-	/// <unmanaged>SDL_SYSTEM_CURSOR_SIZEWE</unmanaged>
-	Sizewe = 7,
-	/// <unmanaged>SDL_SYSTEM_CURSOR_SIZENS</unmanaged>
-	Sizens = 8,
-	/// <unmanaged>SDL_SYSTEM_CURSOR_SIZEALL</unmanaged>
-	Sizeall = 9,
-	/// <unmanaged>SDL_SYSTEM_CURSOR_NO</unmanaged>
-	No = 10,
-	/// <unmanaged>SDL_SYSTEM_CURSOR_HAND</unmanaged>
-	Hand = 11,
-	/// <unmanaged>SDL_SYSTEM_CURSOR_WINDOW_TOPLEFT</unmanaged>
-	WindowTopleft = 12,
-	/// <unmanaged>SDL_SYSTEM_CURSOR_WINDOW_TOP</unmanaged>
-	WindowTop = 13,
-	/// <unmanaged>SDL_SYSTEM_CURSOR_WINDOW_TOPRIGHT</unmanaged>
-	WindowTopright = 14,
-	/// <unmanaged>SDL_SYSTEM_CURSOR_WINDOW_RIGHT</unmanaged>
-	WindowRight = 15,
-	/// <unmanaged>SDL_SYSTEM_CURSOR_WINDOW_BOTTOMRIGHT</unmanaged>
-	WindowBottomright = 16,
-	/// <unmanaged>SDL_SYSTEM_CURSOR_WINDOW_BOTTOM</unmanaged>
-	WindowBottom = 17,
-	/// <unmanaged>SDL_SYSTEM_CURSOR_WINDOW_BOTTOMLEFT</unmanaged>
-	WindowBottomleft = 18,
-	/// <unmanaged>SDL_SYSTEM_CURSOR_WINDOW_LEFT</unmanaged>
-	WindowLeft = 19,
-	/// <unmanaged>SDL_NUM_SYSTEM_CURSORS</unmanaged>
-	SDL_NUM_SYSTEM_CURSORS = 20,
-}
-
-public enum SDL_MouseWheelDirection
-{
-	/// <unmanaged>SDL_MOUSEWHEEL_NORMAL</unmanaged>
-	Normal = 0,
-	/// <unmanaged>SDL_MOUSEWHEEL_FLIPPED</unmanaged>
-	Flipped = 1,
-}
-
-public enum SDL_TouchDeviceType
-{
-	/// <unmanaged>SDL_TOUCH_DEVICE_INVALID</unmanaged>
-	Invalid = -1,
-	/// <unmanaged>SDL_TOUCH_DEVICE_DIRECT</unmanaged>
-	Direct = 0,
-	/// <unmanaged>SDL_TOUCH_DEVICE_INDIRECT_ABSOLUTE</unmanaged>
-	IndirectAbsolute = 1,
-	/// <unmanaged>SDL_TOUCH_DEVICE_INDIRECT_RELATIVE</unmanaged>
-	IndirectRelative = 2,
-}
-
-public enum SDL_LogCategory
-{
-	/// <unmanaged>SDL_LOG_CATEGORY_APPLICATION</unmanaged>
-	Application = 0,
-	/// <unmanaged>SDL_LOG_CATEGORY_ERROR</unmanaged>
-	Error = 1,
-	/// <unmanaged>SDL_LOG_CATEGORY_ASSERT</unmanaged>
-	Assert = 2,
-	/// <unmanaged>SDL_LOG_CATEGORY_SYSTEM</unmanaged>
-	System = 3,
-	/// <unmanaged>SDL_LOG_CATEGORY_AUDIO</unmanaged>
-	Audio = 4,
-	/// <unmanaged>SDL_LOG_CATEGORY_VIDEO</unmanaged>
-	Video = 5,
-	/// <unmanaged>SDL_LOG_CATEGORY_RENDER</unmanaged>
-	Render = 6,
-	/// <unmanaged>SDL_LOG_CATEGORY_INPUT</unmanaged>
-	Input = 7,
-	/// <unmanaged>SDL_LOG_CATEGORY_TEST</unmanaged>
-	Test = 8,
-	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED1</unmanaged>
-	Reserved1 = 9,
-	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED2</unmanaged>
-	Reserved2 = 10,
-	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED3</unmanaged>
-	Reserved3 = 11,
-	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED4</unmanaged>
-	Reserved4 = 12,
-	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED5</unmanaged>
-	Reserved5 = 13,
-	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED6</unmanaged>
-	Reserved6 = 14,
-	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED7</unmanaged>
-	Reserved7 = 15,
-	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED8</unmanaged>
-	Reserved8 = 16,
-	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED9</unmanaged>
-	Reserved9 = 17,
-	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED10</unmanaged>
-	Reserved10 = 18,
-	/// <unmanaged>SDL_LOG_CATEGORY_CUSTOM</unmanaged>
-	Custom = 19,
-}
-
-public enum SDL_LogPriority
-{
-	/// <unmanaged>SDL_LOG_PRIORITY_VERBOSE</unmanaged>
-	Verbose = 1,
-	/// <unmanaged>SDL_LOG_PRIORITY_DEBUG</unmanaged>
-	Debug = 2,
-	/// <unmanaged>SDL_LOG_PRIORITY_INFO</unmanaged>
-	Info = 3,
-	/// <unmanaged>SDL_LOG_PRIORITY_WARN</unmanaged>
-	Warn = 4,
-	/// <unmanaged>SDL_LOG_PRIORITY_ERROR</unmanaged>
-	Error = 5,
-	/// <unmanaged>SDL_LOG_PRIORITY_CRITICAL</unmanaged>
-	Critical = 6,
-	/// <unmanaged>SDL_NUM_LOG_PRIORITIES</unmanaged>
-	SDL_NUM_LOG_PRIORITIES = 7,
-}
-
-public enum SDL_PowerState
-{
-	/// <unmanaged>SDL_POWERSTATE_ERROR</unmanaged>
-	Error = -1,
-	/// <unmanaged>SDL_POWERSTATE_UNKNOWN</unmanaged>
-	Unknown = 0,
-	/// <unmanaged>SDL_POWERSTATE_ON_BATTERY</unmanaged>
-	OnBattery = 1,
-	/// <unmanaged>SDL_POWERSTATE_NO_BATTERY</unmanaged>
-	NoBattery = 2,
-	/// <unmanaged>SDL_POWERSTATE_CHARGING</unmanaged>
-	Charging = 3,
-	/// <unmanaged>SDL_POWERSTATE_CHARGED</unmanaged>
-	Charged = 4,
 }
 
 public enum SDL_SensorType
@@ -1042,6 +1757,74 @@ public enum SDL_SensorType
 	AccelR = 5,
 	/// <unmanaged>SDL_SENSOR_GYRO_R</unmanaged>
 	GyroR = 6,
+}
+
+public enum SDL_DUMMY_ENUM
+{
+	/// <unmanaged>DUMMY_ENUM_VALUE</unmanaged>
+	DUMMY_ENUM_VALUE = 0,
+}
+
+public enum SDL_ScaleMode
+{
+	/// <unmanaged>SDL_SCALEMODE_NEAREST</unmanaged>
+	Nearest = 0,
+	/// <unmanaged>SDL_SCALEMODE_LINEAR</unmanaged>
+	Linear = 1,
+	/// <unmanaged>SDL_SCALEMODE_BEST</unmanaged>
+	Best = 2,
+}
+
+public enum SDL_FlipMode
+{
+	/// <unmanaged>SDL_FLIP_NONE</unmanaged>
+	None = 0,
+	/// <unmanaged>SDL_FLIP_HORIZONTAL</unmanaged>
+	Horizontal = 1,
+	/// <unmanaged>SDL_FLIP_VERTICAL</unmanaged>
+	Vertical = 2,
+}
+
+public enum SDL_ThreadPriority
+{
+	/// <unmanaged>SDL_THREAD_PRIORITY_LOW</unmanaged>
+	SDL_THREAD_PRIORITY_LOW = 0,
+	/// <unmanaged>SDL_THREAD_PRIORITY_NORMAL</unmanaged>
+	SDL_THREAD_PRIORITY_NORMAL = 1,
+	/// <unmanaged>SDL_THREAD_PRIORITY_HIGH</unmanaged>
+	SDL_THREAD_PRIORITY_HIGH = 2,
+	/// <unmanaged>SDL_THREAD_PRIORITY_TIME_CRITICAL</unmanaged>
+	SDL_THREAD_PRIORITY_TIME_CRITICAL = 3,
+}
+
+public enum SDL_DateFormat
+{
+	/// <unmanaged>SDL_DATE_FORMAT_YYYYMMDD</unmanaged>
+	Yyyymmdd = 0,
+	/// <unmanaged>SDL_DATE_FORMAT_DDMMYYYY</unmanaged>
+	Ddmmyyyy = 1,
+	/// <unmanaged>SDL_DATE_FORMAT_MMDDYYYY</unmanaged>
+	Mmddyyyy = 2,
+}
+
+public enum SDL_TimeFormat
+{
+	/// <unmanaged>SDL_TIME_FORMAT_24HR</unmanaged>
+	_24hr = 0,
+	/// <unmanaged>SDL_TIME_FORMAT_12HR</unmanaged>
+	_12hr = 1,
+}
+
+public enum SDL_TouchDeviceType
+{
+	/// <unmanaged>SDL_TOUCH_DEVICE_INVALID</unmanaged>
+	Invalid = -1,
+	/// <unmanaged>SDL_TOUCH_DEVICE_DIRECT</unmanaged>
+	Direct = 0,
+	/// <unmanaged>SDL_TOUCH_DEVICE_INDIRECT_ABSOLUTE</unmanaged>
+	IndirectAbsolute = 1,
+	/// <unmanaged>SDL_TOUCH_DEVICE_INDIRECT_RELATIVE</unmanaged>
+	IndirectRelative = 2,
 }
 
 public enum SDL_SystemTheme
@@ -1207,770 +1990,27 @@ public enum SDL_HitTestResult
 	ResizeLeft = 9,
 }
 
-public enum SDL_EventType
+public enum SDL_WinRT_Path
 {
-	/// <unmanaged>SDL_EVENT_FIRST</unmanaged>
-	First = 0,
-	/// <unmanaged>SDL_EVENT_QUIT</unmanaged>
-	Quit = 0x100,
-	/// <unmanaged>SDL_EVENT_TERMINATING</unmanaged>
-	Terminating = 257,
-	/// <unmanaged>SDL_EVENT_LOW_MEMORY</unmanaged>
-	LowMemory = 258,
-	/// <unmanaged>SDL_EVENT_WILL_ENTER_BACKGROUND</unmanaged>
-	WillEnterBackground = 259,
-	/// <unmanaged>SDL_EVENT_DID_ENTER_BACKGROUND</unmanaged>
-	DidEnterBackground = 260,
-	/// <unmanaged>SDL_EVENT_WILL_ENTER_FOREGROUND</unmanaged>
-	WillEnterForeground = 261,
-	/// <unmanaged>SDL_EVENT_DID_ENTER_FOREGROUND</unmanaged>
-	DidEnterForeground = 262,
-	/// <unmanaged>SDL_EVENT_LOCALE_CHANGED</unmanaged>
-	LocaleChanged = 263,
-	/// <unmanaged>SDL_EVENT_SYSTEM_THEME_CHANGED</unmanaged>
-	SystemThemeChanged = 264,
-	/// <unmanaged>SDL_EVENT_DISPLAY_ORIENTATION</unmanaged>
-	DisplayOrientation = 0x151,
-	/// <unmanaged>SDL_EVENT_DISPLAY_ADDED</unmanaged>
-	DisplayAdded = 338,
-	/// <unmanaged>SDL_EVENT_DISPLAY_REMOVED</unmanaged>
-	DisplayRemoved = 339,
-	/// <unmanaged>SDL_EVENT_DISPLAY_MOVED</unmanaged>
-	DisplayMoved = 340,
-	/// <unmanaged>SDL_EVENT_DISPLAY_CONTENT_SCALE_CHANGED</unmanaged>
-	DisplayContentScaleChanged = 341,
-	/// <unmanaged>SDL_EVENT_DISPLAY_HDR_STATE_CHANGED</unmanaged>
-	DisplayHdrStateChanged = 342,
-	/// <unmanaged>SDL_EVENT_DISPLAY_FIRST</unmanaged>
-	DisplayFirst = DisplayOrientation,
-	/// <unmanaged>SDL_EVENT_DISPLAY_LAST</unmanaged>
-	DisplayLast = DisplayHdrStateChanged,
-	/// <unmanaged>SDL_EVENT_WINDOW_SHOWN</unmanaged>
-	WindowShown = 0x202,
-	/// <unmanaged>SDL_EVENT_WINDOW_HIDDEN</unmanaged>
-	WindowHidden = 515,
-	/// <unmanaged>SDL_EVENT_WINDOW_EXPOSED</unmanaged>
-	WindowExposed = 516,
-	/// <unmanaged>SDL_EVENT_WINDOW_MOVED</unmanaged>
-	WindowMoved = 517,
-	/// <unmanaged>SDL_EVENT_WINDOW_RESIZED</unmanaged>
-	WindowResized = 518,
-	/// <unmanaged>SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED</unmanaged>
-	WindowPixelSizeChanged = 519,
-	/// <unmanaged>SDL_EVENT_WINDOW_MINIMIZED</unmanaged>
-	WindowMinimized = 520,
-	/// <unmanaged>SDL_EVENT_WINDOW_MAXIMIZED</unmanaged>
-	WindowMaximized = 521,
-	/// <unmanaged>SDL_EVENT_WINDOW_RESTORED</unmanaged>
-	WindowRestored = 522,
-	/// <unmanaged>SDL_EVENT_WINDOW_MOUSE_ENTER</unmanaged>
-	WindowMouseEnter = 523,
-	/// <unmanaged>SDL_EVENT_WINDOW_MOUSE_LEAVE</unmanaged>
-	WindowMouseLeave = 524,
-	/// <unmanaged>SDL_EVENT_WINDOW_FOCUS_GAINED</unmanaged>
-	WindowFocusGained = 525,
-	/// <unmanaged>SDL_EVENT_WINDOW_FOCUS_LOST</unmanaged>
-	WindowFocusLost = 526,
-	/// <unmanaged>SDL_EVENT_WINDOW_CLOSE_REQUESTED</unmanaged>
-	WindowCloseRequested = 527,
-	/// <unmanaged>SDL_EVENT_WINDOW_TAKE_FOCUS</unmanaged>
-	WindowTakeFocus = 528,
-	/// <unmanaged>SDL_EVENT_WINDOW_HIT_TEST</unmanaged>
-	WindowHitTest = 529,
-	/// <unmanaged>SDL_EVENT_WINDOW_ICCPROF_CHANGED</unmanaged>
-	WindowIccprofChanged = 530,
-	/// <unmanaged>SDL_EVENT_WINDOW_DISPLAY_CHANGED</unmanaged>
-	WindowDisplayChanged = 531,
-	/// <unmanaged>SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED</unmanaged>
-	WindowDisplayScaleChanged = 532,
-	/// <unmanaged>SDL_EVENT_WINDOW_OCCLUDED</unmanaged>
-	WindowOccluded = 533,
-	/// <unmanaged>SDL_EVENT_WINDOW_ENTER_FULLSCREEN</unmanaged>
-	WindowEnterFullscreen = 534,
-	/// <unmanaged>SDL_EVENT_WINDOW_LEAVE_FULLSCREEN</unmanaged>
-	WindowLeaveFullscreen = 535,
-	/// <unmanaged>SDL_EVENT_WINDOW_DESTROYED</unmanaged>
-	WindowDestroyed = 536,
-	/// <unmanaged>SDL_EVENT_WINDOW_PEN_ENTER</unmanaged>
-	WindowPenEnter = 537,
-	/// <unmanaged>SDL_EVENT_WINDOW_PEN_LEAVE</unmanaged>
-	WindowPenLeave = 538,
-	/// <unmanaged>SDL_EVENT_WINDOW_FIRST</unmanaged>
-	WindowFirst = WindowShown,
-	/// <unmanaged>SDL_EVENT_WINDOW_LAST</unmanaged>
-	WindowLast = WindowPenLeave,
-	/// <unmanaged>SDL_EVENT_KEY_DOWN</unmanaged>
-	KeyDown = 0x300,
-	/// <unmanaged>SDL_EVENT_KEY_UP</unmanaged>
-	KeyUp = 769,
-	/// <unmanaged>SDL_EVENT_TEXT_EDITING</unmanaged>
-	TextEditing = 770,
-	/// <unmanaged>SDL_EVENT_TEXT_INPUT</unmanaged>
-	TextInput = 771,
-	/// <unmanaged>SDL_EVENT_KEYMAP_CHANGED</unmanaged>
-	KeymapChanged = 772,
-	/// <unmanaged>SDL_EVENT_KEYBOARD_ADDED</unmanaged>
-	KeyboardAdded = 773,
-	/// <unmanaged>SDL_EVENT_KEYBOARD_REMOVED</unmanaged>
-	KeyboardRemoved = 774,
-	/// <unmanaged>SDL_EVENT_MOUSE_MOTION</unmanaged>
-	MouseMotion = 0x400,
-	/// <unmanaged>SDL_EVENT_MOUSE_BUTTON_DOWN</unmanaged>
-	MouseButtonDown = 1025,
-	/// <unmanaged>SDL_EVENT_MOUSE_BUTTON_UP</unmanaged>
-	MouseButtonUp = 1026,
-	/// <unmanaged>SDL_EVENT_MOUSE_WHEEL</unmanaged>
-	MouseWheel = 1027,
-	/// <unmanaged>SDL_EVENT_MOUSE_ADDED</unmanaged>
-	MouseAdded = 1028,
-	/// <unmanaged>SDL_EVENT_MOUSE_REMOVED</unmanaged>
-	MouseRemoved = 1029,
-	/// <unmanaged>SDL_EVENT_JOYSTICK_AXIS_MOTION</unmanaged>
-	JoystickAxisMotion = 0x600,
-	/// <unmanaged>SDL_EVENT_JOYSTICK_BALL_MOTION</unmanaged>
-	JoystickBallMotion = 1537,
-	/// <unmanaged>SDL_EVENT_JOYSTICK_HAT_MOTION</unmanaged>
-	JoystickHatMotion = 1538,
-	/// <unmanaged>SDL_EVENT_JOYSTICK_BUTTON_DOWN</unmanaged>
-	JoystickButtonDown = 1539,
-	/// <unmanaged>SDL_EVENT_JOYSTICK_BUTTON_UP</unmanaged>
-	JoystickButtonUp = 1540,
-	/// <unmanaged>SDL_EVENT_JOYSTICK_ADDED</unmanaged>
-	JoystickAdded = 1541,
-	/// <unmanaged>SDL_EVENT_JOYSTICK_REMOVED</unmanaged>
-	JoystickRemoved = 1542,
-	/// <unmanaged>SDL_EVENT_JOYSTICK_BATTERY_UPDATED</unmanaged>
-	JoystickBatteryUpdated = 1543,
-	/// <unmanaged>SDL_EVENT_JOYSTICK_UPDATE_COMPLETE</unmanaged>
-	JoystickUpdateComplete = 1544,
-	/// <unmanaged>SDL_EVENT_GAMEPAD_AXIS_MOTION</unmanaged>
-	GamepadAxisMotion = 0x650,
-	/// <unmanaged>SDL_EVENT_GAMEPAD_BUTTON_DOWN</unmanaged>
-	GamepadButtonDown = 1617,
-	/// <unmanaged>SDL_EVENT_GAMEPAD_BUTTON_UP</unmanaged>
-	GamepadButtonUp = 1618,
-	/// <unmanaged>SDL_EVENT_GAMEPAD_ADDED</unmanaged>
-	GamepadAdded = 1619,
-	/// <unmanaged>SDL_EVENT_GAMEPAD_REMOVED</unmanaged>
-	GamepadRemoved = 1620,
-	/// <unmanaged>SDL_EVENT_GAMEPAD_REMAPPED</unmanaged>
-	GamepadRemapped = 1621,
-	/// <unmanaged>SDL_EVENT_GAMEPAD_TOUCHPAD_DOWN</unmanaged>
-	GamepadTouchpadDown = 1622,
-	/// <unmanaged>SDL_EVENT_GAMEPAD_TOUCHPAD_MOTION</unmanaged>
-	GamepadTouchpadMotion = 1623,
-	/// <unmanaged>SDL_EVENT_GAMEPAD_TOUCHPAD_UP</unmanaged>
-	GamepadTouchpadUp = 1624,
-	/// <unmanaged>SDL_EVENT_GAMEPAD_SENSOR_UPDATE</unmanaged>
-	GamepadSensorUpdate = 1625,
-	/// <unmanaged>SDL_EVENT_GAMEPAD_UPDATE_COMPLETE</unmanaged>
-	GamepadUpdateComplete = 1626,
-	/// <unmanaged>SDL_EVENT_GAMEPAD_STEAM_HANDLE_UPDATED</unmanaged>
-	GamepadSteamHandleUpdated = 1627,
-	/// <unmanaged>SDL_EVENT_FINGER_DOWN</unmanaged>
-	FingerDown = 0x700,
-	/// <unmanaged>SDL_EVENT_FINGER_UP</unmanaged>
-	FingerUp = 1793,
-	/// <unmanaged>SDL_EVENT_FINGER_MOTION</unmanaged>
-	FingerMotion = 1794,
-	/// <unmanaged>SDL_EVENT_CLIPBOARD_UPDATE</unmanaged>
-	ClipboardUpdate = 0x900,
-	/// <unmanaged>SDL_EVENT_DROP_FILE</unmanaged>
-	DropFile = 0x1000,
-	/// <unmanaged>SDL_EVENT_DROP_TEXT</unmanaged>
-	DropText = 4097,
-	/// <unmanaged>SDL_EVENT_DROP_BEGIN</unmanaged>
-	DropBegin = 4098,
-	/// <unmanaged>SDL_EVENT_DROP_COMPLETE</unmanaged>
-	DropComplete = 4099,
-	/// <unmanaged>SDL_EVENT_DROP_POSITION</unmanaged>
-	DropPosition = 4100,
-	/// <unmanaged>SDL_EVENT_AUDIO_DEVICE_ADDED</unmanaged>
-	AudioDeviceAdded = 0x1100,
-	/// <unmanaged>SDL_EVENT_AUDIO_DEVICE_REMOVED</unmanaged>
-	AudioDeviceRemoved = 4353,
-	/// <unmanaged>SDL_EVENT_AUDIO_DEVICE_FORMAT_CHANGED</unmanaged>
-	AudioDeviceFormatChanged = 4354,
-	/// <unmanaged>SDL_EVENT_SENSOR_UPDATE</unmanaged>
-	SensorUpdate = 0x1200,
-	/// <unmanaged>SDL_EVENT_PEN_DOWN</unmanaged>
-	PenDown = 0x1300,
-	/// <unmanaged>SDL_EVENT_PEN_UP</unmanaged>
-	PenUp = 4865,
-	/// <unmanaged>SDL_EVENT_PEN_MOTION</unmanaged>
-	PenMotion = 4866,
-	/// <unmanaged>SDL_EVENT_PEN_BUTTON_DOWN</unmanaged>
-	PenButtonDown = 4867,
-	/// <unmanaged>SDL_EVENT_PEN_BUTTON_UP</unmanaged>
-	PenButtonUp = 4868,
-	/// <unmanaged>SDL_EVENT_CAMERA_DEVICE_ADDED</unmanaged>
-	CameraDeviceAdded = 0x1400,
-	/// <unmanaged>SDL_EVENT_CAMERA_DEVICE_REMOVED</unmanaged>
-	CameraDeviceRemoved = 5121,
-	/// <unmanaged>SDL_EVENT_CAMERA_DEVICE_APPROVED</unmanaged>
-	CameraDeviceApproved = 5122,
-	/// <unmanaged>SDL_EVENT_CAMERA_DEVICE_DENIED</unmanaged>
-	CameraDeviceDenied = 5123,
-	/// <unmanaged>SDL_EVENT_RENDER_TARGETS_RESET</unmanaged>
-	RenderTargetsReset = 0x2000,
-	/// <unmanaged>SDL_EVENT_RENDER_DEVICE_RESET</unmanaged>
-	RenderDeviceReset = 8193,
-	/// <unmanaged>SDL_EVENT_POLL_SENTINEL</unmanaged>
-	PollSentinel = 0x7F00,
-	/// <unmanaged>SDL_EVENT_USER</unmanaged>
-	User = 0x8000,
-	/// <unmanaged>SDL_EVENT_LAST</unmanaged>
-	Last = 0xFFFF,
-	/// <unmanaged>SDL_EVENT_ENUM_PADDING</unmanaged>
-	EnumPadding = 0x7FFFFFFF,
+	/// <unmanaged>SDL_WINRT_PATH_INSTALLED_LOCATION</unmanaged>
+	InstalledLocation = 0,
+	/// <unmanaged>SDL_WINRT_PATH_LOCAL_FOLDER</unmanaged>
+	LocalFolder = 1,
+	/// <unmanaged>SDL_WINRT_PATH_ROAMING_FOLDER</unmanaged>
+	RoamingFolder = 2,
+	/// <unmanaged>SDL_WINRT_PATH_TEMP_FOLDER</unmanaged>
+	TempFolder = 3,
 }
 
-public enum SDL_EventAction
+public enum SDL_WinRT_DeviceFamily
 {
-	/// <unmanaged>SDL_ADDEVENT</unmanaged>
-	AddEvent = 0,
-	/// <unmanaged>SDL_PEEKEVENT</unmanaged>
-	PeekEvent = 1,
-	/// <unmanaged>SDL_GETEVENT</unmanaged>
-	GetEvent = 2,
-}
-
-public enum SDL_HintPriority
-{
-	/// <unmanaged>SDL_HINT_NORMAL</unmanaged>
-	Normal = 1,
-	/// <unmanaged>SDL_HINT_OVERRIDE</unmanaged>
-	Override = 2,
-}
-
-[Flags]
-public enum SDL_BlendMode
-{
-	/// <unmanaged>SDL_BLENDMODE_NONE</unmanaged>
-	None = 0x00000000,
-	/// <unmanaged>SDL_BLENDMODE_BLEND</unmanaged>
-	Blend = 0x00000001,
-	/// <unmanaged>SDL_BLENDMODE_ADD</unmanaged>
-	Add = 0x00000002,
-	/// <unmanaged>SDL_BLENDMODE_MOD</unmanaged>
-	Mod = 0x00000004,
-	/// <unmanaged>SDL_BLENDMODE_MUL</unmanaged>
-	Mul = 0x00000008,
-	/// <unmanaged>SDL_BLENDMODE_INVALID</unmanaged>
-	Invalid = 0x7FFFFFFF,
-}
-
-public enum SDL_BlendOperation
-{
-	/// <unmanaged>SDL_BLENDOPERATION_ADD</unmanaged>
-	Add = 0x1,
-	/// <unmanaged>SDL_BLENDOPERATION_SUBTRACT</unmanaged>
-	Subtract = 0x2,
-	/// <unmanaged>SDL_BLENDOPERATION_REV_SUBTRACT</unmanaged>
-	RevSubtract = 0x3,
-	/// <unmanaged>SDL_BLENDOPERATION_MINIMUM</unmanaged>
-	Minimum = 0x4,
-	/// <unmanaged>SDL_BLENDOPERATION_MAXIMUM</unmanaged>
-	Maximum = 0x5,
-}
-
-public enum SDL_BlendFactor
-{
-	/// <unmanaged>SDL_BLENDFACTOR_ZERO</unmanaged>
-	Zero = 0x1,
-	/// <unmanaged>SDL_BLENDFACTOR_ONE</unmanaged>
-	One = 0x2,
-	/// <unmanaged>SDL_BLENDFACTOR_SRC_COLOR</unmanaged>
-	SrcColor = 0x3,
-	/// <unmanaged>SDL_BLENDFACTOR_ONE_MINUS_SRC_COLOR</unmanaged>
-	OneMinusSrcColor = 0x4,
-	/// <unmanaged>SDL_BLENDFACTOR_SRC_ALPHA</unmanaged>
-	SrcAlpha = 0x5,
-	/// <unmanaged>SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA</unmanaged>
-	OneMinusSrcAlpha = 0x6,
-	/// <unmanaged>SDL_BLENDFACTOR_DST_COLOR</unmanaged>
-	DstColor = 0x7,
-	/// <unmanaged>SDL_BLENDFACTOR_ONE_MINUS_DST_COLOR</unmanaged>
-	OneMinusDstColor = 0x8,
-	/// <unmanaged>SDL_BLENDFACTOR_DST_ALPHA</unmanaged>
-	DstAlpha = 0x9,
-	/// <unmanaged>SDL_BLENDFACTOR_ONE_MINUS_DST_ALPHA</unmanaged>
-	OneMinusDstAlpha = 0xA,
-}
-
-public enum SDL_PixelType
-{
-	/// <unmanaged>SDL_PIXELTYPE_UNKNOWN</unmanaged>
+	/// <unmanaged>SDL_WINRT_DEVICEFAMILY_UNKNOWN</unmanaged>
 	Unknown = 0,
-	/// <unmanaged>SDL_PIXELTYPE_INDEX1</unmanaged>
-	Index1 = 1,
-	/// <unmanaged>SDL_PIXELTYPE_INDEX4</unmanaged>
-	Index4 = 2,
-	/// <unmanaged>SDL_PIXELTYPE_INDEX8</unmanaged>
-	Index8 = 3,
-	/// <unmanaged>SDL_PIXELTYPE_PACKED8</unmanaged>
-	Packed8 = 4,
-	/// <unmanaged>SDL_PIXELTYPE_PACKED16</unmanaged>
-	Packed16 = 5,
-	/// <unmanaged>SDL_PIXELTYPE_PACKED32</unmanaged>
-	Packed32 = 6,
-	/// <unmanaged>SDL_PIXELTYPE_ARRAYU8</unmanaged>
-	ArrayU8 = 7,
-	/// <unmanaged>SDL_PIXELTYPE_ARRAYU16</unmanaged>
-	ArrayU16 = 8,
-	/// <unmanaged>SDL_PIXELTYPE_ARRAYU32</unmanaged>
-	ArrayU32 = 9,
-	/// <unmanaged>SDL_PIXELTYPE_ARRAYF16</unmanaged>
-	ArrayF16 = 10,
-	/// <unmanaged>SDL_PIXELTYPE_ARRAYF32</unmanaged>
-	ArrayF32 = 11,
-	/// <unmanaged>SDL_PIXELTYPE_INDEX2</unmanaged>
-	Index2 = 12,
-}
-
-public enum SDL_BitmapOrder
-{
-	/// <unmanaged>SDL_BITMAPORDER_NONE</unmanaged>
-	None = 0,
-	/// <unmanaged>SDL_BITMAPORDER_4321</unmanaged>
-	_4321 = 1,
-	/// <unmanaged>SDL_BITMAPORDER_1234</unmanaged>
-	_1234 = 2,
-}
-
-public enum SDL_PackedOrder
-{
-	/// <unmanaged>SDL_PACKEDORDER_NONE</unmanaged>
-	None = 0,
-	/// <unmanaged>SDL_PACKEDORDER_XRGB</unmanaged>
-	Xrgb = 1,
-	/// <unmanaged>SDL_PACKEDORDER_RGBX</unmanaged>
-	Rgbx = 2,
-	/// <unmanaged>SDL_PACKEDORDER_ARGB</unmanaged>
-	Argb = 3,
-	/// <unmanaged>SDL_PACKEDORDER_RGBA</unmanaged>
-	Rgba = 4,
-	/// <unmanaged>SDL_PACKEDORDER_XBGR</unmanaged>
-	Xbgr = 5,
-	/// <unmanaged>SDL_PACKEDORDER_BGRX</unmanaged>
-	Bgrx = 6,
-	/// <unmanaged>SDL_PACKEDORDER_ABGR</unmanaged>
-	Abgr = 7,
-	/// <unmanaged>SDL_PACKEDORDER_BGRA</unmanaged>
-	Bgra = 8,
-}
-
-public enum SDL_ArrayOrder
-{
-	/// <unmanaged>SDL_ARRAYORDER_NONE</unmanaged>
-	None = 0,
-	/// <unmanaged>SDL_ARRAYORDER_RGB</unmanaged>
-	Rgb = 1,
-	/// <unmanaged>SDL_ARRAYORDER_RGBA</unmanaged>
-	Rgba = 2,
-	/// <unmanaged>SDL_ARRAYORDER_ARGB</unmanaged>
-	Argb = 3,
-	/// <unmanaged>SDL_ARRAYORDER_BGR</unmanaged>
-	Bgr = 4,
-	/// <unmanaged>SDL_ARRAYORDER_BGRA</unmanaged>
-	Bgra = 5,
-	/// <unmanaged>SDL_ARRAYORDER_ABGR</unmanaged>
-	Abgr = 6,
-}
-
-public enum SDL_PackedLayout
-{
-	/// <unmanaged>SDL_PACKEDLAYOUT_NONE</unmanaged>
-	None = 0,
-	/// <unmanaged>SDL_PACKEDLAYOUT_332</unmanaged>
-	_332 = 1,
-	/// <unmanaged>SDL_PACKEDLAYOUT_4444</unmanaged>
-	_4444 = 2,
-	/// <unmanaged>SDL_PACKEDLAYOUT_1555</unmanaged>
-	_1555 = 3,
-	/// <unmanaged>SDL_PACKEDLAYOUT_5551</unmanaged>
-	_5551 = 4,
-	/// <unmanaged>SDL_PACKEDLAYOUT_565</unmanaged>
-	_565 = 5,
-	/// <unmanaged>SDL_PACKEDLAYOUT_8888</unmanaged>
-	_8888 = 6,
-	/// <unmanaged>SDL_PACKEDLAYOUT_2101010</unmanaged>
-	_2101010 = 7,
-	/// <unmanaged>SDL_PACKEDLAYOUT_1010102</unmanaged>
-	_1010102 = 8,
-}
-
-public enum SDL_PixelFormatEnum
-{
-	/// <unmanaged>SDL_PIXELFORMAT_UNKNOWN</unmanaged>
-	Unknown = 0,
-	/// <unmanaged>SDL_PIXELFORMAT_INDEX1LSB</unmanaged>
-	Index1lsb = 286261504,
-	/// <unmanaged>SDL_PIXELFORMAT_INDEX1MSB</unmanaged>
-	Index1msb = 287310080,
-	/// <unmanaged>SDL_PIXELFORMAT_INDEX2LSB</unmanaged>
-	Index2lsb = 470811136,
-	/// <unmanaged>SDL_PIXELFORMAT_INDEX2MSB</unmanaged>
-	Index2msb = 471859712,
-	/// <unmanaged>SDL_PIXELFORMAT_INDEX4LSB</unmanaged>
-	Index4lsb = 303039488,
-	/// <unmanaged>SDL_PIXELFORMAT_INDEX4MSB</unmanaged>
-	Index4msb = 304088064,
-	/// <unmanaged>SDL_PIXELFORMAT_INDEX8</unmanaged>
-	Index8 = 318769153,
-	/// <unmanaged>SDL_PIXELFORMAT_RGB332</unmanaged>
-	Rgb332 = 336660481,
-	/// <unmanaged>SDL_PIXELFORMAT_XRGB4444</unmanaged>
-	Xrgb4444 = 353504258,
-	/// <unmanaged>SDL_PIXELFORMAT_RGB444</unmanaged>
-	Rgb444 = Xrgb4444,
-	/// <unmanaged>SDL_PIXELFORMAT_XBGR4444</unmanaged>
-	Xbgr4444 = 357698562,
-	/// <unmanaged>SDL_PIXELFORMAT_BGR444</unmanaged>
-	Bgr444 = Xbgr4444,
-	/// <unmanaged>SDL_PIXELFORMAT_XRGB1555</unmanaged>
-	Xrgb1555 = 353570562,
-	/// <unmanaged>SDL_PIXELFORMAT_RGB555</unmanaged>
-	Rgb555 = Xrgb1555,
-	/// <unmanaged>SDL_PIXELFORMAT_XBGR1555</unmanaged>
-	Xbgr1555 = 357764866,
-	/// <unmanaged>SDL_PIXELFORMAT_BGR555</unmanaged>
-	Bgr555 = Xbgr1555,
-	/// <unmanaged>SDL_PIXELFORMAT_ARGB4444</unmanaged>
-	Argb4444 = 355602434,
-	/// <unmanaged>SDL_PIXELFORMAT_RGBA4444</unmanaged>
-	Rgba4444 = 356651010,
-	/// <unmanaged>SDL_PIXELFORMAT_ABGR4444</unmanaged>
-	Abgr4444 = 359796738,
-	/// <unmanaged>SDL_PIXELFORMAT_BGRA4444</unmanaged>
-	Bgra4444 = 360845314,
-	/// <unmanaged>SDL_PIXELFORMAT_ARGB1555</unmanaged>
-	Argb1555 = 355667970,
-	/// <unmanaged>SDL_PIXELFORMAT_RGBA5551</unmanaged>
-	Rgba5551 = 356782082,
-	/// <unmanaged>SDL_PIXELFORMAT_ABGR1555</unmanaged>
-	Abgr1555 = 359862274,
-	/// <unmanaged>SDL_PIXELFORMAT_BGRA5551</unmanaged>
-	Bgra5551 = 360976386,
-	/// <unmanaged>SDL_PIXELFORMAT_RGB565</unmanaged>
-	Rgb565 = 353701890,
-	/// <unmanaged>SDL_PIXELFORMAT_BGR565</unmanaged>
-	Bgr565 = 357896194,
-	/// <unmanaged>SDL_PIXELFORMAT_RGB24</unmanaged>
-	Rgb24 = 386930691,
-	/// <unmanaged>SDL_PIXELFORMAT_BGR24</unmanaged>
-	Bgr24 = 390076419,
-	/// <unmanaged>SDL_PIXELFORMAT_XRGB8888</unmanaged>
-	Xrgb8888 = 370546692,
-	/// <unmanaged>SDL_PIXELFORMAT_RGBX8888</unmanaged>
-	Rgbx8888 = 371595268,
-	/// <unmanaged>SDL_PIXELFORMAT_XBGR8888</unmanaged>
-	Xbgr8888 = 374740996,
-	/// <unmanaged>SDL_PIXELFORMAT_BGRX8888</unmanaged>
-	Bgrx8888 = 375789572,
-	/// <unmanaged>SDL_PIXELFORMAT_ARGB8888</unmanaged>
-	Argb8888 = 372645892,
-	/// <unmanaged>SDL_PIXELFORMAT_RGBA8888</unmanaged>
-	Rgba8888 = 373694468,
-	/// <unmanaged>SDL_PIXELFORMAT_ABGR8888</unmanaged>
-	Abgr8888 = 376840196,
-	/// <unmanaged>SDL_PIXELFORMAT_BGRA8888</unmanaged>
-	Bgra8888 = 377888772,
-	/// <unmanaged>SDL_PIXELFORMAT_XRGB2101010</unmanaged>
-	Xrgb2101010 = 370614276,
-	/// <unmanaged>SDL_PIXELFORMAT_XBGR2101010</unmanaged>
-	Xbgr2101010 = 374808580,
-	/// <unmanaged>SDL_PIXELFORMAT_ARGB2101010</unmanaged>
-	Argb2101010 = 372711428,
-	/// <unmanaged>SDL_PIXELFORMAT_ABGR2101010</unmanaged>
-	Abgr2101010 = 376905732,
-	/// <unmanaged>SDL_PIXELFORMAT_RGB48</unmanaged>
-	Rgb48 = 403714054,
-	/// <unmanaged>SDL_PIXELFORMAT_BGR48</unmanaged>
-	Bgr48 = 406859782,
-	/// <unmanaged>SDL_PIXELFORMAT_RGBA64</unmanaged>
-	Rgba64 = 404766728,
-	/// <unmanaged>SDL_PIXELFORMAT_ARGB64</unmanaged>
-	Argb64 = 405815304,
-	/// <unmanaged>SDL_PIXELFORMAT_BGRA64</unmanaged>
-	Bgra64 = 407912456,
-	/// <unmanaged>SDL_PIXELFORMAT_ABGR64</unmanaged>
-	Abgr64 = 408961032,
-	/// <unmanaged>SDL_PIXELFORMAT_RGB48_FLOAT</unmanaged>
-	Rgb48Float = 437268486,
-	/// <unmanaged>SDL_PIXELFORMAT_BGR48_FLOAT</unmanaged>
-	Bgr48Float = 440414214,
-	/// <unmanaged>SDL_PIXELFORMAT_RGBA64_FLOAT</unmanaged>
-	Rgba64Float = 438321160,
-	/// <unmanaged>SDL_PIXELFORMAT_ARGB64_FLOAT</unmanaged>
-	Argb64Float = 439369736,
-	/// <unmanaged>SDL_PIXELFORMAT_BGRA64_FLOAT</unmanaged>
-	Bgra64Float = 441466888,
-	/// <unmanaged>SDL_PIXELFORMAT_ABGR64_FLOAT</unmanaged>
-	Abgr64Float = 442515464,
-	/// <unmanaged>SDL_PIXELFORMAT_RGB96_FLOAT</unmanaged>
-	Rgb96Float = 454057996,
-	/// <unmanaged>SDL_PIXELFORMAT_BGR96_FLOAT</unmanaged>
-	Bgr96Float = 457203724,
-	/// <unmanaged>SDL_PIXELFORMAT_RGBA128_FLOAT</unmanaged>
-	Rgba128Float = 455114768,
-	/// <unmanaged>SDL_PIXELFORMAT_ARGB128_FLOAT</unmanaged>
-	Argb128Float = 456163344,
-	/// <unmanaged>SDL_PIXELFORMAT_BGRA128_FLOAT</unmanaged>
-	Bgra128Float = 458260496,
-	/// <unmanaged>SDL_PIXELFORMAT_ABGR128_FLOAT</unmanaged>
-	Abgr128Float = 459309072,
-	/// <unmanaged>SDL_PIXELFORMAT_RGBA32</unmanaged>
-	Rgba32 = Abgr8888,
-	/// <unmanaged>SDL_PIXELFORMAT_ARGB32</unmanaged>
-	Argb32 = Bgra8888,
-	/// <unmanaged>SDL_PIXELFORMAT_BGRA32</unmanaged>
-	Bgra32 = Argb8888,
-	/// <unmanaged>SDL_PIXELFORMAT_ABGR32</unmanaged>
-	Abgr32 = Rgba8888,
-	/// <unmanaged>SDL_PIXELFORMAT_RGBX32</unmanaged>
-	Rgbx32 = Xbgr8888,
-	/// <unmanaged>SDL_PIXELFORMAT_XRGB32</unmanaged>
-	Xrgb32 = Bgrx8888,
-	/// <unmanaged>SDL_PIXELFORMAT_BGRX32</unmanaged>
-	Bgrx32 = Xrgb8888,
-	/// <unmanaged>SDL_PIXELFORMAT_XBGR32</unmanaged>
-	Xbgr32 = Rgbx8888,
-	/// <unmanaged>SDL_PIXELFORMAT_YV12</unmanaged>
-	Yv12 = 842094169,
-	/// <unmanaged>SDL_PIXELFORMAT_IYUV</unmanaged>
-	Iyuv = 1448433993,
-	/// <unmanaged>SDL_PIXELFORMAT_YUY2</unmanaged>
-	Yuy2 = 844715353,
-	/// <unmanaged>SDL_PIXELFORMAT_UYVY</unmanaged>
-	Uyvy = 1498831189,
-	/// <unmanaged>SDL_PIXELFORMAT_YVYU</unmanaged>
-	Yvyu = 1431918169,
-	/// <unmanaged>SDL_PIXELFORMAT_NV12</unmanaged>
-	Nv12 = 842094158,
-	/// <unmanaged>SDL_PIXELFORMAT_NV21</unmanaged>
-	Nv21 = 825382478,
-	/// <unmanaged>SDL_PIXELFORMAT_P010</unmanaged>
-	P010 = 808530000,
-	/// <unmanaged>SDL_PIXELFORMAT_EXTERNAL_OES</unmanaged>
-	ExternalOes = 542328143,
-}
-
-public enum SDL_ColorType
-{
-	/// <unmanaged>SDL_COLOR_TYPE_UNKNOWN</unmanaged>
-	Unknown = 0,
-	/// <unmanaged>SDL_COLOR_TYPE_RGB</unmanaged>
-	Rgb = 1,
-	/// <unmanaged>SDL_COLOR_TYPE_YCBCR</unmanaged>
-	Ycbcr = 2,
-}
-
-public enum SDL_ColorRange
-{
-	/// <unmanaged>SDL_COLOR_RANGE_UNKNOWN</unmanaged>
-	Unknown = 0,
-	/// <unmanaged>SDL_COLOR_RANGE_LIMITED</unmanaged>
-	Limited = 1,
-	/// <unmanaged>SDL_COLOR_RANGE_FULL</unmanaged>
-	Full = 2,
-}
-
-public enum SDL_ColorPrimaries
-{
-	/// <unmanaged>SDL_COLOR_PRIMARIES_UNKNOWN</unmanaged>
-	Unknown = 0,
-	/// <unmanaged>SDL_COLOR_PRIMARIES_BT709</unmanaged>
-	Bt709 = 1,
-	/// <unmanaged>SDL_COLOR_PRIMARIES_UNSPECIFIED</unmanaged>
-	Unspecified = 2,
-	/// <unmanaged>SDL_COLOR_PRIMARIES_BT470M</unmanaged>
-	Bt470m = 4,
-	/// <unmanaged>SDL_COLOR_PRIMARIES_BT470BG</unmanaged>
-	Bt470bg = 5,
-	/// <unmanaged>SDL_COLOR_PRIMARIES_BT601</unmanaged>
-	Bt601 = 6,
-	/// <unmanaged>SDL_COLOR_PRIMARIES_SMPTE240</unmanaged>
-	Smpte240 = 7,
-	/// <unmanaged>SDL_COLOR_PRIMARIES_GENERIC_FILM</unmanaged>
-	GenericFilm = 8,
-	/// <unmanaged>SDL_COLOR_PRIMARIES_BT2020</unmanaged>
-	Bt2020 = 9,
-	/// <unmanaged>SDL_COLOR_PRIMARIES_XYZ</unmanaged>
-	Xyz = 10,
-	/// <unmanaged>SDL_COLOR_PRIMARIES_SMPTE431</unmanaged>
-	Smpte431 = 11,
-	/// <unmanaged>SDL_COLOR_PRIMARIES_SMPTE432</unmanaged>
-	Smpte432 = 12,
-	/// <unmanaged>SDL_COLOR_PRIMARIES_EBU3213</unmanaged>
-	Ebu3213 = 22,
-	/// <unmanaged>SDL_COLOR_PRIMARIES_CUSTOM</unmanaged>
-	Custom = 31,
-}
-
-public enum SDL_TransferCharacteristics
-{
-	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_UNKNOWN</unmanaged>
-	Unknown = 0,
-	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_BT709</unmanaged>
-	Bt709 = 1,
-	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_UNSPECIFIED</unmanaged>
-	Unspecified = 2,
-	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_GAMMA22</unmanaged>
-	Gamma22 = 4,
-	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_GAMMA28</unmanaged>
-	Gamma28 = 5,
-	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_BT601</unmanaged>
-	Bt601 = 6,
-	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_SMPTE240</unmanaged>
-	Smpte240 = 7,
-	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_LINEAR</unmanaged>
-	Linear = 8,
-	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_LOG100</unmanaged>
-	Log100 = 9,
-	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_LOG100_SQRT10</unmanaged>
-	Log100Sqrt10 = 10,
-	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_IEC61966</unmanaged>
-	Iec61966 = 11,
-	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_BT1361</unmanaged>
-	Bt1361 = 12,
-	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_SRGB</unmanaged>
-	Srgb = 13,
-	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_BT2020_10BIT</unmanaged>
-	Bt202010bit = 14,
-	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_BT2020_12BIT</unmanaged>
-	Bt202012bit = 15,
-	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_PQ</unmanaged>
-	Pq = 16,
-	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_SMPTE428</unmanaged>
-	Smpte428 = 17,
-	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_HLG</unmanaged>
-	Hlg = 18,
-	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_CUSTOM</unmanaged>
-	Custom = 31,
-}
-
-public enum SDL_MatrixCoefficients
-{
-	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_IDENTITY</unmanaged>
-	Identity = 0,
-	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_BT709</unmanaged>
-	Bt709 = 1,
-	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_UNSPECIFIED</unmanaged>
-	Unspecified = 2,
-	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_FCC</unmanaged>
-	Fcc = 4,
-	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_BT470BG</unmanaged>
-	Bt470bg = 5,
-	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_BT601</unmanaged>
-	Bt601 = 6,
-	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_SMPTE240</unmanaged>
-	Smpte240 = 7,
-	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_YCGCO</unmanaged>
-	Ycgco = 8,
-	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_BT2020_NCL</unmanaged>
-	Bt2020Ncl = 9,
-	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_BT2020_CL</unmanaged>
-	Bt2020Cl = 10,
-	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_SMPTE2085</unmanaged>
-	Smpte2085 = 11,
-	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_CHROMA_DERIVED_NCL</unmanaged>
-	ChromaDerivedNcl = 12,
-	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_CHROMA_DERIVED_CL</unmanaged>
-	ChromaDerivedCl = 13,
-	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_ICTCP</unmanaged>
-	Ictcp = 14,
-	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_CUSTOM</unmanaged>
-	Custom = 31,
-}
-
-public enum SDL_ChromaLocation
-{
-	/// <unmanaged>SDL_CHROMA_LOCATION_NONE</unmanaged>
-	None = 0,
-	/// <unmanaged>SDL_CHROMA_LOCATION_LEFT</unmanaged>
-	Left = 1,
-	/// <unmanaged>SDL_CHROMA_LOCATION_CENTER</unmanaged>
-	Center = 2,
-	/// <unmanaged>SDL_CHROMA_LOCATION_TOPLEFT</unmanaged>
-	Topleft = 3,
-}
-
-public enum SDL_Colorspace
-{
-	/// <unmanaged>SDL_COLORSPACE_UNKNOWN</unmanaged>
-	Unknown = 0,
-	/// <unmanaged>SDL_COLORSPACE_SRGB</unmanaged>
-	Srgb = 301991328,
-	/// <unmanaged>SDL_COLORSPACE_SRGB_LINEAR</unmanaged>
-	SrgbLinear = 301991168,
-	/// <unmanaged>SDL_COLORSPACE_HDR10</unmanaged>
-	Hdr10 = 301999616,
-	/// <unmanaged>SDL_COLORSPACE_JPEG</unmanaged>
-	Jpeg = 570426566,
-	/// <unmanaged>SDL_COLORSPACE_BT601_LIMITED</unmanaged>
-	Bt601Limited = 554703046,
-	/// <unmanaged>SDL_COLORSPACE_BT601_FULL</unmanaged>
-	Bt601Full = 571480262,
-	/// <unmanaged>SDL_COLORSPACE_BT709_LIMITED</unmanaged>
-	Bt709Limited = 554697761,
-	/// <unmanaged>SDL_COLORSPACE_BT709_FULL</unmanaged>
-	Bt709Full = 571474977,
-	/// <unmanaged>SDL_COLORSPACE_BT2020_LIMITED</unmanaged>
-	Bt2020Limited = 554706441,
-	/// <unmanaged>SDL_COLORSPACE_BT2020_FULL</unmanaged>
-	Bt2020Full = 571483657,
-	/// <unmanaged>SDL_COLORSPACE_RGB_DEFAULT</unmanaged>
-	RgbDefault = 301991328,
-	/// <unmanaged>SDL_COLORSPACE_YUV_DEFAULT</unmanaged>
-	YuvDefault = 570426566,
-}
-
-public enum SDL_ScaleMode
-{
-	/// <unmanaged>SDL_SCALEMODE_NEAREST</unmanaged>
-	Nearest = 0,
-	/// <unmanaged>SDL_SCALEMODE_LINEAR</unmanaged>
-	Linear = 1,
-	/// <unmanaged>SDL_SCALEMODE_BEST</unmanaged>
-	Best = 2,
-}
-
-public enum SDL_FlipMode
-{
-	/// <unmanaged>SDL_FLIP_NONE</unmanaged>
-	None = 0,
-	/// <unmanaged>SDL_FLIP_HORIZONTAL</unmanaged>
-	Horizontal = 1,
-	/// <unmanaged>SDL_FLIP_VERTICAL</unmanaged>
-	Vertical = 2,
-}
-
-public enum SDL_CameraPosition
-{
-	/// <unmanaged>SDL_CAMERA_POSITION_UNKNOWN</unmanaged>
-	Unknown = 0,
-	/// <unmanaged>SDL_CAMERA_POSITION_FRONT_FACING</unmanaged>
-	FrontFacing = 1,
-	/// <unmanaged>SDL_CAMERA_POSITION_BACK_FACING</unmanaged>
-	BackFacing = 2,
-}
-
-public enum SDL_DateFormat
-{
-	/// <unmanaged>SDL_DATE_FORMAT_YYYYMMDD</unmanaged>
-	Yyyymmdd = 0,
-	/// <unmanaged>SDL_DATE_FORMAT_DDMMYYYY</unmanaged>
-	Ddmmyyyy = 1,
-	/// <unmanaged>SDL_DATE_FORMAT_MMDDYYYY</unmanaged>
-	Mmddyyyy = 2,
-}
-
-public enum SDL_TimeFormat
-{
-	/// <unmanaged>SDL_TIME_FORMAT_24HR</unmanaged>
-	_24hr = 0,
-	/// <unmanaged>SDL_TIME_FORMAT_12HR</unmanaged>
-	_12hr = 1,
+	/// <unmanaged>SDL_WINRT_DEVICEFAMILY_DESKTOP</unmanaged>
+	Desktop = 1,
+	/// <unmanaged>SDL_WINRT_DEVICEFAMILY_MOBILE</unmanaged>
+	Mobile = 2,
+	/// <unmanaged>SDL_WINRT_DEVICEFAMILY_XBOX</unmanaged>
+	Xbox = 3,
 }
 

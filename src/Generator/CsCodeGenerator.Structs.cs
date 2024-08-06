@@ -52,7 +52,7 @@ public static partial class CsCodeGenerator
             bool isUnion = cppClass.ClassKind == CppClassKind.Union;
 
             string csName = cppClass.Name;
-            WriteStruct(writer, cppClass, cppClass.Name);
+            WriteStruct(writer, cppClass, csName);
             writer.WriteLine();
         }
     }
@@ -62,7 +62,7 @@ public static partial class CsCodeGenerator
         string visibility = s_options.PublicVisiblity ? "public" : "internal";
         bool isUnion = @struct.ClassKind == CppClassKind.Union;
         bool isReadOnly = false;
-        string typeName = string.Empty; ;
+        string typeName = string.Empty;
         if (structName.StartsWith("SDL_Event") || structName.EndsWith("Event"))
         {
             typeName = "SDL_EventType";
@@ -75,10 +75,6 @@ public static partial class CsCodeGenerator
         {
             typeName = "SDL_HapticDirectionType";
         }
-        else if (structName.StartsWith("SDL_SysWMinfo"))
-        {
-            typeName = "SDL_SYSWM_TYPE";
-        }
 
         if (isUnion)
         {
@@ -89,6 +85,10 @@ public static partial class CsCodeGenerator
         {
             foreach (CppField cppField in @struct.Fields)
             {
+                if (structName == "SDL_StorageInterface")
+                {
+                }
+
                 WriteField(writer, cppField, isUnion, isReadOnly, typeName);
             }
         }
@@ -106,6 +106,7 @@ public static partial class CsCodeGenerator
             writer.WriteLine("[FieldOffset(0)]");
         }
 
+        //writer.WriteLine($"[NativeTypeName({field.ToString()})]");
         if (field.Type is CppArrayType arrayType)
         {
             bool canUseFixed = false;
@@ -121,7 +122,7 @@ public static partial class CsCodeGenerator
 
             if (canUseFixed)
             {
-                string csFieldType = GetCsTypeName(arrayType.ElementType, false);
+                string csFieldType = GetCsTypeName(arrayType.ElementType);
                 writer.WriteLine($"public unsafe fixed {csFieldType} {csFieldName}[{arrayType.Size}];");
             }
             else
@@ -129,17 +130,17 @@ public static partial class CsCodeGenerator
                 string csFieldType;
                 if (arrayType.ElementType is CppArrayType elementArrayType)
                 {
-                    csFieldType = GetCsTypeName(elementArrayType.ElementType, false);
+                    csFieldType = GetCsTypeName(elementArrayType.ElementType);
                     writer.WriteLine($"public unsafe fixed {csFieldType} {csFieldName}[{arrayType.Size} * {elementArrayType.Size}];");
                 }
                 else if (arrayType.ElementType is CppTypedef cppTypedef)
                 {
-                    csFieldType = GetCsTypeName(cppTypedef.ElementType, false);
+                    csFieldType = GetCsTypeName(cppTypedef.ElementType);
                     writer.WriteLine($"public unsafe fixed {csFieldType} {csFieldName}[{arrayType.Size}];");
                 }
                 else
                 {
-                    csFieldType = GetCsTypeName(arrayType.ElementType, false);
+                    csFieldType = GetCsTypeName(arrayType.ElementType);
 
                     writer.WriteLine($"public {csFieldName}__FixedBuffer {csFieldName};");
                     writer.WriteLine();
@@ -215,20 +216,26 @@ public static partial class CsCodeGenerator
                 StringBuilder builder = new();
                 foreach (CppParameter parameter in functionType.Parameters)
                 {
-                    string paramCsType = GetCsTypeName(parameter.Type, false);
+                    string paramCsType = GetCsTypeName(parameter.Type);
                     // Otherwise we get interop issues with non blittable types
                     if (paramCsType == "VkBool32")
                         paramCsType = "uint";
                     builder.Append(paramCsType).Append(", ");
                 }
 
-                string returnCsName = GetCsTypeName(functionType.ReturnType, false);
+                string returnCsName = GetCsTypeName(functionType.ReturnType);
                 builder.Append(returnCsName);
                 writer.WriteLine($"public unsafe delegate* unmanaged<{builder}> {csFieldName};");
                 return;
             }
 
-            string csFieldType = GetCsTypeName(field.Type, false);
+            string csFieldType = GetCsTypeName(field.Type);
+            //if (field.Type is CppPointerType
+            //    && csFieldType.EndsWith("*") == false
+            //    && s_collectedHandles.ContainsKey(csFieldType) == false)
+            //{
+            //    csFieldType += "*";
+            //}
 
             string fieldPrefix = isReadOnly ? "readonly " : string.Empty;
             if (csFieldType.EndsWith('*'))

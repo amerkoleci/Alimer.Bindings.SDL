@@ -7,11 +7,18 @@ namespace Generator;
 
 public static partial class CsCodeGenerator
 {
-    private static readonly HashSet<string> s_keywords = new()
-    {
+    private static readonly HashSet<string> s_keywords =
+    [
         "object",
         "event",
-    };
+        "base",
+        "lock",
+        "string",
+        "override",
+        "internal",
+        "private",
+        "public",
+    ];
 
     private static readonly Dictionary<string, string> s_csNameMappings = new()
     {
@@ -34,6 +41,7 @@ public static partial class CsCodeGenerator
         { "Sint64", "long" },
         { "Uint64", "ulong" },
         { "char", "byte" },
+        { "wchar_t", "char" },
         { "size_t", "nuint" },
         { "intptr_t", "nint" },
         { "uintptr_t", "nuint" },
@@ -44,12 +52,11 @@ public static partial class CsCodeGenerator
         { "SDL_FPoint", "PointF" },
         { "SDL_Rect", "Rectangle" },
         { "SDL_FRect", "RectangleF" },
-        { "SDL_Keycode", "int" },
-        { "VkInstance", "nint" },
-        { "VkSurfaceKHR", "ulong" },
         { "SDL_EGLDisplay", "nint" },
         { "SDL_EGLConfig", "nint" },
         { "SDL_EGLSurface", "nint" },
+        { "SDL_EGLAttrib", "nint" },
+        { "SDL_EGLint", "int" },
         { "SDL_MetalView", "nint" },
         { "HWND", "nint" },
         { "HDC", "nint" },
@@ -57,23 +64,22 @@ public static partial class CsCodeGenerator
         { "UINT", "uint" },
         { "WPARAM", "nuint" },
         { "LPARAM", "nint" },
+        { "SDL_eventaction", "SDL_EventAction" },
+        { "SDL_iconv_t", "SDL_iconv_data_t" },
+        // Vulkan
+        { "VkAllocationCallbacks", "nint" },
+        { "VkInstance", "nint" },
+        { "VkPhysicalDevice", "nint" },
+        { "VkSurfaceKHR", "ulong" },
         // Until we understand how to treat this
         { "SDL_BlitMap", "nint" },
         { "SDL_Time", "long" },
-        { "SDL_eventaction", "SDL_EventAction" },
+        
     };
 
     private static readonly HashSet<string> s_knownTypes = new(StringComparer.OrdinalIgnoreCase)
     {
         "SDL_Rect",
-        "SDL_Joystick",
-        "SDL_Gamepad",
-        "SDL_Window",
-        "SDL_Renderer",
-        "SDL_Sensor",
-        "SDL_AudioStream",
-        "SDL_Haptic",
-        "SDL_IOStream",
     };
 
     private static CsCodeGeneratorOptions s_options = new();
@@ -97,8 +103,8 @@ public static partial class CsCodeGenerator
     {
         s_options = options;
 
-        GenerateConstants();
         GenerateEnums();
+        GenerateConstants();
         GenerateHandles();
         GenerateStructAndUnions();
         GenerateCommands();
@@ -131,24 +137,21 @@ public static partial class CsCodeGenerator
         return name;
     }
 
-    private static string GetCsTypeName(CppType? type, bool isPointer = false)
+    private static string GetCsTypeName(CppType? type)
     {
         if (type is CppPrimitiveType primitiveType)
         {
-            return GetCsTypeName(primitiveType, isPointer);
+            return GetCsTypeName(primitiveType);
         }
 
         if (type is CppQualifiedType qualifiedType)
         {
-            return GetCsTypeName(qualifiedType.ElementType, isPointer);
+            return GetCsTypeName(qualifiedType.ElementType);
         }
 
         if (type is CppEnum enumType)
         {
             string enumCsName = GetCsCleanName(enumType.Name);
-            if (isPointer)
-                return enumCsName + "*";
-
             return enumCsName;
         }
 
@@ -156,13 +159,10 @@ public static partial class CsCodeGenerator
         {
             if (typedef.ElementType is CppClass classElementType)
             {
-                return GetCsTypeName(classElementType, isPointer);
+                return GetCsTypeName(classElementType);
             }
 
             string typeDefCsName = GetCsCleanName(typedef.Name);
-            if (isPointer && !s_knownTypes.Contains(typeDefCsName))
-                return typeDefCsName + "*";
-
             return typeDefCsName;
         }
 
@@ -175,74 +175,80 @@ public static partial class CsCodeGenerator
                 || className == "ID3D12Device")
                 return "nint";
 
-            if (isPointer && !s_knownTypes.Contains(className))
-                return className + "*";
-
             return className;
         }
 
         if (type is CppPointerType pointerType)
         {
-            string className = GetCsTypeName(pointerType);
-            if (isPointer && !s_knownTypes.Contains(className))
-                return className + "*";
+            string csPointerTypeName = GetCsTypeName(pointerType);
+            if (csPointerTypeName == "IntPtr" || csPointerTypeName == "nint")
+                return csPointerTypeName;
 
-            return className;
+            if (!s_knownTypes.Contains(csPointerTypeName) && !s_generatedPointerHandles.Contains(csPointerTypeName))
+                return csPointerTypeName + "*";
+
+            return csPointerTypeName;
         }
 
         if (type is CppArrayType arrayType)
         {
-            return GetCsTypeName(arrayType.ElementType, true);
+            return GetCsTypeName(arrayType.ElementType) + "*";
         }
 
         return string.Empty;
     }
 
-    private static string GetCsTypeName(CppPrimitiveType primitiveType, bool isPointer)
+    private static string GetCsTypeName(CppPrimitiveType primitiveType)
     {
         switch (primitiveType.Kind)
         {
             case CppPrimitiveKind.Void:
-                return isPointer ? "nint" : "void";
-
-            case CppPrimitiveKind.Char:
-                return isPointer ? "byte*" : "byte";
+                return "nint";
 
             case CppPrimitiveKind.Bool:
                 return "bool";
 
+            case CppPrimitiveKind.Char:
+                return "byte";
+
             case CppPrimitiveKind.WChar:
-                return isPointer ? "ushort*" : "ushort";
+                return "char";
 
             case CppPrimitiveKind.Short:
-                return isPointer ? "short*" : "short";
+                return "short";
             case CppPrimitiveKind.Int:
-                return isPointer ? "int*" : "int";
+                return "int";
 
             case CppPrimitiveKind.LongLong:
-                break;
+                return "long";
+
             case CppPrimitiveKind.UnsignedChar:
-                break;
+                return "byte";
+
             case CppPrimitiveKind.UnsignedShort:
-                return isPointer ? "ushort*" : "ushort";
+                return "ushort";
             case CppPrimitiveKind.UnsignedInt:
-                return isPointer ? "uint*" : "uint";
+                return "uint";
 
             case CppPrimitiveKind.UnsignedLongLong:
-                break;
+                return "ulong";
+
             case CppPrimitiveKind.Float:
-                return isPointer ? "float*" : "float";
+                return "float";
             case CppPrimitiveKind.Double:
-                return isPointer ? "double*" : "double";
+                return "double";
             case CppPrimitiveKind.LongDouble:
-                break;
+                return "double";
 
+            case CppPrimitiveKind.Long:
+                return s_options.MapCLongToIntPtr ? "nint" : "global::System.Runtime.InteropServices.CLong";
 
+            case CppPrimitiveKind.UnsignedLong:
+                return s_options.MapCLongToIntPtr ? "nuint" : "global::System.Runtime.InteropServices.CULong";
+            
             default:
                 return string.Empty;
         }
-
-        return string.Empty;
     }
 
     private static string GetCsTypeName(CppPointerType pointerType)
@@ -254,31 +260,31 @@ public static partial class CsCodeGenerator
                 if (primitiveType.Kind == CppPrimitiveKind.Void && qualifiedType.Qualifier == CppTypeQualifier.Const)
                 {
                     // const void*
-                    return "void*";
+                    return "void";
                 }
 
-                return GetCsTypeName(primitiveType, true);
+                return GetCsTypeName(primitiveType);
             }
             else if (qualifiedType.ElementType is CppClass @classType)
             {
-                return GetCsTypeName(@classType, true);
+                return GetCsTypeName(@classType);
             }
             else if (qualifiedType.ElementType is CppPointerType subPointerType)
             {
-                return GetCsTypeName(subPointerType, true) + "*";
+                return GetCsTypeName(subPointerType) + "*";
             }
             else if (qualifiedType.ElementType is CppTypedef typedef)
             {
-                return GetCsTypeName(typedef, true);
+                return GetCsTypeName(typedef);
             }
             else if (qualifiedType.ElementType is CppEnum @enum)
             {
-                return GetCsTypeName(@enum, true);
+                return GetCsTypeName(@enum);
             }
 
-            return GetCsTypeName(qualifiedType.ElementType, true);
+            return GetCsTypeName(qualifiedType.ElementType);
         }
 
-        return GetCsTypeName(pointerType.ElementType, true);
+        return GetCsTypeName(pointerType.ElementType);
     }
 }

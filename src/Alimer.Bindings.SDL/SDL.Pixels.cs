@@ -2,49 +2,35 @@
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 using System.Runtime.InteropServices;
-using static SDL.SDL;
-using static SDL.SDL_bool;
+using static SDL3.SDL3;
+using static SDL3.SDL_bool;
 
-namespace SDL;
+namespace SDL3;
 
-unsafe partial class SDL
+unsafe partial class SDL3
 {
-    public static uint SDL_DEFINE_PIXELFOURCC(byte A, byte B, byte C, byte D) => SDL_FOURCC(A, B, C, D);
+    public static SDL_PixelFormat SDL_DEFINE_PIXELFOURCC(byte A, byte B, byte C, byte D) => (SDL_PixelFormat)SDL_FOURCC(A, B, C, D);
 
-    public static uint SDL_DEFINE_PIXELFORMAT(
-            SDL_PixelType type,
-            uint order,
-            SDL_PackedLayout layout,
-            byte bits,
-            byte bytes
-        )
-    {
-        return (uint)(
-            (1 << 28) |
-            (((byte)type) << 24) |
-            (((byte)order) << 20) |
-            (((byte)layout) << 16) |
-            (bits << 8) |
-            (bytes)
-        );
-    }
+    public static SDL_PixelFormat SDL_DEFINE_PIXELFORMAT(int type, int order, int layout, int bits, int bytes)
+        => (SDL_PixelFormat)((1 << 28) | ((type) << 24) | ((order) << 20) | ((layout) << 16) |
+                             ((bits) << 8) | ((bytes) << 0));
 
     public static byte SDL_PIXELFLAG(uint X)
     {
         return (byte)((X >> 28) & 0x0F);
     }
 
-    public static SDL_PixelType SDL_PIXELTYPE(SDL_PixelFormatEnum X)
+    public static SDL_PixelType SDL_PIXELTYPE(SDL_PixelFormat X)
     {
         return (SDL_PixelType)(((uint)X >> 24) & 0x0F);
     }
 
-    public static SDL_PackedOrder SDL_PIXELORDER(SDL_PixelFormatEnum X)
+    public static SDL_PackedOrder SDL_PIXELORDER(SDL_PixelFormat X)
     {
         return (SDL_PackedOrder)(((uint)X >> 20) & 0x0F);
     }
 
-    public static SDL_PackedLayout SDL_PIXELLAYOUT(SDL_PixelFormatEnum X)
+    public static SDL_PackedLayout SDL_PIXELLAYOUT(SDL_PixelFormat X)
     {
         return (SDL_PackedLayout)(((uint)X >> 16) & 0x0F);
     }
@@ -54,11 +40,11 @@ unsafe partial class SDL
         return (byte)((X >> 8) & 0xFF);
     }
 
-    public static byte SDL_BYTESPERPIXEL(SDL_PixelFormatEnum X)
+    public static byte SDL_BYTESPERPIXEL(SDL_PixelFormat X)
     {
         if (SDL_ISPIXELFORMAT_FOURCC(X))
         {
-            if ((X == SDL_PixelFormatEnum.Yuy2) || (X == SDL_PixelFormatEnum.Uyvy) || (X == SDL_PixelFormatEnum.Yvyu))
+            if ((X == SDL_PixelFormat.Yuy2) || (X == SDL_PixelFormat.Uyvy) || (X == SDL_PixelFormat.Yvyu))
             {
                 return 2;
             }
@@ -67,7 +53,7 @@ unsafe partial class SDL
         return (byte)((uint)X & 0xFF);
     }
 
-    public static bool SDL_ISPIXELFORMAT_INDEXED(SDL_PixelFormatEnum format)
+    public static bool SDL_ISPIXELFORMAT_INDEXED(SDL_PixelFormat format)
     {
         if (SDL_ISPIXELFORMAT_FOURCC(format))
         {
@@ -81,7 +67,7 @@ unsafe partial class SDL
         );
     }
 
-    public static bool SDL_ISPIXELFORMAT_PACKED(SDL_PixelFormatEnum format)
+    public static bool SDL_ISPIXELFORMAT_PACKED(SDL_PixelFormat format)
     {
         if (SDL_ISPIXELFORMAT_FOURCC(format))
         {
@@ -95,7 +81,7 @@ unsafe partial class SDL
         );
     }
 
-    public static bool SDL_ISPIXELFORMAT_ARRAY(SDL_PixelFormatEnum format)
+    public static bool SDL_ISPIXELFORMAT_ARRAY(SDL_PixelFormat format)
     {
         if (SDL_ISPIXELFORMAT_FOURCC(format))
         {
@@ -112,7 +98,7 @@ unsafe partial class SDL
         );
     }
 
-    public static bool SDL_ISPIXELFORMAT_ALPHA(SDL_PixelFormatEnum format)
+    public static bool SDL_ISPIXELFORMAT_ALPHA(SDL_PixelFormat format)
     {
         if (!SDL_ISPIXELFORMAT_PACKED(format))
             return false;
@@ -126,7 +112,7 @@ unsafe partial class SDL
         );
     }
 
-    public static bool SDL_ISPIXELFORMAT_10BIT(SDL_PixelFormatEnum format)
+    public static bool SDL_ISPIXELFORMAT_10BIT(SDL_PixelFormat format)
     {
         if (SDL_PIXELTYPE(format) == SDL_PixelType.Packed32 && SDL_PIXELLAYOUT(format) == SDL_PackedLayout._2101010)
             return true;
@@ -134,9 +120,9 @@ unsafe partial class SDL
         return false;
     }
 
-    public static bool SDL_ISPIXELFORMAT_FOURCC(SDL_PixelFormatEnum format)
+    public static bool SDL_ISPIXELFORMAT_FOURCC(SDL_PixelFormat format)
     {
-        return (format == SDL_PixelFormatEnum.Unknown) && (SDL_PIXELFLAG((uint)format) != 1);
+        return (format == SDL_PixelFormat.Unknown) && (SDL_PIXELFLAG((uint)format) != 1);
     }
 
     public static uint SDL_DEFINE_COLORSPACE(
@@ -201,31 +187,31 @@ unsafe partial class SDL
         return SDL_COLORSPACERANGE(space) == SDL_ColorRange.Full;
     }
 
-    public static string SDL_GetPixelFormatNameString(SDL_PixelFormatEnum format)
+    public static string SDL_GetPixelFormatNameString(SDL_PixelFormat format)
     {
         return GetStringOrEmpty(SDL_GetPixelFormatName(format));
     }
 
-    public static SDL_Surface* SDL_CreateSurfaceFrom<T>(T[] source, int width, int height, int pitch, SDL_PixelFormatEnum format)
+    public static SDL_Surface* SDL_CreateSurfaceFrom<T>(T[] source, int width, int height, int pitch, SDL_PixelFormat format)
         where T : unmanaged
     {
         ReadOnlySpan<T> span = source.AsSpan();
 
-        return SDL_CreateSurfaceFrom(span, width, height, pitch, format);
+        return SDL_CreateSurfaceFrom(span, width, height, format, pitch);
     }
 
-    public static SDL_Surface* SDL_CreateSurfaceFrom<T>(ReadOnlySpan<T> source, int width, int height, int pitch, SDL_PixelFormatEnum format)
+    public static SDL_Surface* SDL_CreateSurfaceFrom<T>(ReadOnlySpan<T> source, int width, int height, SDL_PixelFormat format, int pitch)
         where T : unmanaged
     {
-        return SDL_CreateSurfaceFrom(ref MemoryMarshal.GetReference(source), width, height, pitch, format);
+        return SDL_CreateSurfaceFrom(ref MemoryMarshal.GetReference(source), width, height, format, pitch);
     }
 
-    public static SDL_Surface* SDL_CreateSurfaceFrom<T>(ref T source, int width, int height, int pitch, SDL_PixelFormatEnum format)
+    public static SDL_Surface* SDL_CreateSurfaceFrom<T>(ref T source, int width, int height, SDL_PixelFormat format, int pitch)
          where T : unmanaged
     {
         fixed (void* sourcePointer = &source)
         {
-            return SDL_CreateSurfaceFrom((nint)sourcePointer, width, height, pitch, format);
+            return SDL_CreateSurfaceFrom(width, height, format, (nint)sourcePointer, pitch);
         }
     }
 }

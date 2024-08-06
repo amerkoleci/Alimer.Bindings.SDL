@@ -9,7 +9,7 @@ public sealed class CsCodeGeneratorOptions
     public string ClassName { get; set; } = null!;
     public string? Namespace { get; set; }
     public bool PublicVisiblity { get; set; } = true;
-    public bool GenerateFunctionPointers { get; set; } = false;
     public bool EnumWriteUnmanagedTag { get; set; } = true;
-    public bool UseDllImport { get; set; }
+    public bool GenerateCallbackTypes { get; set; }
+    public bool MapCLongToIntPtr { get; set; }
 }

@@ -33,65 +33,85 @@ public static class Program
         CsCodeGeneratorOptions generateOptions = new()
         {
             OutputPath = outputPath,
-            ClassName = "SDL",
-            Namespace = "SDL",
+            ClassName = "SDL3",
+            Namespace = "SDL3",
             PublicVisiblity = true,
-            GenerateFunctionPointers = false,
             EnumWriteUnmanagedTag = true
         };
 
+        string sdlIncludePath = Path.Combine(AppContext.BaseDirectory, "include");
+
         List<string> headers =
         [
-            "SDL_properties.h",
-            "SDL_error.h",
-            "SDL_pen.h",
-            "SDL_init.h",
-            "SDL_platform.h",
-            "SDL_clipboard.h",
-            "SDL_cpuinfo.h",
-            "SDL_loadso.h",
-            "SDL_scancode.h",
-            "SDL_iostream.h",
-            "SDL_keycode.h",
-            "SDL_keyboard.h",
-            "SDL_messagebox.h",
-            "SDL_joystick.h",
-            "SDL_gamepad.h",
-            "SDL_mouse.h",
-            "SDL_system.h",
-            "SDL_timer.h",
-            "SDL_touch.h",
-            "SDL_log.h",
-            "SDL_misc.h",
-            "SDL_power.h",
-            "SDL_sensor.h",
-            "SDL_video.h",
-            "SDL_audio.h",
-            "SDL_events.h",
-            "SDL_vulkan.h",
-            "SDL_metal.h",
-            "SDL_hints.h",
-            "SDL_haptic.h",
-            "SDL_blendmode.h",
-            "SDL_pixels.h",
-            "SDL_surface.h",
-            "SDL_camera.h",
-            "SDL_time.h",
+            Path.Combine(sdlIncludePath, "SDL3/SDL_atomic.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_audio.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_blendmode.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_camera.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_clipboard.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_cpuinfo.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_dialog.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_error.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_events.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_filesystem.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_gamepad.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_guid.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_haptic.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_hidapi.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_hints.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_init.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_iostream.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_joystick.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_keyboard.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_keycode.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_loadso.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_locale.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_log.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_messagebox.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_metal.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_misc.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_mouse.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_mutex.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_pen.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_pixels.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_platform.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_power.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_properties.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_rect.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_render.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_revision.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_scancode.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_sensor.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_stdinc.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_storage.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_surface.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_thread.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_time.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_timer.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_touch.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_version.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_video.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_vulkan.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_system.h"),
         ];
 
-        foreach(string header in headers)
+        var options = new CppParserOptions
         {
-            string? headerFile = Path.Combine(AppContext.BaseDirectory, "include", $"SDL3/{header}");
-            var options = new CppParserOptions
+            ParseMacros = false,
+            SystemIncludeFolders =
             {
-                ParseMacros = true,
-                SystemIncludeFolders =
-                {
-                    Path.Combine(AppContext.BaseDirectory, "include")
-                }
-            };
+                Path.Combine(AppContext.BaseDirectory, "include")
+            },
+            Defines =
+            {
+                "SDL_PLATFORM_ANDROID",
+                "SDL_PLATFORM_IOS",
+                "SDL_PLATFORM_WINRT",
+            }
+        };
 
-            CppCompilation compilation = CppParser.ParseFile(headerFile, options);
+        foreach (string header in headers)
+        {
+            CppCompilation compilation = CppParser.ParseFile(header, options);
 
             // Print diagnostic messages
             if (compilation.HasErrors)

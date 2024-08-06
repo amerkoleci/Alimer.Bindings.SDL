@@ -7,6 +7,62 @@ namespace Generator;
 
 public static partial class CsCodeGenerator
 {
+    private static readonly HashSet<string> s_ignoreConstants = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "alloca",
+        "SDL_HAS_BUILTIN",
+        "SDL_arraysize",
+        "SDL_STRINGIFY_ARG",
+        "SDL_reinterpret_cast",
+        "SDL_static_cast",
+        "SDL_const_cast",
+        "SDL_SIZE_MAX",
+        "SDL_SINT64_C",
+        "SDL_UINT64_C",
+        "SDL_FOURCC",
+        "SDL_memcpy",
+        "SDL_memset",
+        "SDL_zero",
+        "SDL_zerop",
+        "SDL_zeroa",
+        "SDL_min",
+        "SDL_max",
+        "SDL_clamp",
+        "SDL_copyp",
+        "SDL_memmove",
+        "SDL_stack_alloc",
+        "SDL_IN_BYTECAP",
+        "SDL_INOUT_Z_CAP",
+        "SDL_OUT_Z_CAP",
+        "SDL_OUT_CAP",
+        "SDL_OUT_BYTECAP",
+        "SDL_OUT_Z_BYTECAP",
+        "SDL_SCANF_FORMAT_STRING",
+        "SDL_COMPILE_TIME_ASSERT",
+        "SDL_CompilerBarrier",
+        "SDL_MemoryBarrierRelease",
+        "SDL_MemoryBarrierAcquire",
+        "SDL_CPUPauseInstruction",
+        "SDL_AtomicIncRef",
+        "SDL_AtomicDecRef",
+        "SDL_DEFINE_AUDIO_FORMAT",
+        "SDL_size_mul_overflow",
+        "SDL_size_add_overflow",
+        "SDL_AUDIO_S16",
+        "SDL_AUDIO_S32",
+        "SDL_AUDIO_F32",
+        "SDL_VERSIONNUM",
+        "SDL_VERSIONNUM_MAJOR",
+        "SDL_VERSIONNUM_MINOR",
+        "SDL_VERSIONNUM_MICRO",
+        "SDL_VERSION",
+        "SDL_VERSION_ATLEAST",
+        "SDL_BeginThreadFunction",
+        "SDL_EndThreadFunction",
+        "SDL_CreateThread",
+        "SDL_CreateThreadWithProperties",
+    };
+
     private static readonly List<CppMacro> s_collectedMacros = new();
 
     private static void CollectConstants(CppCompilation compilation)
@@ -24,6 +80,9 @@ public static partial class CsCodeGenerator
             {
                 continue;
             }
+
+            if (cppMacro.Name.StartsWith("SDL_PLATFORM_"))
+                continue;
 
             if (cppMacro.Name == "SDL_OutOfMemory" ||
                 cppMacro.Name == "SDL_Unsupported" ||
@@ -68,6 +127,11 @@ public static partial class CsCodeGenerator
                 || cppMacro.Name.StartsWith("SDL_ISCOLORSPACE_")
                 || cppMacro.Name == "SDL_SECONDS_TO_NS"
                 || cppMacro.Name == "SDL_NS_TO_SECONDS"
+                || cppMacro.Name.StartsWith("SDL_MIN_")
+                || cppMacro.Name.StartsWith("SDL_MAX_")
+                || cppMacro.Name.StartsWith("SDL_PRI")
+                || cppMacro.Name.StartsWith("SDL_ICONV_")
+                || cppMacro.Name.StartsWith("SDL_iconv_")
                 )
             {
                 continue;
@@ -77,6 +141,12 @@ public static partial class CsCodeGenerator
             {
                 continue;
             }
+
+            if (s_ignoreConstants.Contains(cppMacro.Name))
+                continue;
+
+            if (cppMacro.Value.StartsWith("SDL_THREAD_ANNOTATION_ATTRIBUTE__"))
+                continue;
 
             s_collectedMacros.Add(cppMacro);
         }
@@ -99,7 +169,7 @@ public static partial class CsCodeGenerator
                 //string csName = GetPrettyEnumName(cppMacro.Name, "VK_");
 
                 string modifier = "static";
-                string csDataType = "ReadOnlySpan<byte>";
+                string csDataType = "int";
                 string macroValue = NormalizeEnumValue(cppMacro.Value);
                 if (macroValue.EndsWith("F", StringComparison.OrdinalIgnoreCase))
                 {
@@ -130,6 +200,11 @@ public static partial class CsCodeGenerator
                 {
                     modifier = "const";
                     csDataType = "int";
+                }
+                else if (macroValue.StartsWith("\"", StringComparison.OrdinalIgnoreCase)
+                    && macroValue.EndsWith("\"", StringComparison.OrdinalIgnoreCase))
+                {
+                    csDataType = "ReadOnlySpan<byte>";
                 }
 
                 if (cppMacro.Name == "SDL_OutOfMemory" || cppMacro.Name == "SDL_Unsupported")
@@ -163,7 +238,13 @@ public static partial class CsCodeGenerator
                 }
                 if (cppMacro.Name == "SDL_NS_PER_SECOND")
                 {
+                    modifier = "const";
                     csDataType = "ulong";
+                }
+                if (cppMacro.Name == "SDL_PI_D")
+                {
+                    modifier = "const";
+                    csDataType = "double";
                 }
 
                 if (cppMacro.Name == "SDL_AUDIO_MASK_BITSIZE" ||
@@ -176,7 +257,7 @@ public static partial class CsCodeGenerator
                     || cppMacro.Name.StartsWith("SDL_HAPTIC_"))
                 {
                     modifier = "const";
-                    csDataType = "ushort";
+                    csDataType = "uint";
                 }
 
                 if (cppMacro.Name.StartsWith("SDL_AUDIO_S")
@@ -193,16 +274,58 @@ public static partial class CsCodeGenerator
                     csDataType = "SDL_AudioDeviceID";
                 }
 
+                if (cppMacro.Name == "SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK"
+                    || cppMacro.Name == "SDL_AUDIO_DEVICE_DEFAULT_RECORDING")
+                {
+                    csDataType = "SDL_AudioDeviceID";
+                }
+
                 if (cppMacro.Name.StartsWith("SDLK_"))
                 {
                     modifier = "const";
-                    csDataType = "int";
+                    csDataType = "uint";
 
                     if(macroValue.StartsWith("SDL_SCANCODE_TO_KEYCODE"))
                     {
                         string enumValueName = GetEnumItemName("SDL_Scancode", cppMacro.Tokens[2].Text, "SDL_SCANCODE");
                         macroValue = $"((int)SDL_Scancode.{enumValueName} | SDLK_SCANCODE_MASK)";
                     }
+                }
+                else if(cppMacro.Name.StartsWith("SDL_KMOD_"))
+                {
+                    modifier = "const";
+                    csDataType = "ushort";
+                    if(macroValue.EndsWith("u"))
+                        macroValue = macroValue.Substring(0, macroValue.Length - 1);
+                }
+
+                if(cppMacro.Name.StartsWith("SDL_WINDOW_") && cppMacro.Tokens.Count > 2)
+                {
+                    modifier = "const";
+                    csDataType = "ulong";
+                    macroValue = cppMacro.Tokens[2].Text;
+                }
+
+                if (cppMacro.Name == "SDL_FALSE"
+                    || cppMacro.Name == "SDL_TRUE")
+                {
+                    csDataType = "SDL_bool";
+                    macroValue = $"(SDL_bool)({macroValue})";
+                }
+
+                if (cppMacro.Name == "SDL_MAJOR_VERSION"
+                    || cppMacro.Name == "SDL_MINOR_VERSION"
+                    || cppMacro.Name == "SDL_MICRO_VERSION"
+                    || cppMacro.Name.StartsWith("SDL_PEN_FLAG_"))
+                {
+                    modifier = "const";
+                    csDataType = "int";
+                }
+                else if (cppMacro.Name == "SDL_RWLOCK_TIMEDOUT"
+                    || cppMacro.Name == "SDL_GLOB_CASEINSENSITIVE")
+                {
+                    modifier = "const";
+                    csDataType = "uint";
                 }
 
                 //writer.WriteLine($"/// <unmanaged>{cppMacro.Name}</unmanaged>");
@@ -214,6 +337,13 @@ public static partial class CsCodeGenerator
                 {
                     writer.WriteLine($"public {modifier} {csDataType} {cppMacro.Name} = {macroValue};");
                 }
+            }
+
+            writer.WriteLine();
+
+            foreach (string enumConstant in s_enumConstants)
+            {
+                writer.WriteLine($"public const {enumConstant};");
             }
         }
     }

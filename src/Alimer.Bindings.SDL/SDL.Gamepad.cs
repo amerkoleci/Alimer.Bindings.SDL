@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace SDL;
+namespace SDL3;
 
 public partial struct SDL_GamepadBinding
 {
@@ -60,7 +60,7 @@ public partial struct SDL_GamepadBinding
     }
 }
 
-unsafe partial class SDL
+unsafe partial class SDL3
 {
     public static ReadOnlySpan<SDL_JoystickID> SDL_GetGamepads()
     {
@@ -122,14 +122,9 @@ unsafe partial class SDL
         return GetStringOrEmpty(SDL_GetGamepadMapping(gamepad));
     }
 
-    public static string SDL_GetGamepadInstanceNameString(SDL_JoystickID instance_id)
+    public static string SDL_GetGamepadNameForIDString(SDL_JoystickID instance_id)
     {
-        return GetStringOrEmpty(SDL_GetGamepadInstanceName(instance_id));
-    }
-
-    public static string SDL_GetGamepadInstanceMappingString(SDL_JoystickID instance_id)
-    {
-        return GetStringOrEmpty(SDL_GetGamepadInstanceMapping(instance_id));
+        return GetStringOrEmpty(SDL_GetGamepadNameForID(instance_id));
     }
 
     public static string SDL_GetGamepadNameString(SDL_Gamepad gamepad)

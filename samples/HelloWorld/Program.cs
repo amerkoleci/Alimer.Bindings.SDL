@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
-using static SDL.SDL;
+using static SDL3.SDL3;
 using System.Drawing;
-using SDL;
+using SDL3;
 
 namespace HelloWorld;
 
@@ -12,12 +12,16 @@ public static unsafe class Program
     public static void Main()
     {
 #if DEBUG
-        SDL_LogSetAllPriority(SDL_LogPriority.Debug);
+        SDL_SetLogPriorities(SDL_LogPriority.Debug);
 #endif
 
         SDL_SetLogOutputFunction(OnLog);
 
-        SDL_GetVersion(out SDL_version version);
+        int v = SDL_GetVersion();
+        Console.WriteLine($"SDL: v{SDL_VERSIONNUM_MAJOR(v)}.{SDL_VERSIONNUM_MINOR(v)}.{SDL_VERSIONNUM_MICRO(v)}",
+            SDL_VERSIONNUM_MAJOR(v),
+            SDL_VERSIONNUM_MINOR(v),
+            SDL_VERSIONNUM_MICRO(v));
 
         string platform = SDL_GetPlatformString();
 
@@ -48,7 +52,7 @@ public static unsafe class Program
         SDL_GL_SetAttribute(SDL_GLattr.StencilSize, 8);
 
         // Enable native IME.
-        SDL_SetHint(SDL_HINT_IME_SHOW_UI, true);
+        SDL_SetHint(SDL_HINT_IME_IMPLEMENTED_UI, true);
 
         // create the window
         SDL_WindowFlags flags = SDL_WindowFlags.Resizable | SDL_WindowFlags.OpenGL | SDL_WindowFlags.Hidden;
@@ -63,7 +67,7 @@ public static unsafe class Program
         var id = SDL_GetWindowID(window);
         SDL_GetWindowSizeInPixels(window, out int width, out int height);
 
-        nint hwnd = SDL_GetProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_WIN32_HWND_POINTER);
+        nint hwnd = (nint)SDL_GetPointerProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_WIN32_HWND_POINTER);
 
         var display = SDL_GetDisplayForWindow(window);
         display = SDL_GetDisplayForPoint(Point.Empty);
@@ -89,8 +93,7 @@ public static unsafe class Program
         bool done = false;
         while (!done)
         {
-            SDL_Event evt;
-            while (SDL_PollEvent(&evt))
+            while (SDL_PollEvent(out SDL_Event evt))
             {
                 if (evt.type == SDL_EventType.Quit)
                 {
@@ -106,7 +109,7 @@ public static unsafe class Program
             SDL_GL_SwapWindow(window);
         }
 
-        SDL_GL_DeleteContext(gl_context);
+        SDL_GL_DestroyContext(gl_context);
         SDL_DestroyWindow(window);
         SDL_Quit();
     }

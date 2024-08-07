@@ -102,7 +102,7 @@ unsafe partial class SDL3
     {
         fixed (void* dataPtr = &data)
         {
-            return SDL_SendGamepadEffect(gamepad, dataPtr, size);
+            return SDL_SendGamepadEffect(gamepad, (nint)dataPtr, size);
         }
     }
 

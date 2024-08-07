@@ -70,12 +70,20 @@ public enum SDL_WindowFlags : ulong
 }
 #endregion
 
-public delegate void SDL_LogOutputFunction(SDL_LogCategory category, SDL_LogPriority priority, string description);
+public delegate void SDL_LogOutputFunction(SDL_LogCategory category, SDL_LogPriority priority, string? message);
 
 // https://github.com/libsdl-org/SDL/blob/main/docs/README-migration.md
 
 public static unsafe partial class SDL3
 {
+    private const DllImportSearchPath DefaultDllImportSearchPath = DllImportSearchPath.ApplicationDirectory | DllImportSearchPath.UserDirectories | DllImportSearchPath.UseDllDirectoryForDependencies;
+
+    /// <summary>
+    /// Raised whenever a native library is loaded by SDL.
+    /// Handlers can be added to this event to customize how libraries are loaded, and they will be used first whenever a new native library is being resolved.
+    /// </summary>
+    public static event DllImportResolver? SDL_DllImporterResolver;
+
     private const string LibName = "SDL3";
 
     static SDL3()
@@ -83,23 +91,30 @@ public static unsafe partial class SDL3
         NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), OnDllImport);
     }
 
-    private static nint OnDllImport(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
+    private static IntPtr OnDllImport(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
     {
-        if (libraryName.Equals(LibName) && TryResolveSDL3(assembly, searchPath, out nint nativeLibrary))
+        if (libraryName != LibName)
+        {
+            return IntPtr.Zero;
+        }
+
+        IntPtr nativeLibrary = IntPtr.Zero;
+        DllImportResolver? resolver = SDL_DllImporterResolver;
+        if (resolver != null)
+        {
+            nativeLibrary = resolver(libraryName, assembly, searchPath);
+        }
+
+        if (nativeLibrary != IntPtr.Zero)
         {
             return nativeLibrary;
         }
 
-        return 0;
-    }
-
-    private static bool TryResolveSDL3(Assembly assembly, DllImportSearchPath? searchPath, out nint nativeLibrary)
-    {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             if (NativeLibrary.TryLoad("SDL3.dll", assembly, searchPath, out nativeLibrary))
             {
-                return true;
+                return nativeLibrary;
             }
         }
         else
@@ -108,29 +123,34 @@ public static unsafe partial class SDL3
             {
                 if (NativeLibrary.TryLoad("libSDL3.so", assembly, searchPath, out nativeLibrary))
                 {
-                    return true;
+                    return nativeLibrary;
                 }
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 if (NativeLibrary.TryLoad("libSDL3.dylib", assembly, searchPath, out nativeLibrary))
                 {
-                    return true;
+                    return nativeLibrary;
                 }
 
                 if (NativeLibrary.TryLoad("/usr/local/opt/SDL3/lib/libSDL3.dylib", assembly, searchPath, out nativeLibrary))
                 {
-                    return true;
+                    return nativeLibrary;
                 }
-            }
-
-            if (NativeLibrary.TryLoad("SDL3", assembly, searchPath, out nativeLibrary))
-            {
-                return true;
             }
         }
 
-        return false;
+        if (NativeLibrary.TryLoad("libSDL3", assembly, searchPath, out nativeLibrary))
+        {
+            return nativeLibrary;
+        }
+
+        if (NativeLibrary.TryLoad("SDL3", assembly, searchPath, out nativeLibrary))
+        {
+            return nativeLibrary;
+        }
+
+        return 0;
     }
 
     //[NativeTypeName("#define SDL_SIZE_MAX SIZE_MAX")]
@@ -178,21 +198,15 @@ public static unsafe partial class SDL3
     {
         s_logCallback = callback;
 
-        Internal_SDL_SetLogOutputFunction(callback != null ? &OnNativeMessageCallback : null, IntPtr.Zero);
+        SDL_SetLogOutputFunction(callback != null ? &OnNativeMessageCallback : null, IntPtr.Zero);
     }
 
-    [DllImport(LibName, EntryPoint = nameof(SDL_SetLogOutputFunction), CallingConvention = CallingConvention.Cdecl)]
-    private static extern void Internal_SDL_SetLogOutputFunction(delegate* unmanaged<nint, int, SDL_LogPriority, sbyte*, void> callback, IntPtr userdata);
-
     [UnmanagedCallersOnly]
-    private static unsafe void OnNativeMessageCallback(nint userdata, int category, SDL_LogPriority priority, sbyte* messagePtr)
+    private static unsafe void OnNativeMessageCallback(nint userdata, int category, SDL_LogPriority priority, byte* messagePtr)
     {
-        string message = new(messagePtr);
+        string? message = ConvertToManaged(messagePtr);
 
-        if (s_logCallback != null)
-        {
-            s_logCallback((SDL_LogCategory)category, priority, message);
-        }
+        s_logCallback?.Invoke((SDL_LogCategory)category, priority, message);
     }
     #endregion
 
@@ -262,6 +276,18 @@ public static unsafe partial class SDL3
     [LibraryImport(LibName, EntryPoint = "SDL_PollEvent")]
     [return: MarshalAs(UnmanagedType.Bool)]
     public static partial bool SDL_PollEvent(out SDL_Event @event);
+
+    public static int SDL_PeepEvents(SDL_Event[] events, SDL_EventAction action, SDL_EventType minType, SDL_EventType maxType)
+    {
+        fixed (SDL_Event* eventsPtr = events)
+            return SDL_PeepEvents(eventsPtr, events.Length, action, minType, maxType);
+    }
+
+    public static int SDL_PeepEvents(Span<SDL_Event> events, SDL_EventAction action, SDL_EventType minType, SDL_EventType maxType)
+    {
+        fixed (SDL_Event* eventsPtr = events)
+            return SDL_PeepEvents(eventsPtr, events.Length, action, minType, maxType);
+    }
 
     #region SDL_vulkan.h
     public static int SDL_Vulkan_LoadLibrary()

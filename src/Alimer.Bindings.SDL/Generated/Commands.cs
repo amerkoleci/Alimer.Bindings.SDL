@@ -22,16 +22,16 @@ public unsafe partial class SDL3
 	public static partial bool SDL_TryLockSpinlock(SDL_SpinLock* @lock);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LockSpinlock")]
-	public static partial nint SDL_LockSpinlock(SDL_SpinLock* @lock);
+	public static partial void SDL_LockSpinlock(SDL_SpinLock* @lock);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UnlockSpinlock")]
-	public static partial nint SDL_UnlockSpinlock(SDL_SpinLock* @lock);
+	public static partial void SDL_UnlockSpinlock(SDL_SpinLock* @lock);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_MemoryBarrierReleaseFunction")]
-	public static partial nint SDL_MemoryBarrierReleaseFunction();
+	public static partial void SDL_MemoryBarrierReleaseFunction();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_MemoryBarrierAcquireFunction")]
-	public static partial nint SDL_MemoryBarrierAcquireFunction();
+	public static partial void SDL_MemoryBarrierAcquireFunction();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_AtomicCompareAndSwap")]
 	[return: MarshalAs(UnmanagedType.Bool)]
@@ -115,7 +115,7 @@ public unsafe partial class SDL3
 	public static partial int SDL_SetAudioDeviceGain(SDL_AudioDeviceID devid, float gain);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CloseAudioDevice")]
-	public static partial nint SDL_CloseAudioDevice(SDL_AudioDeviceID devid);
+	public static partial void SDL_CloseAudioDevice(SDL_AudioDeviceID devid);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_BindAudioStreams")]
 	public static partial int SDL_BindAudioStreams(SDL_AudioDeviceID devid, SDL_AudioStream streams, int num_streams);
@@ -124,10 +124,10 @@ public unsafe partial class SDL3
 	public static partial int SDL_BindAudioStream(SDL_AudioDeviceID devid, SDL_AudioStream stream);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UnbindAudioStreams")]
-	public static partial nint SDL_UnbindAudioStreams(SDL_AudioStream streams, int num_streams);
+	public static partial void SDL_UnbindAudioStreams(SDL_AudioStream streams, int num_streams);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UnbindAudioStream")]
-	public static partial nint SDL_UnbindAudioStream(SDL_AudioStream stream);
+	public static partial void SDL_UnbindAudioStream(SDL_AudioStream stream);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetAudioStreamDevice")]
 	public static partial SDL_AudioDeviceID SDL_GetAudioStreamDevice(SDL_AudioStream stream);
@@ -169,7 +169,7 @@ public unsafe partial class SDL3
 	public static partial int SDL_SetAudioStreamOutputChannelMap(SDL_AudioStream stream, int* chmap, int count);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_PutAudioStreamData")]
-	public static partial int SDL_PutAudioStreamData(SDL_AudioStream stream, void* buf, int len);
+	public static partial int SDL_PutAudioStreamData(SDL_AudioStream stream, nint buf, int len);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetAudioStreamData")]
 	public static partial int SDL_GetAudioStreamData(SDL_AudioStream stream, nint buf, int len);
@@ -199,19 +199,19 @@ public unsafe partial class SDL3
 	public static partial int SDL_UnlockAudioStream(SDL_AudioStream stream);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetAudioStreamGetCallback")]
-	public static partial int SDL_SetAudioStreamGetCallback(SDL_AudioStream stream, delegate* unmanaged<nint, SDL_AudioStream, int, int, nint> callback, nint userdata);
+	public static partial int SDL_SetAudioStreamGetCallback(SDL_AudioStream stream, delegate* unmanaged<nint, SDL_AudioStream, int, int, void> callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetAudioStreamPutCallback")]
-	public static partial int SDL_SetAudioStreamPutCallback(SDL_AudioStream stream, delegate* unmanaged<nint, SDL_AudioStream, int, int, nint> callback, nint userdata);
+	public static partial int SDL_SetAudioStreamPutCallback(SDL_AudioStream stream, delegate* unmanaged<nint, SDL_AudioStream, int, int, void> callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DestroyAudioStream")]
-	public static partial nint SDL_DestroyAudioStream(SDL_AudioStream stream);
+	public static partial void SDL_DestroyAudioStream(SDL_AudioStream stream);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_OpenAudioDeviceStream")]
-	public static partial SDL_AudioStream SDL_OpenAudioDeviceStream(SDL_AudioDeviceID devid, SDL_AudioSpec* spec, delegate* unmanaged<nint, SDL_AudioStream, int, int, nint> callback, nint userdata);
+	public static partial SDL_AudioStream SDL_OpenAudioDeviceStream(SDL_AudioDeviceID devid, SDL_AudioSpec* spec, delegate* unmanaged<nint, SDL_AudioStream, int, int, void> callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetAudioPostmixCallback")]
-	public static partial int SDL_SetAudioPostmixCallback(SDL_AudioDeviceID devid, delegate* unmanaged<nint, SDL_AudioSpec*, float*, int, nint> callback, nint userdata);
+	public static partial int SDL_SetAudioPostmixCallback(SDL_AudioDeviceID devid, delegate* unmanaged<nint, SDL_AudioSpec*, float*, int, void> callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadWAV_IO")]
 	public static partial int SDL_LoadWAV_IO(SDL_IOStream src, [MarshalAs(UnmanagedType.Bool)] bool closeio, SDL_AudioSpec* spec, byte** audio_buf, uint* audio_len);
@@ -295,7 +295,7 @@ public unsafe partial class SDL3
 	public static partial int SDL_ReleaseCameraFrame(SDL_Camera camera, SDL_Surface* frame);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CloseCamera")]
-	public static partial nint SDL_CloseCamera(SDL_Camera camera);
+	public static partial void SDL_CloseCamera(SDL_Camera camera);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetClipboardText")]
 	public static partial int SDL_SetClipboardText(byte* text);
@@ -346,7 +346,7 @@ public unsafe partial class SDL3
 	public static partial bool SDL_HasPrimarySelectionText();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetClipboardData")]
-	public static partial int SDL_SetClipboardData(delegate* unmanaged<nint, byte*, nuint*, void*> callback, delegate* unmanaged<nint, nint> cleanup, nint userdata, byte** mime_types, nuint num_mime_types);
+	public static partial int SDL_SetClipboardData(delegate* unmanaged<nint, byte*, nuint*, nint> callback, delegate* unmanaged<nint, void> cleanup, nint userdata, byte** mime_types, nuint num_mime_types);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ClearClipboardData")]
 	public static partial int SDL_ClearClipboardData();
@@ -441,31 +441,31 @@ public unsafe partial class SDL3
 	public static partial nuint SDL_GetSIMDAlignment();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ShowOpenFileDialog")]
-	public static partial nint SDL_ShowOpenFileDialog(delegate* unmanaged<nint, byte**, int, nint> callback, nint userdata, SDL_Window window, SDL_DialogFileFilter* filters, int nfilters, byte* default_location, [MarshalAs(UnmanagedType.Bool)] bool allow_many);
+	public static partial void SDL_ShowOpenFileDialog(delegate* unmanaged<nint, byte**, int, void> callback, nint userdata, SDL_Window window, SDL_DialogFileFilter* filters, int nfilters, byte* default_location, [MarshalAs(UnmanagedType.Bool)] bool allow_many);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ShowOpenFileDialog")]
-	public static partial nint SDL_ShowOpenFileDialog(delegate* unmanaged<nint, byte**, int, nint> callback, nint userdata, SDL_Window window, SDL_DialogFileFilter* filters, int nfilters, ReadOnlySpan<byte> default_location, [MarshalAs(UnmanagedType.Bool)] bool allow_many);
+	public static partial void SDL_ShowOpenFileDialog(delegate* unmanaged<nint, byte**, int, void> callback, nint userdata, SDL_Window window, SDL_DialogFileFilter* filters, int nfilters, ReadOnlySpan<byte> default_location, [MarshalAs(UnmanagedType.Bool)] bool allow_many);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ShowOpenFileDialog")]
-	public static partial nint SDL_ShowOpenFileDialog(delegate* unmanaged<nint, byte**, int, nint> callback, nint userdata, SDL_Window window, SDL_DialogFileFilter* filters, int nfilters, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> default_location, [MarshalAs(UnmanagedType.Bool)] bool allow_many);
+	public static partial void SDL_ShowOpenFileDialog(delegate* unmanaged<nint, byte**, int, void> callback, nint userdata, SDL_Window window, SDL_DialogFileFilter* filters, int nfilters, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> default_location, [MarshalAs(UnmanagedType.Bool)] bool allow_many);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ShowSaveFileDialog")]
-	public static partial nint SDL_ShowSaveFileDialog(delegate* unmanaged<nint, byte**, int, nint> callback, nint userdata, SDL_Window window, SDL_DialogFileFilter* filters, int nfilters, byte* default_location);
+	public static partial void SDL_ShowSaveFileDialog(delegate* unmanaged<nint, byte**, int, void> callback, nint userdata, SDL_Window window, SDL_DialogFileFilter* filters, int nfilters, byte* default_location);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ShowSaveFileDialog")]
-	public static partial nint SDL_ShowSaveFileDialog(delegate* unmanaged<nint, byte**, int, nint> callback, nint userdata, SDL_Window window, SDL_DialogFileFilter* filters, int nfilters, ReadOnlySpan<byte> default_location);
+	public static partial void SDL_ShowSaveFileDialog(delegate* unmanaged<nint, byte**, int, void> callback, nint userdata, SDL_Window window, SDL_DialogFileFilter* filters, int nfilters, ReadOnlySpan<byte> default_location);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ShowSaveFileDialog")]
-	public static partial nint SDL_ShowSaveFileDialog(delegate* unmanaged<nint, byte**, int, nint> callback, nint userdata, SDL_Window window, SDL_DialogFileFilter* filters, int nfilters, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> default_location);
+	public static partial void SDL_ShowSaveFileDialog(delegate* unmanaged<nint, byte**, int, void> callback, nint userdata, SDL_Window window, SDL_DialogFileFilter* filters, int nfilters, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> default_location);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ShowOpenFolderDialog")]
-	public static partial nint SDL_ShowOpenFolderDialog(delegate* unmanaged<nint, byte**, int, nint> callback, nint userdata, SDL_Window window, byte* default_location, [MarshalAs(UnmanagedType.Bool)] bool allow_many);
+	public static partial void SDL_ShowOpenFolderDialog(delegate* unmanaged<nint, byte**, int, void> callback, nint userdata, SDL_Window window, byte* default_location, [MarshalAs(UnmanagedType.Bool)] bool allow_many);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ShowOpenFolderDialog")]
-	public static partial nint SDL_ShowOpenFolderDialog(delegate* unmanaged<nint, byte**, int, nint> callback, nint userdata, SDL_Window window, ReadOnlySpan<byte> default_location, [MarshalAs(UnmanagedType.Bool)] bool allow_many);
+	public static partial void SDL_ShowOpenFolderDialog(delegate* unmanaged<nint, byte**, int, void> callback, nint userdata, SDL_Window window, ReadOnlySpan<byte> default_location, [MarshalAs(UnmanagedType.Bool)] bool allow_many);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ShowOpenFolderDialog")]
-	public static partial nint SDL_ShowOpenFolderDialog(delegate* unmanaged<nint, byte**, int, nint> callback, nint userdata, SDL_Window window, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> default_location, [MarshalAs(UnmanagedType.Bool)] bool allow_many);
+	public static partial void SDL_ShowOpenFolderDialog(delegate* unmanaged<nint, byte**, int, void> callback, nint userdata, SDL_Window window, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> default_location, [MarshalAs(UnmanagedType.Bool)] bool allow_many);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetError")]
 	public static partial int SDL_SetError(byte* fmt);
@@ -491,7 +491,7 @@ public unsafe partial class SDL3
 	public static partial int SDL_ClearError();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_PumpEvents")]
-	public static partial nint SDL_PumpEvents();
+	public static partial void SDL_PumpEvents();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_PeepEvents")]
 	public static partial int SDL_PeepEvents(SDL_Event* events, int numevents, SDL_EventAction action, SDL_EventType minType, SDL_EventType maxType);
@@ -505,10 +505,10 @@ public unsafe partial class SDL3
 	public static partial bool SDL_HasEvents(SDL_EventType minType, SDL_EventType maxType);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_FlushEvent")]
-	public static partial nint SDL_FlushEvent(SDL_EventType type);
+	public static partial void SDL_FlushEvent(SDL_EventType type);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_FlushEvents")]
-	public static partial nint SDL_FlushEvents(SDL_EventType minType, SDL_EventType maxType);
+	public static partial void SDL_FlushEvents(SDL_EventType minType, SDL_EventType maxType);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_PollEvent")]
 	[return: MarshalAs(UnmanagedType.Bool)]
@@ -526,7 +526,7 @@ public unsafe partial class SDL3
 	public static partial int SDL_PushEvent(SDL_Event* @event);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetEventFilter")]
-	public static partial nint SDL_SetEventFilter(delegate* unmanaged<nint, SDL_Event*, int> filter, nint userdata);
+	public static partial void SDL_SetEventFilter(delegate* unmanaged<nint, SDL_Event*, int> filter, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetEventFilter")]
 	[return: MarshalAs(UnmanagedType.Bool)]
@@ -536,13 +536,13 @@ public unsafe partial class SDL3
 	public static partial int SDL_AddEventWatch(delegate* unmanaged<nint, SDL_Event*, int> filter, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DelEventWatch")]
-	public static partial nint SDL_DelEventWatch(delegate* unmanaged<nint, SDL_Event*, int> filter, nint userdata);
+	public static partial void SDL_DelEventWatch(delegate* unmanaged<nint, SDL_Event*, int> filter, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_FilterEvents")]
-	public static partial nint SDL_FilterEvents(delegate* unmanaged<nint, SDL_Event*, int> filter, nint userdata);
+	public static partial void SDL_FilterEvents(delegate* unmanaged<nint, SDL_Event*, int> filter, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetEventEnabled")]
-	public static partial nint SDL_SetEventEnabled(SDL_EventType type, [MarshalAs(UnmanagedType.Bool)] bool enabled);
+	public static partial void SDL_SetEventEnabled(SDL_EventType type, [MarshalAs(UnmanagedType.Bool)] bool enabled);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_EventEnabled")]
 	[return: MarshalAs(UnmanagedType.Bool)]
@@ -847,7 +847,7 @@ public unsafe partial class SDL3
 	public static partial SDL_Joystick SDL_GetGamepadJoystick(SDL_Gamepad gamepad);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetGamepadEventsEnabled")]
-	public static partial nint SDL_SetGamepadEventsEnabled([MarshalAs(UnmanagedType.Bool)] bool enabled);
+	public static partial void SDL_SetGamepadEventsEnabled([MarshalAs(UnmanagedType.Bool)] bool enabled);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GamepadEventsEnabled")]
 	[return: MarshalAs(UnmanagedType.Bool)]
@@ -857,7 +857,7 @@ public unsafe partial class SDL3
 	public static partial SDL_GamepadBinding** SDL_GetGamepadBindings(SDL_Gamepad gamepad, out int count);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UpdateGamepads")]
-	public static partial nint SDL_UpdateGamepads();
+	public static partial void SDL_UpdateGamepads();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadTypeFromString")]
 	public static partial SDL_GamepadType SDL_GetGamepadTypeFromString(byte* str);
@@ -966,10 +966,10 @@ public unsafe partial class SDL3
 	public static partial int SDL_SetGamepadLED(SDL_Gamepad gamepad, byte red, byte green, byte blue);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SendGamepadEffect")]
-	public static partial int SDL_SendGamepadEffect(SDL_Gamepad gamepad, void* data, int size);
+	public static partial int SDL_SendGamepadEffect(SDL_Gamepad gamepad, nint data, int size);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CloseGamepad")]
-	public static partial nint SDL_CloseGamepad(SDL_Gamepad gamepad);
+	public static partial void SDL_CloseGamepad(SDL_Gamepad gamepad);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetGamepadAppleSFSymbolsNameForButton")]
 	public static partial byte* SDL_GetGamepadAppleSFSymbolsNameForButtonPtr(SDL_Gamepad gamepad, SDL_GamepadButton button);
@@ -1039,7 +1039,7 @@ public unsafe partial class SDL3
 	public static partial SDL_Haptic SDL_OpenHapticFromJoystick(SDL_Joystick joystick);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CloseHaptic")]
-	public static partial nint SDL_CloseHaptic(SDL_Haptic haptic);
+	public static partial void SDL_CloseHaptic(SDL_Haptic haptic);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetMaxHapticEffects")]
 	public static partial int SDL_GetMaxHapticEffects(SDL_Haptic haptic);
@@ -1070,7 +1070,7 @@ public unsafe partial class SDL3
 	public static partial int SDL_StopHapticEffect(SDL_Haptic haptic, int effect);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DestroyHapticEffect")]
-	public static partial nint SDL_DestroyHapticEffect(SDL_Haptic haptic, int effect);
+	public static partial void SDL_DestroyHapticEffect(SDL_Haptic haptic, int effect);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetHapticEffectStatus")]
 	public static partial int SDL_GetHapticEffectStatus(SDL_Haptic haptic, int effect);
@@ -1116,7 +1116,7 @@ public unsafe partial class SDL3
 	public static partial SDL_hid_device_info* SDL_hid_enumerate(ushort vendor_id, ushort product_id);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_hid_free_enumeration")]
-	public static partial nint SDL_hid_free_enumeration(SDL_hid_device_info* devs);
+	public static partial void SDL_hid_free_enumeration(SDL_hid_device_info* devs);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_hid_open")]
 	public static partial SDL_hid_device SDL_hid_open(ushort vendor_id, ushort product_id, char* serial_number);
@@ -1173,7 +1173,7 @@ public unsafe partial class SDL3
 	public static partial int SDL_hid_get_report_descriptor(SDL_hid_device dev, byte* buf, nuint buf_size);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_hid_ble_scan")]
-	public static partial nint SDL_hid_ble_scan([MarshalAs(UnmanagedType.Bool)] bool active);
+	public static partial void SDL_hid_ble_scan([MarshalAs(UnmanagedType.Bool)] bool active);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetHintWithPriority")]
 	[return: MarshalAs(UnmanagedType.Bool)]
@@ -1212,7 +1212,7 @@ public unsafe partial class SDL3
 	public static partial bool SDL_ResetHint([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ResetHints")]
-	public static partial nint SDL_ResetHints();
+	public static partial void SDL_ResetHints();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetHint")]
 	public static partial byte* SDL_GetHintPtr(byte* name);
@@ -1241,22 +1241,22 @@ public unsafe partial class SDL3
 	public static partial bool SDL_GetHintBoolean([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name, [MarshalAs(UnmanagedType.Bool)] bool default_value);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_AddHintCallback")]
-	public static partial int SDL_AddHintCallback(byte* name, delegate* unmanaged<nint, byte*, byte*, byte*, nint> callback, nint userdata);
+	public static partial int SDL_AddHintCallback(byte* name, delegate* unmanaged<nint, byte*, byte*, byte*, void> callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_AddHintCallback")]
-	public static partial int SDL_AddHintCallback(ReadOnlySpan<byte> name, delegate* unmanaged<nint, byte*, byte*, byte*, nint> callback, nint userdata);
+	public static partial int SDL_AddHintCallback(ReadOnlySpan<byte> name, delegate* unmanaged<nint, byte*, byte*, byte*, void> callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_AddHintCallback")]
-	public static partial int SDL_AddHintCallback([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name, delegate* unmanaged<nint, byte*, byte*, byte*, nint> callback, nint userdata);
+	public static partial int SDL_AddHintCallback([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name, delegate* unmanaged<nint, byte*, byte*, byte*, void> callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DelHintCallback")]
-	public static partial nint SDL_DelHintCallback(byte* name, delegate* unmanaged<nint, byte*, byte*, byte*, nint> callback, nint userdata);
+	public static partial void SDL_DelHintCallback(byte* name, delegate* unmanaged<nint, byte*, byte*, byte*, void> callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DelHintCallback")]
-	public static partial nint SDL_DelHintCallback(ReadOnlySpan<byte> name, delegate* unmanaged<nint, byte*, byte*, byte*, nint> callback, nint userdata);
+	public static partial void SDL_DelHintCallback(ReadOnlySpan<byte> name, delegate* unmanaged<nint, byte*, byte*, byte*, void> callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DelHintCallback")]
-	public static partial nint SDL_DelHintCallback([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name, delegate* unmanaged<nint, byte*, byte*, byte*, nint> callback, nint userdata);
+	public static partial void SDL_DelHintCallback([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name, delegate* unmanaged<nint, byte*, byte*, byte*, void> callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Init")]
 	public static partial int SDL_Init(SDL_InitFlags flags);
@@ -1265,13 +1265,13 @@ public unsafe partial class SDL3
 	public static partial int SDL_InitSubSystem(SDL_InitFlags flags);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_QuitSubSystem")]
-	public static partial nint SDL_QuitSubSystem(SDL_InitFlags flags);
+	public static partial void SDL_QuitSubSystem(SDL_InitFlags flags);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_WasInit")]
 	public static partial SDL_InitFlags SDL_WasInit(SDL_InitFlags flags);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Quit")]
-	public static partial nint SDL_Quit();
+	public static partial void SDL_Quit();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetAppMetadata")]
 	public static partial int SDL_SetAppMetadata(byte* appname, byte* appversion, byte* appidentifier);
@@ -1318,7 +1318,7 @@ public unsafe partial class SDL3
 	public static partial SDL_IOStream SDL_IOFromMem(nint mem, nuint size);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_IOFromConstMem")]
-	public static partial SDL_IOStream SDL_IOFromConstMem(void* mem, nuint size);
+	public static partial SDL_IOStream SDL_IOFromConstMem(nint mem, nuint size);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_IOFromDynamicMem")]
 	public static partial SDL_IOStream SDL_IOFromDynamicMem();
@@ -1348,7 +1348,7 @@ public unsafe partial class SDL3
 	public static partial nuint SDL_ReadIO(SDL_IOStream context, nint ptr, nuint size);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_WriteIO")]
-	public static partial nuint SDL_WriteIO(SDL_IOStream context, void* ptr, nuint size);
+	public static partial nuint SDL_WriteIO(SDL_IOStream context, nint ptr, nuint size);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadFile_IO")]
 	public static partial nint SDL_LoadFile_IO(SDL_IOStream src, nuint* datasize, [MarshalAs(UnmanagedType.Bool)] bool closeio);
@@ -1475,10 +1475,10 @@ public unsafe partial class SDL3
 	public static partial bool SDL_WriteS64BE(SDL_IOStream dst, long value);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LockJoysticks")]
-	public static partial nint SDL_LockJoysticks();
+	public static partial void SDL_LockJoysticks();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UnlockJoysticks")]
-	public static partial nint SDL_UnlockJoysticks();
+	public static partial void SDL_UnlockJoysticks();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_HasJoystick")]
 	[return: MarshalAs(UnmanagedType.Bool)]
@@ -1610,7 +1610,7 @@ public unsafe partial class SDL3
 	public static partial SDL_JoystickType SDL_GetJoystickType(SDL_Joystick joystick);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickGUIDInfo")]
-	public static partial nint SDL_GetJoystickGUIDInfo(Guid guid, ushort* vendor, ushort* product, ushort* version, ushort* crc16);
+	public static partial void SDL_GetJoystickGUIDInfo(Guid guid, ushort* vendor, ushort* product, ushort* version, ushort* crc16);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_JoystickConnected")]
 	[return: MarshalAs(UnmanagedType.Bool)]
@@ -1632,14 +1632,14 @@ public unsafe partial class SDL3
 	public static partial int SDL_GetNumJoystickButtons(SDL_Joystick joystick);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetJoystickEventsEnabled")]
-	public static partial nint SDL_SetJoystickEventsEnabled([MarshalAs(UnmanagedType.Bool)] bool enabled);
+	public static partial void SDL_SetJoystickEventsEnabled([MarshalAs(UnmanagedType.Bool)] bool enabled);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_JoystickEventsEnabled")]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	public static partial bool SDL_JoystickEventsEnabled();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UpdateJoysticks")]
-	public static partial nint SDL_UpdateJoysticks();
+	public static partial void SDL_UpdateJoysticks();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickAxis")]
 	public static partial short SDL_GetJoystickAxis(SDL_Joystick joystick, int axis);
@@ -1667,10 +1667,10 @@ public unsafe partial class SDL3
 	public static partial int SDL_SetJoystickLED(SDL_Joystick joystick, byte red, byte green, byte blue);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SendJoystickEffect")]
-	public static partial int SDL_SendJoystickEffect(SDL_Joystick joystick, void* data, int size);
+	public static partial int SDL_SendJoystickEffect(SDL_Joystick joystick, nint data, int size);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CloseJoystick")]
-	public static partial nint SDL_CloseJoystick(SDL_Joystick joystick);
+	public static partial void SDL_CloseJoystick(SDL_Joystick joystick);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetJoystickConnectionState")]
 	public static partial SDL_JoystickConnectionState SDL_GetJoystickConnectionState(SDL_Joystick joystick);
@@ -1700,13 +1700,13 @@ public unsafe partial class SDL3
 	public static partial byte* SDL_GetKeyboardState(int* numkeys);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ResetKeyboard")]
-	public static partial nint SDL_ResetKeyboard();
+	public static partial void SDL_ResetKeyboard();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetModState")]
 	public static partial SDL_Keymod SDL_GetModState();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetModState")]
-	public static partial nint SDL_SetModState(SDL_Keymod modstate);
+	public static partial void SDL_SetModState(SDL_Keymod modstate);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetDefaultKeyFromScancode")]
 	public static partial SDL_Keycode SDL_GetDefaultKeyFromScancode(SDL_Scancode scancode, SDL_Keymod modstate);
@@ -1803,103 +1803,109 @@ public unsafe partial class SDL3
 	public static partial nint SDL_LoadObject([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> sofile);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadFunction")]
-	public static partial delegate* unmanaged<nint> SDL_LoadFunction(nint handle, byte* name);
+	public static partial delegate* unmanaged<void> SDL_LoadFunction(nint handle, byte* name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadFunction")]
-	public static partial delegate* unmanaged<nint> SDL_LoadFunction(nint handle, ReadOnlySpan<byte> name);
+	public static partial delegate* unmanaged<void> SDL_LoadFunction(nint handle, ReadOnlySpan<byte> name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadFunction")]
-	public static partial delegate* unmanaged<nint> SDL_LoadFunction(nint handle, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name);
+	public static partial delegate* unmanaged<void> SDL_LoadFunction(nint handle, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UnloadObject")]
-	public static partial nint SDL_UnloadObject(nint handle);
+	public static partial void SDL_UnloadObject(nint handle);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetPreferredLocales")]
 	public static partial SDL_Locale** SDL_GetPreferredLocales(out int count);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetLogPriorities")]
-	public static partial nint SDL_SetLogPriorities(SDL_LogPriority priority);
+	public static partial void SDL_SetLogPriorities(SDL_LogPriority priority);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetLogPriority")]
-	public static partial nint SDL_SetLogPriority(int category, SDL_LogPriority priority);
+	public static partial void SDL_SetLogPriority(int category, SDL_LogPriority priority);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetLogPriority")]
 	public static partial SDL_LogPriority SDL_GetLogPriority(int category);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ResetLogPriorities")]
-	public static partial nint SDL_ResetLogPriorities();
+	public static partial void SDL_ResetLogPriorities();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Log")]
-	public static partial nint SDL_Log(byte* fmt);
+	public static partial void SDL_Log(byte* fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Log")]
-	public static partial nint SDL_Log(ReadOnlySpan<byte> fmt);
+	public static partial void SDL_Log(ReadOnlySpan<byte> fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Log")]
-	public static partial nint SDL_Log([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt);
+	public static partial void SDL_Log([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogVerbose")]
-	public static partial nint SDL_LogVerbose(int category, byte* fmt);
+	public static partial void SDL_LogVerbose(int category, byte* fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogVerbose")]
-	public static partial nint SDL_LogVerbose(int category, ReadOnlySpan<byte> fmt);
+	public static partial void SDL_LogVerbose(int category, ReadOnlySpan<byte> fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogVerbose")]
-	public static partial nint SDL_LogVerbose(int category, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt);
+	public static partial void SDL_LogVerbose(int category, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogDebug")]
-	public static partial nint SDL_LogDebug(int category, byte* fmt);
+	public static partial void SDL_LogDebug(int category, byte* fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogDebug")]
-	public static partial nint SDL_LogDebug(int category, ReadOnlySpan<byte> fmt);
+	public static partial void SDL_LogDebug(int category, ReadOnlySpan<byte> fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogDebug")]
-	public static partial nint SDL_LogDebug(int category, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt);
+	public static partial void SDL_LogDebug(int category, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogInfo")]
-	public static partial nint SDL_LogInfo(int category, byte* fmt);
+	public static partial void SDL_LogInfo(int category, byte* fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogInfo")]
-	public static partial nint SDL_LogInfo(int category, ReadOnlySpan<byte> fmt);
+	public static partial void SDL_LogInfo(int category, ReadOnlySpan<byte> fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogInfo")]
-	public static partial nint SDL_LogInfo(int category, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt);
+	public static partial void SDL_LogInfo(int category, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogWarn")]
-	public static partial nint SDL_LogWarn(int category, byte* fmt);
+	public static partial void SDL_LogWarn(int category, byte* fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogWarn")]
-	public static partial nint SDL_LogWarn(int category, ReadOnlySpan<byte> fmt);
+	public static partial void SDL_LogWarn(int category, ReadOnlySpan<byte> fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogWarn")]
-	public static partial nint SDL_LogWarn(int category, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt);
+	public static partial void SDL_LogWarn(int category, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogError")]
-	public static partial nint SDL_LogError(int category, byte* fmt);
+	public static partial void SDL_LogError(int category, byte* fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogError")]
-	public static partial nint SDL_LogError(int category, ReadOnlySpan<byte> fmt);
+	public static partial void SDL_LogError(int category, ReadOnlySpan<byte> fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogError")]
-	public static partial nint SDL_LogError(int category, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt);
+	public static partial void SDL_LogError(int category, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogCritical")]
-	public static partial nint SDL_LogCritical(int category, byte* fmt);
+	public static partial void SDL_LogCritical(int category, byte* fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogCritical")]
-	public static partial nint SDL_LogCritical(int category, ReadOnlySpan<byte> fmt);
+	public static partial void SDL_LogCritical(int category, ReadOnlySpan<byte> fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogCritical")]
-	public static partial nint SDL_LogCritical(int category, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt);
+	public static partial void SDL_LogCritical(int category, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogMessage")]
-	public static partial nint SDL_LogMessage(int category, SDL_LogPriority priority, byte* fmt);
+	public static partial void SDL_LogMessage(int category, SDL_LogPriority priority, byte* fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogMessage")]
-	public static partial nint SDL_LogMessage(int category, SDL_LogPriority priority, ReadOnlySpan<byte> fmt);
+	public static partial void SDL_LogMessage(int category, SDL_LogPriority priority, ReadOnlySpan<byte> fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LogMessage")]
-	public static partial nint SDL_LogMessage(int category, SDL_LogPriority priority, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt);
+	public static partial void SDL_LogMessage(int category, SDL_LogPriority priority, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetLogOutputFunction")]
+	public static partial void SDL_GetLogOutputFunction(delegate* unmanaged<nint, int, SDL_LogPriority, byte*, void> callback, nint userdata);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetLogOutputFunction")]
+	public static partial void SDL_SetLogOutputFunction(delegate* unmanaged<nint, int, SDL_LogPriority, byte*, void> callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ShowMessageBox")]
 	public static partial int SDL_ShowMessageBox(SDL_MessageBoxData* messageboxdata, int* buttonid);
@@ -1917,7 +1923,7 @@ public unsafe partial class SDL3
 	public static partial nint SDL_Metal_CreateView(SDL_Window window);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Metal_DestroyView")]
-	public static partial nint SDL_Metal_DestroyView(nint view);
+	public static partial void SDL_Metal_DestroyView(nint view);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Metal_GetLayer")]
 	public static partial nint SDL_Metal_GetLayer(nint view);
@@ -1959,7 +1965,7 @@ public unsafe partial class SDL3
 	public static partial SDL_MouseButtonFlags SDL_GetRelativeMouseState(float* x, float* y);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_WarpMouseInWindow")]
-	public static partial nint SDL_WarpMouseInWindow(SDL_Window window, float x, float y);
+	public static partial void SDL_WarpMouseInWindow(SDL_Window window, float x, float y);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_WarpMouseGlobal")]
 	public static partial int SDL_WarpMouseGlobal(float x, float y);
@@ -1993,7 +1999,7 @@ public unsafe partial class SDL3
 	public static partial SDL_Cursor SDL_GetDefaultCursor();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DestroyCursor")]
-	public static partial nint SDL_DestroyCursor(SDL_Cursor cursor);
+	public static partial void SDL_DestroyCursor(SDL_Cursor cursor);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ShowCursor")]
 	public static partial int SDL_ShowCursor();
@@ -2009,25 +2015,25 @@ public unsafe partial class SDL3
 	public static partial SDL_Mutex SDL_CreateMutex();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LockMutex")]
-	public static partial nint SDL_LockMutex(SDL_Mutex mutex);
+	public static partial void SDL_LockMutex(SDL_Mutex mutex);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_TryLockMutex")]
 	public static partial int SDL_TryLockMutex(SDL_Mutex mutex);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UnlockMutex")]
-	public static partial nint SDL_UnlockMutex(SDL_Mutex mutex);
+	public static partial void SDL_UnlockMutex(SDL_Mutex mutex);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DestroyMutex")]
-	public static partial nint SDL_DestroyMutex(SDL_Mutex mutex);
+	public static partial void SDL_DestroyMutex(SDL_Mutex mutex);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateRWLock")]
 	public static partial SDL_RWLock SDL_CreateRWLock();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LockRWLockForReading")]
-	public static partial nint SDL_LockRWLockForReading(SDL_RWLock rwlock);
+	public static partial void SDL_LockRWLockForReading(SDL_RWLock rwlock);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LockRWLockForWriting")]
-	public static partial nint SDL_LockRWLockForWriting(SDL_RWLock rwlock);
+	public static partial void SDL_LockRWLockForWriting(SDL_RWLock rwlock);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_TryLockRWLockForReading")]
 	public static partial int SDL_TryLockRWLockForReading(SDL_RWLock rwlock);
@@ -2036,16 +2042,16 @@ public unsafe partial class SDL3
 	public static partial int SDL_TryLockRWLockForWriting(SDL_RWLock rwlock);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UnlockRWLock")]
-	public static partial nint SDL_UnlockRWLock(SDL_RWLock rwlock);
+	public static partial void SDL_UnlockRWLock(SDL_RWLock rwlock);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DestroyRWLock")]
-	public static partial nint SDL_DestroyRWLock(SDL_RWLock rwlock);
+	public static partial void SDL_DestroyRWLock(SDL_RWLock rwlock);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateSemaphore")]
 	public static partial SDL_Semaphore SDL_CreateSemaphore(uint initial_value);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DestroySemaphore")]
-	public static partial nint SDL_DestroySemaphore(SDL_Semaphore sem);
+	public static partial void SDL_DestroySemaphore(SDL_Semaphore sem);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_WaitSemaphore")]
 	public static partial int SDL_WaitSemaphore(SDL_Semaphore sem);
@@ -2066,7 +2072,7 @@ public unsafe partial class SDL3
 	public static partial SDL_Condition SDL_CreateCondition();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DestroyCondition")]
-	public static partial nint SDL_DestroyCondition(SDL_Condition cond);
+	public static partial void SDL_DestroyCondition(SDL_Condition cond);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SignalCondition")]
 	public static partial int SDL_SignalCondition(SDL_Condition cond);
@@ -2134,7 +2140,7 @@ public unsafe partial class SDL3
 	public static partial int SDL_SetPaletteColors(SDL_Palette* palette, SDL_Color* colors, int firstcolor, int ncolors);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DestroyPalette")]
-	public static partial nint SDL_DestroyPalette(SDL_Palette* palette);
+	public static partial void SDL_DestroyPalette(SDL_Palette* palette);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_MapRGB")]
 	public static partial uint SDL_MapRGB(SDL_PixelFormatDetails* format, SDL_Palette* palette, byte r, byte g, byte b);
@@ -2143,10 +2149,10 @@ public unsafe partial class SDL3
 	public static partial uint SDL_MapRGBA(SDL_PixelFormatDetails* format, SDL_Palette* palette, byte r, byte g, byte b, byte a);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetRGB")]
-	public static partial nint SDL_GetRGB(uint pixel, SDL_PixelFormatDetails* format, SDL_Palette* palette, byte* r, byte* g, byte* b);
+	public static partial void SDL_GetRGB(uint pixel, SDL_PixelFormatDetails* format, SDL_Palette* palette, byte* r, byte* g, byte* b);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetRGBA")]
-	public static partial nint SDL_GetRGBA(uint pixel, SDL_PixelFormatDetails* format, SDL_Palette* palette, byte* r, byte* g, byte* b, byte* a);
+	public static partial void SDL_GetRGBA(uint pixel, SDL_PixelFormatDetails* format, SDL_Palette* palette, byte* r, byte* g, byte* b, byte* a);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetPlatform")]
 	public static partial byte* SDL_GetPlatformPtr();
@@ -2172,16 +2178,16 @@ public unsafe partial class SDL3
 	public static partial int SDL_LockProperties(SDL_PropertiesID props);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UnlockProperties")]
-	public static partial nint SDL_UnlockProperties(SDL_PropertiesID props);
+	public static partial void SDL_UnlockProperties(SDL_PropertiesID props);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetPointerPropertyWithCleanup")]
-	public static partial int SDL_SetPointerPropertyWithCleanup(SDL_PropertiesID props, byte* name, nint value, delegate* unmanaged<nint, nint, nint> cleanup, nint userdata);
+	public static partial int SDL_SetPointerPropertyWithCleanup(SDL_PropertiesID props, byte* name, nint value, delegate* unmanaged<nint, nint, void> cleanup, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetPointerPropertyWithCleanup")]
-	public static partial int SDL_SetPointerPropertyWithCleanup(SDL_PropertiesID props, ReadOnlySpan<byte> name, nint value, delegate* unmanaged<nint, nint, nint> cleanup, nint userdata);
+	public static partial int SDL_SetPointerPropertyWithCleanup(SDL_PropertiesID props, ReadOnlySpan<byte> name, nint value, delegate* unmanaged<nint, nint, void> cleanup, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetPointerPropertyWithCleanup")]
-	public static partial int SDL_SetPointerPropertyWithCleanup(SDL_PropertiesID props, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name, nint value, delegate* unmanaged<nint, nint, nint> cleanup, nint userdata);
+	public static partial int SDL_SetPointerPropertyWithCleanup(SDL_PropertiesID props, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name, nint value, delegate* unmanaged<nint, nint, void> cleanup, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetPointerProperty")]
 	public static partial int SDL_SetPointerProperty(SDL_PropertiesID props, byte* name, nint value);
@@ -2312,13 +2318,13 @@ public unsafe partial class SDL3
 	public static partial int SDL_ClearProperty(SDL_PropertiesID props, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_EnumerateProperties")]
-	public static partial int SDL_EnumerateProperties(SDL_PropertiesID props, delegate* unmanaged<nint, SDL_PropertiesID, byte*, nint> callback, nint userdata);
+	public static partial int SDL_EnumerateProperties(SDL_PropertiesID props, delegate* unmanaged<nint, SDL_PropertiesID, byte*, void> callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DestroyProperties")]
-	public static partial nint SDL_DestroyProperties(SDL_PropertiesID props);
+	public static partial void SDL_DestroyProperties(SDL_PropertiesID props);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_RectToFRect")]
-	public static partial nint SDL_RectToFRect(Rectangle* rect, RectangleF* frect);
+	public static partial void SDL_RectToFRect(Rectangle* rect, RectangleF* frect);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_PointInRect")]
 	[return: MarshalAs(UnmanagedType.Bool)]
@@ -2499,7 +2505,7 @@ public unsafe partial class SDL3
 	public static partial int SDL_GetTextureScaleMode(SDL_Texture texture, SDL_ScaleMode* scaleMode);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UpdateTexture")]
-	public static partial int SDL_UpdateTexture(SDL_Texture texture, Rectangle* rect, void* pixels, int pitch);
+	public static partial int SDL_UpdateTexture(SDL_Texture texture, Rectangle* rect, nint pixels, int pitch);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UpdateYUVTexture")]
 	public static partial int SDL_UpdateYUVTexture(SDL_Texture texture, Rectangle* rect, byte* Yplane, int Ypitch, byte* Uplane, int Upitch, byte* Vplane, int Vpitch);
@@ -2514,7 +2520,7 @@ public unsafe partial class SDL3
 	public static partial int SDL_LockTextureToSurface(SDL_Texture texture, Rectangle* rect, SDL_Surface** surface);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UnlockTexture")]
-	public static partial nint SDL_UnlockTexture(SDL_Texture texture);
+	public static partial void SDL_UnlockTexture(SDL_Texture texture);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetRenderTarget")]
 	public static partial int SDL_SetRenderTarget(SDL_Renderer renderer, SDL_Texture texture);
@@ -2636,7 +2642,7 @@ public unsafe partial class SDL3
 	public static partial int SDL_RenderGeometry(SDL_Renderer renderer, SDL_Texture texture, SDL_Vertex* vertices, int num_vertices, int* indices, int num_indices);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_RenderGeometryRaw")]
-	public static partial int SDL_RenderGeometryRaw(SDL_Renderer renderer, SDL_Texture texture, float* xy, int xy_stride, SDL_FColor* color, int color_stride, float* uv, int uv_stride, int num_vertices, void* indices, int num_indices, int size_indices);
+	public static partial int SDL_RenderGeometryRaw(SDL_Renderer renderer, SDL_Texture texture, float* xy, int xy_stride, SDL_FColor* color, int color_stride, float* uv, int uv_stride, int num_vertices, nint indices, int num_indices, int size_indices);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_RenderReadPixels")]
 	public static partial SDL_Surface* SDL_RenderReadPixels(SDL_Renderer renderer, Rectangle* rect);
@@ -2645,10 +2651,10 @@ public unsafe partial class SDL3
 	public static partial int SDL_RenderPresent(SDL_Renderer renderer);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DestroyTexture")]
-	public static partial nint SDL_DestroyTexture(SDL_Texture texture);
+	public static partial void SDL_DestroyTexture(SDL_Texture texture);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DestroyRenderer")]
-	public static partial nint SDL_DestroyRenderer(SDL_Renderer renderer);
+	public static partial void SDL_DestroyRenderer(SDL_Renderer renderer);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_FlushRenderer")]
 	public static partial int SDL_FlushRenderer(SDL_Renderer renderer);
@@ -2715,10 +2721,10 @@ public unsafe partial class SDL3
 	public static partial int SDL_GetSensorData(SDL_Sensor sensor, float* data, int num_values);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CloseSensor")]
-	public static partial nint SDL_CloseSensor(SDL_Sensor sensor);
+	public static partial void SDL_CloseSensor(SDL_Sensor sensor);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UpdateSensors")]
-	public static partial nint SDL_UpdateSensors();
+	public static partial void SDL_UpdateSensors();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_malloc")]
 	public static partial nint SDL_malloc(nuint size);
@@ -2730,22 +2736,22 @@ public unsafe partial class SDL3
 	public static partial nint SDL_realloc(nint mem, nuint size);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_free")]
-	public static partial nint SDL_free(nint mem);
+	public static partial void SDL_free(nint mem);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetOriginalMemoryFunctions")]
-	public static partial nint SDL_GetOriginalMemoryFunctions(delegate* unmanaged<nuint, nint> malloc_func, delegate* unmanaged<nuint, nuint, nint> calloc_func, delegate* unmanaged<nint, nuint, nint> realloc_func, delegate* unmanaged<nint, nint> free_func);
+	public static partial void SDL_GetOriginalMemoryFunctions(delegate* unmanaged<nuint, nint> malloc_func, delegate* unmanaged<nuint, nuint, nint> calloc_func, delegate* unmanaged<nint, nuint, nint> realloc_func, delegate* unmanaged<nint, void> free_func);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetMemoryFunctions")]
-	public static partial nint SDL_GetMemoryFunctions(delegate* unmanaged<nuint, nint> malloc_func, delegate* unmanaged<nuint, nuint, nint> calloc_func, delegate* unmanaged<nint, nuint, nint> realloc_func, delegate* unmanaged<nint, nint> free_func);
+	public static partial void SDL_GetMemoryFunctions(delegate* unmanaged<nuint, nint> malloc_func, delegate* unmanaged<nuint, nuint, nint> calloc_func, delegate* unmanaged<nint, nuint, nint> realloc_func, delegate* unmanaged<nint, void> free_func);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetMemoryFunctions")]
-	public static partial int SDL_SetMemoryFunctions(delegate* unmanaged<nuint, nint> malloc_func, delegate* unmanaged<nuint, nuint, nint> calloc_func, delegate* unmanaged<nint, nuint, nint> realloc_func, delegate* unmanaged<nint, nint> free_func);
+	public static partial int SDL_SetMemoryFunctions(delegate* unmanaged<nuint, nint> malloc_func, delegate* unmanaged<nuint, nuint, nint> calloc_func, delegate* unmanaged<nint, nuint, nint> realloc_func, delegate* unmanaged<nint, void> free_func);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_aligned_alloc")]
 	public static partial nint SDL_aligned_alloc(nuint alignment, nuint size);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_aligned_free")]
-	public static partial nint SDL_aligned_free(nint mem);
+	public static partial void SDL_aligned_free(nint mem);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetNumAllocations")]
 	public static partial int SDL_GetNumAllocations();
@@ -2783,16 +2789,16 @@ public unsafe partial class SDL3
 	public static partial int SDL_unsetenv([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_qsort")]
-	public static partial nint SDL_qsort(nint @base, nuint nmemb, nuint size, delegate* unmanaged<void*, void*, int> compare);
+	public static partial void SDL_qsort(nint @base, nuint nmemb, nuint size, delegate* unmanaged<nint, nint, int> compare);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_bsearch")]
-	public static partial nint SDL_bsearch(void* key, void* @base, nuint nmemb, nuint size, delegate* unmanaged<void*, void*, int> compare);
+	public static partial nint SDL_bsearch(nint key, nint @base, nuint nmemb, nuint size, delegate* unmanaged<nint, nint, int> compare);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_qsort_r")]
-	public static partial nint SDL_qsort_r(nint @base, nuint nmemb, nuint size, delegate* unmanaged<nint, void*, void*, int> compare, nint userdata);
+	public static partial void SDL_qsort_r(nint @base, nuint nmemb, nuint size, delegate* unmanaged<nint, nint, nint, int> compare, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_bsearch_r")]
-	public static partial nint SDL_bsearch_r(void* key, void* @base, nuint nmemb, nuint size, delegate* unmanaged<nint, void*, void*, int> compare, nint userdata);
+	public static partial nint SDL_bsearch_r(nint key, nint @base, nuint nmemb, nuint size, delegate* unmanaged<nint, nint, nint, int> compare, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_abs")]
 	public static partial int SDL_abs(int x);
@@ -2840,16 +2846,16 @@ public unsafe partial class SDL3
 	public static partial int SDL_tolower(int x);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_crc16")]
-	public static partial ushort SDL_crc16(ushort crc, void* data, nuint len);
+	public static partial ushort SDL_crc16(ushort crc, nint data, nuint len);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_crc32")]
-	public static partial uint SDL_crc32(uint crc, void* data, nuint len);
+	public static partial uint SDL_crc32(uint crc, nint data, nuint len);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_memcpy")]
-	public static partial nint SDL_memcpy(nint dst, void* src, nuint len);
+	public static partial nint SDL_memcpy(nint dst, nint src, nuint len);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_memmove")]
-	public static partial nint SDL_memmove(nint dst, void* src, nuint len);
+	public static partial nint SDL_memmove(nint dst, nint src, nuint len);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_memset")]
 	public static partial nint SDL_memset(nint dst, int c, nuint len);
@@ -2858,7 +2864,7 @@ public unsafe partial class SDL3
 	public static partial nint SDL_memset4(nint dst, uint val, nuint dwords);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_memcmp")]
-	public static partial int SDL_memcmp(void* s1, void* s2, nuint len);
+	public static partial int SDL_memcmp(nint s1, nint s2, nuint len);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_wcslen")]
 	public static partial nuint SDL_wcslen(char* wstr);
@@ -3377,13 +3383,13 @@ public unsafe partial class SDL3
 	public static partial int SDL_sscanf([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> text, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_vsscanf")]
-	public static partial int SDL_vsscanf(byte* text, byte* fmt, byte ap);
+	public static partial int SDL_vsscanf(byte* text, byte* fmt, byte* ap);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_vsscanf")]
-	public static partial int SDL_vsscanf(ReadOnlySpan<byte> text, ReadOnlySpan<byte> fmt, byte ap);
+	public static partial int SDL_vsscanf(ReadOnlySpan<byte> text, ReadOnlySpan<byte> fmt, byte* ap);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_vsscanf")]
-	public static partial int SDL_vsscanf([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> text, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt, byte ap);
+	public static partial int SDL_vsscanf([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> text, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt, byte* ap);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_snprintf")]
 	public static partial int SDL_snprintf(byte* text, nuint maxlen, byte* fmt);
@@ -3398,16 +3404,16 @@ public unsafe partial class SDL3
 	public static partial int SDL_swprintf(char* text, nuint maxlen, char* fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_vsnprintf")]
-	public static partial int SDL_vsnprintf(byte* text, nuint maxlen, byte* fmt, byte ap);
+	public static partial int SDL_vsnprintf(byte* text, nuint maxlen, byte* fmt, byte* ap);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_vsnprintf")]
-	public static partial int SDL_vsnprintf(ReadOnlySpan<byte> text, nuint maxlen, ReadOnlySpan<byte> fmt, byte ap);
+	public static partial int SDL_vsnprintf(ReadOnlySpan<byte> text, nuint maxlen, ReadOnlySpan<byte> fmt, byte* ap);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_vsnprintf")]
-	public static partial int SDL_vsnprintf([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> text, nuint maxlen, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt, byte ap);
+	public static partial int SDL_vsnprintf([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> text, nuint maxlen, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt, byte* ap);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_vswprintf")]
-	public static partial int SDL_vswprintf(char* text, nuint maxlen, char* fmt, byte ap);
+	public static partial int SDL_vswprintf(char* text, nuint maxlen, char* fmt, byte* ap);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_asprintf")]
 	public static partial int SDL_asprintf(byte** strp, byte* fmt);
@@ -3419,16 +3425,16 @@ public unsafe partial class SDL3
 	public static partial int SDL_asprintf(byte** strp, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_vasprintf")]
-	public static partial int SDL_vasprintf(byte** strp, byte* fmt, byte ap);
+	public static partial int SDL_vasprintf(byte** strp, byte* fmt, byte* ap);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_vasprintf")]
-	public static partial int SDL_vasprintf(byte** strp, ReadOnlySpan<byte> fmt, byte ap);
+	public static partial int SDL_vasprintf(byte** strp, ReadOnlySpan<byte> fmt, byte* ap);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_vasprintf")]
-	public static partial int SDL_vasprintf(byte** strp, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt, byte ap);
+	public static partial int SDL_vasprintf(byte** strp, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> fmt, byte* ap);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_srand")]
-	public static partial nint SDL_srand(ulong seed);
+	public static partial void SDL_srand(ulong seed);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_rand")]
 	public static partial int SDL_rand(int n);
@@ -3692,13 +3698,13 @@ public unsafe partial class SDL3
 	public static partial int SDL_ReadStorageFile(SDL_Storage storage, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> path, nint destination, ulong length);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_WriteStorageFile")]
-	public static partial int SDL_WriteStorageFile(SDL_Storage storage, byte* path, void* source, ulong length);
+	public static partial int SDL_WriteStorageFile(SDL_Storage storage, byte* path, nint source, ulong length);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_WriteStorageFile")]
-	public static partial int SDL_WriteStorageFile(SDL_Storage storage, ReadOnlySpan<byte> path, void* source, ulong length);
+	public static partial int SDL_WriteStorageFile(SDL_Storage storage, ReadOnlySpan<byte> path, nint source, ulong length);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_WriteStorageFile")]
-	public static partial int SDL_WriteStorageFile(SDL_Storage storage, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> path, void* source, ulong length);
+	public static partial int SDL_WriteStorageFile(SDL_Storage storage, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> path, nint source, ulong length);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateStorageDirectory")]
 	public static partial int SDL_CreateStorageDirectory(SDL_Storage storage, byte* path);
@@ -3773,7 +3779,7 @@ public unsafe partial class SDL3
 	public static partial SDL_Surface* SDL_CreateSurfaceFrom(int width, int height, SDL_PixelFormat format, nint pixels, int pitch);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DestroySurface")]
-	public static partial nint SDL_DestroySurface(SDL_Surface* surface);
+	public static partial void SDL_DestroySurface(SDL_Surface* surface);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetSurfaceProperties")]
 	public static partial SDL_PropertiesID SDL_GetSurfaceProperties(SDL_Surface* surface);
@@ -3804,13 +3810,13 @@ public unsafe partial class SDL3
 	public static partial SDL_Surface** SDL_GetSurfaceImages(SDL_Surface* surface, out int count);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_RemoveSurfaceAlternateImages")]
-	public static partial nint SDL_RemoveSurfaceAlternateImages(SDL_Surface* surface);
+	public static partial void SDL_RemoveSurfaceAlternateImages(SDL_Surface* surface);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LockSurface")]
 	public static partial int SDL_LockSurface(SDL_Surface* surface);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UnlockSurface")]
-	public static partial nint SDL_UnlockSurface(SDL_Surface* surface);
+	public static partial void SDL_UnlockSurface(SDL_Surface* surface);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadBMP_IO")]
 	public static partial SDL_Surface* SDL_LoadBMP_IO(SDL_IOStream src, [MarshalAs(UnmanagedType.Bool)] bool closeio);
@@ -3894,13 +3900,13 @@ public unsafe partial class SDL3
 	public static partial SDL_Surface* SDL_ConvertSurfaceAndColorspace(SDL_Surface* surface, SDL_PixelFormat format, SDL_Palette* palette, SDL_Colorspace colorspace, SDL_PropertiesID props);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ConvertPixels")]
-	public static partial int SDL_ConvertPixels(int width, int height, SDL_PixelFormat src_format, void* src, int src_pitch, SDL_PixelFormat dst_format, nint dst, int dst_pitch);
+	public static partial int SDL_ConvertPixels(int width, int height, SDL_PixelFormat src_format, nint src, int src_pitch, SDL_PixelFormat dst_format, nint dst, int dst_pitch);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ConvertPixelsAndColorspace")]
-	public static partial int SDL_ConvertPixelsAndColorspace(int width, int height, SDL_PixelFormat src_format, SDL_Colorspace src_colorspace, SDL_PropertiesID src_properties, void* src, int src_pitch, SDL_PixelFormat dst_format, SDL_Colorspace dst_colorspace, SDL_PropertiesID dst_properties, nint dst, int dst_pitch);
+	public static partial int SDL_ConvertPixelsAndColorspace(int width, int height, SDL_PixelFormat src_format, SDL_Colorspace src_colorspace, SDL_PropertiesID src_properties, nint src, int src_pitch, SDL_PixelFormat dst_format, SDL_Colorspace dst_colorspace, SDL_PropertiesID dst_properties, nint dst, int dst_pitch);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_PremultiplyAlpha")]
-	public static partial int SDL_PremultiplyAlpha(int width, int height, SDL_PixelFormat src_format, void* src, int src_pitch, SDL_PixelFormat dst_format, nint dst, int dst_pitch, [MarshalAs(UnmanagedType.Bool)] bool linear);
+	public static partial int SDL_PremultiplyAlpha(int width, int height, SDL_PixelFormat src_format, nint src, int src_pitch, SDL_PixelFormat dst_format, nint dst, int dst_pitch, [MarshalAs(UnmanagedType.Bool)] bool linear);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_PremultiplySurfaceAlpha")]
 	public static partial int SDL_PremultiplySurfaceAlpha(SDL_Surface* surface, [MarshalAs(UnmanagedType.Bool)] bool linear);
@@ -3954,16 +3960,16 @@ public unsafe partial class SDL3
 	public static partial int SDL_WriteSurfacePixelFloat(SDL_Surface* surface, int x, int y, float r, float g, float b, float a);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateThreadRuntime")]
-	public static partial SDL_Thread SDL_CreateThreadRuntime(delegate* unmanaged<nint, int> fn, byte* name, nint data, delegate* unmanaged<nint> pfnBeginThread, delegate* unmanaged<nint> pfnEndThread);
+	public static partial SDL_Thread SDL_CreateThreadRuntime(delegate* unmanaged<nint, int> fn, byte* name, nint data, delegate* unmanaged<void> pfnBeginThread, delegate* unmanaged<void> pfnEndThread);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateThreadRuntime")]
-	public static partial SDL_Thread SDL_CreateThreadRuntime(delegate* unmanaged<nint, int> fn, ReadOnlySpan<byte> name, nint data, delegate* unmanaged<nint> pfnBeginThread, delegate* unmanaged<nint> pfnEndThread);
+	public static partial SDL_Thread SDL_CreateThreadRuntime(delegate* unmanaged<nint, int> fn, ReadOnlySpan<byte> name, nint data, delegate* unmanaged<void> pfnBeginThread, delegate* unmanaged<void> pfnEndThread);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateThreadRuntime")]
-	public static partial SDL_Thread SDL_CreateThreadRuntime(delegate* unmanaged<nint, int> fn, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name, nint data, delegate* unmanaged<nint> pfnBeginThread, delegate* unmanaged<nint> pfnEndThread);
+	public static partial SDL_Thread SDL_CreateThreadRuntime(delegate* unmanaged<nint, int> fn, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name, nint data, delegate* unmanaged<void> pfnBeginThread, delegate* unmanaged<void> pfnEndThread);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateThreadWithPropertiesRuntime")]
-	public static partial SDL_Thread SDL_CreateThreadWithPropertiesRuntime(SDL_PropertiesID props, delegate* unmanaged<nint> pfnBeginThread, delegate* unmanaged<nint> pfnEndThread);
+	public static partial SDL_Thread SDL_CreateThreadWithPropertiesRuntime(SDL_PropertiesID props, delegate* unmanaged<void> pfnBeginThread, delegate* unmanaged<void> pfnEndThread);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetThreadName")]
 	public static partial byte* SDL_GetThreadNamePtr(SDL_Thread thread);
@@ -3983,19 +3989,19 @@ public unsafe partial class SDL3
 	public static partial int SDL_SetThreadPriority(SDL_ThreadPriority priority);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_WaitThread")]
-	public static partial nint SDL_WaitThread(SDL_Thread thread, int* status);
+	public static partial void SDL_WaitThread(SDL_Thread thread, int* status);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DetachThread")]
-	public static partial nint SDL_DetachThread(SDL_Thread thread);
+	public static partial void SDL_DetachThread(SDL_Thread thread);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetTLS")]
 	public static partial nint SDL_GetTLS(SDL_AtomicInt* id);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetTLS")]
-	public static partial int SDL_SetTLS(SDL_AtomicInt* id, void* value, delegate* unmanaged<nint, nint> destructor);
+	public static partial int SDL_SetTLS(SDL_AtomicInt* id, nint value, delegate* unmanaged<nint, void> destructor);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CleanupTLS")]
-	public static partial nint SDL_CleanupTLS();
+	public static partial void SDL_CleanupTLS();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetDateTimeLocalePreferences")]
 	public static partial int SDL_GetDateTimeLocalePreferences(SDL_DateFormat* dateFormat, SDL_TimeFormat* timeFormat);
@@ -4010,7 +4016,7 @@ public unsafe partial class SDL3
 	public static partial int SDL_DateTimeToTime(SDL_DateTime* dt, long* ticks);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_TimeToWindows")]
-	public static partial nint SDL_TimeToWindows(long ticks, uint* dwLowDateTime, uint* dwHighDateTime);
+	public static partial void SDL_TimeToWindows(long ticks, uint* dwLowDateTime, uint* dwHighDateTime);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_TimeFromWindows")]
 	public static partial long SDL_TimeFromWindows(uint dwLowDateTime, uint dwHighDateTime);
@@ -4037,10 +4043,10 @@ public unsafe partial class SDL3
 	public static partial ulong SDL_GetPerformanceFrequency();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Delay")]
-	public static partial nint SDL_Delay(uint ms);
+	public static partial void SDL_Delay(uint ms);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DelayNS")]
-	public static partial nint SDL_DelayNS(ulong ns);
+	public static partial void SDL_DelayNS(ulong ns);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_AddTimer")]
 	public static partial SDL_TimerID SDL_AddTimer(uint interval, delegate* unmanaged<nint, SDL_TimerID, uint, uint> callback, nint userdata);
@@ -4367,7 +4373,7 @@ public unsafe partial class SDL3
 	public static partial int SDL_FlashWindow(SDL_Window window, SDL_FlashOperation operation);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DestroyWindow")]
-	public static partial nint SDL_DestroyWindow(SDL_Window window);
+	public static partial void SDL_DestroyWindow(SDL_Window window);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ScreenSaverEnabled")]
 	[return: MarshalAs(UnmanagedType.Bool)]
@@ -4389,25 +4395,25 @@ public unsafe partial class SDL3
 	public static partial int SDL_GL_LoadLibrary([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> path);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GL_GetProcAddress")]
-	public static partial delegate* unmanaged<nint> SDL_GL_GetProcAddress(byte* proc);
+	public static partial delegate* unmanaged<void>* SDL_GL_GetProcAddress(byte* proc);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GL_GetProcAddress")]
-	public static partial delegate* unmanaged<nint> SDL_GL_GetProcAddress(ReadOnlySpan<byte> proc);
+	public static partial delegate* unmanaged<void>* SDL_GL_GetProcAddress(ReadOnlySpan<byte> proc);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GL_GetProcAddress")]
-	public static partial delegate* unmanaged<nint> SDL_GL_GetProcAddress([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> proc);
+	public static partial delegate* unmanaged<void>* SDL_GL_GetProcAddress([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> proc);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_EGL_GetProcAddress")]
-	public static partial delegate* unmanaged<nint> SDL_EGL_GetProcAddress(byte* proc);
+	public static partial delegate* unmanaged<void>* SDL_EGL_GetProcAddress(byte* proc);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_EGL_GetProcAddress")]
-	public static partial delegate* unmanaged<nint> SDL_EGL_GetProcAddress(ReadOnlySpan<byte> proc);
+	public static partial delegate* unmanaged<void>* SDL_EGL_GetProcAddress(ReadOnlySpan<byte> proc);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_EGL_GetProcAddress")]
-	public static partial delegate* unmanaged<nint> SDL_EGL_GetProcAddress([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> proc);
+	public static partial delegate* unmanaged<void>* SDL_EGL_GetProcAddress([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> proc);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GL_UnloadLibrary")]
-	public static partial nint SDL_GL_UnloadLibrary();
+	public static partial void SDL_GL_UnloadLibrary();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GL_ExtensionSupported")]
 	[return: MarshalAs(UnmanagedType.Bool)]
@@ -4422,7 +4428,7 @@ public unsafe partial class SDL3
 	public static partial bool SDL_GL_ExtensionSupported([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> extension);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GL_ResetAttributes")]
-	public static partial nint SDL_GL_ResetAttributes();
+	public static partial void SDL_GL_ResetAttributes();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GL_SetAttribute")]
 	public static partial int SDL_GL_SetAttribute(SDL_GLattr attr, int value);
@@ -4452,7 +4458,7 @@ public unsafe partial class SDL3
 	public static partial nint SDL_EGL_GetWindowSurface(SDL_Window window);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_EGL_SetAttributeCallbacks")]
-	public static partial nint SDL_EGL_SetAttributeCallbacks(delegate* unmanaged<nint> platformAttribCallback, delegate* unmanaged<int*> surfaceAttribCallback, delegate* unmanaged<int*> contextAttribCallback);
+	public static partial void SDL_EGL_SetAttributeCallbacks(delegate* unmanaged<nint> platformAttribCallback, delegate* unmanaged<int*> surfaceAttribCallback, delegate* unmanaged<int*> contextAttribCallback);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GL_SetSwapInterval")]
 	public static partial int SDL_GL_SetSwapInterval(int interval);
@@ -4476,26 +4482,26 @@ public unsafe partial class SDL3
 	public static partial int SDL_Vulkan_LoadLibrary([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> path);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_GetVkGetInstanceProcAddr")]
-	public static partial delegate* unmanaged<nint> SDL_Vulkan_GetVkGetInstanceProcAddr();
+	public static partial delegate* unmanaged<void>* SDL_Vulkan_GetVkGetInstanceProcAddr();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_UnloadLibrary")]
-	public static partial nint SDL_Vulkan_UnloadLibrary();
+	public static partial void SDL_Vulkan_UnloadLibrary();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_GetInstanceExtensions")]
 	public static partial byte** SDL_Vulkan_GetInstanceExtensions(out uint count);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_CreateSurface")]
-	public static partial int SDL_Vulkan_CreateSurface(SDL_Window window, nint instance, nint allocator, ulong* surface);
+	public static partial int SDL_Vulkan_CreateSurface(SDL_Window window, nint instance, nint allocator, ulong** surface);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_DestroySurface")]
-	public static partial nint SDL_Vulkan_DestroySurface(nint instance, ulong surface, nint allocator);
+	public static partial void SDL_Vulkan_DestroySurface(nint instance, ulong* surface, nint allocator);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Vulkan_GetPresentationSupport")]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	public static partial bool SDL_Vulkan_GetPresentationSupport(nint instance, nint physicalDevice, uint queueFamilyIndex);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowsMessageHook")]
-	public static partial nint SDL_SetWindowsMessageHook(delegate* unmanaged<nint, tagMSG, SDL_bool> callback, nint userdata);
+	public static partial void SDL_SetWindowsMessageHook(delegate* unmanaged<nint, tagMSG, SDL_bool> callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetDirect3D9AdapterIndex")]
 	public static partial int SDL_GetDirect3D9AdapterIndex(SDL_DisplayID displayID);
@@ -4504,13 +4510,13 @@ public unsafe partial class SDL3
 	public static partial int SDL_GetDXGIOutputInfo(SDL_DisplayID displayID, int* adapterIndex, int* outputIndex);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetX11EventHook")]
-	public static partial nint SDL_SetX11EventHook(delegate* unmanaged<nint, _XEvent, SDL_bool> callback, nint userdata);
+	public static partial void SDL_SetX11EventHook(delegate* unmanaged<nint, _XEvent, SDL_bool> callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetiOSAnimationCallback")]
-	public static partial int SDL_SetiOSAnimationCallback(SDL_Window window, int interval, delegate* unmanaged<nint, nint> callback, nint callbackParam);
+	public static partial int SDL_SetiOSAnimationCallback(SDL_Window window, int interval, delegate* unmanaged<nint, void> callback, nint callbackParam);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetiOSEventPump")]
-	public static partial nint SDL_SetiOSEventPump([MarshalAs(UnmanagedType.Bool)] bool enabled);
+	public static partial void SDL_SetiOSEventPump([MarshalAs(UnmanagedType.Bool)] bool enabled);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetAndroidJNIEnv")]
 	public static partial nint SDL_GetAndroidJNIEnv();
@@ -4534,7 +4540,7 @@ public unsafe partial class SDL3
 	public static partial bool SDL_IsDeXMode();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SendAndroidBackButton")]
-	public static partial nint SDL_SendAndroidBackButton();
+	public static partial void SDL_SendAndroidBackButton();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetAndroidInternalStoragePath")]
 	public static partial byte* SDL_GetAndroidInternalStoragePathPtr();
@@ -4564,13 +4570,13 @@ public unsafe partial class SDL3
 	}
 
 	[LibraryImport(LibName, EntryPoint = "SDL_RequestAndroidPermission")]
-	public static partial int SDL_RequestAndroidPermission(byte* permission, delegate* unmanaged<nint, byte*, SDL_bool, nint> cb, nint userdata);
+	public static partial int SDL_RequestAndroidPermission(byte* permission, delegate* unmanaged<nint, byte*, SDL_bool, void> cb, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_RequestAndroidPermission")]
-	public static partial int SDL_RequestAndroidPermission(ReadOnlySpan<byte> permission, delegate* unmanaged<nint, byte*, SDL_bool, nint> cb, nint userdata);
+	public static partial int SDL_RequestAndroidPermission(ReadOnlySpan<byte> permission, delegate* unmanaged<nint, byte*, SDL_bool, void> cb, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_RequestAndroidPermission")]
-	public static partial int SDL_RequestAndroidPermission([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> permission, delegate* unmanaged<nint, byte*, SDL_bool, nint> cb, nint userdata);
+	public static partial int SDL_RequestAndroidPermission([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> permission, delegate* unmanaged<nint, byte*, SDL_bool, void> cb, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ShowAndroidToast")]
 	public static partial int SDL_ShowAndroidToast(byte* message, int duration, int gravity, int xoffset, int yoffset);
@@ -4600,24 +4606,24 @@ public unsafe partial class SDL3
 	public static partial bool SDL_IsTablet();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_OnApplicationWillTerminate")]
-	public static partial nint SDL_OnApplicationWillTerminate();
+	public static partial void SDL_OnApplicationWillTerminate();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_OnApplicationDidReceiveMemoryWarning")]
-	public static partial nint SDL_OnApplicationDidReceiveMemoryWarning();
+	public static partial void SDL_OnApplicationDidReceiveMemoryWarning();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_OnApplicationWillEnterBackground")]
-	public static partial nint SDL_OnApplicationWillEnterBackground();
+	public static partial void SDL_OnApplicationWillEnterBackground();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_OnApplicationDidEnterBackground")]
-	public static partial nint SDL_OnApplicationDidEnterBackground();
+	public static partial void SDL_OnApplicationDidEnterBackground();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_OnApplicationWillEnterForeground")]
-	public static partial nint SDL_OnApplicationWillEnterForeground();
+	public static partial void SDL_OnApplicationWillEnterForeground();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_OnApplicationDidEnterForeground")]
-	public static partial nint SDL_OnApplicationDidEnterForeground();
+	public static partial void SDL_OnApplicationDidEnterForeground();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_OnApplicationDidChangeStatusBarOrientation")]
-	public static partial nint SDL_OnApplicationDidChangeStatusBarOrientation();
+	public static partial void SDL_OnApplicationDidChangeStatusBarOrientation();
 
 }

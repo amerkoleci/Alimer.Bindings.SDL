@@ -35,9 +35,6 @@ public static partial class CsCodeGenerator
         foreach (CppFunction? cppFunction in compilation.Functions)
         {
             if (cppFunction.Name == "SDL_LogMessageV"
-                || cppFunction.Name == "SDL_GetLogOutputFunction"
-                || cppFunction.Name == "SDL_SetLogOutputFunction"
-                || cppFunction.Name == "SDL_EGL_SetEGLAttributeCallbacks"
                 || cppFunction.Name == "SDL_GUIDToString"
                 || cppFunction.Name == "SDL_GUIDFromString"
                 || cppFunction.Name == "SDL_SetPropertyWithCleanup"
@@ -98,7 +95,7 @@ public static partial class CsCodeGenerator
         {
             foreach (CppFunction cppFunction in s_collectedFunctions)
             {
-                WriteFunctionInvocation(writer, cppFunction);
+                WriteFunctionInvocation(cppFunction, writer);
             }
         }
     }
@@ -133,8 +130,13 @@ public static partial class CsCodeGenerator
     }
 
 
-    private static void WriteFunctionInvocation(CodeWriter writer, CppFunction cppFunction)
+    private static void WriteFunctionInvocation(CppFunction cppFunction, CodeWriter writer)
     {
+        if(cppFunction.Name == "SDL_Metal_CreateView")
+        {
+
+        }
+
         string returnCsName = GetCsTypeName(cppFunction.ReturnType);
         string argumentsString = GetParameterSignature(cppFunction, false);
         string functionName = cppFunction.Name;

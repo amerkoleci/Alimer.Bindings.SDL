@@ -165,9 +165,9 @@ public static partial class CsCodeGenerator
             {
                 return GetCsTypeName(classElementType);
             }
-            else if (typedef.ElementType is CppPointerType cppPointerType)
+            else if (typedef.ElementType is CppPointerType)
             {
-                return GetCsTypeName(cppPointerType);
+                return GetCsTypeName(typedef.ElementType);
             }
 
             string typeDefCsName = GetCsCleanName(typedef.Name);
@@ -189,6 +189,9 @@ public static partial class CsCodeGenerator
         if (type is CppPointerType pointerType)
         {
             string csPointerTypeName = GetCsTypeName(pointerType);
+            if (csPointerTypeName == "void")
+                return "nint";
+
             if (csPointerTypeName == "IntPtr" || csPointerTypeName == "nint")
                 return csPointerTypeName;
 
@@ -225,7 +228,7 @@ public static partial class CsCodeGenerator
         switch (primitiveType.Kind)
         {
             case CppPrimitiveKind.Void:
-                return "nint";
+                return "void";
 
             case CppPrimitiveKind.Bool:
                 return "bool";

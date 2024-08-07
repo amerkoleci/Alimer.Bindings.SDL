@@ -705,7 +705,7 @@ public partial struct SDL_IOStreamInterface
 	public unsafe delegate* unmanaged<nint, long> size;
 	public unsafe delegate* unmanaged<nint, long, SDL_IOWhence, long> seek;
 	public unsafe delegate* unmanaged<nint, nint, nuint, SDL_IOStatus*, nuint> read;
-	public unsafe delegate* unmanaged<nint, void*, nuint, SDL_IOStatus*, nuint> write;
+	public unsafe delegate* unmanaged<nint, nint, nuint, SDL_IOStatus*, nuint> write;
 	public unsafe delegate* unmanaged<nint, int> close;
 }
 
@@ -740,12 +740,12 @@ public partial struct SDL_VirtualJoystickDesc
 	public unsafe SDL_VirtualJoystickTouchpadDesc* touchpads;
 	public unsafe SDL_VirtualJoystickSensorDesc* sensors;
 	public nint userdata;
-	public unsafe delegate* unmanaged<nint, nint> Update;
-	public unsafe delegate* unmanaged<nint, int, nint> SetPlayerIndex;
+	public unsafe delegate* unmanaged<nint, void> Update;
+	public unsafe delegate* unmanaged<nint, int, void> SetPlayerIndex;
 	public unsafe delegate* unmanaged<nint, ushort, ushort, int> Rumble;
 	public unsafe delegate* unmanaged<nint, ushort, ushort, int> RumbleTriggers;
 	public unsafe delegate* unmanaged<nint, byte, byte, byte, int> SetLED;
-	public unsafe delegate* unmanaged<nint, void*, int, int> SendEffect;
+	public unsafe delegate* unmanaged<nint, nint, int, int> SendEffect;
 	public unsafe delegate* unmanaged<nint, SDL_bool, int> SetSensorsEnabled;
 }
 
@@ -904,7 +904,7 @@ public partial struct SDL_StorageInterface
 	public unsafe delegate* unmanaged<nint, byte*, delegate* unmanaged<nint, byte*, byte*, int>, nint, int> enumerate;
 	public unsafe delegate* unmanaged<nint, byte*, SDL_PathInfo*, int> info;
 	public unsafe delegate* unmanaged<nint, byte*, nint, ulong, int> read_file;
-	public unsafe delegate* unmanaged<nint, byte*, void*, ulong, int> write_file;
+	public unsafe delegate* unmanaged<nint, byte*, nint, ulong, int> write_file;
 	public unsafe delegate* unmanaged<nint, byte*, int> mkdir;
 	public unsafe delegate* unmanaged<nint, byte*, int> remove;
 	public unsafe delegate* unmanaged<nint, byte*, byte*, int> rename;

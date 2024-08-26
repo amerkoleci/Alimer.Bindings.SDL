@@ -114,7 +114,7 @@ public static unsafe class Program
         SDL_Quit();
     }
 
-    private static void OnLog(SDL_LogCategory category, SDL_LogPriority priority, string message)
+    private static void OnLog(SDL_LogCategory category, SDL_LogPriority priority, string? message)
     {
         Console.WriteLine($"SDL: {message}");
     }

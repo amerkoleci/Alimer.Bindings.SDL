@@ -172,14 +172,14 @@ public static unsafe partial class SDL3
     public static partial nint SDL_free(void* mem);
 
     #region SDL_hints.h
-    public static bool SDL_SetHint(ReadOnlySpan<byte> name, bool value)
+    public static int SDL_SetHint(ReadOnlySpan<byte> name, bool value)
     {
         fixed (byte* pName = name)
         fixed (byte* pValue = (value ? "1"u8 : "0"u8))
             return SDL_SetHint(pName, pValue);
     }
 
-    public static bool SDL_SetHint(string name, bool value)
+    public static int SDL_SetHint(string name, bool value)
     {
         return SDL_SetHint(name, value ? "1" : "0");
     }

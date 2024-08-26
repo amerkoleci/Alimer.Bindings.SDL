@@ -31,6 +31,7 @@
 
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_error.h>
+#include <SDL3/SDL_events.h>
 
 #include <SDL3/SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
@@ -65,6 +66,38 @@ typedef Uint32 SDL_InitFlags;
 #define SDL_INIT_EVENTS     0x00004000u
 #define SDL_INIT_SENSOR     0x00008000u /**< `SDL_INIT_SENSOR` implies `SDL_INIT_EVENTS` */
 #define SDL_INIT_CAMERA     0x00010000u /**< `SDL_INIT_CAMERA` implies `SDL_INIT_EVENTS` */
+
+/**
+ * Return values for optional main callbacks.
+ *
+ * Returning SDL_APP_SUCCESS or SDL_APP_FAILURE from SDL_AppInit,
+ * SDL_AppEvent, or SDL_AppIterate will terminate the program and report
+ * success/failure to the operating system. What that means is
+ * platform-dependent. On Unix, for example, on success, the process error
+ * code will be zero, and on failure it will be 1. This interface doesn't
+ * allow you to return specific exit codes, just whether there was an error
+ * generally or not.
+ *
+ * Returning SDL_APP_CONTINUE from these functions will let the app continue
+ * to run.
+ *
+ * See
+ * [Main callbacks in SDL3](https://wiki.libsdl.org/SDL3/README/main-functions#main-callbacks-in-sdl3)
+ * for complete details.
+ *
+ * \since This enum is available since SDL 3.0.0.
+ */
+typedef enum SDL_AppResult
+{
+    SDL_APP_CONTINUE,   /** Value that requests that the app continue from the main callbacks. */
+    SDL_APP_SUCCESS,    /** Value that requests termination with success from the main callbacks. */
+    SDL_APP_FAILURE     /** Value that requests termination with error from the main callbacks. */
+} SDL_AppResult;
+
+typedef SDL_AppResult (SDLCALL *SDL_AppInit_func)(void **appstate, int argc, char *argv[]);
+typedef SDL_AppResult (SDLCALL *SDL_AppIterate_func)(void *appstate);
+typedef SDL_AppResult (SDLCALL *SDL_AppEvent_func)(void *appstate, const SDL_Event *event);
+typedef void (SDLCALL *SDL_AppQuit_func)(void *appstate);
 
 /**
  * Initialize the SDL library.

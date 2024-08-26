@@ -64,7 +64,8 @@ public static partial class CsCodeGenerator
 
             if (typedef.Name == "SDL_TimerCallback"
                 || typedef.Name == "SDL_Surface"
-                || typedef.Name.EndsWith("Callback"))
+                || typedef.Name.EndsWith("Callback")
+                || typedef.Name.EndsWith("_func"))
             {
                 continue;
             }

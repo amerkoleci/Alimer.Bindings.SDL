@@ -231,6 +231,14 @@ public unsafe partial class SDL3
 	[LibraryImport(LibName, EntryPoint = "SDL_ConvertAudioSamples")]
 	public static partial int SDL_ConvertAudioSamples(SDL_AudioSpec* src_spec, byte* src_data, int src_len, SDL_AudioSpec* dst_spec, byte** dst_data, int* dst_len);
 
+	[LibraryImport(LibName, EntryPoint = "SDL_GetAudioFormatName")]
+	public static partial byte* SDL_GetAudioFormatNamePtr(SDL_AudioFormat format);
+
+	public static string? SDL_GetAudioFormatName(SDL_AudioFormat format)
+	{
+		return ConvertToManaged(SDL_GetAudioFormatNamePtr(format));
+	}
+
 	[LibraryImport(LibName, EntryPoint = "SDL_GetSilenceValueForFormat")]
 	public static partial int SDL_GetSilenceValueForFormat(SDL_AudioFormat format);
 
@@ -526,20 +534,20 @@ public unsafe partial class SDL3
 	public static partial int SDL_PushEvent(SDL_Event* @event);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetEventFilter")]
-	public static partial void SDL_SetEventFilter(delegate* unmanaged<nint, SDL_Event*, int> filter, nint userdata);
+	public static partial void SDL_SetEventFilter(delegate* unmanaged<nint, SDL_Event*, SDL_bool> filter, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetEventFilter")]
 	[return: MarshalAs(UnmanagedType.Bool)]
-	public static partial bool SDL_GetEventFilter(delegate* unmanaged<nint, SDL_Event*, int> filter, nint userdata);
+	public static partial bool SDL_GetEventFilter(delegate* unmanaged<nint, SDL_Event*, SDL_bool> filter, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_AddEventWatch")]
-	public static partial int SDL_AddEventWatch(delegate* unmanaged<nint, SDL_Event*, int> filter, nint userdata);
+	public static partial int SDL_AddEventWatch(delegate* unmanaged<nint, SDL_Event*, SDL_bool> filter, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DelEventWatch")]
-	public static partial void SDL_DelEventWatch(delegate* unmanaged<nint, SDL_Event*, int> filter, nint userdata);
+	public static partial void SDL_DelEventWatch(delegate* unmanaged<nint, SDL_Event*, SDL_bool> filter, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_FilterEvents")]
-	public static partial void SDL_FilterEvents(delegate* unmanaged<nint, SDL_Event*, int> filter, nint userdata);
+	public static partial void SDL_FilterEvents(delegate* unmanaged<nint, SDL_Event*, SDL_bool> filter, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetEventEnabled")]
 	public static partial void SDL_SetEventEnabled(SDL_EventType type, [MarshalAs(UnmanagedType.Bool)] bool enabled);
@@ -1176,40 +1184,31 @@ public unsafe partial class SDL3
 	public static partial void SDL_hid_ble_scan([MarshalAs(UnmanagedType.Bool)] bool active);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetHintWithPriority")]
-	[return: MarshalAs(UnmanagedType.Bool)]
-	public static partial bool SDL_SetHintWithPriority(byte* name, byte* value, SDL_HintPriority priority);
+	public static partial int SDL_SetHintWithPriority(byte* name, byte* value, SDL_HintPriority priority);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetHintWithPriority")]
-	[return: MarshalAs(UnmanagedType.Bool)]
-	public static partial bool SDL_SetHintWithPriority(ReadOnlySpan<byte> name, ReadOnlySpan<byte> value, SDL_HintPriority priority);
+	public static partial int SDL_SetHintWithPriority(ReadOnlySpan<byte> name, ReadOnlySpan<byte> value, SDL_HintPriority priority);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetHintWithPriority")]
-	[return: MarshalAs(UnmanagedType.Bool)]
-	public static partial bool SDL_SetHintWithPriority([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> value, SDL_HintPriority priority);
+	public static partial int SDL_SetHintWithPriority([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> value, SDL_HintPriority priority);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetHint")]
-	[return: MarshalAs(UnmanagedType.Bool)]
-	public static partial bool SDL_SetHint(byte* name, byte* value);
+	public static partial int SDL_SetHint(byte* name, byte* value);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetHint")]
-	[return: MarshalAs(UnmanagedType.Bool)]
-	public static partial bool SDL_SetHint(ReadOnlySpan<byte> name, ReadOnlySpan<byte> value);
+	public static partial int SDL_SetHint(ReadOnlySpan<byte> name, ReadOnlySpan<byte> value);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetHint")]
-	[return: MarshalAs(UnmanagedType.Bool)]
-	public static partial bool SDL_SetHint([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> value);
+	public static partial int SDL_SetHint([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> value);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ResetHint")]
-	[return: MarshalAs(UnmanagedType.Bool)]
-	public static partial bool SDL_ResetHint(byte* name);
+	public static partial int SDL_ResetHint(byte* name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ResetHint")]
-	[return: MarshalAs(UnmanagedType.Bool)]
-	public static partial bool SDL_ResetHint(ReadOnlySpan<byte> name);
+	public static partial int SDL_ResetHint(ReadOnlySpan<byte> name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ResetHint")]
-	[return: MarshalAs(UnmanagedType.Bool)]
-	public static partial bool SDL_ResetHint([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name);
+	public static partial int SDL_ResetHint([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ResetHints")]
 	public static partial void SDL_ResetHints();
@@ -1708,14 +1707,8 @@ public unsafe partial class SDL3
 	[LibraryImport(LibName, EntryPoint = "SDL_SetModState")]
 	public static partial void SDL_SetModState(SDL_Keymod modstate);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_GetDefaultKeyFromScancode")]
-	public static partial SDL_Keycode SDL_GetDefaultKeyFromScancode(SDL_Scancode scancode, SDL_Keymod modstate);
-
 	[LibraryImport(LibName, EntryPoint = "SDL_GetKeyFromScancode")]
-	public static partial SDL_Keycode SDL_GetKeyFromScancode(SDL_Scancode scancode, SDL_Keymod modstate);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_GetDefaultScancodeFromKey")]
-	public static partial SDL_Scancode SDL_GetDefaultScancodeFromKey(SDL_Keycode key, SDL_Keymod* modstate);
+	public static partial SDL_Keycode SDL_GetKeyFromScancode(SDL_Scancode scancode, SDL_Keymod modstate, [MarshalAs(UnmanagedType.Bool)] bool key_event);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetScancodeFromKey")]
 	public static partial SDL_Scancode SDL_GetScancodeFromKey(SDL_Keycode key, SDL_Keymod* modstate);
@@ -1803,13 +1796,13 @@ public unsafe partial class SDL3
 	public static partial nint SDL_LoadObject([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> sofile);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadFunction")]
-	public static partial delegate* unmanaged<void> SDL_LoadFunction(nint handle, byte* name);
+	public static partial delegate* unmanaged<void>* SDL_LoadFunction(nint handle, byte* name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadFunction")]
-	public static partial delegate* unmanaged<void> SDL_LoadFunction(nint handle, ReadOnlySpan<byte> name);
+	public static partial delegate* unmanaged<void>* SDL_LoadFunction(nint handle, ReadOnlySpan<byte> name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadFunction")]
-	public static partial delegate* unmanaged<void> SDL_LoadFunction(nint handle, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name);
+	public static partial delegate* unmanaged<void>* SDL_LoadFunction(nint handle, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UnloadObject")]
 	public static partial void SDL_UnloadObject(nint handle);
@@ -1828,6 +1821,15 @@ public unsafe partial class SDL3
 
 	[LibraryImport(LibName, EntryPoint = "SDL_ResetLogPriorities")]
 	public static partial void SDL_ResetLogPriorities();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetLogPriorityPrefix")]
+	public static partial int SDL_SetLogPriorityPrefix(SDL_LogPriority priority, byte* prefix);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetLogPriorityPrefix")]
+	public static partial int SDL_SetLogPriorityPrefix(SDL_LogPriority priority, ReadOnlySpan<byte> prefix);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetLogPriorityPrefix")]
+	public static partial int SDL_SetLogPriorityPrefix(SDL_LogPriority priority, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> prefix);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_Log")]
 	public static partial void SDL_Log(byte* fmt);
@@ -1970,15 +1972,15 @@ public unsafe partial class SDL3
 	[LibraryImport(LibName, EntryPoint = "SDL_WarpMouseGlobal")]
 	public static partial int SDL_WarpMouseGlobal(float x, float y);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_SetRelativeMouseMode")]
-	public static partial int SDL_SetRelativeMouseMode([MarshalAs(UnmanagedType.Bool)] bool enabled);
+	[LibraryImport(LibName, EntryPoint = "SDL_SetWindowRelativeMouseMode")]
+	public static partial int SDL_SetWindowRelativeMouseMode(SDL_Window window, [MarshalAs(UnmanagedType.Bool)] bool enabled);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_GetWindowRelativeMouseMode")]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	public static partial bool SDL_GetWindowRelativeMouseMode(SDL_Window window);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CaptureMouse")]
 	public static partial int SDL_CaptureMouse([MarshalAs(UnmanagedType.Bool)] bool enabled);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_GetRelativeMouseMode")]
-	[return: MarshalAs(UnmanagedType.Bool)]
-	public static partial bool SDL_GetRelativeMouseMode();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateCursor")]
 	public static partial SDL_Cursor SDL_CreateCursor(byte* data, byte* mask, int w, int h, int hot_x, int hot_y);
@@ -2085,36 +2087,6 @@ public unsafe partial class SDL3
 
 	[LibraryImport(LibName, EntryPoint = "SDL_WaitConditionTimeout")]
 	public static partial int SDL_WaitConditionTimeout(SDL_Condition cond, SDL_Mutex mutex, int timeoutMS);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_GetPens")]
-	public static partial SDL_PenID* SDL_GetPens(out int count);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_GetPenStatus")]
-	public static partial uint SDL_GetPenStatus(SDL_PenID instance_id, float* x, float* y, float* axes, nuint num_axes);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_GetPenFromGUID")]
-	public static partial SDL_PenID SDL_GetPenFromGUID(Guid guid);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_GetPenGUID")]
-	public static partial Guid SDL_GetPenGUID(SDL_PenID instance_id);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_PenConnected")]
-	[return: MarshalAs(UnmanagedType.Bool)]
-	public static partial bool SDL_PenConnected(SDL_PenID instance_id);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_GetPenName")]
-	public static partial byte* SDL_GetPenNamePtr(SDL_PenID instance_id);
-
-	public static string? SDL_GetPenName(SDL_PenID instance_id)
-	{
-		return ConvertToManaged(SDL_GetPenNamePtr(instance_id));
-	}
-
-	[LibraryImport(LibName, EntryPoint = "SDL_GetPenCapabilities")]
-	public static partial SDL_PenCapabilityFlags SDL_GetPenCapabilities(SDL_PenID instance_id, SDL_PenCapabilityInfo* capabilities);
-
-	[LibraryImport(LibName, EntryPoint = "SDL_GetPenType")]
-	public static partial SDL_PenSubtype SDL_GetPenType(SDL_PenID instance_id);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetPixelFormatName")]
 	public static partial byte* SDL_GetPixelFormatNamePtr(SDL_PixelFormat format);
@@ -4625,5 +4597,29 @@ public unsafe partial class SDL3
 
 	[LibraryImport(LibName, EntryPoint = "SDL_OnApplicationDidChangeStatusBarOrientation")]
 	public static partial void SDL_OnApplicationDidChangeStatusBarOrientation();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_main")]
+	public static partial int SDL_main(int argc, byte** argv);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetMainReady")]
+	public static partial void SDL_SetMainReady();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_RunApp")]
+	public static partial int SDL_RunApp(int argc, byte** argv, delegate* unmanaged<int, byte**, int> mainFunction, nint reserved);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_EnterAppMainCallbacks")]
+	public static partial int SDL_EnterAppMainCallbacks(int argc, byte** argv, delegate* unmanaged<nint, int, byte**, SDL_AppResult> appinit, delegate* unmanaged<nint, SDL_AppResult> appiter, delegate* unmanaged<nint, SDL_Event*, SDL_AppResult> appevent, delegate* unmanaged<nint, void> appquit);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_RegisterApp")]
+	public static partial int SDL_RegisterApp(byte* name, uint style, nint hInst);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_RegisterApp")]
+	public static partial int SDL_RegisterApp(ReadOnlySpan<byte> name, uint style, nint hInst);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_RegisterApp")]
+	public static partial int SDL_RegisterApp([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name, uint style, nint hInst);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_UnregisterApp")]
+	public static partial void SDL_UnregisterApp();
 
 }

@@ -281,11 +281,11 @@ public enum SDL_Keycode : uint
 	KpDecimal = SDL3.SDLK_KP_DECIMAL,
 	KpHexadecimal = SDL3.SDLK_KP_HEXADECIMAL,
 	LeftControl = SDL3.SDLK_LCTRL,
-	LeftShirt = SDL3.SDLK_LSHIFT,
+	LeftShift = SDL3.SDLK_LSHIFT,
 	LeftAlt = SDL3.SDLK_LALT,
 	LeftGui = SDL3.SDLK_LGUI,
 	RightControl = SDL3.SDLK_RCTRL,
-	RightShirt = SDL3.SDLK_RSHIFT,
+	RightShift = SDL3.SDLK_RSHIFT,
 	RightAlt = SDL3.SDLK_RALT,
 	RightGui = SDL3.SDLK_RGUI,
 	Mode = SDL3.SDLK_MODE,
@@ -328,8 +328,8 @@ public enum SDL_Keycode : uint
 public enum SDL_Keymod : ushort
 {
 	None = SDL3.SDL_KMOD_NONE,
-	LeftShirt = SDL3.SDL_KMOD_LSHIFT,
-	RightShirt = SDL3.SDL_KMOD_RSHIFT,
+	LeftShift = SDL3.SDL_KMOD_LSHIFT,
+	RightShift = SDL3.SDL_KMOD_RSHIFT,
 	LeftControl = SDL3.SDL_KMOD_LCTRL,
 	RightControl = SDL3.SDL_KMOD_RCTRL,
 	LeftAlt = SDL3.SDL_KMOD_LALT,
@@ -368,6 +368,11 @@ public enum SDL_MouseID : uint
 }
 
 public enum SDL_PenID : uint
+{
+}
+
+[Flags]
+public enum SDL_PenInputFlags : uint
 {
 }
 

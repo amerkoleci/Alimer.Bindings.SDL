@@ -45,8 +45,7 @@ extern "C" {
  *
  * If the keyboard is disconnected and reconnected, it will get a new ID.
  *
- * The ID value starts at 1 and increments from there. The value 0 is an
- * invalid ID.
+ * The value 0 is an invalid ID.
  *
  * \since This datatype is available since SDL 3.0.0.
  */
@@ -185,60 +184,26 @@ extern SDL_DECLSPEC SDL_Keymod SDLCALL SDL_GetModState(void);
 extern SDL_DECLSPEC void SDLCALL SDL_SetModState(SDL_Keymod modstate);
 
 /**
- * Get the key code corresponding to the given scancode according to a default
- * en_US keyboard layout.
- *
- * See SDL_Keycode for details.
- *
- * \param scancode the desired SDL_Scancode to query.
- * \param modstate the modifier state to use when translating the scancode to
- *                 a keycode.
- * \returns the SDL_Keycode that corresponds to the given SDL_Scancode.
- *
- * \since This function is available since SDL 3.0.0.
- *
- * \sa SDL_GetKeyName
- * \sa SDL_GetScancodeFromKey
- */
-extern SDL_DECLSPEC SDL_Keycode SDLCALL SDL_GetDefaultKeyFromScancode(SDL_Scancode scancode, SDL_Keymod modstate);
-
-/**
  * Get the key code corresponding to the given scancode according to the
  * current keyboard layout.
  *
- * See SDL_Keycode for details.
+ * If you want to get the keycode as it would be delivered in key events,
+ * including options specified in SDL_HINT_KEYCODE_OPTIONS, then you should
+ * pass `key_event` as SDL_TRUE. Otherwise this function simply translates the
+ * scancode based on the given modifier state.
  *
  * \param scancode the desired SDL_Scancode to query.
  * \param modstate the modifier state to use when translating the scancode to
  *                 a keycode.
+ * \param key_event SDL_TRUE if the keycode will be used in key events.
  * \returns the SDL_Keycode that corresponds to the given SDL_Scancode.
  *
  * \since This function is available since SDL 3.0.0.
  *
- * \sa SDL_GetDefaultKeyFromScancode
  * \sa SDL_GetKeyName
  * \sa SDL_GetScancodeFromKey
  */
-extern SDL_DECLSPEC SDL_Keycode SDLCALL SDL_GetKeyFromScancode(SDL_Scancode scancode, SDL_Keymod modstate);
-
-/**
- * Get the scancode corresponding to the given key code according to a default
- * en_US keyboard layout.
- *
- * Note that there may be multiple scancode+modifier states that can generate
- * this keycode, this will just return the first one found.
- *
- * \param key the desired SDL_Keycode to query.
- * \param modstate a pointer to the modifier state that would be used when the
- *                 scancode generates this key, may be NULL.
- * \returns the SDL_Scancode that corresponds to the given SDL_Keycode.
- *
- * \since This function is available since SDL 3.0.0.
- *
- * \sa SDL_GetScancodeFromKey
- * \sa SDL_GetScancodeName
- */
-extern SDL_DECLSPEC SDL_Scancode SDLCALL SDL_GetDefaultScancodeFromKey(SDL_Keycode key, SDL_Keymod *modstate);
+extern SDL_DECLSPEC SDL_Keycode SDLCALL SDL_GetKeyFromScancode(SDL_Scancode scancode, SDL_Keymod modstate, SDL_bool key_event);
 
 /**
  * Get the scancode corresponding to the given key code according to the
@@ -254,7 +219,6 @@ extern SDL_DECLSPEC SDL_Scancode SDLCALL SDL_GetDefaultScancodeFromKey(SDL_Keyco
  *
  * \since This function is available since SDL 3.0.0.
  *
- * \sa SDL_GetDefaultScancodeFromKey
  * \sa SDL_GetKeyFromScancode
  * \sa SDL_GetScancodeName
  */
@@ -317,9 +281,6 @@ extern SDL_DECLSPEC SDL_Scancode SDLCALL SDL_GetScancodeFromName(const char *nam
 
 /**
  * Get a human-readable name for a key.
- *
- * Both lowercase and uppercase alphabetic keycodes have uppercase names, e.g.
- * SDL_Keycode 'a' and 'A' both have the name "A".
  *
  * If the key doesn't have a name, this function returns an empty string ("").
  *

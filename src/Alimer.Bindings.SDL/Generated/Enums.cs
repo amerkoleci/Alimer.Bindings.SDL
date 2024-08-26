@@ -167,12 +167,8 @@ public enum SDL_EventType
 	WindowLeaveFullscreen = 536,
 	/// <unmanaged>SDL_EVENT_WINDOW_DESTROYED</unmanaged>
 	WindowDestroyed = 537,
-	/// <unmanaged>SDL_EVENT_WINDOW_PEN_ENTER</unmanaged>
-	WindowPenEnter = 538,
-	/// <unmanaged>SDL_EVENT_WINDOW_PEN_LEAVE</unmanaged>
-	WindowPenLeave = 539,
 	/// <unmanaged>SDL_EVENT_WINDOW_HDR_STATE_CHANGED</unmanaged>
-	WindowHdrStateChanged = 540,
+	WindowHdrStateChanged = 538,
 	/// <unmanaged>SDL_EVENT_WINDOW_FIRST</unmanaged>
 	WindowFirst = WindowShown,
 	/// <unmanaged>SDL_EVENT_WINDOW_LAST</unmanaged>
@@ -273,16 +269,22 @@ public enum SDL_EventType
 	AudioDeviceFormatChanged = 4354,
 	/// <unmanaged>SDL_EVENT_SENSOR_UPDATE</unmanaged>
 	SensorUpdate = 0x1200,
+	/// <unmanaged>SDL_EVENT_PEN_PROXIMITY_IN</unmanaged>
+	PenProximityIn = 0x1300,
+	/// <unmanaged>SDL_EVENT_PEN_PROXIMITY_OUT</unmanaged>
+	PenProximityOut = 4865,
 	/// <unmanaged>SDL_EVENT_PEN_DOWN</unmanaged>
-	PenDown = 0x1300,
+	PenDown = 4866,
 	/// <unmanaged>SDL_EVENT_PEN_UP</unmanaged>
-	PenUp = 4865,
-	/// <unmanaged>SDL_EVENT_PEN_MOTION</unmanaged>
-	PenMotion = 4866,
+	PenUp = 4867,
 	/// <unmanaged>SDL_EVENT_PEN_BUTTON_DOWN</unmanaged>
-	PenButtonDown = 4867,
+	PenButtonDown = 4868,
 	/// <unmanaged>SDL_EVENT_PEN_BUTTON_UP</unmanaged>
-	PenButtonUp = 4868,
+	PenButtonUp = 4869,
+	/// <unmanaged>SDL_EVENT_PEN_MOTION</unmanaged>
+	PenMotion = 4870,
+	/// <unmanaged>SDL_EVENT_PEN_AXIS</unmanaged>
+	PenAxis = 4871,
 	/// <unmanaged>SDL_EVENT_CAMERA_DEVICE_ADDED</unmanaged>
 	CameraDeviceAdded = 0x1400,
 	/// <unmanaged>SDL_EVENT_CAMERA_DEVICE_REMOVED</unmanaged>
@@ -517,6 +519,16 @@ public enum SDL_HintPriority
 	Normal = 1,
 	/// <unmanaged>SDL_HINT_OVERRIDE</unmanaged>
 	Override = 2,
+}
+
+public enum SDL_AppResult
+{
+	/// <unmanaged>SDL_APP_CONTINUE</unmanaged>
+	Continue = 0,
+	/// <unmanaged>SDL_APP_SUCCESS</unmanaged>
+	Success = 1,
+	/// <unmanaged>SDL_APP_FAILURE</unmanaged>
+	Failure = 2,
 }
 
 public enum SDL_IOStatus
@@ -759,28 +771,10 @@ public enum SDL_PenAxis
 	Rotation = 4,
 	/// <unmanaged>SDL_PEN_AXIS_SLIDER</unmanaged>
 	Slider = 5,
+	/// <unmanaged>SDL_PEN_AXIS_TANGENTIAL_PRESSURE</unmanaged>
+	TangentialPressure = 6,
 	/// <unmanaged>SDL_PEN_NUM_AXES</unmanaged>
-	NumAxes = 6,
-	/// <unmanaged>SDL_PEN_AXIS_LAST</unmanaged>
-	Last = NumAxes - 1,
-}
-
-public enum SDL_PenSubtype
-{
-	/// <unmanaged>SDL_PEN_TYPE_UNKNOWN</unmanaged>
-	Unknown = 0,
-	/// <unmanaged>SDL_PEN_TYPE_ERASER</unmanaged>
-	Eraser = 1,
-	/// <unmanaged>SDL_PEN_TYPE_PEN</unmanaged>
-	Pen = 2,
-	/// <unmanaged>SDL_PEN_TYPE_PENCIL</unmanaged>
-	Pencil = 3,
-	/// <unmanaged>SDL_PEN_TYPE_BRUSH</unmanaged>
-	Brush = 4,
-	/// <unmanaged>SDL_PEN_TYPE_AIRBRUSH</unmanaged>
-	Airbrush = 5,
-	/// <unmanaged>SDL_PEN_TYPE_LAST</unmanaged>
-	Last = Airbrush,
+	NumAxes = 7,
 }
 
 public enum SDL_PixelType
@@ -1654,7 +1648,7 @@ public enum SDL_Scancode
 	/// <unmanaged>SDL_SCANCODE_LCTRL</unmanaged>
 	LeftControl = 224,
 	/// <unmanaged>SDL_SCANCODE_LSHIFT</unmanaged>
-	LeftShirt = 225,
+	LeftShift = 225,
 	/// <unmanaged>SDL_SCANCODE_LALT</unmanaged>
 	LeftAlt = 226,
 	/// <unmanaged>SDL_SCANCODE_LGUI</unmanaged>
@@ -1662,7 +1656,7 @@ public enum SDL_Scancode
 	/// <unmanaged>SDL_SCANCODE_RCTRL</unmanaged>
 	RightControl = 228,
 	/// <unmanaged>SDL_SCANCODE_RSHIFT</unmanaged>
-	RightShirt = 229,
+	RightShift = 229,
 	/// <unmanaged>SDL_SCANCODE_RALT</unmanaged>
 	RightAlt = 230,
 	/// <unmanaged>SDL_SCANCODE_RGUI</unmanaged>

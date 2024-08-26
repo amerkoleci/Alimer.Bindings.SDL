@@ -92,6 +92,7 @@ public static class Program
             Path.Combine(sdlIncludePath, "SDL3/SDL_video.h"),
             Path.Combine(sdlIncludePath, "SDL3/SDL_vulkan.h"),
             Path.Combine(sdlIncludePath, "SDL3/SDL_system.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_main.h"),
         ];
 
         var options = new CppParserOptions

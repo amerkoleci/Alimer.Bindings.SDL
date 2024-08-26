@@ -61,6 +61,7 @@ public static partial class CsCodeGenerator
         "SDL_EndThreadFunction",
         "SDL_CreateThread",
         "SDL_CreateThreadWithProperties",
+        "main",
     };
 
     private static readonly List<CppMacro> s_collectedMacros = new();

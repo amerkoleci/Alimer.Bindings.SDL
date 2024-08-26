@@ -80,6 +80,8 @@ public static partial class CsCodeGenerator
         { "SDL_DateFormat", "SDL_DATE_FORMAT" },
         { "SDL_TimeFormat", "SDL_TIME_FORMAT" },
 
+        { "SDL_AppResult", "SDL_APP" },
+
         { "SDL_WinRT_Path", "SDL_WINRT_PATH" },
         { "SDL_WinRT_DeviceFamily", "SDL_WINRT_DEVICEFAMILY" },
     };
@@ -110,11 +112,11 @@ public static partial class CsCodeGenerator
     private static readonly Dictionary<string, string> s_partRenames = new(StringComparer.OrdinalIgnoreCase)
     {
         { "lctrl", "LeftControl" },
-        { "Lshift", "LeftShirt" },
+        { "Lshift", "LeftShift" },
         { "Lalt", "LeftAlt" },
         { "Lgui", "LeftGui" },
         { "Rctrl", "RightControl" },
-        { "Rshift", "RightShirt" },
+        { "Rshift", "RightShift" },
         { "Ralt", "RightAlt" },
         { "Rgui", "RightGui" },
     };

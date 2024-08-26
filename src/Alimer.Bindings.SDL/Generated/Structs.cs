@@ -339,19 +339,13 @@ public partial struct SDL_TouchFingerEvent
 	public SDL_WindowID windowID;
 }
 
-public partial struct SDL_PenTipEvent
+public partial struct SDL_PenProximityEvent
 {
 	public SDL_EventType type;
 	public uint reserved;
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public SDL_PenID which;
-	public byte tip;
-	public byte state;
-	public ushort pen_state;
-	public float x;
-	public float y;
-	public unsafe fixed float axes[6];
 }
 
 public partial struct SDL_PenMotionEvent
@@ -361,12 +355,23 @@ public partial struct SDL_PenMotionEvent
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public SDL_PenID which;
-	public byte padding1;
-	public byte padding2;
-	public ushort pen_state;
+	public SDL_PenInputFlags pen_state;
 	public float x;
 	public float y;
-	public unsafe fixed float axes[6];
+}
+
+public partial struct SDL_PenTouchEvent
+{
+	public SDL_EventType type;
+	public uint reserved;
+	public ulong timestamp;
+	public SDL_WindowID windowID;
+	public SDL_PenID which;
+	public SDL_PenInputFlags pen_state;
+	public float x;
+	public float y;
+	public byte eraser;
+	public byte state;
 }
 
 public partial struct SDL_PenButtonEvent
@@ -376,12 +381,25 @@ public partial struct SDL_PenButtonEvent
 	public ulong timestamp;
 	public SDL_WindowID windowID;
 	public SDL_PenID which;
-	public byte button;
-	public byte state;
-	public ushort pen_state;
+	public SDL_PenInputFlags pen_state;
 	public float x;
 	public float y;
-	public unsafe fixed float axes[6];
+	public byte button;
+	public byte state;
+}
+
+public partial struct SDL_PenAxisEvent
+{
+	public SDL_EventType type;
+	public uint reserved;
+	public ulong timestamp;
+	public SDL_WindowID windowID;
+	public SDL_PenID which;
+	public SDL_PenInputFlags pen_state;
+	public float x;
+	public float y;
+	public SDL_PenAxis axis;
+	public float value;
 }
 
 public partial struct SDL_DropEvent
@@ -495,11 +513,15 @@ public partial struct SDL_Event
 	[FieldOffset(0)]
 	public SDL_TouchFingerEvent tfinger;
 	[FieldOffset(0)]
-	public SDL_PenTipEvent ptip;
+	public SDL_PenProximityEvent pproximity;
+	[FieldOffset(0)]
+	public SDL_PenTouchEvent ptouch;
 	[FieldOffset(0)]
 	public SDL_PenMotionEvent pmotion;
 	[FieldOffset(0)]
 	public SDL_PenButtonEvent pbutton;
+	[FieldOffset(0)]
+	public SDL_PenAxisEvent paxis;
 	[FieldOffset(0)]
 	public SDL_DropEvent drop;
 	[FieldOffset(0)]
@@ -811,13 +833,6 @@ public partial struct SDL_MessageBoxData
 	public unsafe SDL_MessageBoxColorScheme* colorScheme;
 }
 
-public partial struct SDL_PenCapabilityInfo
-{
-	public float max_tilt;
-	public uint wacom_id;
-	public sbyte num_buttons;
-}
-
 public partial struct SDL_Color
 {
 	public byte r;
@@ -901,7 +916,7 @@ public partial struct SDL_StorageInterface
 {
 	public unsafe delegate* unmanaged<nint, int> close;
 	public unsafe delegate* unmanaged<nint, SDL_bool> ready;
-	public unsafe delegate* unmanaged<nint, byte*, delegate* unmanaged<nint, byte*, byte*, int>, nint, int> enumerate;
+	public unsafe delegate* unmanaged<nint, byte*, delegate* unmanaged<nint, byte*, byte*, int>*, nint, int> enumerate;
 	public unsafe delegate* unmanaged<nint, byte*, SDL_PathInfo*, int> info;
 	public unsafe delegate* unmanaged<nint, byte*, nint, ulong, int> read_file;
 	public unsafe delegate* unmanaged<nint, byte*, nint, ulong, int> write_file;

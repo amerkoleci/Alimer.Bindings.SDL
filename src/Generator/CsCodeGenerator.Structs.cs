@@ -6,9 +6,9 @@ using CppAst;
 
 namespace Generator;
 
-public static partial class CsCodeGenerator
+partial class CsCodeGenerator
 {
-    private static void CollectStructAndUnions(CppCompilation compilation)
+    private void CollectStructAndUnions(CppCompilation compilation)
     {
         foreach (CppClass? cppClass in compilation.Classes)
         {
@@ -25,18 +25,18 @@ public static partial class CsCodeGenerator
                 continue;
             }
 
-            s_collectedStructAndUnions.Add(cppClass);
+            _collectedStructAndUnions.Add(cppClass);
         }
     }
 
-    private static void GenerateStructAndUnions()
+    private void GenerateStructAndUnions()
     {
-        string visibility = s_options.PublicVisiblity ? "public" : "internal";
+        string visibility = _options.PublicVisiblity ? "public" : "internal";
 
         // Generate Structures
-        using var writer = new CodeWriter(Path.Combine(s_options.OutputPath, "Structs.cs"),
+        using var writer = new CodeWriter(Path.Combine(_options.OutputPath, "Structs.cs"),
             false,
-            s_options.Namespace,
+            _options.Namespace,
             [
                 "System.Runtime.InteropServices",
                 "System.Runtime.CompilerServices",
@@ -47,7 +47,7 @@ public static partial class CsCodeGenerator
             );
 
         // Print All classes, structs
-        foreach (CppClass? cppClass in s_collectedStructAndUnions)
+        foreach (CppClass? cppClass in _collectedStructAndUnions)
         {
             bool isUnion = cppClass.ClassKind == CppClassKind.Union;
 
@@ -57,9 +57,9 @@ public static partial class CsCodeGenerator
         }
     }
 
-    private static void WriteStruct(CodeWriter writer, CppClass @struct, string structName)
+    private void WriteStruct(CodeWriter writer, CppClass @struct, string structName)
     {
-        string visibility = s_options.PublicVisiblity ? "public" : "internal";
+        string visibility = _options.PublicVisiblity ? "public" : "internal";
         bool isUnion = @struct.ClassKind == CppClassKind.Union;
         bool isReadOnly = false;
         string typeName = string.Empty;
@@ -94,7 +94,7 @@ public static partial class CsCodeGenerator
         }
     }
 
-    private static void WriteField(CodeWriter writer, CppField field,
+    private void WriteField(CodeWriter writer, CppField field,
         bool isUnion = false,
         bool isReadOnly = false,
         string typeName = "")

@@ -40,7 +40,9 @@
 /* ##SDL_atomic.h */
 #define SDL_AtomicCAS SDL_AtomicCompareAndSwap
 #define SDL_AtomicCASPtr SDL_AtomicCompareAndSwapPointer
+#define SDL_AtomicGetPtr SDL_AtomicGetPointer
 #define SDL_AtomicLock SDL_LockSpinlock
+#define SDL_AtomicSetPtr SDL_AtomicSetPointer
 #define SDL_AtomicTryLock SDL_TryLockSpinlock
 #define SDL_AtomicUnlock SDL_UnlockSpinlock
 #define SDL_atomic_t SDL_AtomicInt
@@ -116,6 +118,7 @@
 #define SDL_DROPCOMPLETE SDL_EVENT_DROP_COMPLETE
 #define SDL_DROPFILE SDL_EVENT_DROP_FILE
 #define SDL_DROPTEXT SDL_EVENT_DROP_TEXT
+#define SDL_DelEventWatch SDL_RemoveEventWatch
 #define SDL_FINGERDOWN SDL_EVENT_FINGER_DOWN
 #define SDL_FINGERMOTION SDL_EVENT_FINGER_MOTION
 #define SDL_FINGERUP SDL_EVENT_FINGER_UP
@@ -296,6 +299,7 @@
 #define SDL_MouseIsHaptic SDL_IsMouseHaptic
 
 /* ##SDL_hints.h */
+#define SDL_DelHintCallback SDL_RemoveHintCallback
 #define SDL_HINT_ALLOW_TOPMOST SDL_HINT_WINDOW_ALLOW_TOPMOST
 #define SDL_HINT_DIRECTINPUT_ENABLED SDL_HINT_JOYSTICK_DIRECTINPUT
 #define SDL_HINT_GDK_TEXTINPUT_DEFAULT SDL_HINT_GDK_TEXTINPUT_DEFAULT_TEXT
@@ -523,7 +527,6 @@
 #define SDL_RenderSetVSync SDL_SetRenderVSync
 #define SDL_RenderSetViewport SDL_SetRenderViewport
 #define SDL_RenderWindowToLogical SDL_RenderCoordinatesFromWindow
-#define SDL_ScaleModeBest SDL_SCALEMODE_BEST
 #define SDL_ScaleModeLinear SDL_SCALEMODE_LINEAR
 #define SDL_ScaleModeNearest SDL_SCALEMODE_NEAREST
 
@@ -578,6 +581,8 @@
 
 /* ##SDL_stdinc.h */
 #define SDL_TABLESIZE SDL_arraysize
+#define SDL_size_add_overflow SDL_size_add_check_overflow
+#define SDL_size_mul_overflow SDL_size_mul_check_overflow
 #define SDL_strtokr SDL_strtok_r
 
 /* ##SDL_surface.h */
@@ -660,7 +665,9 @@
 /* ##SDL_atomic.h */
 #define SDL_AtomicCAS SDL_AtomicCAS_renamed_SDL_AtomicCompareAndSwap
 #define SDL_AtomicCASPtr SDL_AtomicCASPtr_renamed_SDL_AtomicCompareAndSwapPointer
+#define SDL_AtomicGetPtr SDL_AtomicGetPtr_renamed_SDL_AtomicGetPointer
 #define SDL_AtomicLock SDL_AtomicLock_renamed_SDL_LockSpinlock
+#define SDL_AtomicSetPtr SDL_AtomicSetPtr_renamed_SDL_AtomicSetPointer
 #define SDL_AtomicTryLock SDL_AtomicTryLock_renamed_SDL_TryLockSpinlock
 #define SDL_AtomicUnlock SDL_AtomicUnlock_renamed_SDL_UnlockSpinlock
 #define SDL_atomic_t SDL_atomic_t_renamed_SDL_AtomicInt
@@ -736,6 +743,7 @@
 #define SDL_DROPCOMPLETE SDL_DROPCOMPLETE_renamed_SDL_EVENT_DROP_COMPLETE
 #define SDL_DROPFILE SDL_DROPFILE_renamed_SDL_EVENT_DROP_FILE
 #define SDL_DROPTEXT SDL_DROPTEXT_renamed_SDL_EVENT_DROP_TEXT
+#define SDL_DelEventWatch SDL_DelEventWatch_renamed_SDL_RemoveEventWatch
 #define SDL_FINGERDOWN SDL_FINGERDOWN_renamed_SDL_EVENT_FINGER_DOWN
 #define SDL_FINGERMOTION SDL_FINGERMOTION_renamed_SDL_EVENT_FINGER_MOTION
 #define SDL_FINGERUP SDL_FINGERUP_renamed_SDL_EVENT_FINGER_UP
@@ -917,6 +925,7 @@
 #define SDL_MouseIsHaptic SDL_MouseIsHaptic_renamed_SDL_IsMouseHaptic
 
 /* ##SDL_hints.h */
+#define SDL_DelHintCallback SDL_DelHintCallback_renamed_SDL_RemoveHintCallback
 #define SDL_HINT_ALLOW_TOPMOST SDL_HINT_ALLOW_TOPMOST_renamed_SDL_HINT_WINDOW_ALLOW_TOPMOST
 #define SDL_HINT_DIRECTINPUT_ENABLED SDL_HINT_DIRECTINPUT_ENABLED_renamed_SDL_HINT_JOYSTICK_DIRECTINPUT
 #define SDL_HINT_GDK_TEXTINPUT_DEFAULT SDL_HINT_GDK_TEXTINPUT_DEFAULT_renamed_SDL_HINT_GDK_TEXTINPUT_DEFAULT_TEXT
@@ -1144,7 +1153,6 @@
 #define SDL_RenderSetVSync SDL_RenderSetVSync_renamed_SDL_SetRenderVSync
 #define SDL_RenderSetViewport SDL_RenderSetViewport_renamed_SDL_SetRenderViewport
 #define SDL_RenderWindowToLogical SDL_RenderWindowToLogical_renamed_SDL_RenderCoordinatesFromWindow
-#define SDL_ScaleModeBest SDL_ScaleModeBest_renamed_SDL_SCALEMODE_BEST
 #define SDL_ScaleModeLinear SDL_ScaleModeLinear_renamed_SDL_SCALEMODE_LINEAR
 #define SDL_ScaleModeNearest SDL_ScaleModeNearest_renamed_SDL_SCALEMODE_NEAREST
 
@@ -1199,6 +1207,8 @@
 
 /* ##SDL_stdinc.h */
 #define SDL_TABLESIZE SDL_TABLESIZE_renamed_SDL_arraysize
+#define SDL_size_add_overflow SDL_size_add_overflow_renamed_SDL_size_add_check_overflow
+#define SDL_size_mul_overflow SDL_size_mul_overflow_renamed_SDL_size_mul_check_overflow
 #define SDL_strtokr SDL_strtokr_renamed_SDL_strtok_r
 
 /* ##SDL_surface.h */

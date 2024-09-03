@@ -86,19 +86,19 @@ unsafe partial class SDL3
         return names;
     }
 
-    public static int SDL_SendGamepadEffect<T>(SDL_Gamepad gamepad, T[] source) where T : unmanaged
+    public static bool SDL_SendGamepadEffect<T>(SDL_Gamepad gamepad, T[] source) where T : unmanaged
     {
         ReadOnlySpan<T> span = source.AsSpan();
 
         return SDL_SendGamepadEffect(gamepad, span);
     }
 
-    public static int SDL_SendGamepadEffect<T>(SDL_Gamepad gamepad, ReadOnlySpan<T> data) where T : unmanaged
+    public static bool SDL_SendGamepadEffect<T>(SDL_Gamepad gamepad, ReadOnlySpan<T> data) where T : unmanaged
     {
         return SDL_SendGamepadEffect(gamepad, ref MemoryMarshal.GetReference(data), data.Length * sizeof(T));
     }
 
-    public static int SDL_SendGamepadEffect<T>(SDL_Gamepad gamepad, ref T data, int size) where T : unmanaged
+    public static bool SDL_SendGamepadEffect<T>(SDL_Gamepad gamepad, ref T data, int size) where T : unmanaged
     {
         fixed (void* dataPtr = &data)
         {

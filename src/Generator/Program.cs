@@ -36,7 +36,8 @@ public static class Program
             ClassName = "SDL3",
             Namespace = "SDL3",
             PublicVisiblity = true,
-            EnumWriteUnmanagedTag = true
+            EnumWriteUnmanagedTag = true,
+            BooleanMarshalType = "I1",
         };
 
         string sdlIncludePath = Path.Combine(AppContext.BaseDirectory, "include");
@@ -92,6 +93,7 @@ public static class Program
             Path.Combine(sdlIncludePath, "SDL3/SDL_video.h"),
             Path.Combine(sdlIncludePath, "SDL3/SDL_vulkan.h"),
             Path.Combine(sdlIncludePath, "SDL3/SDL_system.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_gpu.h"),
             Path.Combine(sdlIncludePath, "SDL3/SDL_main.h"),
         ];
 
@@ -109,6 +111,8 @@ public static class Program
                 "SDL_PLATFORM_WINRT",
             }
         };
+
+        CsCodeGenerator generator = new(generateOptions);
 
         foreach (string header in headers)
         {
@@ -131,10 +135,10 @@ public static class Program
                 return 0;
             }
 
-            CsCodeGenerator.Collect(compilation);
+            generator.Collect(compilation);
         }
 
-        CsCodeGenerator.Generate(generateOptions);
+        generator.Generate();
 
         return 0;
     }

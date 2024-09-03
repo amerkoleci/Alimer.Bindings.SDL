@@ -5,10 +5,12 @@ using CppAst;
 
 namespace Generator;
 
-public static partial class CsCodeGenerator
+partial class CsCodeGenerator
 {
     private static readonly HashSet<string> s_ignoreConstants = new(StringComparer.OrdinalIgnoreCase)
     {
+        "SDL_FALSE",
+        "SDL_TRUE",
         "alloca",
         "SDL_HAS_BUILTIN",
         "SDL_arraysize",
@@ -62,11 +64,13 @@ public static partial class CsCodeGenerator
         "SDL_CreateThread",
         "SDL_CreateThreadWithProperties",
         "main",
+        "SDL_size_mul_check_overflow",
+        "SDL_size_add_check_overflow",
     };
 
-    private static readonly List<CppMacro> s_collectedMacros = new();
+    private static readonly List<CppMacro> _collectedMacros = new();
 
-    private static void CollectConstants(CppCompilation compilation)
+    private void CollectConstants(CppCompilation compilation)
     {
         foreach (CppMacro cppMacro in compilation.Macros)
         {
@@ -149,17 +153,17 @@ public static partial class CsCodeGenerator
             if (cppMacro.Value.StartsWith("SDL_THREAD_ANNOTATION_ATTRIBUTE__"))
                 continue;
 
-            s_collectedMacros.Add(cppMacro);
+            _collectedMacros.Add(cppMacro);
         }
     }
 
-    private static void GenerateConstants()
+    private void GenerateConstants()
     {
-        string visibility = s_options.PublicVisiblity ? "public" : "internal";
-        using CodeWriter writer = new(Path.Combine(s_options.OutputPath, "Constants.cs"), false, s_options.Namespace, []);
-        using (writer.PushBlock($"{visibility} static partial class {s_options.ClassName}"))
+        string visibility = _options.PublicVisiblity ? "public" : "internal";
+        using CodeWriter writer = new(Path.Combine(_options.OutputPath, "Constants.cs"), false, _options.Namespace, []);
+        using (writer.PushBlock($"{visibility} static partial class {_options.ClassName}"))
         {
-            foreach (CppMacro cppMacro in s_collectedMacros)
+            foreach (CppMacro cppMacro in _collectedMacros)
             {
                 if (cppMacro.Name.StartsWith("SDL_PROP_GAMEPAD_CAP_") && cppMacro.Name.EndsWith("_BOOLEAN"))
                 {
@@ -232,7 +236,8 @@ public static partial class CsCodeGenerator
                     || cppMacro.Name == "SDL_HAT_RIGHTDOWN"
                     || cppMacro.Name == "SDL_HAT_LEFTUP"
                     || cppMacro.Name == "SDL_HAT_LEFTDOWN"
-                    || cppMacro.Name.StartsWith("SDL_PEN_"))
+                    || cppMacro.Name.StartsWith("SDL_PEN_")
+                    || cppMacro.Name.StartsWith("SDL_GPU_"))
                 {
                     modifier = "const";
                     csDataType = "uint";
@@ -328,6 +333,12 @@ public static partial class CsCodeGenerator
                     modifier = "const";
                     csDataType = "uint";
                 }
+                else if(cppMacro.Name.StartsWith("SDL_GPU_COLORCOMPONENT_"))
+                {
+                    modifier = "const";
+                    csDataType = "byte";
+                    macroValue = $"(byte)({macroValue})";
+                }
 
                 //writer.WriteLine($"/// <unmanaged>{cppMacro.Name}</unmanaged>");
                 if (modifier == "static" && csDataType == "ReadOnlySpan<byte>")
@@ -342,7 +353,7 @@ public static partial class CsCodeGenerator
 
             writer.WriteLine();
 
-            foreach (string enumConstant in s_enumConstants)
+            foreach (string enumConstant in _enumConstants)
             {
                 writer.WriteLine($"public const {enumConstant};");
             }

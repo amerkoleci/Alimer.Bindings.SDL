@@ -6,9 +6,9 @@ using CppAst;
 
 namespace Generator;
 
-public static partial class CsCodeGenerator
+partial class CsCodeGenerator
 {
-    private static void CollectCommands(CppCompilation compilation)
+    private void CollectCommands(CppCompilation compilation)
     {
         foreach (CppTypedef typedef in compilation.Typedefs)
         {
@@ -29,7 +29,7 @@ public static partial class CsCodeGenerator
             }
 
             CppFunctionType functionType = (CppFunctionType)pointerType.ElementType;
-            s_collectedCallbackTypedes.Add(typedef.Name, functionType);
+            _collectedCallbackTypedes.Add(typedef.Name, functionType);
         }
 
         foreach (CppFunction? cppFunction in compilation.Functions)
@@ -60,25 +60,25 @@ public static partial class CsCodeGenerator
             if (ignoreFunction)
                 continue;
 
-            s_collectedFunctions.Add(cppFunction);
+            _collectedFunctions.Add(cppFunction);
         }
     }
 
-    private static void GenerateCommands()
+    private void GenerateCommands()
     {
-        string visibility = s_options.PublicVisiblity ? "public" : "internal";
+        string visibility = _options.PublicVisiblity ? "public" : "internal";
 
         // Generate Functions
-        using CodeWriter writer = new(Path.Combine(s_options.OutputPath, "Commands.cs"),
+        using CodeWriter writer = new(Path.Combine(_options.OutputPath, "Commands.cs"),
             true,
-            s_options.Namespace,
+            _options.Namespace,
             ["System", "System.Runtime.InteropServices", "System.Drawing"]
             );
 
         // Generate callback
-        if (s_options.GenerateCallbackTypes)
+        if (_options.GenerateCallbackTypes)
         {
-            foreach (KeyValuePair<string, CppFunctionType> pair in s_collectedCallbackTypedes)
+            foreach (KeyValuePair<string, CppFunctionType> pair in _collectedCallbackTypedes)
             {
                 CppFunctionType functionType = pair.Value;
 
@@ -91,9 +91,9 @@ public static partial class CsCodeGenerator
             }
         }
 
-        using (writer.PushBlock($"{visibility} unsafe partial class {s_options.ClassName}"))
+        using (writer.PushBlock($"{visibility} unsafe partial class {_options.ClassName}"))
         {
-            foreach (CppFunction cppFunction in s_collectedFunctions)
+            foreach (CppFunction cppFunction in _collectedFunctions)
             {
                 WriteFunctionInvocation(cppFunction, writer);
             }
@@ -130,7 +130,7 @@ public static partial class CsCodeGenerator
     }
 
 
-    private static void WriteFunctionInvocation(CppFunction cppFunction, CodeWriter writer)
+    private void WriteFunctionInvocation(CppFunction cppFunction, CodeWriter writer)
     {
         if(cppFunction.Name == "SDL_Metal_CreateView")
         {
@@ -147,7 +147,7 @@ public static partial class CsCodeGenerator
         writer.WriteLine($"[LibraryImport(LibName, EntryPoint = \"{cppFunction.Name}\")]");
         if (returnCsName == "SDL_bool")
         {
-            writer.WriteLine("[return: MarshalAs(UnmanagedType.Bool)]");
+            writer.WriteLine($"[return: MarshalAs(UnmanagedType.{_options.BooleanMarshalType})]");
             returnCsName = "bool";
         }
         else if (IsString(cppFunction.ReturnType, out bool isConstString))
@@ -202,7 +202,7 @@ public static partial class CsCodeGenerator
             argumentsString = GetParameterSignature(cppFunction, false, MarshalStringType.Byte);
             writer.WriteLine($"[LibraryImport(LibName, EntryPoint = \"{cppFunction.Name}\")]");
             if (returnCsName == "bool")
-                writer.WriteLine("[return: MarshalAs(UnmanagedType.Bool)]");
+                writer.WriteLine($"[return: MarshalAs(UnmanagedType.{_options.BooleanMarshalType})]");
             writer.WriteLine($"public static partial {returnCsName} {nativeFunctionName}({argumentsString});");
             writer.WriteLine();
 
@@ -210,23 +210,23 @@ public static partial class CsCodeGenerator
             argumentsString = GetParameterSignature(cppFunction, false, MarshalStringType.Char);
             writer.WriteLine($"[LibraryImport(LibName, EntryPoint = \"{cppFunction.Name}\")]");
             if (returnCsName == "bool")
-                writer.WriteLine("[return: MarshalAs(UnmanagedType.Bool)]");
+                writer.WriteLine($"[return: MarshalAs(UnmanagedType.{_options.BooleanMarshalType})]");
             writer.WriteLine($"public static partial {returnCsName} {nativeFunctionName}({argumentsString});");
             writer.WriteLine();
         }
     }
 
-    private static string GetParameterSignature(CppFunction cppFunction, bool invocation, MarshalStringType marshalString = MarshalStringType.None)
+    private string GetParameterSignature(CppFunction cppFunction, bool invocation, MarshalStringType marshalString = MarshalStringType.None)
     {
         return GetParameterSignature(cppFunction.Name, cppFunction.Parameters, invocation, marshalString);
     }
 
-    private static string GetParameterSignature(CppFunctionType cppFunctionType, bool invocation, MarshalStringType marshalString = MarshalStringType.None)
+    private string GetParameterSignature(CppFunctionType cppFunctionType, bool invocation, MarshalStringType marshalString = MarshalStringType.None)
     {
         return GetParameterSignature(cppFunctionType.FullName, cppFunctionType.Parameters, invocation, marshalString);
     }
 
-    private static string GetParameterSignature(
+    private string GetParameterSignature(
         string functionName,
         IEnumerable<CppParameter> parameters,
         bool invocation,
@@ -298,7 +298,7 @@ public static partial class CsCodeGenerator
 
             if (paramCsTypeName == "SDL_bool")
             {
-                argumentBuilder.Append("[MarshalAs(UnmanagedType.Bool)] ");
+                argumentBuilder.Append($"[MarshalAs(UnmanagedType.{_options.BooleanMarshalType})] ");
                 paramCsTypeName = "bool";
             }
             else if (marshalString != MarshalStringType.None && IsString(cppParameter.Type, out _))
@@ -329,7 +329,7 @@ public static partial class CsCodeGenerator
         return argumentBuilder.ToString();
     }
 
-    private static string GetCallbackMemberSignature(CppFunctionType functionType)
+    private string GetCallbackMemberSignature(CppFunctionType functionType)
     {
         StringBuilder builder = new();
         foreach (CppParameter parameter in functionType.Parameters)

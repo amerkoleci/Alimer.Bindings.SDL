@@ -5,7 +5,7 @@ using CppAst;
 
 namespace Generator;
 
-public static partial class CsCodeGenerator
+partial class CsCodeGenerator
 {
     private static readonly HashSet<string> s_ignoreHandles = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -50,16 +50,16 @@ public static partial class CsCodeGenerator
         "SDL_PenCapabilityFlags",
     };
 
-    private static readonly HashSet<string> s_generatedPointerHandles = [];
+    private readonly HashSet<string> _generatedPointerHandles = [];
 
-    private static void CollectHandles(CppCompilation compilation)
+    private void CollectHandles(CppCompilation compilation)
     {
         foreach (CppTypedef typedef in compilation.Typedefs)
         {
             if (s_csNameMappings.ContainsKey(typedef.Name))
                 continue;
 
-            if (s_ignoreHandles.Contains(typedef.Name) || s_collectedHandles.ContainsKey(typedef.Name))
+            if (s_ignoreHandles.Contains(typedef.Name) || _collectedHandles.ContainsKey(typedef.Name))
                 continue;
 
             if (typedef.Name == "SDL_TimerCallback"
@@ -71,7 +71,7 @@ public static partial class CsCodeGenerator
             }
 
             string elementTypeName = GetCsTypeName(typedef.ElementType);
-            s_collectedHandles.Add(typedef.Name, elementTypeName);
+            _collectedHandles.Add(typedef.Name, elementTypeName);
         }
 
         foreach (CppClass? cppClass in compilation.Classes)
@@ -82,7 +82,7 @@ public static partial class CsCodeGenerator
                 continue;
             }
 
-            if (s_ignoreHandles.Contains(cppClass.Name) || s_collectedHandles.ContainsKey(cppClass.Name))
+            if (s_ignoreHandles.Contains(cppClass.Name) || _collectedHandles.ContainsKey(cppClass.Name))
                 continue;
 
             string handleName = cppClass.Name;
@@ -92,22 +92,22 @@ public static partial class CsCodeGenerator
                 AddCsMapping(cppClass.Name, handleName);
             }
 
-            s_collectedHandles.Add(handleName, "nint");
+            _collectedHandles.Add(handleName, "nint");
         }
     }
 
-    private static void GenerateHandles()
+    private void GenerateHandles()
     {
-        string visibility = s_options.PublicVisiblity ? "public" : "internal";
+        string visibility = _options.PublicVisiblity ? "public" : "internal";
 
         // Generate Functions
-        using CodeWriter writer = new(Path.Combine(s_options.OutputPath, "Handles.cs"),
+        using CodeWriter writer = new(Path.Combine(_options.OutputPath, "Handles.cs"),
             true,
-            s_options.Namespace, ["System.Diagnostics", "System.Diagnostics.CodeAnalysis"]
+            _options.Namespace, ["System.Diagnostics", "System.Diagnostics.CodeAnalysis"]
             );
 
         // First generate primitive types
-        foreach (KeyValuePair<string, string> handlePair in s_collectedHandles)
+        foreach (KeyValuePair<string, string> handlePair in _collectedHandles)
         {
             string csName = handlePair.Key;
             if (s_csNameMappings.ContainsKey(csName))
@@ -121,7 +121,8 @@ public static partial class CsCodeGenerator
             bool generateEnum = false;
             if (csName.EndsWith("Flags")
                 || csName == "SDL_BlendMode"
-                || csName == "SDL_Keymod")
+                || csName == "SDL_Keymod"
+                || csName == "SDL_GPUShaderFormat")
             {
                 writer.WriteLine("[Flags]");
                 generateEnum = true;
@@ -173,10 +174,26 @@ public static partial class CsCodeGenerator
                     {
                         constantPrefix = "SDL_SURFACE_";
                     }
+                    else if (csName == "SDL_GPUTextureUsageFlags")
+                    {
+                        constantPrefix = "SDL_GPU_TEXTUREUSAGE_";
+                    }
+                    else if (csName == "SDL_GPUBufferUsageFlags")
+                    {
+                        constantPrefix = "SDL_GPU_BUFFERUSAGE_";
+                    }
+                    else if (csName == "SDL_GPUColorComponentFlags")
+                    {
+                        constantPrefix = "SDL_GPU_COLORCOMPONENT_";
+                    }
+                    else if (csName == "SDL_GPUShaderFormat")
+                    {
+                        constantPrefix = "SDL_GPU_SHADERFORMAT_";
+                    }
 
                     if (!string.IsNullOrEmpty(constantPrefix))
                     {
-                        foreach (CppMacro macro in s_collectedMacros)
+                        foreach (CppMacro macro in _collectedMacros)
                         {
                             if (!macro.Name.StartsWith(constantPrefix))
                                 continue;
@@ -195,6 +212,11 @@ public static partial class CsCodeGenerator
                             string enumItemName = GetEnumItemName(csName, macro.Name, constantPrefix);
                             writer.WriteLine($"{enumItemName} = SDL3.{macro.Name},");
                         }
+
+                        if (csName == "SDL_GPUColorComponentFlags")
+                        {
+                            writer.WriteLine("All = R | G | B | A");
+                        }
                     }
                 }
             }
@@ -202,7 +224,7 @@ public static partial class CsCodeGenerator
         }
 
 
-        foreach (KeyValuePair<string, string> handlePair in s_collectedHandles)
+        foreach (KeyValuePair<string, string> handlePair in _collectedHandles)
         {
             string csName = handlePair.Key;
             if (s_csNameMappings.ContainsKey(csName))
@@ -215,7 +237,7 @@ public static partial class CsCodeGenerator
 
             writer.WriteLine($"[DebuggerDisplay(\"{{DebuggerDisplay,nq}}\")]");
             string typeDeclaration = $"{visibility} readonly partial struct {csName}({elementTypeName} value) : IEquatable<{csName}>";
-            s_generatedPointerHandles.Add(csName);
+            _generatedPointerHandles.Add(csName);
 
             using (writer.PushBlock(typeDeclaration))
             {

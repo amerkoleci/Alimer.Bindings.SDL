@@ -26,13 +26,13 @@ public static unsafe class Program
         string platform = SDL_GetPlatform()!;
 
         // Init SDL
-        if (SDL_Init(SDL_InitFlags.Timer | SDL_InitFlags.Video | SDL_InitFlags.Gamepad) != 0)
+        if (SDL_Init(SDL_InitFlags.Timer | SDL_InitFlags.Video | SDL_InitFlags.Gamepad) == false)
         {
             var error = SDL_GetError();
             throw new Exception($"Failed to start SDL2: {error}");
         }
 
-        if (SDL_Vulkan_LoadLibrary() < 0)
+        if (!SDL_Vulkan_LoadLibrary())
         {
             return;
         }

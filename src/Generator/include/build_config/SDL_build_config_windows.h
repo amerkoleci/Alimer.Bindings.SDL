@@ -310,6 +310,16 @@ typedef unsigned int uintptr_t;
 /* Enable Vulkan support */
 #define SDL_VIDEO_VULKAN 1
 
+#if !defined(SDL_GPU_D3D11) && defined(HAVE_D3D11_H)
+#define SDL_GPU_D3D11 1
+#endif
+#if !defined(SDL_GPU_D3D12)
+#define SDL_GPU_D3D12 1
+#endif
+#if !defined(SDL_GPU_VULKAN) && defined(SDL_VIDEO_VULKAN)
+#define SDL_GPU_VULKAN 1
+#endif
+
 #ifndef SDL_VIDEO_RENDER_VULKAN
 #define SDL_VIDEO_RENDER_VULKAN    1
 #endif

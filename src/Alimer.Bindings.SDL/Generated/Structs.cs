@@ -728,7 +728,7 @@ public partial struct SDL_IOStreamInterface
 	public unsafe delegate* unmanaged<nint, long, SDL_IOWhence, long> seek;
 	public unsafe delegate* unmanaged<nint, nint, nuint, SDL_IOStatus*, nuint> read;
 	public unsafe delegate* unmanaged<nint, nint, nuint, SDL_IOStatus*, nuint> write;
-	public unsafe delegate* unmanaged<nint, int> close;
+	public unsafe delegate* unmanaged<nint, SDL_bool> close;
 }
 
 public partial struct SDL_VirtualJoystickTouchpadDesc
@@ -764,11 +764,12 @@ public partial struct SDL_VirtualJoystickDesc
 	public nint userdata;
 	public unsafe delegate* unmanaged<nint, void> Update;
 	public unsafe delegate* unmanaged<nint, int, void> SetPlayerIndex;
-	public unsafe delegate* unmanaged<nint, ushort, ushort, int> Rumble;
-	public unsafe delegate* unmanaged<nint, ushort, ushort, int> RumbleTriggers;
-	public unsafe delegate* unmanaged<nint, byte, byte, byte, int> SetLED;
-	public unsafe delegate* unmanaged<nint, nint, int, int> SendEffect;
-	public unsafe delegate* unmanaged<nint, SDL_bool, int> SetSensorsEnabled;
+	public unsafe delegate* unmanaged<nint, ushort, ushort, SDL_bool> Rumble;
+	public unsafe delegate* unmanaged<nint, ushort, ushort, SDL_bool> RumbleTriggers;
+	public unsafe delegate* unmanaged<nint, byte, byte, byte, SDL_bool> SetLED;
+	public unsafe delegate* unmanaged<nint, nint, int, SDL_bool> SendEffect;
+	public unsafe delegate* unmanaged<nint, SDL_bool, SDL_bool> SetSensorsEnabled;
+	public unsafe delegate* unmanaged<nint, void> Cleanup;
 }
 
 public partial struct SDL_Locale
@@ -914,16 +915,16 @@ public partial struct SDL_Vertex
 
 public partial struct SDL_StorageInterface
 {
-	public unsafe delegate* unmanaged<nint, int> close;
+	public unsafe delegate* unmanaged<nint, SDL_bool> close;
 	public unsafe delegate* unmanaged<nint, SDL_bool> ready;
-	public unsafe delegate* unmanaged<nint, byte*, delegate* unmanaged<nint, byte*, byte*, int>*, nint, int> enumerate;
-	public unsafe delegate* unmanaged<nint, byte*, SDL_PathInfo*, int> info;
-	public unsafe delegate* unmanaged<nint, byte*, nint, ulong, int> read_file;
-	public unsafe delegate* unmanaged<nint, byte*, nint, ulong, int> write_file;
-	public unsafe delegate* unmanaged<nint, byte*, int> mkdir;
-	public unsafe delegate* unmanaged<nint, byte*, int> remove;
-	public unsafe delegate* unmanaged<nint, byte*, byte*, int> rename;
-	public unsafe delegate* unmanaged<nint, byte*, byte*, int> copy;
+	public unsafe delegate* unmanaged<nint, byte*, delegate* unmanaged<nint, byte*, byte*, int>*, nint, SDL_bool> enumerate;
+	public unsafe delegate* unmanaged<nint, byte*, SDL_PathInfo*, SDL_bool> info;
+	public unsafe delegate* unmanaged<nint, byte*, nint, ulong, SDL_bool> read_file;
+	public unsafe delegate* unmanaged<nint, byte*, nint, ulong, SDL_bool> write_file;
+	public unsafe delegate* unmanaged<nint, byte*, SDL_bool> mkdir;
+	public unsafe delegate* unmanaged<nint, byte*, SDL_bool> remove;
+	public unsafe delegate* unmanaged<nint, byte*, byte*, SDL_bool> rename;
+	public unsafe delegate* unmanaged<nint, byte*, byte*, SDL_bool> copy;
 	public unsafe delegate* unmanaged<nint, ulong> space_remaining;
 }
 
@@ -971,5 +972,332 @@ public partial struct SDL_DisplayMode
 	public int refresh_rate_numerator;
 	public int refresh_rate_denominator;
 	public SDL_DisplayModeData @internal;
+}
+
+public partial struct SDL_GPUDepthStencilValue
+{
+	public float depth;
+	public byte stencil;
+}
+
+public partial struct SDL_GPUViewport
+{
+	public float x;
+	public float y;
+	public float w;
+	public float h;
+	public float minDepth;
+	public float maxDepth;
+}
+
+public partial struct SDL_GPUTextureTransferInfo
+{
+	public SDL_GPUTransferBuffer transferBuffer;
+	public uint offset;
+	public uint imagePitch;
+	public uint imageHeight;
+}
+
+public partial struct SDL_GPUTransferBufferLocation
+{
+	public SDL_GPUTransferBuffer transferBuffer;
+	public uint offset;
+}
+
+public partial struct SDL_GPUTextureLocation
+{
+	public SDL_GPUTexture texture;
+	public uint mipLevel;
+	public uint layer;
+	public uint x;
+	public uint y;
+	public uint z;
+}
+
+public partial struct SDL_GPUTextureRegion
+{
+	public SDL_GPUTexture texture;
+	public uint mipLevel;
+	public uint layer;
+	public uint x;
+	public uint y;
+	public uint z;
+	public uint w;
+	public uint h;
+	public uint d;
+}
+
+public partial struct SDL_GPUBlitRegion
+{
+	public SDL_GPUTexture texture;
+	public uint mipLevel;
+	public uint layerOrDepthPlane;
+	public uint x;
+	public uint y;
+	public uint w;
+	public uint h;
+}
+
+public partial struct SDL_GPUBufferLocation
+{
+	public SDL_GPUBuffer buffer;
+	public uint offset;
+}
+
+public partial struct SDL_GPUBufferRegion
+{
+	public SDL_GPUBuffer buffer;
+	public uint offset;
+	public uint size;
+}
+
+public partial struct SDL_GPUIndirectDrawCommand
+{
+	public uint vertexCount;
+	public uint instanceCount;
+	public uint firstVertex;
+	public uint firstInstance;
+}
+
+public partial struct SDL_GPUIndexedIndirectDrawCommand
+{
+	public uint indexCount;
+	public uint instanceCount;
+	public uint firstIndex;
+	public int vertexOffset;
+	public uint firstInstance;
+}
+
+public partial struct SDL_GPUIndirectDispatchCommand
+{
+	public uint groupCountX;
+	public uint groupCountY;
+	public uint groupCountZ;
+}
+
+public partial struct SDL_GPUSamplerCreateInfo
+{
+	public SDL_GPUFilter minFilter;
+	public SDL_GPUFilter magFilter;
+	public SDL_GPUSamplerMipmapMode mipmapMode;
+	public SDL_GPUSamplerAddressMode addressModeU;
+	public SDL_GPUSamplerAddressMode addressModeV;
+	public SDL_GPUSamplerAddressMode addressModeW;
+	public float mipLodBias;
+	public SDL_bool anisotropyEnable;
+	public float maxAnisotropy;
+	public SDL_bool compareEnable;
+	public SDL_GPUCompareOp compareOp;
+	public float minLod;
+	public float maxLod;
+	public SDL_PropertiesID props;
+}
+
+public partial struct SDL_GPUVertexBinding
+{
+	public uint binding;
+	public uint stride;
+	public SDL_GPUVertexInputRate inputRate;
+	public uint instanceStepRate;
+}
+
+public partial struct SDL_GPUVertexAttribute
+{
+	public uint location;
+	public uint binding;
+	public SDL_GPUVertexElementFormat format;
+	public uint offset;
+}
+
+public partial struct SDL_GPUVertexInputState
+{
+	public unsafe SDL_GPUVertexBinding* vertexBindings;
+	public uint vertexBindingCount;
+	public unsafe SDL_GPUVertexAttribute* vertexAttributes;
+	public uint vertexAttributeCount;
+}
+
+public partial struct SDL_GPUStencilOpState
+{
+	public SDL_GPUStencilOp failOp;
+	public SDL_GPUStencilOp passOp;
+	public SDL_GPUStencilOp depthFailOp;
+	public SDL_GPUCompareOp compareOp;
+}
+
+public partial struct SDL_GPUColorAttachmentBlendState
+{
+	public SDL_bool blendEnable;
+	public SDL_GPUBlendFactor srcColorBlendFactor;
+	public SDL_GPUBlendFactor dstColorBlendFactor;
+	public SDL_GPUBlendOp colorBlendOp;
+	public SDL_GPUBlendFactor srcAlphaBlendFactor;
+	public SDL_GPUBlendFactor dstAlphaBlendFactor;
+	public SDL_GPUBlendOp alphaBlendOp;
+	public SDL_GPUColorComponentFlags colorWriteMask;
+}
+
+public partial struct SDL_GPUShaderCreateInfo
+{
+	public nuint codeSize;
+	public unsafe byte* code;
+	public unsafe byte* entryPointName;
+	public SDL_GPUShaderFormat format;
+	public SDL_GPUShaderStage stage;
+	public uint samplerCount;
+	public uint storageTextureCount;
+	public uint storageBufferCount;
+	public uint uniformBufferCount;
+	public SDL_PropertiesID props;
+}
+
+public partial struct SDL_GPUTextureCreateInfo
+{
+	public SDL_GPUTextureType type;
+	public SDL_GPUTextureFormat format;
+	public SDL_GPUTextureUsageFlags usageFlags;
+	public uint width;
+	public uint height;
+	public uint layerCountOrDepth;
+	public uint levelCount;
+	public SDL_GPUSampleCount sampleCount;
+	public SDL_PropertiesID props;
+}
+
+public partial struct SDL_GPUBufferCreateInfo
+{
+	public SDL_GPUBufferUsageFlags usageFlags;
+	public uint sizeInBytes;
+	public SDL_PropertiesID props;
+}
+
+public partial struct SDL_GPUTransferBufferCreateInfo
+{
+	public SDL_GPUTransferBufferUsage usage;
+	public uint sizeInBytes;
+	public SDL_PropertiesID props;
+}
+
+public partial struct SDL_GPURasterizerState
+{
+	public SDL_GPUFillMode fillMode;
+	public SDL_GPUCullMode cullMode;
+	public SDL_GPUFrontFace frontFace;
+	public SDL_bool depthBiasEnable;
+	public float depthBiasConstantFactor;
+	public float depthBiasClamp;
+	public float depthBiasSlopeFactor;
+}
+
+public partial struct SDL_GPUMultisampleState
+{
+	public SDL_GPUSampleCount sampleCount;
+	public uint sampleMask;
+}
+
+public partial struct SDL_GPUDepthStencilState
+{
+	public SDL_bool depthTestEnable;
+	public SDL_bool depthWriteEnable;
+	public SDL_GPUCompareOp compareOp;
+	public SDL_bool stencilTestEnable;
+	public SDL_GPUStencilOpState backStencilState;
+	public SDL_GPUStencilOpState frontStencilState;
+	public byte compareMask;
+	public byte writeMask;
+	public byte reference;
+}
+
+public partial struct SDL_GPUColorAttachmentDescription
+{
+	public SDL_GPUTextureFormat format;
+	public SDL_GPUColorAttachmentBlendState blendState;
+}
+
+public partial struct SDL_GPUGraphicsPipelineAttachmentInfo
+{
+	public unsafe SDL_GPUColorAttachmentDescription* colorAttachmentDescriptions;
+	public uint colorAttachmentCount;
+	public SDL_bool hasDepthStencilAttachment;
+	public SDL_GPUTextureFormat depthStencilFormat;
+}
+
+public partial struct SDL_GPUGraphicsPipelineCreateInfo
+{
+	public SDL_GPUShader vertexShader;
+	public SDL_GPUShader fragmentShader;
+	public SDL_GPUVertexInputState vertexInputState;
+	public SDL_GPUPrimitiveType primitiveType;
+	public SDL_GPURasterizerState rasterizerState;
+	public SDL_GPUMultisampleState multisampleState;
+	public SDL_GPUDepthStencilState depthStencilState;
+	public SDL_GPUGraphicsPipelineAttachmentInfo attachmentInfo;
+	public unsafe fixed float blendConstants[4];
+	public SDL_PropertiesID props;
+}
+
+public partial struct SDL_GPUComputePipelineCreateInfo
+{
+	public nuint codeSize;
+	public unsafe byte* code;
+	public unsafe byte* entryPointName;
+	public SDL_GPUShaderFormat format;
+	public uint readOnlyStorageTextureCount;
+	public uint readOnlyStorageBufferCount;
+	public uint writeOnlyStorageTextureCount;
+	public uint writeOnlyStorageBufferCount;
+	public uint uniformBufferCount;
+	public uint threadCountX;
+	public uint threadCountY;
+	public uint threadCountZ;
+	public SDL_PropertiesID props;
+}
+
+public partial struct SDL_GPUColorAttachmentInfo
+{
+	public SDL_GPUTexture texture;
+	public uint mipLevel;
+	public uint layerOrDepthPlane;
+	public SDL_FColor clearColor;
+	public SDL_GPULoadOp loadOp;
+	public SDL_GPUStoreOp storeOp;
+	public SDL_bool cycle;
+}
+
+public partial struct SDL_GPUDepthStencilAttachmentInfo
+{
+	public SDL_GPUTexture texture;
+	public SDL_GPUDepthStencilValue depthStencilClearValue;
+	public SDL_GPULoadOp loadOp;
+	public SDL_GPUStoreOp storeOp;
+	public SDL_GPULoadOp stencilLoadOp;
+	public SDL_GPUStoreOp stencilStoreOp;
+	public SDL_bool cycle;
+}
+
+public partial struct SDL_GPUBufferBinding
+{
+	public SDL_GPUBuffer buffer;
+	public uint offset;
+}
+
+public partial struct SDL_GPUTextureSamplerBinding
+{
+	public SDL_GPUTexture texture;
+	public SDL_GPUSampler sampler;
+}
+
+public partial struct SDL_GPUStorageBufferWriteOnlyBinding
+{
+	public SDL_GPUBuffer buffer;
+	public SDL_bool cycle;
+}
+
+public partial struct SDL_GPUStorageTextureWriteOnlyBinding
+{
+	public SDL_GPUTexture texture;
+	public uint mipLevel;
+	public uint layer;
+	public SDL_bool cycle;
 }
 

@@ -6,7 +6,7 @@ using CppAst;
 
 namespace Generator;
 
-public static partial class CsCodeGenerator
+partial class CsCodeGenerator
 {
     private static readonly char[] separator = ['_'];
 
@@ -84,6 +84,33 @@ public static partial class CsCodeGenerator
 
         { "SDL_WinRT_Path", "SDL_WINRT_PATH" },
         { "SDL_WinRT_DeviceFamily", "SDL_WINRT_DEVICEFAMILY" },
+
+        // SDL_GPU
+        { "SDL_GPUPrimitiveType", "SDL_GPU_PRIMITIVETYPE" },
+        { "SDL_GPULoadOp", "SDL_GPU_LOADOP" },
+        { "SDL_GPUStoreOp", "SDL_GPU_STOREOP" },
+        { "SDL_GPUIndexElementSize", "SDL_GPU_INDEXELEMENTSIZE" },
+        { "SDL_GPUTextureFormat", "SDL_GPU_TEXTUREFORMAT" },
+        { "SDL_GPUVertexInputRate", "SDL_GPU_VERTEXINPUTRATE" },
+        { "SDL_GPUTextureType", "SDL_GPU_TEXTURETYPE" },
+        { "SDL_GPUSampleCount", "SDL_GPU_SAMPLECOUNT" },
+        { "SDL_GPUCubeMapFace", "SDL_GPU_CUBEMAPFACE" },
+        { "SDL_GPUTransferBufferUsage", "SDL_GPU_TRANSFERBUFFERUSAGE" },
+        { "SDL_GPUShaderStage", "SDL_GPU_SHADERSTAGE" },
+        { "SDL_GPUVertexElementFormat", "SDL_GPU_VERTEXELEMENTFORMAT" },
+        { "SDL_GPUFillMode", "SDL_GPU_FILLMODE" },
+        { "SDL_GPUCullMode", "SDL_GPU_CULLMODE" },
+        { "SDL_GPUFrontFace", "SDL_GPU_FRONTFACE" },
+        { "SDL_GPUCompareOp", "SDL_GPU_COMPAREOP" },
+        { "SDL_GPUStencilOp", "SDL_GPU_STENCILOP" },
+        { "SDL_GPUBlendOp", "SDL_GPU_BLENDOP" },
+        { "SDL_GPUBlendFactor", "SDL_GPU_BLENDFACTOR" },
+        { "SDL_GPUFilter", "SDL_GPU_FILTER" },
+        { "SDL_GPUSamplerMipmapMode", "SDL_GPU_SAMPLERMIPMAPMODE" },
+        { "SDL_GPUSamplerAddressMode", "SDL_GPU_SAMPLERADDRESSMODE" },
+        { "SDL_GPUPresentMode", "SDL_GPU_PRESENTMODE" },
+        { "SDL_GPUSwapchainComposition", "SDL_GPU_SWAPCHAINCOMPOSITION" },
+        { "SDL_GPUDriver", "SDL_GPU_DRIVER" },
     };
 
     private static readonly Dictionary<string, string> s_knownEnumValueNames = new()
@@ -96,9 +123,22 @@ public static partial class CsCodeGenerator
         { "SDL_PEEKEVENT", "PeekEvent" },
         { "SDL_GETEVENT", "GetEvent" },
         { "SDL_PEN_NUM_AXES", "NumAxes" },
+        // SDL_GPU
+        { "SDL_GPU_INDEXELEMENTSIZE_16BIT", "UInt16" },
+        { "SDL_GPU_INDEXELEMENTSIZE_32BIT", "UInt32" },
+        { "SDL_GPU_TEXTURETYPE_2D", "Type2D" },
+        { "SDL_GPU_TEXTURETYPE_2D_ARRAY", "Type2DArray" },
+        { "SDL_GPU_TEXTURETYPE_3D", "Type3D" },
+        { "SDL_GPU_TEXTURETYPE_CUBE", "Cube" },
+        { "SDL_GPU_SAMPLECOUNT_1", "Count1" },
+        { "SDL_GPU_SAMPLECOUNT_2", "Count2" },
+        { "SDL_GPU_SAMPLECOUNT_4", "Count4" },
+        { "SDL_GPU_SAMPLECOUNT_8", "Count8" },
+        { "SDL_GPU_SAMPLECOUNT_16", "Count16" },
+        { "SDL_GPU_SAMPLECOUNT_32", "Count32" },
     };
 
-    private static readonly HashSet<string> s_enumConstants = [];
+    private readonly HashSet<string> _enumConstants = [];
 
     private static readonly HashSet<string> s_ignoredParts = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -107,6 +147,11 @@ public static partial class CsCodeGenerator
     private static readonly HashSet<string> s_preserveCaps = new(StringComparer.OrdinalIgnoreCase)
     {
         "sdl",
+        "gpu",
+        "sdr",
+        "hdr",
+        "d3d11",
+        "d3d12",
     };
 
     private static readonly Dictionary<string, string> s_partRenames = new(StringComparer.OrdinalIgnoreCase)
@@ -156,9 +201,29 @@ public static partial class CsCodeGenerator
         "BackSlash",
         "PlusMinus",
         "CapsLock",
+        "MetalLib",
+        "PointList",
+        "LineList",
+        "LineStrip",
+        "TriangleList",
+        "TriangleStrip",
+        "PositiveX",
+        "PositiveY",
+        "PositiveZ",
+        "NegativeX",
+        "NegativeY",
+        "NegativeZ",
+        "UInt",
+        "UInt2",
+        "UInt3",
+        "UInt4",
+        "UByte2",
+        "UByte4",
+        "UShort2",
+        "UShort2",
     };
 
-    public static void CollectEnums(CppCompilation compilation)
+    public void CollectEnums(CppCompilation compilation)
     {
         foreach (CppEnum cppEnum in compilation.Enums)
         {
@@ -167,17 +232,17 @@ public static partial class CsCodeGenerator
                 continue;
             }
 
-            s_collectedEnums.Add(cppEnum);
+            _collectedEnums.Add(cppEnum);
         }
     }
 
-    public static void GenerateEnums()
+    public void GenerateEnums()
     {
-        string visibility = s_options.PublicVisiblity ? "public" : "internal";
-        using CodeWriter writer = new(Path.Combine(s_options.OutputPath, "Enums.cs"), false, s_options.Namespace, ["System"]);
+        string visibility = _options.PublicVisiblity ? "public" : "internal";
+        using CodeWriter writer = new(Path.Combine(_options.OutputPath, "Enums.cs"), false, _options.Namespace, ["System"]);
         Dictionary<string, string> createdEnums = [];
 
-        foreach (CppEnum cppEnum in s_collectedEnums)
+        foreach (CppEnum cppEnum in _collectedEnums)
         {
             bool isBitmask =
                 cppEnum.Name.EndsWith("Flags") ||
@@ -244,7 +309,7 @@ public static partial class CsCodeGenerator
                         continue;
                     }
 
-                    if (enumItemName != "Count" && s_options.EnumWriteUnmanagedTag)
+                    if (enumItemName != "Count" && _options.EnumWriteUnmanagedTag)
                     {
                         writer.WriteLine($"/// <unmanaged>{enumItem.Name}</unmanaged>");
                     }
@@ -281,7 +346,7 @@ public static partial class CsCodeGenerator
                         writer.WriteLine($"{enumItemName} = {enumItem.Value},");
                     }
 
-                    s_enumConstants.Add($"{enumCsName} {enumItem.Name} = {enumCsName}.{enumItemName}");
+                    _enumConstants.Add($"{enumCsName} {enumItem.Name} = {enumCsName}.{enumItemName}");
                 }
             }
 
@@ -377,7 +442,109 @@ public static partial class CsCodeGenerator
 
     private static string GetEnumItemName(string enumName, string cppEnumItemName, string enumNamePrefix)
     {
-        string enumItemName = GetPrettyEnumName(cppEnumItemName, enumNamePrefix);
+        string enumItemName;
+        if (enumName == "SDL_GPUTextureFormat")
+        {
+            enumItemName = cppEnumItemName.Substring(enumNamePrefix.Length + 1);
+            string[] splits = enumItemName.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+            if (splits.Length <= 1)
+            {
+                enumItemName = char.ToUpperInvariant(enumItemName[0]) + enumItemName.Substring(1).ToLowerInvariant();
+            }
+            else
+            {
+                StringBuilder sb = new();
+                foreach (string part in splits)
+                {
+                    if (part.Equals("UNORM", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append("Unorm");
+                    }
+                    else if (part.Equals("SNORM", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append("Snorm");
+                    }
+                    else if (part.Equals("UINT", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append("Uint");
+                    }
+                    else if (part.Equals("INT", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append("Int");
+                    }
+                    else if (part.Equals("FLOAT", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append("Float");
+                    }
+                    else if (part.Equals("UFLOAT", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append("Ufloat");
+                    }
+                    else if (part.Equals("SRGB", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append("Srgb");
+                    }
+                    else if (part.Equals("BC1", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append("BC1");
+                    }
+                    else if (part.Equals("BC2", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append("BC2");
+                    }
+                    else if (part.Equals("BC3", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append("BC3");
+                    }
+                    else if (part.Equals("BC4", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append("BC4");
+                    }
+                    else if (part.Equals("BC5", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append("BC5");
+                    }
+                    else if (part.Equals("BC6H", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append("BC6H");
+                    }
+                    else if (part.Equals("BC7", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append("BC7");
+                    }
+                    else if (part.Equals("ETC2", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append("Etc2");
+                    }
+                    else if (part.Equals("EAC", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append("Eac");
+                    }
+                    else if (part.Equals("ASTC", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append("Astc");
+                    }
+                    else if (part.Equals("RGBA", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append("RGBA");
+                    }
+                    else if (part.Equals("RGB", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append("RGB");
+                    }
+                    else
+                    {
+                        sb.Append(part);
+                    }
+                }
+
+                enumItemName = sb.ToString();
+            }
+
+            return enumItemName;
+        }
+
+        enumItemName = GetPrettyEnumName(cppEnumItemName, enumNamePrefix);
         if (char.IsNumber(enumItemName[0]))
         {
             if (enumName == "SDL_Keycode")

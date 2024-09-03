@@ -89,9 +89,9 @@ typedef Uint32 SDL_InitFlags;
  */
 typedef enum SDL_AppResult
 {
-    SDL_APP_CONTINUE,   /** Value that requests that the app continue from the main callbacks. */
-    SDL_APP_SUCCESS,    /** Value that requests termination with success from the main callbacks. */
-    SDL_APP_FAILURE     /** Value that requests termination with error from the main callbacks. */
+    SDL_APP_CONTINUE,   /**< Value that requests that the app continue from the main callbacks. */
+    SDL_APP_SUCCESS,    /**< Value that requests termination with success from the main callbacks. */
+    SDL_APP_FAILURE     /**< Value that requests termination with error from the main callbacks. */
 } SDL_AppResult;
 
 typedef SDL_AppResult (SDLCALL *SDL_AppInit_func)(void **appstate, int argc, char *argv[]);
@@ -143,8 +143,8 @@ typedef void (SDLCALL *SDL_AppQuit_func)(void *appstate);
  * SDL_SetAppMetadataProperty().
  *
  * \param flags subsystem initialization flags.
- * \returns 0 on success or a negative error code on failure; call
- *          SDL_GetError() for more information.
+ * \returns SDL_TRUE on success or SDL_FALSE on failure; call SDL_GetError()
+ *          for more information.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -155,7 +155,7 @@ typedef void (SDLCALL *SDL_AppQuit_func)(void *appstate);
  * \sa SDL_SetMainReady
  * \sa SDL_WasInit
  */
-extern SDL_DECLSPEC int SDLCALL SDL_Init(SDL_InitFlags flags);
+extern SDL_DECLSPEC SDL_bool SDLCALL SDL_Init(SDL_InitFlags flags);
 
 /**
  * Compatibility function to initialize the SDL library.
@@ -163,8 +163,8 @@ extern SDL_DECLSPEC int SDLCALL SDL_Init(SDL_InitFlags flags);
  * This function and SDL_Init() are interchangeable.
  *
  * \param flags any of the flags used by SDL_Init(); see SDL_Init for details.
- * \returns 0 on success or a negative error code on failure; call
- *          SDL_GetError() for more information.
+ * \returns SDL_TRUE on success or SDL_FALSE on failure; call SDL_GetError()
+ *          for more information.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -172,7 +172,7 @@ extern SDL_DECLSPEC int SDLCALL SDL_Init(SDL_InitFlags flags);
  * \sa SDL_Quit
  * \sa SDL_QuitSubSystem
  */
-extern SDL_DECLSPEC int SDLCALL SDL_InitSubSystem(SDL_InitFlags flags);
+extern SDL_DECLSPEC SDL_bool SDLCALL SDL_InitSubSystem(SDL_InitFlags flags);
 
 /**
  * Shut down specific SDL subsystems.
@@ -248,8 +248,8 @@ extern SDL_DECLSPEC void SDLCALL SDL_Quit(void);
  *                   hash, or whatever makes sense).
  * \param appidentifier A unique string in reverse-domain format that
  *                      identifies this app ("com.example.mygame2").
- * \returns 0 on success or a negative error code on failure; call
- *          SDL_GetError() for more information.
+ * \returns SDL_TRUE on success or SDL_FALSE on failure; call SDL_GetError()
+ *          for more information.
  *
  * \threadsafety It is safe to call this function from any thread.
  *
@@ -257,7 +257,7 @@ extern SDL_DECLSPEC void SDLCALL SDL_Quit(void);
  *
  * \sa SDL_SetAppMetadataProperty
  */
-extern SDL_DECLSPEC int SDLCALL SDL_SetAppMetadata(const char *appname, const char *appversion, const char *appidentifier);
+extern SDL_DECLSPEC SDL_bool SDLCALL SDL_SetAppMetadata(const char *appname, const char *appversion, const char *appidentifier);
 
 /**
  * Specify metadata about your app through a set of properties.
@@ -283,7 +283,7 @@ extern SDL_DECLSPEC int SDLCALL SDL_SetAppMetadata(const char *appname, const ch
  *   anywhere the OS shows the name of the application separately from window
  *   titles, such as volume control applets, etc. This defaults to "SDL
  *   Application".
- * - SDL_PROP_APP_METADATA_VERSION_STRING`: The version of the app that is
+ * - `SDL_PROP_APP_METADATA_VERSION_STRING`: The version of the app that is
  *   running; there are no rules on format, so "1.0.3beta2" and "April 22nd,
  *   2024" and a git hash are all valid options. This has no default.
  * - `SDL_PROP_APP_METADATA_IDENTIFIER_STRING`: A unique string that
@@ -293,16 +293,16 @@ extern SDL_DECLSPEC int SDLCALL SDL_SetAppMetadata(const char *appname, const ch
  *   associated desktop settings and icons. If you plan to package your
  *   application in a container such as Flatpak, the app ID should match the
  *   name of your Flatpak container as well. This has no default.
- * - SDL_PROP_APP_METADATA_CREATOR_STRING`: The human-readable name of the
+ * - `SDL_PROP_APP_METADATA_CREATOR_STRING`: The human-readable name of the
  *   creator/developer/maker of this app, like "MojoWorkshop, LLC"
- * - SDL_PROP_APP_METADATA_COPYRIGHT_STRING`: The human-readable copyright
+ * - `SDL_PROP_APP_METADATA_COPYRIGHT_STRING`: The human-readable copyright
  *   notice, like "Copyright (c) 2024 MojoWorkshop, LLC" or whatnot. Keep this
  *   to one line, don't paste a copy of a whole software license in here. This
  *   has no default.
- * - SDL_PROP_APP_METADATA_URL_STRING`: A URL to the app on the web. Maybe a
+ * - `SDL_PROP_APP_METADATA_URL_STRING`: A URL to the app on the web. Maybe a
  *   product page, or a storefront, or even a GitHub repository, for user's
  *   further information This has no default.
- * - SDL_PROP_APP_METADATA_TYPE_STRING`: The type of application this is.
+ * - `SDL_PROP_APP_METADATA_TYPE_STRING`: The type of application this is.
  *   Currently this string can be "game" for a video game, "mediaplayer" for a
  *   media player, or generically "application" if nothing else applies.
  *   Future versions of SDL might add new types. This defaults to
@@ -310,8 +310,8 @@ extern SDL_DECLSPEC int SDLCALL SDL_SetAppMetadata(const char *appname, const ch
  *
  * \param name the name of the metadata property to set.
  * \param value the value of the property, or NULL to remove that property.
- * \returns 0 on success or a negative error code on failure; call
- *          SDL_GetError() for more information.
+ * \returns SDL_TRUE on success or SDL_FALSE on failure; call SDL_GetError()
+ *          for more information.
  *
  * \threadsafety It is safe to call this function from any thread.
  *
@@ -320,7 +320,7 @@ extern SDL_DECLSPEC int SDLCALL SDL_SetAppMetadata(const char *appname, const ch
  * \sa SDL_GetAppMetadataProperty
  * \sa SDL_SetAppMetadata
  */
-extern SDL_DECLSPEC int SDLCALL SDL_SetAppMetadataProperty(const char *name, const char *value);
+extern SDL_DECLSPEC SDL_bool SDLCALL SDL_SetAppMetadataProperty(const char *name, const char *value);
 
 #define SDL_PROP_APP_METADATA_NAME_STRING         "SDL.app.metadata.name"
 #define SDL_PROP_APP_METADATA_VERSION_STRING      "SDL.app.metadata.version"

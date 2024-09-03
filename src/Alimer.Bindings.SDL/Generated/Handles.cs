@@ -417,6 +417,49 @@ public enum SDL_WindowID : uint
 {
 }
 
+[Flags]
+public enum SDL_GPUTextureUsageFlags : uint
+{
+	Sampler = SDL3.SDL_GPU_TEXTUREUSAGE_SAMPLER,
+	ColorTarget = SDL3.SDL_GPU_TEXTUREUSAGE_COLOR_TARGET,
+	DepthStencilTarget = SDL3.SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET,
+	GraphicsStorageRead = SDL3.SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ,
+	ComputeStorageRead = SDL3.SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_READ,
+	ComputeStorageWrite = SDL3.SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_WRITE,
+}
+
+[Flags]
+public enum SDL_GPUBufferUsageFlags : uint
+{
+	Vertex = SDL3.SDL_GPU_BUFFERUSAGE_VERTEX,
+	Index = SDL3.SDL_GPU_BUFFERUSAGE_INDEX,
+	Indirect = SDL3.SDL_GPU_BUFFERUSAGE_INDIRECT,
+	GraphicsStorageRead = SDL3.SDL_GPU_BUFFERUSAGE_GRAPHICS_STORAGE_READ,
+	ComputeStorageRead = SDL3.SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_READ,
+	ComputeStorageWrite = SDL3.SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_WRITE,
+}
+
+[Flags]
+public enum SDL_GPUShaderFormat : uint
+{
+	Private = SDL3.SDL_GPU_SHADERFORMAT_PRIVATE,
+	Spirv = SDL3.SDL_GPU_SHADERFORMAT_SPIRV,
+	Dxbc = SDL3.SDL_GPU_SHADERFORMAT_DXBC,
+	Dxil = SDL3.SDL_GPU_SHADERFORMAT_DXIL,
+	Msl = SDL3.SDL_GPU_SHADERFORMAT_MSL,
+	MetalLib = SDL3.SDL_GPU_SHADERFORMAT_METALLIB,
+}
+
+[Flags]
+public enum SDL_GPUColorComponentFlags : byte
+{
+	R = SDL3.SDL_GPU_COLORCOMPONENT_R,
+	G = SDL3.SDL_GPU_COLORCOMPONENT_G,
+	B = SDL3.SDL_GPU_COLORCOMPONENT_B,
+	A = SDL3.SDL_GPU_COLORCOMPONENT_A,
+	All = R | G | B | A
+}
+
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_AudioStream(nint value) : IEquatable<SDL_AudioStream>
 {
@@ -919,5 +962,278 @@ public readonly partial struct _XEvent(nint value) : IEquatable<_XEvent>
 	/// <inheritdoc/>
 	public override int GetHashCode() => Value.GetHashCode();
 	private string DebuggerDisplay => $"{nameof(_XEvent)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_GPUDevice(nint value) : IEquatable<SDL_GPUDevice>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_GPUDevice Null => new(0);
+	public static implicit operator nint(SDL_GPUDevice value) => value.Value;
+	public static implicit operator SDL_GPUDevice(nint value) => new(value);
+	public static bool operator ==(SDL_GPUDevice left, SDL_GPUDevice right) => left.Value == right.Value;
+	public static bool operator !=(SDL_GPUDevice left, SDL_GPUDevice right) => left.Value != right.Value;
+	public static bool operator ==(SDL_GPUDevice left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_GPUDevice left, nint right) => left.Value != right;
+	public bool Equals(SDL_GPUDevice other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_GPUDevice other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_GPUDevice)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_GPUBuffer(nint value) : IEquatable<SDL_GPUBuffer>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_GPUBuffer Null => new(0);
+	public static implicit operator nint(SDL_GPUBuffer value) => value.Value;
+	public static implicit operator SDL_GPUBuffer(nint value) => new(value);
+	public static bool operator ==(SDL_GPUBuffer left, SDL_GPUBuffer right) => left.Value == right.Value;
+	public static bool operator !=(SDL_GPUBuffer left, SDL_GPUBuffer right) => left.Value != right.Value;
+	public static bool operator ==(SDL_GPUBuffer left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_GPUBuffer left, nint right) => left.Value != right;
+	public bool Equals(SDL_GPUBuffer other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_GPUBuffer other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_GPUBuffer)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_GPUTransferBuffer(nint value) : IEquatable<SDL_GPUTransferBuffer>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_GPUTransferBuffer Null => new(0);
+	public static implicit operator nint(SDL_GPUTransferBuffer value) => value.Value;
+	public static implicit operator SDL_GPUTransferBuffer(nint value) => new(value);
+	public static bool operator ==(SDL_GPUTransferBuffer left, SDL_GPUTransferBuffer right) => left.Value == right.Value;
+	public static bool operator !=(SDL_GPUTransferBuffer left, SDL_GPUTransferBuffer right) => left.Value != right.Value;
+	public static bool operator ==(SDL_GPUTransferBuffer left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_GPUTransferBuffer left, nint right) => left.Value != right;
+	public bool Equals(SDL_GPUTransferBuffer other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_GPUTransferBuffer other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_GPUTransferBuffer)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_GPUTexture(nint value) : IEquatable<SDL_GPUTexture>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_GPUTexture Null => new(0);
+	public static implicit operator nint(SDL_GPUTexture value) => value.Value;
+	public static implicit operator SDL_GPUTexture(nint value) => new(value);
+	public static bool operator ==(SDL_GPUTexture left, SDL_GPUTexture right) => left.Value == right.Value;
+	public static bool operator !=(SDL_GPUTexture left, SDL_GPUTexture right) => left.Value != right.Value;
+	public static bool operator ==(SDL_GPUTexture left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_GPUTexture left, nint right) => left.Value != right;
+	public bool Equals(SDL_GPUTexture other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_GPUTexture other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_GPUTexture)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_GPUSampler(nint value) : IEquatable<SDL_GPUSampler>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_GPUSampler Null => new(0);
+	public static implicit operator nint(SDL_GPUSampler value) => value.Value;
+	public static implicit operator SDL_GPUSampler(nint value) => new(value);
+	public static bool operator ==(SDL_GPUSampler left, SDL_GPUSampler right) => left.Value == right.Value;
+	public static bool operator !=(SDL_GPUSampler left, SDL_GPUSampler right) => left.Value != right.Value;
+	public static bool operator ==(SDL_GPUSampler left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_GPUSampler left, nint right) => left.Value != right;
+	public bool Equals(SDL_GPUSampler other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_GPUSampler other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_GPUSampler)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_GPUShader(nint value) : IEquatable<SDL_GPUShader>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_GPUShader Null => new(0);
+	public static implicit operator nint(SDL_GPUShader value) => value.Value;
+	public static implicit operator SDL_GPUShader(nint value) => new(value);
+	public static bool operator ==(SDL_GPUShader left, SDL_GPUShader right) => left.Value == right.Value;
+	public static bool operator !=(SDL_GPUShader left, SDL_GPUShader right) => left.Value != right.Value;
+	public static bool operator ==(SDL_GPUShader left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_GPUShader left, nint right) => left.Value != right;
+	public bool Equals(SDL_GPUShader other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_GPUShader other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_GPUShader)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_GPUComputePipeline(nint value) : IEquatable<SDL_GPUComputePipeline>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_GPUComputePipeline Null => new(0);
+	public static implicit operator nint(SDL_GPUComputePipeline value) => value.Value;
+	public static implicit operator SDL_GPUComputePipeline(nint value) => new(value);
+	public static bool operator ==(SDL_GPUComputePipeline left, SDL_GPUComputePipeline right) => left.Value == right.Value;
+	public static bool operator !=(SDL_GPUComputePipeline left, SDL_GPUComputePipeline right) => left.Value != right.Value;
+	public static bool operator ==(SDL_GPUComputePipeline left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_GPUComputePipeline left, nint right) => left.Value != right;
+	public bool Equals(SDL_GPUComputePipeline other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_GPUComputePipeline other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_GPUComputePipeline)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_GPUGraphicsPipeline(nint value) : IEquatable<SDL_GPUGraphicsPipeline>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_GPUGraphicsPipeline Null => new(0);
+	public static implicit operator nint(SDL_GPUGraphicsPipeline value) => value.Value;
+	public static implicit operator SDL_GPUGraphicsPipeline(nint value) => new(value);
+	public static bool operator ==(SDL_GPUGraphicsPipeline left, SDL_GPUGraphicsPipeline right) => left.Value == right.Value;
+	public static bool operator !=(SDL_GPUGraphicsPipeline left, SDL_GPUGraphicsPipeline right) => left.Value != right.Value;
+	public static bool operator ==(SDL_GPUGraphicsPipeline left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_GPUGraphicsPipeline left, nint right) => left.Value != right;
+	public bool Equals(SDL_GPUGraphicsPipeline other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_GPUGraphicsPipeline other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_GPUGraphicsPipeline)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_GPUCommandBuffer(nint value) : IEquatable<SDL_GPUCommandBuffer>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_GPUCommandBuffer Null => new(0);
+	public static implicit operator nint(SDL_GPUCommandBuffer value) => value.Value;
+	public static implicit operator SDL_GPUCommandBuffer(nint value) => new(value);
+	public static bool operator ==(SDL_GPUCommandBuffer left, SDL_GPUCommandBuffer right) => left.Value == right.Value;
+	public static bool operator !=(SDL_GPUCommandBuffer left, SDL_GPUCommandBuffer right) => left.Value != right.Value;
+	public static bool operator ==(SDL_GPUCommandBuffer left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_GPUCommandBuffer left, nint right) => left.Value != right;
+	public bool Equals(SDL_GPUCommandBuffer other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_GPUCommandBuffer other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_GPUCommandBuffer)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_GPURenderPass(nint value) : IEquatable<SDL_GPURenderPass>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_GPURenderPass Null => new(0);
+	public static implicit operator nint(SDL_GPURenderPass value) => value.Value;
+	public static implicit operator SDL_GPURenderPass(nint value) => new(value);
+	public static bool operator ==(SDL_GPURenderPass left, SDL_GPURenderPass right) => left.Value == right.Value;
+	public static bool operator !=(SDL_GPURenderPass left, SDL_GPURenderPass right) => left.Value != right.Value;
+	public static bool operator ==(SDL_GPURenderPass left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_GPURenderPass left, nint right) => left.Value != right;
+	public bool Equals(SDL_GPURenderPass other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_GPURenderPass other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_GPURenderPass)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_GPUComputePass(nint value) : IEquatable<SDL_GPUComputePass>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_GPUComputePass Null => new(0);
+	public static implicit operator nint(SDL_GPUComputePass value) => value.Value;
+	public static implicit operator SDL_GPUComputePass(nint value) => new(value);
+	public static bool operator ==(SDL_GPUComputePass left, SDL_GPUComputePass right) => left.Value == right.Value;
+	public static bool operator !=(SDL_GPUComputePass left, SDL_GPUComputePass right) => left.Value != right.Value;
+	public static bool operator ==(SDL_GPUComputePass left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_GPUComputePass left, nint right) => left.Value != right;
+	public bool Equals(SDL_GPUComputePass other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_GPUComputePass other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_GPUComputePass)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_GPUCopyPass(nint value) : IEquatable<SDL_GPUCopyPass>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_GPUCopyPass Null => new(0);
+	public static implicit operator nint(SDL_GPUCopyPass value) => value.Value;
+	public static implicit operator SDL_GPUCopyPass(nint value) => new(value);
+	public static bool operator ==(SDL_GPUCopyPass left, SDL_GPUCopyPass right) => left.Value == right.Value;
+	public static bool operator !=(SDL_GPUCopyPass left, SDL_GPUCopyPass right) => left.Value != right.Value;
+	public static bool operator ==(SDL_GPUCopyPass left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_GPUCopyPass left, nint right) => left.Value != right;
+	public bool Equals(SDL_GPUCopyPass other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_GPUCopyPass other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_GPUCopyPass)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_GPUFence(nint value) : IEquatable<SDL_GPUFence>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_GPUFence Null => new(0);
+	public static implicit operator nint(SDL_GPUFence value) => value.Value;
+	public static implicit operator SDL_GPUFence(nint value) => new(value);
+	public static bool operator ==(SDL_GPUFence left, SDL_GPUFence right) => left.Value == right.Value;
+	public static bool operator !=(SDL_GPUFence left, SDL_GPUFence right) => left.Value != right.Value;
+	public static bool operator ==(SDL_GPUFence left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_GPUFence left, nint right) => left.Value != right;
+	public bool Equals(SDL_GPUFence other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_GPUFence other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_GPUFence)} [0x{Value.ToString("X")}]";
 }
 

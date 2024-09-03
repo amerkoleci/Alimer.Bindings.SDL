@@ -6,7 +6,7 @@ using CppAst;
 
 namespace Generator;
 
-public static partial class CsCodeGenerator
+public partial class CsCodeGenerator
 {
     private static readonly HashSet<string> s_keywords =
     [
@@ -86,15 +86,20 @@ public static partial class CsCodeGenerator
         "SDL_Rect",
     };
 
-    private static CsCodeGeneratorOptions s_options = new();
+    private readonly CsCodeGeneratorOptions _options = new();
 
-    private static readonly List<CppEnum> s_collectedEnums = [];
-    private static readonly Dictionary<string, CppFunctionType> s_collectedCallbackTypedes = [];
-    private static readonly Dictionary<string, string> s_collectedHandles = [];
-    private static readonly List<CppClass> s_collectedStructAndUnions = [];
-    private static readonly List<CppFunction> s_collectedFunctions = [];
+    private readonly List<CppEnum> _collectedEnums = [];
+    private readonly Dictionary<string, CppFunctionType> _collectedCallbackTypedes = [];
+    private readonly Dictionary<string, string> _collectedHandles = [];
+    private readonly List<CppClass> _collectedStructAndUnions = [];
+    private readonly List<CppFunction> _collectedFunctions = [];
 
-    public static void Collect(CppCompilation compilation)
+    public CsCodeGenerator(CsCodeGeneratorOptions options)
+    {
+        _options = options;
+    }
+
+    public void Collect(CppCompilation compilation)
     {
         CollectConstants(compilation);
         CollectEnums(compilation);
@@ -103,10 +108,8 @@ public static partial class CsCodeGenerator
         CollectCommands(compilation);
     }
 
-    public static void Generate(CsCodeGeneratorOptions options)
+    public void Generate()
     {
-        s_options = options;
-
         GenerateEnums();
         GenerateConstants();
         GenerateHandles();
@@ -141,7 +144,7 @@ public static partial class CsCodeGenerator
         return name;
     }
 
-    private static string GetCsTypeName(CppType? type)
+    private string GetCsTypeName(CppType? type)
     {
         if (type is CppPrimitiveType primitiveType)
         {
@@ -195,7 +198,7 @@ public static partial class CsCodeGenerator
             if (csPointerTypeName == "IntPtr" || csPointerTypeName == "nint")
                 return csPointerTypeName;
 
-            if (!s_knownTypes.Contains(csPointerTypeName) && !s_generatedPointerHandles.Contains(csPointerTypeName))
+            if (!s_knownTypes.Contains(csPointerTypeName) && !_generatedPointerHandles.Contains(csPointerTypeName))
                 return csPointerTypeName + "*";
 
             return csPointerTypeName;
@@ -223,7 +226,7 @@ public static partial class CsCodeGenerator
         return string.Empty;
     }
 
-    private static string GetCsTypeName(CppPrimitiveType primitiveType)
+    private string GetCsTypeName(CppPrimitiveType primitiveType)
     {
         switch (primitiveType.Kind)
         {
@@ -266,17 +269,17 @@ public static partial class CsCodeGenerator
                 return "double";
 
             case CppPrimitiveKind.Long:
-                return s_options.MapCLongToIntPtr ? "nint" : "global::System.Runtime.InteropServices.CLong";
+                return _options.MapCLongToIntPtr ? "nint" : "global::System.Runtime.InteropServices.CLong";
 
             case CppPrimitiveKind.UnsignedLong:
-                return s_options.MapCLongToIntPtr ? "nuint" : "global::System.Runtime.InteropServices.CULong";
+                return _options.MapCLongToIntPtr ? "nuint" : "global::System.Runtime.InteropServices.CULong";
 
             default:
                 return string.Empty;
         }
     }
 
-    private static string GetCsTypeName(CppPointerType pointerType)
+    private string GetCsTypeName(CppPointerType pointerType)
     {
         if (pointerType.ElementType is CppQualifiedType qualifiedType)
         {

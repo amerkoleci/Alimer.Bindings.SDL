@@ -13,6 +13,8 @@ namespace SDL3;
 
 public enum SDL_AudioFormat : uint
 {
+	/// <unmanaged>SDL_AUDIO_UNKNOWN</unmanaged>
+	Unknown = 0x0000u,
 	/// <unmanaged>SDL_AUDIO_U8</unmanaged>
 	U8 = 0x0008u,
 	/// <unmanaged>SDL_AUDIO_S8</unmanaged>
@@ -168,11 +170,11 @@ public enum SDL_EventType
 	/// <unmanaged>SDL_EVENT_WINDOW_DESTROYED</unmanaged>
 	WindowDestroyed = 537,
 	/// <unmanaged>SDL_EVENT_WINDOW_HDR_STATE_CHANGED</unmanaged>
-	WindowHdrStateChanged = 538,
+	WindowHDRStateChanged = 538,
 	/// <unmanaged>SDL_EVENT_WINDOW_FIRST</unmanaged>
 	WindowFirst = WindowShown,
 	/// <unmanaged>SDL_EVENT_WINDOW_LAST</unmanaged>
-	WindowLast = WindowHdrStateChanged,
+	WindowLast = WindowHDRStateChanged,
 	/// <unmanaged>SDL_EVENT_KEY_DOWN</unmanaged>
 	KeyDown = 0x300,
 	/// <unmanaged>SDL_EVENT_KEY_UP</unmanaged>
@@ -643,32 +645,34 @@ public enum SDL_LogCategory
 	Video = 5,
 	/// <unmanaged>SDL_LOG_CATEGORY_RENDER</unmanaged>
 	Render = 6,
+	/// <unmanaged>SDL_LOG_CATEGORY_GPU</unmanaged>
+	GPU = 7,
 	/// <unmanaged>SDL_LOG_CATEGORY_INPUT</unmanaged>
-	Input = 7,
+	Input = 8,
 	/// <unmanaged>SDL_LOG_CATEGORY_TEST</unmanaged>
-	Test = 8,
+	Test = 9,
 	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED1</unmanaged>
-	Reserved1 = 9,
+	Reserved1 = 10,
 	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED2</unmanaged>
-	Reserved2 = 10,
+	Reserved2 = 11,
 	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED3</unmanaged>
-	Reserved3 = 11,
+	Reserved3 = 12,
 	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED4</unmanaged>
-	Reserved4 = 12,
+	Reserved4 = 13,
 	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED5</unmanaged>
-	Reserved5 = 13,
+	Reserved5 = 14,
 	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED6</unmanaged>
-	Reserved6 = 14,
+	Reserved6 = 15,
 	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED7</unmanaged>
-	Reserved7 = 15,
+	Reserved7 = 16,
 	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED8</unmanaged>
-	Reserved8 = 16,
+	Reserved8 = 17,
 	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED9</unmanaged>
-	Reserved9 = 17,
+	Reserved9 = 18,
 	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED10</unmanaged>
-	Reserved10 = 18,
+	Reserved10 = 19,
 	/// <unmanaged>SDL_LOG_CATEGORY_CUSTOM</unmanaged>
-	Custom = 19,
+	Custom = 20,
 }
 
 public enum SDL_LogPriority
@@ -1765,8 +1769,6 @@ public enum SDL_ScaleMode
 	Nearest = 0,
 	/// <unmanaged>SDL_SCALEMODE_LINEAR</unmanaged>
 	Linear = 1,
-	/// <unmanaged>SDL_SCALEMODE_BEST</unmanaged>
-	Best = 2,
 }
 
 public enum SDL_FlipMode
@@ -2006,5 +2008,465 @@ public enum SDL_WinRT_DeviceFamily
 	Mobile = 2,
 	/// <unmanaged>SDL_WINRT_DEVICEFAMILY_XBOX</unmanaged>
 	Xbox = 3,
+}
+
+public enum SDL_GPUPrimitiveType
+{
+	/// <unmanaged>SDL_GPU_PRIMITIVETYPE_POINTLIST</unmanaged>
+	PointList = 0,
+	/// <unmanaged>SDL_GPU_PRIMITIVETYPE_LINELIST</unmanaged>
+	LineList = 1,
+	/// <unmanaged>SDL_GPU_PRIMITIVETYPE_LINESTRIP</unmanaged>
+	LineStrip = 2,
+	/// <unmanaged>SDL_GPU_PRIMITIVETYPE_TRIANGLELIST</unmanaged>
+	TriangleList = 3,
+	/// <unmanaged>SDL_GPU_PRIMITIVETYPE_TRIANGLESTRIP</unmanaged>
+	TriangleStrip = 4,
+}
+
+public enum SDL_GPULoadOp
+{
+	/// <unmanaged>SDL_GPU_LOADOP_LOAD</unmanaged>
+	Load = 0,
+	/// <unmanaged>SDL_GPU_LOADOP_CLEAR</unmanaged>
+	Clear = 1,
+	/// <unmanaged>SDL_GPU_LOADOP_DONT_CARE</unmanaged>
+	DontCare = 2,
+}
+
+public enum SDL_GPUStoreOp
+{
+	/// <unmanaged>SDL_GPU_STOREOP_STORE</unmanaged>
+	Store = 0,
+	/// <unmanaged>SDL_GPU_STOREOP_DONT_CARE</unmanaged>
+	DontCare = 1,
+}
+
+public enum SDL_GPUIndexElementSize
+{
+	/// <unmanaged>SDL_GPU_INDEXELEMENTSIZE_16BIT</unmanaged>
+	UInt16 = 0,
+	/// <unmanaged>SDL_GPU_INDEXELEMENTSIZE_32BIT</unmanaged>
+	UInt32 = 1,
+}
+
+public enum SDL_GPUTextureFormat
+{
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_INVALID</unmanaged>
+	Invalid = -1,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_A8_UNORM</unmanaged>
+	A8Unorm = 0,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8_UNORM</unmanaged>
+	R8Unorm = 1,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8_UNORM</unmanaged>
+	R8G8Unorm = 2,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM</unmanaged>
+	R8G8B8A8Unorm = 3,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16_UNORM</unmanaged>
+	R16Unorm = 4,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16_UNORM</unmanaged>
+	R16G16Unorm = 5,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16B16A16_UNORM</unmanaged>
+	R16G16B16A16Unorm = 6,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R10G10B10A2_UNORM</unmanaged>
+	R10G10B10A2Unorm = 7,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_B5G6R5_UNORM</unmanaged>
+	B5G6R5Unorm = 8,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_B5G5R5A1_UNORM</unmanaged>
+	B5G5R5A1Unorm = 9,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_B4G4R4A4_UNORM</unmanaged>
+	B4G4R4A4Unorm = 10,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_B8G8R8A8_UNORM</unmanaged>
+	B8G8R8A8Unorm = 11,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC1_RGBA_UNORM</unmanaged>
+	BC1RGBAUnorm = 12,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC2_RGBA_UNORM</unmanaged>
+	BC2RGBAUnorm = 13,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC3_RGBA_UNORM</unmanaged>
+	BC3RGBAUnorm = 14,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC4_R_UNORM</unmanaged>
+	BC4RUnorm = 15,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC5_RG_UNORM</unmanaged>
+	BC5RGUnorm = 16,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC7_RGBA_UNORM</unmanaged>
+	BC7RGBAUnorm = 17,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC6H_RGB_FLOAT</unmanaged>
+	BC6HRGBFloat = 18,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC6H_RGB_UFLOAT</unmanaged>
+	BC6HRGBUfloat = 19,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8_SNORM</unmanaged>
+	R8Snorm = 20,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8_SNORM</unmanaged>
+	R8G8Snorm = 21,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8B8A8_SNORM</unmanaged>
+	R8G8B8A8Snorm = 22,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16_SNORM</unmanaged>
+	R16Snorm = 23,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16_SNORM</unmanaged>
+	R16G16Snorm = 24,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16B16A16_SNORM</unmanaged>
+	R16G16B16A16Snorm = 25,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16_FLOAT</unmanaged>
+	R16Float = 26,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16_FLOAT</unmanaged>
+	R16G16Float = 27,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16B16A16_FLOAT</unmanaged>
+	R16G16B16A16Float = 28,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R32_FLOAT</unmanaged>
+	R32Float = 29,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R32G32_FLOAT</unmanaged>
+	R32G32Float = 30,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R32G32B32A32_FLOAT</unmanaged>
+	R32G32B32A32Float = 31,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R11G11B10_UFLOAT</unmanaged>
+	R11G11B10Ufloat = 32,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8_UINT</unmanaged>
+	R8Uint = 33,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8_UINT</unmanaged>
+	R8G8Uint = 34,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UINT</unmanaged>
+	R8G8B8A8Uint = 35,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16_UINT</unmanaged>
+	R16Uint = 36,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16_UINT</unmanaged>
+	R16G16Uint = 37,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16B16A16_UINT</unmanaged>
+	R16G16B16A16Uint = 38,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8_INT</unmanaged>
+	R8Int = 39,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8_INT</unmanaged>
+	R8G8Int = 40,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8B8A8_INT</unmanaged>
+	R8G8B8A8Int = 41,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16_INT</unmanaged>
+	R16Int = 42,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16_INT</unmanaged>
+	R16G16Int = 43,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16B16A16_INT</unmanaged>
+	R16G16B16A16Int = 44,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM_SRGB</unmanaged>
+	R8G8B8A8UnormSrgb = 45,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_B8G8R8A8_UNORM_SRGB</unmanaged>
+	B8G8R8A8UnormSrgb = 46,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC1_RGBA_UNORM_SRGB</unmanaged>
+	BC1RGBAUnormSrgb = 47,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC2_RGBA_UNORM_SRGB</unmanaged>
+	BC2RGBAUnormSrgb = 48,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC3_RGBA_UNORM_SRGB</unmanaged>
+	BC3RGBAUnormSrgb = 49,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC7_RGBA_UNORM_SRGB</unmanaged>
+	BC7RGBAUnormSrgb = 50,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_D16_UNORM</unmanaged>
+	D16Unorm = 51,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_D24_UNORM</unmanaged>
+	D24Unorm = 52,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_D32_FLOAT</unmanaged>
+	D32Float = 53,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_D24_UNORM_S8_UINT</unmanaged>
+	D24UnormS8Uint = 54,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_D32_FLOAT_S8_UINT</unmanaged>
+	D32FloatS8Uint = 55,
+}
+
+public enum SDL_GPUTextureType
+{
+	/// <unmanaged>SDL_GPU_TEXTURETYPE_2D</unmanaged>
+	Type2D = 0,
+	/// <unmanaged>SDL_GPU_TEXTURETYPE_2D_ARRAY</unmanaged>
+	Type2DArray = 1,
+	/// <unmanaged>SDL_GPU_TEXTURETYPE_3D</unmanaged>
+	Type3D = 2,
+	/// <unmanaged>SDL_GPU_TEXTURETYPE_CUBE</unmanaged>
+	Cube = 3,
+}
+
+public enum SDL_GPUSampleCount
+{
+	/// <unmanaged>SDL_GPU_SAMPLECOUNT_1</unmanaged>
+	Count1 = 0,
+	/// <unmanaged>SDL_GPU_SAMPLECOUNT_2</unmanaged>
+	Count2 = 1,
+	/// <unmanaged>SDL_GPU_SAMPLECOUNT_4</unmanaged>
+	Count4 = 2,
+	/// <unmanaged>SDL_GPU_SAMPLECOUNT_8</unmanaged>
+	Count8 = 3,
+}
+
+public enum SDL_GPUCubeMapFace
+{
+	/// <unmanaged>SDL_GPU_CUBEMAPFACE_POSITIVEX</unmanaged>
+	PositiveX = 0,
+	/// <unmanaged>SDL_GPU_CUBEMAPFACE_NEGATIVEX</unmanaged>
+	NegativeX = 1,
+	/// <unmanaged>SDL_GPU_CUBEMAPFACE_POSITIVEY</unmanaged>
+	PositiveY = 2,
+	/// <unmanaged>SDL_GPU_CUBEMAPFACE_NEGATIVEY</unmanaged>
+	NegativeY = 3,
+	/// <unmanaged>SDL_GPU_CUBEMAPFACE_POSITIVEZ</unmanaged>
+	PositiveZ = 4,
+	/// <unmanaged>SDL_GPU_CUBEMAPFACE_NEGATIVEZ</unmanaged>
+	NegativeZ = 5,
+}
+
+public enum SDL_GPUTransferBufferUsage
+{
+	/// <unmanaged>SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD</unmanaged>
+	Upload = 0,
+	/// <unmanaged>SDL_GPU_TRANSFERBUFFERUSAGE_DOWNLOAD</unmanaged>
+	Download = 1,
+}
+
+public enum SDL_GPUShaderStage
+{
+	/// <unmanaged>SDL_GPU_SHADERSTAGE_VERTEX</unmanaged>
+	Vertex = 0,
+	/// <unmanaged>SDL_GPU_SHADERSTAGE_FRAGMENT</unmanaged>
+	Fragment = 1,
+}
+
+public enum SDL_GPUVertexElementFormat
+{
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_INT</unmanaged>
+	Int = 0,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_INT2</unmanaged>
+	Int2 = 1,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_INT3</unmanaged>
+	Int3 = 2,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_INT4</unmanaged>
+	Int4 = 3,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_UINT</unmanaged>
+	UInt = 4,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_UINT2</unmanaged>
+	UInt2 = 5,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_UINT3</unmanaged>
+	UInt3 = 6,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_UINT4</unmanaged>
+	UInt4 = 7,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_FLOAT</unmanaged>
+	Float = 8,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2</unmanaged>
+	Float2 = 9,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3</unmanaged>
+	Float3 = 10,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_FLOAT4</unmanaged>
+	Float4 = 11,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_BYTE2</unmanaged>
+	Byte2 = 12,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_BYTE4</unmanaged>
+	Byte4 = 13,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_UBYTE2</unmanaged>
+	UByte2 = 14,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_UBYTE4</unmanaged>
+	UByte4 = 15,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_BYTE2_NORM</unmanaged>
+	Byte2Norm = 16,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_BYTE4_NORM</unmanaged>
+	Byte4Norm = 17,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_UBYTE2_NORM</unmanaged>
+	UByte2Norm = 18,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_UBYTE4_NORM</unmanaged>
+	UByte4Norm = 19,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_SHORT2</unmanaged>
+	Short2 = 20,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_SHORT4</unmanaged>
+	Short4 = 21,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_USHORT2</unmanaged>
+	UShort2 = 22,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_USHORT4</unmanaged>
+	Ushort4 = 23,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_SHORT2_NORM</unmanaged>
+	Short2Norm = 24,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_SHORT4_NORM</unmanaged>
+	Short4Norm = 25,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_USHORT2_NORM</unmanaged>
+	UShort2Norm = 26,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_USHORT4_NORM</unmanaged>
+	Ushort4Norm = 27,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_HALF2</unmanaged>
+	Half2 = 28,
+	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_HALF4</unmanaged>
+	Half4 = 29,
+}
+
+public enum SDL_GPUVertexInputRate
+{
+	/// <unmanaged>SDL_GPU_VERTEXINPUTRATE_VERTEX</unmanaged>
+	Vertex = 0,
+	/// <unmanaged>SDL_GPU_VERTEXINPUTRATE_INSTANCE</unmanaged>
+	Instance = 1,
+}
+
+public enum SDL_GPUFillMode
+{
+	/// <unmanaged>SDL_GPU_FILLMODE_FILL</unmanaged>
+	Fill = 0,
+	/// <unmanaged>SDL_GPU_FILLMODE_LINE</unmanaged>
+	Line = 1,
+}
+
+public enum SDL_GPUCullMode
+{
+	/// <unmanaged>SDL_GPU_CULLMODE_NONE</unmanaged>
+	None = 0,
+	/// <unmanaged>SDL_GPU_CULLMODE_FRONT</unmanaged>
+	Front = 1,
+	/// <unmanaged>SDL_GPU_CULLMODE_BACK</unmanaged>
+	Back = 2,
+}
+
+public enum SDL_GPUFrontFace
+{
+	/// <unmanaged>SDL_GPU_FRONTFACE_COUNTER_CLOCKWISE</unmanaged>
+	CounterClockwise = 0,
+	/// <unmanaged>SDL_GPU_FRONTFACE_CLOCKWISE</unmanaged>
+	Clockwise = 1,
+}
+
+public enum SDL_GPUCompareOp
+{
+	/// <unmanaged>SDL_GPU_COMPAREOP_NEVER</unmanaged>
+	Never = 0,
+	/// <unmanaged>SDL_GPU_COMPAREOP_LESS</unmanaged>
+	Less = 1,
+	/// <unmanaged>SDL_GPU_COMPAREOP_EQUAL</unmanaged>
+	Equal = 2,
+	/// <unmanaged>SDL_GPU_COMPAREOP_LESS_OR_EQUAL</unmanaged>
+	LessOrEqual = 3,
+	/// <unmanaged>SDL_GPU_COMPAREOP_GREATER</unmanaged>
+	Greater = 4,
+	/// <unmanaged>SDL_GPU_COMPAREOP_NOT_EQUAL</unmanaged>
+	NotEqual = 5,
+	/// <unmanaged>SDL_GPU_COMPAREOP_GREATER_OR_EQUAL</unmanaged>
+	GreaterOrEqual = 6,
+	/// <unmanaged>SDL_GPU_COMPAREOP_ALWAYS</unmanaged>
+	Always = 7,
+}
+
+public enum SDL_GPUStencilOp
+{
+	/// <unmanaged>SDL_GPU_STENCILOP_KEEP</unmanaged>
+	Keep = 0,
+	/// <unmanaged>SDL_GPU_STENCILOP_ZERO</unmanaged>
+	Zero = 1,
+	/// <unmanaged>SDL_GPU_STENCILOP_REPLACE</unmanaged>
+	Replace = 2,
+	/// <unmanaged>SDL_GPU_STENCILOP_INCREMENT_AND_CLAMP</unmanaged>
+	IncrementAndClamp = 3,
+	/// <unmanaged>SDL_GPU_STENCILOP_DECREMENT_AND_CLAMP</unmanaged>
+	DecrementAndClamp = 4,
+	/// <unmanaged>SDL_GPU_STENCILOP_INVERT</unmanaged>
+	Invert = 5,
+	/// <unmanaged>SDL_GPU_STENCILOP_INCREMENT_AND_WRAP</unmanaged>
+	IncrementAndWrap = 6,
+	/// <unmanaged>SDL_GPU_STENCILOP_DECREMENT_AND_WRAP</unmanaged>
+	DecrementAndWrap = 7,
+}
+
+public enum SDL_GPUBlendOp
+{
+	/// <unmanaged>SDL_GPU_BLENDOP_ADD</unmanaged>
+	Add = 0,
+	/// <unmanaged>SDL_GPU_BLENDOP_SUBTRACT</unmanaged>
+	Subtract = 1,
+	/// <unmanaged>SDL_GPU_BLENDOP_REVERSE_SUBTRACT</unmanaged>
+	ReverseSubtract = 2,
+	/// <unmanaged>SDL_GPU_BLENDOP_MIN</unmanaged>
+	Min = 3,
+	/// <unmanaged>SDL_GPU_BLENDOP_MAX</unmanaged>
+	Max = 4,
+}
+
+public enum SDL_GPUBlendFactor
+{
+	/// <unmanaged>SDL_GPU_BLENDFACTOR_ZERO</unmanaged>
+	Zero = 0,
+	/// <unmanaged>SDL_GPU_BLENDFACTOR_ONE</unmanaged>
+	One = 1,
+	/// <unmanaged>SDL_GPU_BLENDFACTOR_SRC_COLOR</unmanaged>
+	SrcColor = 2,
+	/// <unmanaged>SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_COLOR</unmanaged>
+	OneMinusSrcColor = 3,
+	/// <unmanaged>SDL_GPU_BLENDFACTOR_DST_COLOR</unmanaged>
+	DstColor = 4,
+	/// <unmanaged>SDL_GPU_BLENDFACTOR_ONE_MINUS_DST_COLOR</unmanaged>
+	OneMinusDstColor = 5,
+	/// <unmanaged>SDL_GPU_BLENDFACTOR_SRC_ALPHA</unmanaged>
+	SrcAlpha = 6,
+	/// <unmanaged>SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_ALPHA</unmanaged>
+	OneMinusSrcAlpha = 7,
+	/// <unmanaged>SDL_GPU_BLENDFACTOR_DST_ALPHA</unmanaged>
+	DstAlpha = 8,
+	/// <unmanaged>SDL_GPU_BLENDFACTOR_ONE_MINUS_DST_ALPHA</unmanaged>
+	OneMinusDstAlpha = 9,
+	/// <unmanaged>SDL_GPU_BLENDFACTOR_CONSTANT_COLOR</unmanaged>
+	ConstantColor = 10,
+	/// <unmanaged>SDL_GPU_BLENDFACTOR_ONE_MINUS_CONSTANT_COLOR</unmanaged>
+	OneMinusConstantColor = 11,
+	/// <unmanaged>SDL_GPU_BLENDFACTOR_SRC_ALPHA_SATURATE</unmanaged>
+	SrcAlphaSaturate = 12,
+}
+
+public enum SDL_GPUFilter
+{
+	/// <unmanaged>SDL_GPU_FILTER_NEAREST</unmanaged>
+	Nearest = 0,
+	/// <unmanaged>SDL_GPU_FILTER_LINEAR</unmanaged>
+	Linear = 1,
+}
+
+public enum SDL_GPUSamplerMipmapMode
+{
+	/// <unmanaged>SDL_GPU_SAMPLERMIPMAPMODE_NEAREST</unmanaged>
+	Nearest = 0,
+	/// <unmanaged>SDL_GPU_SAMPLERMIPMAPMODE_LINEAR</unmanaged>
+	Linear = 1,
+}
+
+public enum SDL_GPUSamplerAddressMode
+{
+	/// <unmanaged>SDL_GPU_SAMPLERADDRESSMODE_REPEAT</unmanaged>
+	Repeat = 0,
+	/// <unmanaged>SDL_GPU_SAMPLERADDRESSMODE_MIRRORED_REPEAT</unmanaged>
+	MirroredRepeat = 1,
+	/// <unmanaged>SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE</unmanaged>
+	ClampToEdge = 2,
+}
+
+public enum SDL_GPUPresentMode
+{
+	/// <unmanaged>SDL_GPU_PRESENTMODE_VSYNC</unmanaged>
+	Vsync = 0,
+	/// <unmanaged>SDL_GPU_PRESENTMODE_IMMEDIATE</unmanaged>
+	Immediate = 1,
+	/// <unmanaged>SDL_GPU_PRESENTMODE_MAILBOX</unmanaged>
+	Mailbox = 2,
+}
+
+public enum SDL_GPUSwapchainComposition
+{
+	/// <unmanaged>SDL_GPU_SWAPCHAINCOMPOSITION_SDR</unmanaged>
+	SDR = 0,
+	/// <unmanaged>SDL_GPU_SWAPCHAINCOMPOSITION_SDR_LINEAR</unmanaged>
+	SDRLinear = 1,
+	/// <unmanaged>SDL_GPU_SWAPCHAINCOMPOSITION_HDR_EXTENDED_LINEAR</unmanaged>
+	HDRExtendedLinear = 2,
+	/// <unmanaged>SDL_GPU_SWAPCHAINCOMPOSITION_HDR10_ST2048</unmanaged>
+	Hdr10St2048 = 3,
+}
+
+public enum SDL_GPUDriver
+{
+	/// <unmanaged>SDL_GPU_DRIVER_INVALID</unmanaged>
+	Invalid = -1,
+	/// <unmanaged>SDL_GPU_DRIVER_PRIVATE</unmanaged>
+	Private = 0,
+	/// <unmanaged>SDL_GPU_DRIVER_VULKAN</unmanaged>
+	Vulkan = 1,
+	/// <unmanaged>SDL_GPU_DRIVER_D3D11</unmanaged>
+	D3D11 = 2,
+	/// <unmanaged>SDL_GPU_DRIVER_D3D12</unmanaged>
+	D3D12 = 3,
+	/// <unmanaged>SDL_GPU_DRIVER_METAL</unmanaged>
+	Metal = 4,
 }
 

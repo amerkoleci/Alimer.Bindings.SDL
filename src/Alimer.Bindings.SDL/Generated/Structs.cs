@@ -20,6 +20,11 @@ public partial struct SDL_AtomicInt
 	public int value;
 }
 
+public partial struct SDL_AtomicU32
+{
+	public uint value;
+}
+
 public partial struct SDL_AudioSpec
 {
 	public SDL_AudioFormat format;
@@ -89,8 +94,8 @@ public partial struct SDL_KeyboardEvent
 	public SDL_Keycode key;
 	public SDL_Keymod mod;
 	public ushort raw;
-	public byte state;
-	public byte repeat;
+	public bool down;
+	public bool repeat;
 }
 
 public partial struct SDL_TextEditingEvent
@@ -113,7 +118,10 @@ public partial struct SDL_TextEditingCandidatesEvent
 	public unsafe byte** candidates;
 	public int num_candidates;
 	public int selected_candidate;
-	public SDL_bool horizontal;
+	public bool horizontal;
+	public byte padding1;
+	public byte padding2;
+	public byte padding3;
 }
 
 public partial struct SDL_TextInputEvent
@@ -155,7 +163,7 @@ public partial struct SDL_MouseButtonEvent
 	public SDL_WindowID windowID;
 	public SDL_MouseID which;
 	public byte button;
-	public byte state;
+	public bool down;
 	public byte clicks;
 	public byte padding;
 	public float x;
@@ -223,7 +231,7 @@ public partial struct SDL_JoyButtonEvent
 	public ulong timestamp;
 	public SDL_JoystickID which;
 	public byte button;
-	public byte state;
+	public bool down;
 	public byte padding1;
 	public byte padding2;
 }
@@ -267,7 +275,7 @@ public partial struct SDL_GamepadButtonEvent
 	public ulong timestamp;
 	public SDL_JoystickID which;
 	public byte button;
-	public byte state;
+	public bool down;
 	public byte padding1;
 	public byte padding2;
 }
@@ -310,7 +318,7 @@ public partial struct SDL_AudioDeviceEvent
 	public uint reserved;
 	public ulong timestamp;
 	public SDL_AudioDeviceID which;
-	public byte recording;
+	public bool recording;
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;
@@ -370,8 +378,8 @@ public partial struct SDL_PenTouchEvent
 	public SDL_PenInputFlags pen_state;
 	public float x;
 	public float y;
-	public byte eraser;
-	public byte state;
+	public bool eraser;
+	public bool down;
 }
 
 public partial struct SDL_PenButtonEvent
@@ -385,7 +393,7 @@ public partial struct SDL_PenButtonEvent
 	public float x;
 	public float y;
 	public byte button;
-	public byte state;
+	public bool down;
 }
 
 public partial struct SDL_PenAxisEvent
@@ -724,11 +732,13 @@ public partial struct SDL_hid_device_info
 
 public partial struct SDL_IOStreamInterface
 {
+	public uint version;
 	public unsafe delegate* unmanaged<nint, long> size;
 	public unsafe delegate* unmanaged<nint, long, SDL_IOWhence, long> seek;
 	public unsafe delegate* unmanaged<nint, nint, nuint, SDL_IOStatus*, nuint> read;
 	public unsafe delegate* unmanaged<nint, nint, nuint, SDL_IOStatus*, nuint> write;
-	public unsafe delegate* unmanaged<nint, SDL_bool> close;
+	public unsafe delegate* unmanaged<nint, SDL_IOStatus*, bool> flush;
+	public unsafe delegate* unmanaged<nint, bool> close;
 }
 
 public partial struct SDL_VirtualJoystickTouchpadDesc
@@ -745,6 +755,7 @@ public partial struct SDL_VirtualJoystickSensorDesc
 
 public partial struct SDL_VirtualJoystickDesc
 {
+	public uint version;
 	public ushort type;
 	public ushort padding;
 	public ushort vendor_id;
@@ -764,11 +775,11 @@ public partial struct SDL_VirtualJoystickDesc
 	public nint userdata;
 	public unsafe delegate* unmanaged<nint, void> Update;
 	public unsafe delegate* unmanaged<nint, int, void> SetPlayerIndex;
-	public unsafe delegate* unmanaged<nint, ushort, ushort, SDL_bool> Rumble;
-	public unsafe delegate* unmanaged<nint, ushort, ushort, SDL_bool> RumbleTriggers;
-	public unsafe delegate* unmanaged<nint, byte, byte, byte, SDL_bool> SetLED;
-	public unsafe delegate* unmanaged<nint, nint, int, SDL_bool> SendEffect;
-	public unsafe delegate* unmanaged<nint, SDL_bool, SDL_bool> SetSensorsEnabled;
+	public unsafe delegate* unmanaged<nint, ushort, ushort, bool> Rumble;
+	public unsafe delegate* unmanaged<nint, ushort, ushort, bool> RumbleTriggers;
+	public unsafe delegate* unmanaged<nint, byte, byte, byte, bool> SetLED;
+	public unsafe delegate* unmanaged<nint, nint, int, bool> SendEffect;
+	public unsafe delegate* unmanaged<nint, bool, bool> SetSensorsEnabled;
 	public unsafe delegate* unmanaged<nint, void> Cleanup;
 }
 
@@ -832,6 +843,13 @@ public partial struct SDL_MessageBoxData
 	public int numbuttons;
 	public unsafe SDL_MessageBoxButtonData* buttons;
 	public unsafe SDL_MessageBoxColorScheme* colorScheme;
+}
+
+public partial struct SDL_InitState
+{
+	public SDL_AtomicInt status;
+	public SDL_ThreadID thread;
+	public nint reserved;
 }
 
 public partial struct SDL_Color
@@ -913,18 +931,25 @@ public partial struct SDL_Vertex
 	public PointF tex_coord;
 }
 
+public partial struct SDL_alignment_test
+{
+	public byte a;
+	public nint b;
+}
+
 public partial struct SDL_StorageInterface
 {
-	public unsafe delegate* unmanaged<nint, SDL_bool> close;
-	public unsafe delegate* unmanaged<nint, SDL_bool> ready;
-	public unsafe delegate* unmanaged<nint, byte*, delegate* unmanaged<nint, byte*, byte*, int>*, nint, SDL_bool> enumerate;
-	public unsafe delegate* unmanaged<nint, byte*, SDL_PathInfo*, SDL_bool> info;
-	public unsafe delegate* unmanaged<nint, byte*, nint, ulong, SDL_bool> read_file;
-	public unsafe delegate* unmanaged<nint, byte*, nint, ulong, SDL_bool> write_file;
-	public unsafe delegate* unmanaged<nint, byte*, SDL_bool> mkdir;
-	public unsafe delegate* unmanaged<nint, byte*, SDL_bool> remove;
-	public unsafe delegate* unmanaged<nint, byte*, byte*, SDL_bool> rename;
-	public unsafe delegate* unmanaged<nint, byte*, byte*, SDL_bool> copy;
+	public uint version;
+	public unsafe delegate* unmanaged<nint, bool> close;
+	public unsafe delegate* unmanaged<nint, bool> ready;
+	public unsafe delegate* unmanaged<nint, byte*, delegate* unmanaged<nint, byte*, byte*, int>*, nint, bool> enumerate;
+	public unsafe delegate* unmanaged<nint, byte*, SDL_PathInfo*, bool> info;
+	public unsafe delegate* unmanaged<nint, byte*, nint, ulong, bool> read_file;
+	public unsafe delegate* unmanaged<nint, byte*, nint, ulong, bool> write_file;
+	public unsafe delegate* unmanaged<nint, byte*, bool> mkdir;
+	public unsafe delegate* unmanaged<nint, byte*, bool> remove;
+	public unsafe delegate* unmanaged<nint, byte*, byte*, bool> rename;
+	public unsafe delegate* unmanaged<nint, byte*, byte*, bool> copy;
 	public unsafe delegate* unmanaged<nint, ulong> space_remaining;
 }
 
@@ -974,40 +999,34 @@ public partial struct SDL_DisplayMode
 	public SDL_DisplayModeData @internal;
 }
 
-public partial struct SDL_GPUDepthStencilValue
-{
-	public float depth;
-	public byte stencil;
-}
-
 public partial struct SDL_GPUViewport
 {
 	public float x;
 	public float y;
 	public float w;
 	public float h;
-	public float minDepth;
-	public float maxDepth;
+	public float min_depth;
+	public float max_depth;
 }
 
 public partial struct SDL_GPUTextureTransferInfo
 {
-	public SDL_GPUTransferBuffer transferBuffer;
+	public SDL_GPUTransferBuffer transfer_buffer;
 	public uint offset;
-	public uint imagePitch;
-	public uint imageHeight;
+	public uint pixels_per_row;
+	public uint rows_per_layer;
 }
 
 public partial struct SDL_GPUTransferBufferLocation
 {
-	public SDL_GPUTransferBuffer transferBuffer;
+	public SDL_GPUTransferBuffer transfer_buffer;
 	public uint offset;
 }
 
 public partial struct SDL_GPUTextureLocation
 {
 	public SDL_GPUTexture texture;
-	public uint mipLevel;
+	public uint mip_level;
 	public uint layer;
 	public uint x;
 	public uint y;
@@ -1017,7 +1036,7 @@ public partial struct SDL_GPUTextureLocation
 public partial struct SDL_GPUTextureRegion
 {
 	public SDL_GPUTexture texture;
-	public uint mipLevel;
+	public uint mip_level;
 	public uint layer;
 	public uint x;
 	public uint y;
@@ -1030,8 +1049,8 @@ public partial struct SDL_GPUTextureRegion
 public partial struct SDL_GPUBlitRegion
 {
 	public SDL_GPUTexture texture;
-	public uint mipLevel;
-	public uint layerOrDepthPlane;
+	public uint mip_level;
+	public uint layer_or_depth_plane;
 	public uint x;
 	public uint y;
 	public uint w;
@@ -1053,101 +1072,106 @@ public partial struct SDL_GPUBufferRegion
 
 public partial struct SDL_GPUIndirectDrawCommand
 {
-	public uint vertexCount;
-	public uint instanceCount;
-	public uint firstVertex;
-	public uint firstInstance;
+	public uint num_vertices;
+	public uint num_instances;
+	public uint first_vertex;
+	public uint first_instance;
 }
 
 public partial struct SDL_GPUIndexedIndirectDrawCommand
 {
-	public uint indexCount;
-	public uint instanceCount;
-	public uint firstIndex;
-	public int vertexOffset;
-	public uint firstInstance;
+	public uint num_indices;
+	public uint num_instances;
+	public uint first_index;
+	public int vertex_offset;
+	public uint first_instance;
 }
 
 public partial struct SDL_GPUIndirectDispatchCommand
 {
-	public uint groupCountX;
-	public uint groupCountY;
-	public uint groupCountZ;
+	public uint groupcount_x;
+	public uint groupcount_y;
+	public uint groupcount_z;
 }
 
 public partial struct SDL_GPUSamplerCreateInfo
 {
-	public SDL_GPUFilter minFilter;
-	public SDL_GPUFilter magFilter;
-	public SDL_GPUSamplerMipmapMode mipmapMode;
-	public SDL_GPUSamplerAddressMode addressModeU;
-	public SDL_GPUSamplerAddressMode addressModeV;
-	public SDL_GPUSamplerAddressMode addressModeW;
-	public float mipLodBias;
-	public SDL_bool anisotropyEnable;
-	public float maxAnisotropy;
-	public SDL_bool compareEnable;
-	public SDL_GPUCompareOp compareOp;
-	public float minLod;
-	public float maxLod;
+	public SDL_GPUFilter min_filter;
+	public SDL_GPUFilter mag_filter;
+	public SDL_GPUSamplerMipmapMode mipmap_mode;
+	public SDL_GPUSamplerAddressMode address_mode_u;
+	public SDL_GPUSamplerAddressMode address_mode_v;
+	public SDL_GPUSamplerAddressMode address_mode_w;
+	public float mip_lod_bias;
+	public float max_anisotropy;
+	public SDL_GPUCompareOp compare_op;
+	public float min_lod;
+	public float max_lod;
+	public bool enable_anisotropy;
+	public bool enable_compare;
+	public byte padding1;
+	public byte padding2;
 	public SDL_PropertiesID props;
 }
 
-public partial struct SDL_GPUVertexBinding
+public partial struct SDL_GPUVertexBufferDescription
 {
-	public uint binding;
-	public uint stride;
-	public SDL_GPUVertexInputRate inputRate;
-	public uint instanceStepRate;
+	public uint slot;
+	public uint pitch;
+	public SDL_GPUVertexInputRate input_rate;
+	public uint instance_step_rate;
 }
 
 public partial struct SDL_GPUVertexAttribute
 {
 	public uint location;
-	public uint binding;
+	public uint buffer_slot;
 	public SDL_GPUVertexElementFormat format;
 	public uint offset;
 }
 
 public partial struct SDL_GPUVertexInputState
 {
-	public unsafe SDL_GPUVertexBinding* vertexBindings;
-	public uint vertexBindingCount;
-	public unsafe SDL_GPUVertexAttribute* vertexAttributes;
-	public uint vertexAttributeCount;
+	public unsafe SDL_GPUVertexBufferDescription* vertex_buffer_descriptions;
+	public uint num_vertex_buffers;
+	public unsafe SDL_GPUVertexAttribute* vertex_attributes;
+	public uint num_vertex_attributes;
 }
 
 public partial struct SDL_GPUStencilOpState
 {
-	public SDL_GPUStencilOp failOp;
-	public SDL_GPUStencilOp passOp;
-	public SDL_GPUStencilOp depthFailOp;
-	public SDL_GPUCompareOp compareOp;
+	public SDL_GPUStencilOp fail_op;
+	public SDL_GPUStencilOp pass_op;
+	public SDL_GPUStencilOp depth_fail_op;
+	public SDL_GPUCompareOp compare_op;
 }
 
-public partial struct SDL_GPUColorAttachmentBlendState
+public partial struct SDL_GPUColorTargetBlendState
 {
-	public SDL_bool blendEnable;
-	public SDL_GPUBlendFactor srcColorBlendFactor;
-	public SDL_GPUBlendFactor dstColorBlendFactor;
-	public SDL_GPUBlendOp colorBlendOp;
-	public SDL_GPUBlendFactor srcAlphaBlendFactor;
-	public SDL_GPUBlendFactor dstAlphaBlendFactor;
-	public SDL_GPUBlendOp alphaBlendOp;
-	public SDL_GPUColorComponentFlags colorWriteMask;
+	public SDL_GPUBlendFactor src_color_blendfactor;
+	public SDL_GPUBlendFactor dst_color_blendfactor;
+	public SDL_GPUBlendOp color_blend_op;
+	public SDL_GPUBlendFactor src_alpha_blendfactor;
+	public SDL_GPUBlendFactor dst_alpha_blendfactor;
+	public SDL_GPUBlendOp alpha_blend_op;
+	public SDL_GPUColorComponentFlags color_write_mask;
+	public bool enable_blend;
+	public bool enable_color_write_mask;
+	public byte padding2;
+	public byte padding3;
 }
 
 public partial struct SDL_GPUShaderCreateInfo
 {
-	public nuint codeSize;
+	public nuint code_size;
 	public unsafe byte* code;
-	public unsafe byte* entryPointName;
+	public unsafe byte* entrypoint;
 	public SDL_GPUShaderFormat format;
 	public SDL_GPUShaderStage stage;
-	public uint samplerCount;
-	public uint storageTextureCount;
-	public uint storageBufferCount;
-	public uint uniformBufferCount;
+	public uint num_samplers;
+	public uint num_storage_textures;
+	public uint num_storage_buffers;
+	public uint num_uniform_buffers;
 	public SDL_PropertiesID props;
 }
 
@@ -1155,124 +1179,159 @@ public partial struct SDL_GPUTextureCreateInfo
 {
 	public SDL_GPUTextureType type;
 	public SDL_GPUTextureFormat format;
-	public SDL_GPUTextureUsageFlags usageFlags;
+	public SDL_GPUTextureUsageFlags usage;
 	public uint width;
 	public uint height;
-	public uint layerCountOrDepth;
-	public uint levelCount;
-	public SDL_GPUSampleCount sampleCount;
+	public uint layer_count_or_depth;
+	public uint num_levels;
+	public SDL_GPUSampleCount sample_count;
 	public SDL_PropertiesID props;
 }
 
 public partial struct SDL_GPUBufferCreateInfo
 {
-	public SDL_GPUBufferUsageFlags usageFlags;
-	public uint sizeInBytes;
+	public SDL_GPUBufferUsageFlags usage;
+	public uint size;
 	public SDL_PropertiesID props;
 }
 
 public partial struct SDL_GPUTransferBufferCreateInfo
 {
 	public SDL_GPUTransferBufferUsage usage;
-	public uint sizeInBytes;
+	public uint size;
 	public SDL_PropertiesID props;
 }
 
 public partial struct SDL_GPURasterizerState
 {
-	public SDL_GPUFillMode fillMode;
-	public SDL_GPUCullMode cullMode;
-	public SDL_GPUFrontFace frontFace;
-	public SDL_bool depthBiasEnable;
-	public float depthBiasConstantFactor;
-	public float depthBiasClamp;
-	public float depthBiasSlopeFactor;
+	public SDL_GPUFillMode fill_mode;
+	public SDL_GPUCullMode cull_mode;
+	public SDL_GPUFrontFace front_face;
+	public float depth_bias_constant_factor;
+	public float depth_bias_clamp;
+	public float depth_bias_slope_factor;
+	public bool enable_depth_bias;
+	public byte padding1;
+	public byte padding2;
+	public byte padding3;
 }
 
 public partial struct SDL_GPUMultisampleState
 {
-	public SDL_GPUSampleCount sampleCount;
-	public uint sampleMask;
+	public SDL_GPUSampleCount sample_count;
+	public uint sample_mask;
+	public bool enable_mask;
+	public byte padding1;
+	public byte padding2;
+	public byte padding3;
 }
 
 public partial struct SDL_GPUDepthStencilState
 {
-	public SDL_bool depthTestEnable;
-	public SDL_bool depthWriteEnable;
-	public SDL_GPUCompareOp compareOp;
-	public SDL_bool stencilTestEnable;
-	public SDL_GPUStencilOpState backStencilState;
-	public SDL_GPUStencilOpState frontStencilState;
-	public byte compareMask;
-	public byte writeMask;
-	public byte reference;
+	public SDL_GPUCompareOp compare_op;
+	public SDL_GPUStencilOpState back_stencil_state;
+	public SDL_GPUStencilOpState front_stencil_state;
+	public byte compare_mask;
+	public byte write_mask;
+	public bool enable_depth_test;
+	public bool enable_depth_write;
+	public bool enable_stencil_test;
+	public byte padding1;
+	public byte padding2;
+	public byte padding3;
 }
 
-public partial struct SDL_GPUColorAttachmentDescription
+public partial struct SDL_GPUColorTargetDescription
 {
 	public SDL_GPUTextureFormat format;
-	public SDL_GPUColorAttachmentBlendState blendState;
+	public SDL_GPUColorTargetBlendState blend_state;
 }
 
-public partial struct SDL_GPUGraphicsPipelineAttachmentInfo
+public partial struct SDL_GPUGraphicsPipelineTargetInfo
 {
-	public unsafe SDL_GPUColorAttachmentDescription* colorAttachmentDescriptions;
-	public uint colorAttachmentCount;
-	public SDL_bool hasDepthStencilAttachment;
-	public SDL_GPUTextureFormat depthStencilFormat;
+	public unsafe SDL_GPUColorTargetDescription* color_target_descriptions;
+	public uint num_color_targets;
+	public SDL_GPUTextureFormat depth_stencil_format;
+	public bool has_depth_stencil_target;
+	public byte padding1;
+	public byte padding2;
+	public byte padding3;
 }
 
 public partial struct SDL_GPUGraphicsPipelineCreateInfo
 {
-	public SDL_GPUShader vertexShader;
-	public SDL_GPUShader fragmentShader;
-	public SDL_GPUVertexInputState vertexInputState;
-	public SDL_GPUPrimitiveType primitiveType;
-	public SDL_GPURasterizerState rasterizerState;
-	public SDL_GPUMultisampleState multisampleState;
-	public SDL_GPUDepthStencilState depthStencilState;
-	public SDL_GPUGraphicsPipelineAttachmentInfo attachmentInfo;
-	public unsafe fixed float blendConstants[4];
+	public SDL_GPUShader vertex_shader;
+	public SDL_GPUShader fragment_shader;
+	public SDL_GPUVertexInputState vertex_input_state;
+	public SDL_GPUPrimitiveType primitive_type;
+	public SDL_GPURasterizerState rasterizer_state;
+	public SDL_GPUMultisampleState multisample_state;
+	public SDL_GPUDepthStencilState depth_stencil_state;
+	public SDL_GPUGraphicsPipelineTargetInfo target_info;
 	public SDL_PropertiesID props;
 }
 
 public partial struct SDL_GPUComputePipelineCreateInfo
 {
-	public nuint codeSize;
+	public nuint code_size;
 	public unsafe byte* code;
-	public unsafe byte* entryPointName;
+	public unsafe byte* entrypoint;
 	public SDL_GPUShaderFormat format;
-	public uint readOnlyStorageTextureCount;
-	public uint readOnlyStorageBufferCount;
-	public uint writeOnlyStorageTextureCount;
-	public uint writeOnlyStorageBufferCount;
-	public uint uniformBufferCount;
-	public uint threadCountX;
-	public uint threadCountY;
-	public uint threadCountZ;
+	public uint num_samplers;
+	public uint num_readonly_storage_textures;
+	public uint num_readonly_storage_buffers;
+	public uint num_writeonly_storage_textures;
+	public uint num_writeonly_storage_buffers;
+	public uint num_uniform_buffers;
+	public uint threadcount_x;
+	public uint threadcount_y;
+	public uint threadcount_z;
 	public SDL_PropertiesID props;
 }
 
-public partial struct SDL_GPUColorAttachmentInfo
+public partial struct SDL_GPUColorTargetInfo
 {
 	public SDL_GPUTexture texture;
-	public uint mipLevel;
-	public uint layerOrDepthPlane;
-	public SDL_FColor clearColor;
-	public SDL_GPULoadOp loadOp;
-	public SDL_GPUStoreOp storeOp;
-	public SDL_bool cycle;
+	public uint mip_level;
+	public uint layer_or_depth_plane;
+	public SDL_FColor clear_color;
+	public SDL_GPULoadOp load_op;
+	public SDL_GPUStoreOp store_op;
+	public SDL_GPUTexture resolve_texture;
+	public uint resolve_mip_level;
+	public uint resolve_layer;
+	public bool cycle;
+	public bool cycle_resolve_texture;
+	public byte padding1;
+	public byte padding2;
 }
 
-public partial struct SDL_GPUDepthStencilAttachmentInfo
+public partial struct SDL_GPUDepthStencilTargetInfo
 {
 	public SDL_GPUTexture texture;
-	public SDL_GPUDepthStencilValue depthStencilClearValue;
-	public SDL_GPULoadOp loadOp;
-	public SDL_GPUStoreOp storeOp;
-	public SDL_GPULoadOp stencilLoadOp;
-	public SDL_GPUStoreOp stencilStoreOp;
-	public SDL_bool cycle;
+	public float clear_depth;
+	public SDL_GPULoadOp load_op;
+	public SDL_GPUStoreOp store_op;
+	public SDL_GPULoadOp stencil_load_op;
+	public SDL_GPUStoreOp stencil_store_op;
+	public bool cycle;
+	public byte clear_stencil;
+	public byte padding1;
+	public byte padding2;
+}
+
+public partial struct SDL_GPUBlitInfo
+{
+	public SDL_GPUBlitRegion source;
+	public SDL_GPUBlitRegion destination;
+	public SDL_GPULoadOp load_op;
+	public SDL_FColor clear_color;
+	public SDL_FlipMode flip_mode;
+	public SDL_GPUFilter filter;
+	public bool cycle;
+	public byte padding1;
+	public byte padding2;
+	public byte padding3;
 }
 
 public partial struct SDL_GPUBufferBinding
@@ -1290,14 +1349,20 @@ public partial struct SDL_GPUTextureSamplerBinding
 public partial struct SDL_GPUStorageBufferWriteOnlyBinding
 {
 	public SDL_GPUBuffer buffer;
-	public SDL_bool cycle;
+	public bool cycle;
+	public byte padding1;
+	public byte padding2;
+	public byte padding3;
 }
 
 public partial struct SDL_GPUStorageTextureWriteOnlyBinding
 {
 	public SDL_GPUTexture texture;
-	public uint mipLevel;
+	public uint mip_level;
 	public uint layer;
-	public SDL_bool cycle;
+	public bool cycle;
+	public byte padding1;
+	public byte padding2;
+	public byte padding3;
 }
 

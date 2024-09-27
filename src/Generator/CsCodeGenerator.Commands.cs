@@ -145,7 +145,7 @@ partial class CsCodeGenerator
         bool freeReturnString = false;
 
         writer.WriteLine($"[LibraryImport(LibName, EntryPoint = \"{cppFunction.Name}\")]");
-        if (returnCsName == "SDL_bool")
+        if (returnCsName == "SDL_bool" || returnCsName == "bool")
         {
             writer.WriteLine($"[return: MarshalAs(UnmanagedType.{_options.BooleanMarshalType})]");
             returnCsName = "bool";
@@ -296,7 +296,7 @@ partial class CsCodeGenerator
                 }
             }
 
-            if (paramCsTypeName == "SDL_bool")
+            if (paramCsTypeName == "SDL_bool" || paramCsTypeName == "bool")
             {
                 argumentBuilder.Append($"[MarshalAs(UnmanagedType.{_options.BooleanMarshalType})] ");
                 paramCsTypeName = "bool";

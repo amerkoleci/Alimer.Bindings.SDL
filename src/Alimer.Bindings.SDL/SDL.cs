@@ -159,10 +159,6 @@ public static unsafe partial class SDL3
     //[NativeTypeName("#define SDL_SIZE_MAX SIZE_MAX")]
     public const ulong SDL_SIZE_MAX = 0xffffffffffffffffUL;
 
-    public const SDL_AudioFormat SDL_AUDIO_S16 = SDL_AudioFormat.S16le;
-    public const SDL_AudioFormat SDL_AUDIO_S32 = SDL_AudioFormat.S32le;
-    public const SDL_AudioFormat SDL_AUDIO_F32 = SDL_AudioFormat.F32le;
-
     public static uint SDL_FOURCC(byte A, byte B, byte C, byte D)
     {
         return (uint)(A | (B << 8) | (C << 16) | (D << 24));

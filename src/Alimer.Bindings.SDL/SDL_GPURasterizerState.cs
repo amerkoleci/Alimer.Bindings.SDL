@@ -34,12 +34,12 @@ partial struct SDL_GPURasterizerState
         float depthBiasClamp = 0.0f,
         float depthBiasSlopeFactor = 0.0f)
     {
-        this.fillMode = fillMode;
-        this.cullMode = cullMode;
-        this.frontFace = frontFace;
-        this.depthBiasEnable = depthBiasEnable ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE;
-        this.depthBiasConstantFactor = depthBiasConstantFactor;
-        this.depthBiasClamp = depthBiasClamp;
-        this.depthBiasSlopeFactor = depthBiasSlopeFactor;
+        this.fill_mode = fillMode;
+        this.cull_mode = cullMode;
+        this.front_face = frontFace;
+        this.enable_depth_bias = depthBiasEnable;
+        this.depth_bias_constant_factor = depthBiasConstantFactor;
+        this.depth_bias_clamp = depthBiasClamp;
+        this.depth_bias_slope_factor = depthBiasSlopeFactor;
     }
 }

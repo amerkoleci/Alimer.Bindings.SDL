@@ -66,9 +66,10 @@ partial class CsCodeGenerator
         "main",
         "SDL_size_mul_check_overflow",
         "SDL_size_add_check_overflow",
+        "SDL_INIT_INTERFACE",
     };
 
-    private static readonly List<CppMacro> _collectedMacros = new();
+    private readonly List<CppMacro> _collectedMacros = [];
 
     private void CollectConstants(CppCompilation compilation)
     {

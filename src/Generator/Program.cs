@@ -37,7 +37,7 @@ public static class Program
             Namespace = "SDL3",
             PublicVisiblity = true,
             EnumWriteUnmanagedTag = true,
-            BooleanMarshalType = "I1",
+            BooleanMarshalType = "U1",
         };
 
         string sdlIncludePath = Path.Combine(AppContext.BaseDirectory, "include");
@@ -95,6 +95,7 @@ public static class Program
             Path.Combine(sdlIncludePath, "SDL3/SDL_system.h"),
             Path.Combine(sdlIncludePath, "SDL3/SDL_gpu.h"),
             Path.Combine(sdlIncludePath, "SDL3/SDL_main.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_process.h"),
         ];
 
         var options = new CppParserOptions

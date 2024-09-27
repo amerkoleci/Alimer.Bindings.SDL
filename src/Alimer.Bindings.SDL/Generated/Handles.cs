@@ -52,7 +52,6 @@ public enum SDL_HapticID : uint
 [Flags]
 public enum SDL_InitFlags : uint
 {
-	Timer = SDL3.SDL_INIT_TIMER,
 	Audio = SDL3.SDL_INIT_AUDIO,
 	Video = SDL3.SDL_INIT_VIDEO,
 	Joystick = SDL3.SDL_INIT_JOYSTICK,
@@ -442,6 +441,7 @@ public enum SDL_GPUBufferUsageFlags : uint
 [Flags]
 public enum SDL_GPUShaderFormat : uint
 {
+	Invalid = SDL3.SDL_GPU_SHADERFORMAT_INVALID,
 	Private = SDL3.SDL_GPU_SHADERFORMAT_PRIVATE,
 	Spirv = SDL3.SDL_GPU_SHADERFORMAT_SPIRV,
 	Dxbc = SDL3.SDL_GPU_SHADERFORMAT_DXBC,
@@ -773,6 +773,27 @@ public readonly partial struct SDL_Sensor(nint value) : IEquatable<SDL_Sensor>
 	/// <inheritdoc/>
 	public override int GetHashCode() => Value.GetHashCode();
 	private string DebuggerDisplay => $"{nameof(SDL_Sensor)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_Environment(nint value) : IEquatable<SDL_Environment>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_Environment Null => new(0);
+	public static implicit operator nint(SDL_Environment value) => value.Value;
+	public static implicit operator SDL_Environment(nint value) => new(value);
+	public static bool operator ==(SDL_Environment left, SDL_Environment right) => left.Value == right.Value;
+	public static bool operator !=(SDL_Environment left, SDL_Environment right) => left.Value != right.Value;
+	public static bool operator ==(SDL_Environment left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_Environment left, nint right) => left.Value != right;
+	public bool Equals(SDL_Environment other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_Environment other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_Environment)} [0x{Value.ToString("X")}]";
 }
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
@@ -1235,5 +1256,26 @@ public readonly partial struct SDL_GPUFence(nint value) : IEquatable<SDL_GPUFenc
 	/// <inheritdoc/>
 	public override int GetHashCode() => Value.GetHashCode();
 	private string DebuggerDisplay => $"{nameof(SDL_GPUFence)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_Process(nint value) : IEquatable<SDL_Process>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_Process Null => new(0);
+	public static implicit operator nint(SDL_Process value) => value.Value;
+	public static implicit operator SDL_Process(nint value) => new(value);
+	public static bool operator ==(SDL_Process left, SDL_Process right) => left.Value == right.Value;
+	public static bool operator !=(SDL_Process left, SDL_Process right) => left.Value != right.Value;
+	public static bool operator ==(SDL_Process left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_Process left, nint right) => left.Value != right;
+	public bool Equals(SDL_Process other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_Process other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_Process)} [0x{Value.ToString("X")}]";
 }
 

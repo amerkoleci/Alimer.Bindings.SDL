@@ -7,13 +7,13 @@ partial struct SDL_GPUVertexAttribute
 {
     public SDL_GPUVertexAttribute(
         uint location,
-        uint binding,
+        uint bufferSlot,
         SDL_GPUVertexElementFormat format,
         uint offset
         )
     {
         this.location = location;
-        this.binding = binding;
+        this.buffer_slot = bufferSlot;
         this.format = format;
         this.offset = offset;
     }

@@ -3,17 +3,17 @@
 
 namespace SDL3;
 
-partial struct SDL_GPUVertexBinding
+partial struct SDL_GPUVertexBufferDescription
 {
-    public SDL_GPUVertexBinding(
-        uint binding,
-        uint stride,
+    public SDL_GPUVertexBufferDescription(
+        uint slot,
+        uint pitch,
         SDL_GPUVertexInputRate inputRate = SDL_GPUVertexInputRate.Vertex,
         uint instanceStepRate = 0)
     {
-        this.binding = binding;
-        this.stride = stride;
-        this.inputRate = inputRate;
-        this.instanceStepRate = instanceStepRate;
+        this.slot = slot;
+        this.pitch = pitch;
+        this.input_rate = inputRate;
+        this.instance_step_rate = instanceStepRate;
     }
 }

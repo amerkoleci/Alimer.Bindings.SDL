@@ -16,9 +16,9 @@ partial struct SDL_GPUStencilOpState
         SDL_GPUStencilOp depthFailOp = SDL_GPUStencilOp.Keep,
         SDL_GPUCompareOp compareOp = SDL_GPUCompareOp.Always)
     {
-        this.failOp = failOp;
-        this.passOp = passOp;
-        this.depthFailOp = depthFailOp;
-        this.compareOp = compareOp;
+        this.fail_op = failOp;
+        this.pass_op = passOp;
+        this.depth_fail_op = depthFailOp;
+        this.compare_op = compareOp;
     }
 }

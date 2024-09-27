@@ -8,9 +8,9 @@ partial struct SDL_GPUMultisampleState
     /// <summary>
     /// Initializes a new instance of the <see cref="SDL_GPUMultisampleState"/> structure.
     /// </summary>
-    public SDL_GPUMultisampleState(SDL_GPUSampleCount sampleCount, uint sampleMask)
+    public SDL_GPUMultisampleState(SDL_GPUSampleCount sampleCount, uint sampleMask = uint.MaxValue)
     {
-        this.sampleCount = sampleCount;
-        this.sampleMask = sampleMask;
+        this.sample_count = sampleCount;
+        this.sample_mask = sampleMask;
     }
 }

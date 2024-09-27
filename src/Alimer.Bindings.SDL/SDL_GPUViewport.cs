@@ -20,8 +20,8 @@ partial struct SDL_GPUViewport : IEquatable<SDL_GPUViewport>
         y = 0.0f;
         this.w = width;
         this.h = height;
-        minDepth = 0.0f;
-        maxDepth = 1.0f;
+        min_depth = 0.0f;
+        max_depth = 1.0f;
     }
 
     /// <summary>
@@ -37,8 +37,8 @@ partial struct SDL_GPUViewport : IEquatable<SDL_GPUViewport>
         this.y = y;
         this.w = width;
         this.h = height;
-        minDepth = 0.0f;
-        maxDepth = 1.0f;
+        min_depth = 0.0f;
+        max_depth = 1.0f;
     }
 
     /// <summary>
@@ -56,8 +56,8 @@ partial struct SDL_GPUViewport : IEquatable<SDL_GPUViewport>
         this.y = y;
         this.w = width;
         this.h = height;
-        this.minDepth = minDepth;
-        this.maxDepth = maxDepth;
+        this.min_depth = minDepth;
+        this.max_depth = maxDepth;
     }
 
     /// <summary>
@@ -70,8 +70,8 @@ partial struct SDL_GPUViewport : IEquatable<SDL_GPUViewport>
         y = 0.0f;
         w = extent.Width;
         h = extent.Height;
-        minDepth = 0.0f;
-        maxDepth = 1.0f;
+        min_depth = 0.0f;
+        max_depth = 1.0f;
     }
 
 
@@ -85,8 +85,8 @@ partial struct SDL_GPUViewport : IEquatable<SDL_GPUViewport>
         y = bounds.Y;
         w = bounds.Width;
         h = bounds.Height;
-        minDepth = 0.0f;
-        maxDepth = 1.0f;
+        min_depth = 0.0f;
+        max_depth = 1.0f;
     }
 
     /// <summary>
@@ -100,8 +100,8 @@ partial struct SDL_GPUViewport : IEquatable<SDL_GPUViewport>
         w = bounds.Z;
         h = bounds.W;
 
-        minDepth = 0.0f;
-        maxDepth = 1.0f;
+        min_depth = 0.0f;
+        max_depth = 1.0f;
     }
 
     /// <inheritdoc/>
@@ -115,15 +115,15 @@ partial struct SDL_GPUViewport : IEquatable<SDL_GPUViewport>
             y == other.y &&
             w == other.w &&
             h == other.h &&
-            minDepth == other.minDepth &&
-            maxDepth == other.maxDepth;
+            min_depth == other.min_depth &&
+            max_depth == other.max_depth;
     }
 
     /// <inheritdoc/>
-    public override readonly int GetHashCode() => HashCode.Combine(x, y, w, h, minDepth, maxDepth);
+    public override readonly int GetHashCode() => HashCode.Combine(x, y, w, h, min_depth, max_depth);
 
     /// <inheritdoc/>
-    public override readonly string ToString() => $"{{X={x},Y={y},Width={w},Height={h},MinDepth={minDepth},MaxDepth={maxDepth}}}";
+    public override readonly string ToString() => $"{{X={x},Y={y},Width={w},Height={h},MinDepth={min_depth},MaxDepth={max_depth}}}";
 
     /// <summary>
     /// Compares two <see cref="SDL_GPUViewport"/> objects for equality.

@@ -35,15 +35,14 @@ partial struct SDL_GPUDepthStencilState
         bool depthWriteEnable,
         SDL_GPUCompareOp depthCompareOp)
     {
-        this.depthTestEnable = depthTestEnable ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE;
-        this.depthWriteEnable = depthWriteEnable ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE;
-        this.compareOp = depthCompareOp;
-        this.stencilTestEnable = SDL_bool.SDL_FALSE;
-        this.backStencilState = SDL_GPUStencilOpState.Default;
-        this.frontStencilState = SDL_GPUStencilOpState.Default;
-        this.compareMask = byte.MaxValue;
-        this.writeMask = byte.MaxValue;
-        this.reference = 0;
+        this.enable_depth_test = depthTestEnable;
+        this.enable_depth_write = depthWriteEnable;
+        this.compare_op = depthCompareOp;
+        this.enable_stencil_test = false;
+        this.back_stencil_state = SDL_GPUStencilOpState.Default;
+        this.front_stencil_state = SDL_GPUStencilOpState.Default;
+        this.compare_mask = byte.MaxValue;
+        this.write_mask = byte.MaxValue;
     }
 
     public SDL_GPUDepthStencilState(
@@ -54,17 +53,15 @@ partial struct SDL_GPUDepthStencilState
         in SDL_GPUStencilOpState backStencilState,
         in SDL_GPUStencilOpState frontStencilState,
         byte compareMask = byte.MaxValue,
-        byte writeMask = byte.MaxValue,
-        byte reference = 0)
+        byte writeMask = byte.MaxValue)
     {
-        this.depthTestEnable = depthTestEnable ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE; ;
-        this.depthWriteEnable = depthWriteEnable ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE;
-        this.compareOp = depthCompareOp;
-        this.stencilTestEnable = stencilTestEnable ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE;
-        this.backStencilState = backStencilState;
-        this.frontStencilState = frontStencilState;
-        this.compareMask = compareMask;
-        this.writeMask = writeMask;
-        this.reference = reference;
+        this.enable_depth_test = depthTestEnable;
+        this.enable_depth_write = depthWriteEnable;
+        this.compare_op = depthCompareOp;
+        this.enable_stencil_test = stencilTestEnable;
+        this.back_stencil_state = backStencilState;
+        this.front_stencil_state = frontStencilState;
+        this.compare_mask = compareMask;
+        this.write_mask = writeMask;
     }
 }

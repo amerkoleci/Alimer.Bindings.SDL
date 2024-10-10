@@ -81,14 +81,14 @@ static unsafe class Utf8CustomMarshaller
         /// <param name="buffer">The request buffer whose size is at least <see cref="P:System.Runtime.InteropServices.Marshalling.Utf8StringMarshaller.ManagedToUnmanagedIn.BufferSize" />.</param>
         public void FromManaged(ReadOnlySpan<char> managed, Span<byte> buffer)
         {
-            this._allocated = false;
-            if (managed == null)
+            _allocated = false;
+            if (managed.IsEmpty)
             {
-                this._unmanagedValue = (byte*)null;
+                _unmanagedValue = (byte*)null;
             }
             else
             {
-                if (3L * (long)managed.Length >= (long)buffer.Length)
+                if (3L * managed.Length >= buffer.Length)
                 {
                     int num = checked(UTF8EncodingRelaxed.Default.GetByteCount(managed) + 1);
                     if (num > buffer.Length)
@@ -98,24 +98,24 @@ static unsafe class Utf8CustomMarshaller
                     }
                 }
 
-                _unmanagedValue = (byte*)Unsafe.AsPointer<byte>(ref MemoryMarshal.GetReference<byte>(buffer));
+                _unmanagedValue = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(buffer));
                 int bytes = UTF8EncodingRelaxed.Default.GetBytes(managed, buffer);
                 Length = bytes;
-                buffer[bytes] = (byte)0;
+                buffer[bytes] = 0;
             }
         }
 
         /// <summary>Converts the current managed string to an unmanaged string.</summary>
         /// <returns>An unmanaged string.</returns>
-        public byte* ToUnmanaged() => this._unmanagedValue;
+        public readonly byte* ToUnmanaged() => _unmanagedValue;
 
         /// <summary>Frees any allocated unmanaged memory.</summary>
-        public void Free()
+        public readonly void Free()
         {
-            if (!this._allocated)
+            if (!_allocated)
                 return;
 
-            NativeMemory.Free((void*)this._unmanagedValue);
+            NativeMemory.Free(_unmanagedValue);
         }
     }
 }

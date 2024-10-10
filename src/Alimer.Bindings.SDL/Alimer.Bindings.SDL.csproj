@@ -4,12 +4,13 @@
     <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
     <Title>Cross platform .NET bindings for SDL3</Title>
     <RootNamespace>SDL</RootNamespace>
+    <WarningsAsErrors>true</WarningsAsErrors>
     <IsPackable>true</IsPackable>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup>
-    <VersionPrefix>3.9.1</VersionPrefix>
+    <VersionPrefix>3.9.2</VersionPrefix>
     <VersionSuffix Condition="'$(VersionSuffix)' == ''"></VersionSuffix>
   </PropertyGroup>
 

@@ -67,6 +67,7 @@ partial class CsCodeGenerator
         "SDL_size_mul_check_overflow",
         "SDL_size_add_check_overflow",
         "SDL_INIT_INTERFACE",
+        "SDL_BUTTON_MASK",
     };
 
     private readonly List<CppMacro> _collectedMacros = [];

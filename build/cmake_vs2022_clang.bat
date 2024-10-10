@@ -7,4 +7,4 @@ echo - C++ Clang Compiler for Windows 12.0.0+
 echo - C++ Clang-cl for v143+ build tools (x64/x86)
 echo Using the Visual Studio Installer
 echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-echo Open vs2022_clang\Alimer.Native.SDL.sln to build the project.
+echo Open vs2022_clang\SDL.sln to build the project.

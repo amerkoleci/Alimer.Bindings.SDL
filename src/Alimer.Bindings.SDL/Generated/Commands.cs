@@ -427,6 +427,9 @@ public unsafe partial class SDL3
 	[return: MarshalAs(UnmanagedType.U1)]
 	public static partial bool SDL_HasClipboardData([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> mime_type);
 
+	[LibraryImport(LibName, EntryPoint = "SDL_GetClipboardMimeTypes")]
+	public static partial byte** SDL_GetClipboardMimeTypes(nuint* num_mime_types);
+
 	[LibraryImport(LibName, EntryPoint = "SDL_GetNumLogicalCPUCores")]
 	public static partial int SDL_GetNumLogicalCPUCores();
 
@@ -663,15 +666,15 @@ public unsafe partial class SDL3
 
 	[LibraryImport(LibName, EntryPoint = "SDL_EnumerateDirectory")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_EnumerateDirectory(byte* path, delegate* unmanaged<nint, byte*, byte*, int> callback, nint userdata);
+	public static partial bool SDL_EnumerateDirectory(byte* path, delegate* unmanaged<nint, byte*, byte*, SDL_EnumerationResult> callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_EnumerateDirectory")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_EnumerateDirectory(ReadOnlySpan<byte> path, delegate* unmanaged<nint, byte*, byte*, int> callback, nint userdata);
+	public static partial bool SDL_EnumerateDirectory(ReadOnlySpan<byte> path, delegate* unmanaged<nint, byte*, byte*, SDL_EnumerationResult> callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_EnumerateDirectory")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_EnumerateDirectory([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> path, delegate* unmanaged<nint, byte*, byte*, int> callback, nint userdata);
+	public static partial bool SDL_EnumerateDirectory([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> path, delegate* unmanaged<nint, byte*, byte*, SDL_EnumerationResult> callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_RemovePath")]
 	[return: MarshalAs(UnmanagedType.U1)]
@@ -1932,25 +1935,25 @@ public unsafe partial class SDL3
 	public static partial bool SDL_ScreenKeyboardShown(SDL_Window window);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadObject")]
-	public static partial nint SDL_LoadObject(byte* sofile);
+	public static partial SDL_SharedObject SDL_LoadObject(byte* sofile);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadObject")]
-	public static partial nint SDL_LoadObject(ReadOnlySpan<byte> sofile);
+	public static partial SDL_SharedObject SDL_LoadObject(ReadOnlySpan<byte> sofile);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadObject")]
-	public static partial nint SDL_LoadObject([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> sofile);
+	public static partial SDL_SharedObject SDL_LoadObject([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> sofile);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadFunction")]
-	public static partial delegate* unmanaged<void>* SDL_LoadFunction(nint handle, byte* name);
+	public static partial delegate* unmanaged<void>* SDL_LoadFunction(SDL_SharedObject handle, byte* name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadFunction")]
-	public static partial delegate* unmanaged<void>* SDL_LoadFunction(nint handle, ReadOnlySpan<byte> name);
+	public static partial delegate* unmanaged<void>* SDL_LoadFunction(SDL_SharedObject handle, ReadOnlySpan<byte> name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LoadFunction")]
-	public static partial delegate* unmanaged<void>* SDL_LoadFunction(nint handle, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name);
+	public static partial delegate* unmanaged<void>* SDL_LoadFunction(SDL_SharedObject handle, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> name);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UnloadObject")]
-	public static partial void SDL_UnloadObject(nint handle);
+	public static partial void SDL_UnloadObject(SDL_SharedObject handle);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetPreferredLocales")]
 	public static partial SDL_Locale** SDL_GetPreferredLocales(out int count);
@@ -2643,101 +2646,101 @@ public unsafe partial class SDL3
 	public static partial bool SDL_GetCurrentRenderOutputSize(SDL_Renderer renderer, out int w, out int h);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateTexture")]
-	public static partial SDL_Texture SDL_CreateTexture(SDL_Renderer renderer, SDL_PixelFormat format, SDL_TextureAccess access, int w, int h);
+	public static partial SDL_Texture* SDL_CreateTexture(SDL_Renderer renderer, SDL_PixelFormat format, SDL_TextureAccess access, int w, int h);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateTextureFromSurface")]
-	public static partial SDL_Texture SDL_CreateTextureFromSurface(SDL_Renderer renderer, SDL_Surface* surface);
+	public static partial SDL_Texture* SDL_CreateTextureFromSurface(SDL_Renderer renderer, SDL_Surface* surface);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_CreateTextureWithProperties")]
-	public static partial SDL_Texture SDL_CreateTextureWithProperties(SDL_Renderer renderer, SDL_PropertiesID props);
+	public static partial SDL_Texture* SDL_CreateTextureWithProperties(SDL_Renderer renderer, SDL_PropertiesID props);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetTextureProperties")]
-	public static partial SDL_PropertiesID SDL_GetTextureProperties(SDL_Texture texture);
+	public static partial SDL_PropertiesID SDL_GetTextureProperties(SDL_Texture* texture);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetRendererFromTexture")]
-	public static partial SDL_Renderer SDL_GetRendererFromTexture(SDL_Texture texture);
+	public static partial SDL_Renderer SDL_GetRendererFromTexture(SDL_Texture* texture);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetTextureSize")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_GetTextureSize(SDL_Texture texture, float* w, float* h);
+	public static partial bool SDL_GetTextureSize(SDL_Texture* texture, float* w, float* h);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetTextureColorMod")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_SetTextureColorMod(SDL_Texture texture, byte r, byte g, byte b);
+	public static partial bool SDL_SetTextureColorMod(SDL_Texture* texture, byte r, byte g, byte b);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetTextureColorModFloat")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_SetTextureColorModFloat(SDL_Texture texture, float r, float g, float b);
+	public static partial bool SDL_SetTextureColorModFloat(SDL_Texture* texture, float r, float g, float b);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetTextureColorMod")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_GetTextureColorMod(SDL_Texture texture, byte* r, byte* g, byte* b);
+	public static partial bool SDL_GetTextureColorMod(SDL_Texture* texture, byte* r, byte* g, byte* b);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetTextureColorModFloat")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_GetTextureColorModFloat(SDL_Texture texture, float* r, float* g, float* b);
+	public static partial bool SDL_GetTextureColorModFloat(SDL_Texture* texture, float* r, float* g, float* b);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetTextureAlphaMod")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_SetTextureAlphaMod(SDL_Texture texture, byte alpha);
+	public static partial bool SDL_SetTextureAlphaMod(SDL_Texture* texture, byte alpha);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetTextureAlphaModFloat")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_SetTextureAlphaModFloat(SDL_Texture texture, float alpha);
+	public static partial bool SDL_SetTextureAlphaModFloat(SDL_Texture* texture, float alpha);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetTextureAlphaMod")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_GetTextureAlphaMod(SDL_Texture texture, byte* alpha);
+	public static partial bool SDL_GetTextureAlphaMod(SDL_Texture* texture, byte* alpha);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetTextureAlphaModFloat")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_GetTextureAlphaModFloat(SDL_Texture texture, float* alpha);
+	public static partial bool SDL_GetTextureAlphaModFloat(SDL_Texture* texture, float* alpha);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetTextureBlendMode")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_SetTextureBlendMode(SDL_Texture texture, SDL_BlendMode blendMode);
+	public static partial bool SDL_SetTextureBlendMode(SDL_Texture* texture, SDL_BlendMode blendMode);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetTextureBlendMode")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_GetTextureBlendMode(SDL_Texture texture, SDL_BlendMode* blendMode);
+	public static partial bool SDL_GetTextureBlendMode(SDL_Texture* texture, SDL_BlendMode* blendMode);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetTextureScaleMode")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_SetTextureScaleMode(SDL_Texture texture, SDL_ScaleMode scaleMode);
+	public static partial bool SDL_SetTextureScaleMode(SDL_Texture* texture, SDL_ScaleMode scaleMode);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetTextureScaleMode")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_GetTextureScaleMode(SDL_Texture texture, SDL_ScaleMode* scaleMode);
+	public static partial bool SDL_GetTextureScaleMode(SDL_Texture* texture, SDL_ScaleMode* scaleMode);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UpdateTexture")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_UpdateTexture(SDL_Texture texture, Rectangle* rect, nint pixels, int pitch);
+	public static partial bool SDL_UpdateTexture(SDL_Texture* texture, Rectangle* rect, nint pixels, int pitch);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UpdateYUVTexture")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_UpdateYUVTexture(SDL_Texture texture, Rectangle* rect, byte* Yplane, int Ypitch, byte* Uplane, int Upitch, byte* Vplane, int Vpitch);
+	public static partial bool SDL_UpdateYUVTexture(SDL_Texture* texture, Rectangle* rect, byte* Yplane, int Ypitch, byte* Uplane, int Upitch, byte* Vplane, int Vpitch);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UpdateNVTexture")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_UpdateNVTexture(SDL_Texture texture, Rectangle* rect, byte* Yplane, int Ypitch, byte* UVplane, int UVpitch);
+	public static partial bool SDL_UpdateNVTexture(SDL_Texture* texture, Rectangle* rect, byte* Yplane, int Ypitch, byte* UVplane, int UVpitch);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LockTexture")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_LockTexture(SDL_Texture texture, Rectangle* rect, nint pixels, int* pitch);
+	public static partial bool SDL_LockTexture(SDL_Texture* texture, Rectangle* rect, nint pixels, int* pitch);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_LockTextureToSurface")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_LockTextureToSurface(SDL_Texture texture, Rectangle* rect, SDL_Surface** surface);
+	public static partial bool SDL_LockTextureToSurface(SDL_Texture* texture, Rectangle* rect, SDL_Surface** surface);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_UnlockTexture")]
-	public static partial void SDL_UnlockTexture(SDL_Texture texture);
+	public static partial void SDL_UnlockTexture(SDL_Texture* texture);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetRenderTarget")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_SetRenderTarget(SDL_Renderer renderer, SDL_Texture texture);
+	public static partial bool SDL_SetRenderTarget(SDL_Renderer renderer, SDL_Texture* texture);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GetRenderTarget")]
-	public static partial SDL_Texture SDL_GetRenderTarget(SDL_Renderer renderer);
+	public static partial SDL_Texture* SDL_GetRenderTarget(SDL_Renderer renderer);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SetRenderLogicalPresentation")]
 	[return: MarshalAs(UnmanagedType.U1)]
@@ -2869,27 +2872,27 @@ public unsafe partial class SDL3
 
 	[LibraryImport(LibName, EntryPoint = "SDL_RenderTexture")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_RenderTexture(SDL_Renderer renderer, SDL_Texture texture, RectangleF* srcrect, RectangleF* dstrect);
+	public static partial bool SDL_RenderTexture(SDL_Renderer renderer, SDL_Texture* texture, RectangleF* srcrect, RectangleF* dstrect);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_RenderTextureRotated")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_RenderTextureRotated(SDL_Renderer renderer, SDL_Texture texture, RectangleF* srcrect, RectangleF* dstrect, double angle, PointF* center, SDL_FlipMode flip);
+	public static partial bool SDL_RenderTextureRotated(SDL_Renderer renderer, SDL_Texture* texture, RectangleF* srcrect, RectangleF* dstrect, double angle, PointF* center, SDL_FlipMode flip);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_RenderTextureTiled")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_RenderTextureTiled(SDL_Renderer renderer, SDL_Texture texture, RectangleF* srcrect, float scale, RectangleF* dstrect);
+	public static partial bool SDL_RenderTextureTiled(SDL_Renderer renderer, SDL_Texture* texture, RectangleF* srcrect, float scale, RectangleF* dstrect);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_RenderTexture9Grid")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_RenderTexture9Grid(SDL_Renderer renderer, SDL_Texture texture, RectangleF* srcrect, float left_width, float right_width, float top_height, float bottom_height, float scale, RectangleF* dstrect);
+	public static partial bool SDL_RenderTexture9Grid(SDL_Renderer renderer, SDL_Texture* texture, RectangleF* srcrect, float left_width, float right_width, float top_height, float bottom_height, float scale, RectangleF* dstrect);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_RenderGeometry")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_RenderGeometry(SDL_Renderer renderer, SDL_Texture texture, SDL_Vertex* vertices, int num_vertices, int* indices, int num_indices);
+	public static partial bool SDL_RenderGeometry(SDL_Renderer renderer, SDL_Texture* texture, SDL_Vertex* vertices, int num_vertices, int* indices, int num_indices);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_RenderGeometryRaw")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_RenderGeometryRaw(SDL_Renderer renderer, SDL_Texture texture, float* xy, int xy_stride, SDL_FColor* color, int color_stride, float* uv, int uv_stride, int num_vertices, nint indices, int num_indices, int size_indices);
+	public static partial bool SDL_RenderGeometryRaw(SDL_Renderer renderer, SDL_Texture* texture, float* xy, int xy_stride, SDL_FColor* color, int color_stride, float* uv, int uv_stride, int num_vertices, nint indices, int num_indices, int size_indices);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_RenderReadPixels")]
 	public static partial SDL_Surface* SDL_RenderReadPixels(SDL_Renderer renderer, Rectangle* rect);
@@ -2899,7 +2902,7 @@ public unsafe partial class SDL3
 	public static partial bool SDL_RenderPresent(SDL_Renderer renderer);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DestroyTexture")]
-	public static partial void SDL_DestroyTexture(SDL_Texture texture);
+	public static partial void SDL_DestroyTexture(SDL_Texture* texture);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_DestroyRenderer")]
 	public static partial void SDL_DestroyRenderer(SDL_Renderer renderer);
@@ -3168,6 +3171,9 @@ public unsafe partial class SDL3
 
 	[LibraryImport(LibName, EntryPoint = "SDL_crc32")]
 	public static partial uint SDL_crc32(uint crc, nint data, nuint len);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_murmur3_32")]
+	public static partial uint SDL_murmur3_32(nint data, nuint len, uint seed);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_memcpy")]
 	public static partial nint SDL_memcpy(nint dst, nint src, nuint len);
@@ -4069,15 +4075,15 @@ public unsafe partial class SDL3
 
 	[LibraryImport(LibName, EntryPoint = "SDL_EnumerateStorageDirectory")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_EnumerateStorageDirectory(SDL_Storage storage, byte* path, delegate* unmanaged<nint, byte*, byte*, int> callback, nint userdata);
+	public static partial bool SDL_EnumerateStorageDirectory(SDL_Storage storage, byte* path, delegate* unmanaged<nint, byte*, byte*, SDL_EnumerationResult> callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_EnumerateStorageDirectory")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_EnumerateStorageDirectory(SDL_Storage storage, ReadOnlySpan<byte> path, delegate* unmanaged<nint, byte*, byte*, int> callback, nint userdata);
+	public static partial bool SDL_EnumerateStorageDirectory(SDL_Storage storage, ReadOnlySpan<byte> path, delegate* unmanaged<nint, byte*, byte*, SDL_EnumerationResult> callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_EnumerateStorageDirectory")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_EnumerateStorageDirectory(SDL_Storage storage, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> path, delegate* unmanaged<nint, byte*, byte*, int> callback, nint userdata);
+	public static partial bool SDL_EnumerateStorageDirectory(SDL_Storage storage, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> path, delegate* unmanaged<nint, byte*, byte*, SDL_EnumerationResult> callback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_RemoveStoragePath")]
 	[return: MarshalAs(UnmanagedType.U1)]
@@ -4389,9 +4395,9 @@ public unsafe partial class SDL3
 	[LibraryImport(LibName, EntryPoint = "SDL_GetThreadID")]
 	public static partial SDL_ThreadID SDL_GetThreadID(SDL_Thread thread);
 
-	[LibraryImport(LibName, EntryPoint = "SDL_SetThreadPriority")]
+	[LibraryImport(LibName, EntryPoint = "SDL_SetCurrentThreadPriority")]
 	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_SetThreadPriority(SDL_ThreadPriority priority);
+	public static partial bool SDL_SetCurrentThreadPriority(SDL_ThreadPriority priority);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_WaitThread")]
 	public static partial void SDL_WaitThread(SDL_Thread thread, int* status);
@@ -4928,7 +4934,7 @@ public unsafe partial class SDL3
 	public static partial nint SDL_EGL_GetWindowSurface(SDL_Window window);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_EGL_SetAttributeCallbacks")]
-	public static partial void SDL_EGL_SetAttributeCallbacks(delegate* unmanaged<nint> platformAttribCallback, delegate* unmanaged<int*> surfaceAttribCallback, delegate* unmanaged<int*> contextAttribCallback);
+	public static partial void SDL_EGL_SetAttributeCallbacks(delegate* unmanaged<nint, nint> platformAttribCallback, delegate* unmanaged<nint, nint, nint, int*> surfaceAttribCallback, delegate* unmanaged<nint, nint, nint, int*> contextAttribCallback, nint userdata);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_GL_SetSwapInterval")]
 	[return: MarshalAs(UnmanagedType.U1)]
@@ -5007,10 +5013,6 @@ public unsafe partial class SDL3
 	[LibraryImport(LibName, EntryPoint = "SDL_GetAndroidSDKVersion")]
 	public static partial int SDL_GetAndroidSDKVersion();
 
-	[LibraryImport(LibName, EntryPoint = "SDL_IsAndroidTV")]
-	[return: MarshalAs(UnmanagedType.U1)]
-	public static partial bool SDL_IsAndroidTV();
-
 	[LibraryImport(LibName, EntryPoint = "SDL_IsChromebook")]
 	[return: MarshalAs(UnmanagedType.U1)]
 	public static partial bool SDL_IsChromebook();
@@ -5080,6 +5082,10 @@ public unsafe partial class SDL3
 	[LibraryImport(LibName, EntryPoint = "SDL_IsTablet")]
 	[return: MarshalAs(UnmanagedType.U1)]
 	public static partial bool SDL_IsTablet();
+
+	[LibraryImport(LibName, EntryPoint = "SDL_IsTV")]
+	[return: MarshalAs(UnmanagedType.U1)]
+	public static partial bool SDL_IsTV();
 
 	[LibraryImport(LibName, EntryPoint = "SDL_OnApplicationWillTerminate")]
 	public static partial void SDL_OnApplicationWillTerminate();
@@ -5306,7 +5312,7 @@ public unsafe partial class SDL3
 	public static partial void SDL_EndGPURenderPass(SDL_GPURenderPass render_pass);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_BeginGPUComputePass")]
-	public static partial SDL_GPUComputePass SDL_BeginGPUComputePass(SDL_GPUCommandBuffer command_buffer, SDL_GPUStorageTextureWriteOnlyBinding* storage_texture_bindings, uint num_storage_texture_bindings, SDL_GPUStorageBufferWriteOnlyBinding* storage_buffer_bindings, uint num_storage_buffer_bindings);
+	public static partial SDL_GPUComputePass SDL_BeginGPUComputePass(SDL_GPUCommandBuffer command_buffer, SDL_GPUStorageTextureReadWriteBinding* storage_texture_bindings, uint num_storage_texture_bindings, SDL_GPUStorageBufferReadWriteBinding* storage_buffer_bindings, uint num_storage_buffer_bindings);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_BindGPUComputePipeline")]
 	public static partial void SDL_BindGPUComputePipeline(SDL_GPUComputePass compute_pass, SDL_GPUComputePipeline compute_pipeline);
@@ -5388,19 +5394,23 @@ public unsafe partial class SDL3
 	public static partial SDL_GPUTextureFormat SDL_GetGPUSwapchainTextureFormat(SDL_GPUDevice device, SDL_Window window);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_AcquireGPUSwapchainTexture")]
-	public static partial SDL_GPUTexture SDL_AcquireGPUSwapchainTexture(SDL_GPUCommandBuffer command_buffer, SDL_Window window, uint* w, uint* h);
+	[return: MarshalAs(UnmanagedType.U1)]
+	public static partial bool SDL_AcquireGPUSwapchainTexture(SDL_GPUCommandBuffer command_buffer, SDL_Window window, SDL_GPUTexture swapchain_texture, uint* swapchain_texture_width, uint* swapchain_texture_height);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SubmitGPUCommandBuffer")]
-	public static partial void SDL_SubmitGPUCommandBuffer(SDL_GPUCommandBuffer command_buffer);
+	[return: MarshalAs(UnmanagedType.U1)]
+	public static partial bool SDL_SubmitGPUCommandBuffer(SDL_GPUCommandBuffer command_buffer);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_SubmitGPUCommandBufferAndAcquireFence")]
 	public static partial SDL_GPUFence SDL_SubmitGPUCommandBufferAndAcquireFence(SDL_GPUCommandBuffer command_buffer);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_WaitForGPUIdle")]
-	public static partial void SDL_WaitForGPUIdle(SDL_GPUDevice device);
+	[return: MarshalAs(UnmanagedType.U1)]
+	public static partial bool SDL_WaitForGPUIdle(SDL_GPUDevice device);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_WaitForGPUFences")]
-	public static partial void SDL_WaitForGPUFences(SDL_GPUDevice device, [MarshalAs(UnmanagedType.U1)] bool wait_all, SDL_GPUFence** fences, uint num_fences);
+	[return: MarshalAs(UnmanagedType.U1)]
+	public static partial bool SDL_WaitForGPUFences(SDL_GPUDevice device, [MarshalAs(UnmanagedType.U1)] bool wait_all, SDL_GPUFence** fences, uint num_fences);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_QueryGPUFence")]
 	[return: MarshalAs(UnmanagedType.U1)]
@@ -5430,7 +5440,7 @@ public unsafe partial class SDL3
 	public static partial int SDL_RunApp(int argc, byte** argv, delegate* unmanaged<int, byte**, int> mainFunction, nint reserved);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_EnterAppMainCallbacks")]
-	public static partial int SDL_EnterAppMainCallbacks(int argc, byte** argv, delegate* unmanaged<nint, int, byte**, SDL_AppResult> appinit, delegate* unmanaged<nint, SDL_AppResult> appiter, delegate* unmanaged<nint, SDL_Event*, SDL_AppResult> appevent, delegate* unmanaged<nint, void> appquit);
+	public static partial int SDL_EnterAppMainCallbacks(int argc, byte** argv, delegate* unmanaged<nint, int, byte**, SDL_AppResult> appinit, delegate* unmanaged<nint, SDL_AppResult> appiter, delegate* unmanaged<nint, SDL_Event*, SDL_AppResult> appevent, delegate* unmanaged<nint, SDL_AppResult, void> appquit);
 
 	[LibraryImport(LibName, EntryPoint = "SDL_RegisterApp")]
 	[return: MarshalAs(UnmanagedType.U1)]

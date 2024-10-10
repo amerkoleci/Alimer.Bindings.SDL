@@ -931,6 +931,14 @@ public partial struct SDL_Vertex
 	public PointF tex_coord;
 }
 
+public partial struct SDL_Texture
+{
+	public SDL_PixelFormat format;
+	public int w;
+	public int h;
+	public int refcount;
+}
+
 public partial struct SDL_alignment_test
 {
 	public byte a;
@@ -942,7 +950,7 @@ public partial struct SDL_StorageInterface
 	public uint version;
 	public unsafe delegate* unmanaged<nint, bool> close;
 	public unsafe delegate* unmanaged<nint, bool> ready;
-	public unsafe delegate* unmanaged<nint, byte*, delegate* unmanaged<nint, byte*, byte*, int>*, nint, bool> enumerate;
+	public unsafe delegate* unmanaged<nint, byte*, delegate* unmanaged<nint, byte*, byte*, SDL_EnumerationResult>*, nint, bool> enumerate;
 	public unsafe delegate* unmanaged<nint, byte*, SDL_PathInfo*, bool> info;
 	public unsafe delegate* unmanaged<nint, byte*, nint, ulong, bool> read_file;
 	public unsafe delegate* unmanaged<nint, byte*, nint, ulong, bool> write_file;
@@ -962,7 +970,7 @@ public partial struct SDL_Surface
 	public int pitch;
 	public nint pixels;
 	public int refcount;
-	public SDL_SurfaceData @internal;
+	public nint reserved;
 }
 
 public partial struct SDL_DateTime
@@ -1157,8 +1165,8 @@ public partial struct SDL_GPUColorTargetBlendState
 	public SDL_GPUColorComponentFlags color_write_mask;
 	public bool enable_blend;
 	public bool enable_color_write_mask;
+	public byte padding1;
 	public byte padding2;
-	public byte padding3;
 }
 
 public partial struct SDL_GPUShaderCreateInfo
@@ -1211,9 +1219,9 @@ public partial struct SDL_GPURasterizerState
 	public float depth_bias_clamp;
 	public float depth_bias_slope_factor;
 	public bool enable_depth_bias;
+	public bool enable_depth_clip;
 	public byte padding1;
 	public byte padding2;
-	public byte padding3;
 }
 
 public partial struct SDL_GPUMultisampleState
@@ -1280,8 +1288,8 @@ public partial struct SDL_GPUComputePipelineCreateInfo
 	public uint num_samplers;
 	public uint num_readonly_storage_textures;
 	public uint num_readonly_storage_buffers;
-	public uint num_writeonly_storage_textures;
-	public uint num_writeonly_storage_buffers;
+	public uint num_readwrite_storage_textures;
+	public uint num_readwrite_storage_buffers;
 	public uint num_uniform_buffers;
 	public uint threadcount_x;
 	public uint threadcount_y;
@@ -1346,7 +1354,7 @@ public partial struct SDL_GPUTextureSamplerBinding
 	public SDL_GPUSampler sampler;
 }
 
-public partial struct SDL_GPUStorageBufferWriteOnlyBinding
+public partial struct SDL_GPUStorageBufferReadWriteBinding
 {
 	public SDL_GPUBuffer buffer;
 	public bool cycle;
@@ -1355,7 +1363,7 @@ public partial struct SDL_GPUStorageBufferWriteOnlyBinding
 	public byte padding3;
 }
 
-public partial struct SDL_GPUStorageTextureWriteOnlyBinding
+public partial struct SDL_GPUStorageTextureReadWriteBinding
 {
 	public SDL_GPUTexture texture;
 	public uint mip_level;

@@ -425,6 +425,7 @@ public enum SDL_GPUTextureUsageFlags : uint
 	GraphicsStorageRead = SDL3.SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ,
 	ComputeStorageRead = SDL3.SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_READ,
 	ComputeStorageWrite = SDL3.SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_WRITE,
+	ComputeStorageSimultaneousReadWrite = SDL3.SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_SIMULTANEOUS_READ_WRITE,
 }
 
 [Flags]
@@ -608,6 +609,27 @@ public readonly partial struct SDL_Joystick(nint value) : IEquatable<SDL_Joystic
 }
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_SharedObject(nint value) : IEquatable<SDL_SharedObject>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_SharedObject Null => new(0);
+	public static implicit operator nint(SDL_SharedObject value) => value.Value;
+	public static implicit operator SDL_SharedObject(nint value) => new(value);
+	public static bool operator ==(SDL_SharedObject left, SDL_SharedObject right) => left.Value == right.Value;
+	public static bool operator !=(SDL_SharedObject left, SDL_SharedObject right) => left.Value != right.Value;
+	public static bool operator ==(SDL_SharedObject left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_SharedObject left, nint right) => left.Value != right;
+	public bool Equals(SDL_SharedObject other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_SharedObject other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_SharedObject)} [0x{Value.ToString("X")}]";
+}
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_Cursor(nint value) : IEquatable<SDL_Cursor>
 {
 	public readonly nint Value = value;
@@ -734,27 +756,6 @@ public readonly partial struct SDL_Renderer(nint value) : IEquatable<SDL_Rendere
 }
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly partial struct SDL_Texture(nint value) : IEquatable<SDL_Texture>
-{
-	public readonly nint Value = value;
-	public bool IsNull => Value == 0;
-	public bool IsNotNull => Value != 0;
-	public static SDL_Texture Null => new(0);
-	public static implicit operator nint(SDL_Texture value) => value.Value;
-	public static implicit operator SDL_Texture(nint value) => new(value);
-	public static bool operator ==(SDL_Texture left, SDL_Texture right) => left.Value == right.Value;
-	public static bool operator !=(SDL_Texture left, SDL_Texture right) => left.Value != right.Value;
-	public static bool operator ==(SDL_Texture left, nint right) => left.Value == right;
-	public static bool operator !=(SDL_Texture left, nint right) => left.Value != right;
-	public bool Equals(SDL_Texture other) => Value.Equals(other.Value);
-	/// <inheritdoc/>
-	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_Texture other) && Equals(other);
-	/// <inheritdoc/>
-	public override int GetHashCode() => Value.GetHashCode();
-	private string DebuggerDisplay => $"{nameof(SDL_Texture)} [0x{Value.ToString("X")}]";
-}
-
-[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_Sensor(nint value) : IEquatable<SDL_Sensor>
 {
 	public readonly nint Value = value;
@@ -836,27 +837,6 @@ public readonly partial struct SDL_Storage(nint value) : IEquatable<SDL_Storage>
 	/// <inheritdoc/>
 	public override int GetHashCode() => Value.GetHashCode();
 	private string DebuggerDisplay => $"{nameof(SDL_Storage)} [0x{Value.ToString("X")}]";
-}
-
-[DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly partial struct SDL_SurfaceData(nint value) : IEquatable<SDL_SurfaceData>
-{
-	public readonly nint Value = value;
-	public bool IsNull => Value == 0;
-	public bool IsNotNull => Value != 0;
-	public static SDL_SurfaceData Null => new(0);
-	public static implicit operator nint(SDL_SurfaceData value) => value.Value;
-	public static implicit operator SDL_SurfaceData(nint value) => new(value);
-	public static bool operator ==(SDL_SurfaceData left, SDL_SurfaceData right) => left.Value == right.Value;
-	public static bool operator !=(SDL_SurfaceData left, SDL_SurfaceData right) => left.Value != right.Value;
-	public static bool operator ==(SDL_SurfaceData left, nint right) => left.Value == right;
-	public static bool operator !=(SDL_SurfaceData left, nint right) => left.Value != right;
-	public bool Equals(SDL_SurfaceData other) => Value.Equals(other.Value);
-	/// <inheritdoc/>
-	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_SurfaceData other) && Equals(other);
-	/// <inheritdoc/>
-	public override int GetHashCode() => Value.GetHashCode();
-	private string DebuggerDisplay => $"{nameof(SDL_SurfaceData)} [0x{Value.ToString("X")}]";
 }
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]

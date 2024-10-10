@@ -118,11 +118,28 @@ typedef enum SDL_RendererLogicalPresentation
  */
 typedef struct SDL_Renderer SDL_Renderer;
 
+#ifndef SDL_INTERNAL
+
 /**
  * An efficient driver-specific representation of pixel data
  *
  * \since This struct is available since SDL 3.0.0.
+ *
+ * \sa SDL_CreateTexture
+ * \sa SDL_CreateTextureFromSurface
+ * \sa SDL_CreateTextureWithProperties
+ * \sa SDL_DestroyTexture
  */
+struct SDL_Texture
+{
+    SDL_PixelFormat format;     /**< The format of the texture, read-only */
+    int w;                      /**< The width of the texture, read-only. */
+    int h;                      /**< The height of the texture, read-only. */
+
+    int refcount;               /**< Application reference count, used when freeing texture */
+};
+#endif /* !SDL_INTERNAL */
+
 typedef struct SDL_Texture SDL_Texture;
 
 /* Function prototypes */
@@ -1424,6 +1441,13 @@ extern SDL_DECLSPEC bool SDLCALL SDL_GetRenderLogicalPresentationRect(SDL_Render
 /**
  * Get a point in render coordinates when given a point in window coordinates.
  *
+ * This takes into account several states:
+ *
+ * - The window dimensions.
+ * - The logical presentation settings (SDL_SetRenderLogicalPresentation)
+ * - The scale (SDL_SetRenderScale)
+ * - The viewport (SDL_SetRenderViewport)
+ *
  * \param renderer the rendering context.
  * \param window_x the x coordinate in window coordinates.
  * \param window_y the y coordinate in window coordinates.
@@ -1444,6 +1468,13 @@ extern SDL_DECLSPEC bool SDLCALL SDL_RenderCoordinatesFromWindow(SDL_Renderer *r
 /**
  * Get a point in window coordinates when given a point in render coordinates.
  *
+ * This takes into account several states:
+ *
+ * - The window dimensions.
+ * - The logical presentation settings (SDL_SetRenderLogicalPresentation)
+ * - The scale (SDL_SetRenderScale)
+ * - The viewport (SDL_SetRenderViewport)
+ *
  * \param renderer the rendering context.
  * \param x the x coordinate in render coordinates.
  * \param y the y coordinate in render coordinates.
@@ -1460,11 +1491,19 @@ extern SDL_DECLSPEC bool SDLCALL SDL_RenderCoordinatesFromWindow(SDL_Renderer *r
  *
  * \sa SDL_SetRenderLogicalPresentation
  * \sa SDL_SetRenderScale
+ * \sa SDL_SetRenderViewport
  */
 extern SDL_DECLSPEC bool SDLCALL SDL_RenderCoordinatesToWindow(SDL_Renderer *renderer, float x, float y, float *window_x, float *window_y);
 
 /**
  * Convert the coordinates in an event to render coordinates.
+ *
+ * This takes into account several states:
+ *
+ * - The window dimensions.
+ * - The logical presentation settings (SDL_SetRenderLogicalPresentation)
+ * - The scale (SDL_SetRenderScale)
+ * - The viewport (SDL_SetRenderViewport)
  *
  * Touch coordinates are converted from normalized coordinates in the window
  * to non-normalized rendering coordinates.
@@ -2045,8 +2084,8 @@ extern SDL_DECLSPEC bool SDLCALL SDL_RenderTexture(SDL_Renderer *renderer, SDL_T
  */
 extern SDL_DECLSPEC bool SDLCALL SDL_RenderTextureRotated(SDL_Renderer *renderer, SDL_Texture *texture,
                                                      const SDL_FRect *srcrect, const SDL_FRect *dstrect,
-                                                     const double angle, const SDL_FPoint *center,
-                                                     const SDL_FlipMode flip);
+                                                     double angle, const SDL_FPoint *center,
+                                                     SDL_FlipMode flip);
 
 /**
  * Tile a portion of the texture to the current rendering target at subpixel

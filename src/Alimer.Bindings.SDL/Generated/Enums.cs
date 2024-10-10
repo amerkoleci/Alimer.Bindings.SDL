@@ -365,6 +365,16 @@ public enum SDL_PathType
 	SDL_PATHTYPE_OTHER = 3,
 }
 
+public enum SDL_EnumerationResult
+{
+	/// <unmanaged>SDL_ENUM_CONTINUE</unmanaged>
+	SDL_ENUM_CONTINUE = 0,
+	/// <unmanaged>SDL_ENUM_SUCCESS</unmanaged>
+	SDL_ENUM_SUCCESS = 1,
+	/// <unmanaged>SDL_ENUM_FAILURE</unmanaged>
+	SDL_ENUM_FAILURE = 2,
+}
+
 public enum SDL_GamepadType
 {
 	/// <unmanaged>SDL_GAMEPAD_TYPE_UNKNOWN</unmanaged>
@@ -2145,40 +2155,52 @@ public enum SDL_GPUTextureFormat
 	R16G16Uint = 38,
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16B16A16_UINT</unmanaged>
 	R16G16B16A16Uint = 39,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R32_UINT</unmanaged>
+	R32Uint = 40,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R32G32_UINT</unmanaged>
+	R32G32Uint = 41,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R32G32B32A32_UINT</unmanaged>
+	R32G32B32A32Uint = 42,
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8_INT</unmanaged>
-	R8Int = 40,
+	R8Int = 43,
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8_INT</unmanaged>
-	R8G8Int = 41,
+	R8G8Int = 44,
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8B8A8_INT</unmanaged>
-	R8G8B8A8Int = 42,
+	R8G8B8A8Int = 45,
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16_INT</unmanaged>
-	R16Int = 43,
+	R16Int = 46,
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16_INT</unmanaged>
-	R16G16Int = 44,
+	R16G16Int = 47,
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16B16A16_INT</unmanaged>
-	R16G16B16A16Int = 45,
+	R16G16B16A16Int = 48,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R32_INT</unmanaged>
+	R32Int = 49,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R32G32_INT</unmanaged>
+	R32G32Int = 50,
+	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R32G32B32A32_INT</unmanaged>
+	R32G32B32A32Int = 51,
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM_SRGB</unmanaged>
-	R8G8B8A8UnormSrgb = 46,
+	R8G8B8A8UnormSrgb = 52,
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_B8G8R8A8_UNORM_SRGB</unmanaged>
-	B8G8R8A8UnormSrgb = 47,
+	B8G8R8A8UnormSrgb = 53,
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC1_RGBA_UNORM_SRGB</unmanaged>
-	BC1RGBAUnormSrgb = 48,
+	BC1RGBAUnormSrgb = 54,
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC2_RGBA_UNORM_SRGB</unmanaged>
-	BC2RGBAUnormSrgb = 49,
+	BC2RGBAUnormSrgb = 55,
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC3_RGBA_UNORM_SRGB</unmanaged>
-	BC3RGBAUnormSrgb = 50,
+	BC3RGBAUnormSrgb = 56,
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC7_RGBA_UNORM_SRGB</unmanaged>
-	BC7RGBAUnormSrgb = 51,
+	BC7RGBAUnormSrgb = 57,
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_D16_UNORM</unmanaged>
-	D16Unorm = 52,
+	D16Unorm = 58,
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_D24_UNORM</unmanaged>
-	D24Unorm = 53,
+	D24Unorm = 59,
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_D32_FLOAT</unmanaged>
-	D32Float = 54,
+	D32Float = 60,
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_D24_UNORM_S8_UINT</unmanaged>
-	D24UnormS8Uint = 55,
+	D24UnormS8Uint = 61,
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_D32_FLOAT_S8_UINT</unmanaged>
-	D32FloatS8Uint = 56,
+	D32FloatS8Uint = 62,
 }
 
 public enum SDL_GPUTextureType

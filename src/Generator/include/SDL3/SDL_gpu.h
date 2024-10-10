@@ -24,7 +24,131 @@
 /**
  * # CategoryGPU
  *
- * Include file for SDL GPU API functions
+ * The GPU API offers a cross-platform way for apps to talk to modern graphics
+ * hardware. It offers both 3D graphics and "compute" support, in the style of
+ * Metal, Vulkan, and Direct3D 12.
+ *
+ * A basic workflow might be something like this:
+ *
+ * The app creates a GPU device with SDL_CreateGPUDevice(), and assigns it to
+ * a window with SDL_ClaimWindowForGPUDevice()--although strictly speaking you
+ * can render offscreen entirely, perhaps for image processing, and not use a
+ * window at all.
+ *
+ * Next the app prepares static data (things that are created once and used
+ * over and over). For example:
+ *
+ * - Shaders (programs that run on the GPU): use SDL_CreateGPUShader().
+ * - Vertex buffers (arrays of geometry data) and other data rendering will
+ *   need: use SDL_UploadToGPUBuffer().
+ * - Textures (images): use SDL_UploadToGPUTexture().
+ * - Samplers (how textures should be read from): use SDL_CreateGPUSampler().
+ * - Render pipelines (precalculated rendering state): use
+ *   SDL_CreateGPUGraphicsPipeline()
+ *
+ * To render, the app creates one or more command buffers, with
+ * SDL_AcquireGPUCommandBuffer(). Command buffers collect rendering
+ * instructions that will be submitted to the GPU in batch. Complex scenes can
+ * use multiple command buffers, maybe configured across multiple threads in
+ * parallel, as long as they are submitted in the correct order, but many apps
+ * will just need one command buffer per frame.
+ *
+ * Rendering can happen to a texture (what other APIs call a "render target")
+ * or it can happen to the swapchain texture (which is just a special texture
+ * that represents a window's contents). The app can use
+ * SDL_AcquireGPUSwapchainTexture() to render to the window.
+ *
+ * Rendering actually happens in a Render Pass, which is encoded into a
+ * command buffer. One can encode multiple render passes (or alternate between
+ * render and compute passes) in a single command buffer, but many apps might
+ * simply need a single render pass in a single command buffer. Render Passes
+ * can render to up to four color textures and one depth texture
+ * simultaneously. If the set of textures being rendered to needs to change,
+ * the Render Pass must be ended and a new one must be begun.
+ *
+ * The app calls SDL_BeginGPURenderPass(). Then it sets states it needs for
+ * each draw:
+ *
+ * - SDL_BindGPUGraphicsPipeline()
+ * - SDL_SetGPUViewport()
+ * - SDL_BindGPUVertexBuffers()
+ * - SDL_BindGPUVertexSamplers()
+ * - etc
+ *
+ * Then, make the actual draw commands with these states:
+ *
+ * - SDL_DrawGPUPrimitives()
+ * - SDL_DrawGPUPrimitivesIndirect()
+ * - SDL_DrawGPUIndexedPrimitivesIndirect()
+ * - etc
+ *
+ * After all the drawing commands for a pass are complete, the app should call
+ * SDL_EndGPURenderPass(). Once a render pass ends all render-related state is
+ * reset.
+ *
+ * The app can begin new Render Passes and make new draws in the same command
+ * buffer until the entire scene is rendered.
+ *
+ * Once all of the render commands for the scene are complete, the app calls
+ * SDL_SubmitGPUCommandBuffer() to send it to the GPU for processing.
+ *
+ * If the app needs to read back data from texture or buffers, the API has an
+ * efficient way of doing this, provided that the app is willing to tolerate
+ * some latency. When the app uses SDL_DownloadFromGPUTexture() or
+ * SDL_DownloadFromGPUBuffer(), submitting the command buffer with
+ * SubmitGPUCommandBufferAndAcquireFence() will return a fence handle that the
+ * app can poll or wait on in a thread. Once the fence indicates that the
+ * command buffer is done processing, it is safe to read the downloaded data.
+ * Make sure to call SDL_ReleaseGPUFence() when done with the fence.
+ *
+ * The API also has "compute" support. The app calls SDL_BeginGPUComputePass()
+ * with compute-writeable textures and/or buffers, which can be written to in
+ * a compute shader. Then it sets states it needs for the compute dispatches:
+ *
+ * - SDL_BindGPUComputePipeline()
+ * - SDL_BindGPUComputeStorageBuffers()
+ * - SDL_BindGPUComputeStorageTextures()
+ *
+ * Then, dispatch compute work:
+ *
+ * - SDL_DispatchGPUCompute()
+ *
+ * For advanced users, this opens up powerful GPU-driven workflows.
+ *
+ * Graphics and compute pipelines require the use of shaders, which as
+ * mentioned above are small programs executed on the GPU. Each backend
+ * (Vulkan, Metal, D3D12) requires a different shader format. When the app
+ * creates the GPU device, the app lets the device know which shader formats
+ * the app can provide. It will then select the appropriate backend depending
+ * on the available shader formats and the backends available on the platform.
+ * When creating shaders, the app must provide the correct shader format for
+ * the selected backend. If you would like to learn more about why the API
+ * works this way, there is a detailed
+ * [blog post](https://moonside.games/posts/layers-all-the-way-down/)
+ * explaining this situation.
+ *
+ * It is optimal for apps to pre-compile the shader formats they might use,
+ * but for ease of use SDL provides a
+ * [satellite single-header library](https://github.com/libsdl-org/SDL_gpu_shadercross
+ * )
+ * for performing runtime shader cross-compilation.
+ *
+ * This is an extremely quick overview that leaves out several important
+ * details. Already, though, one can see that GPU programming can be quite
+ * complex! If you just need simple 2D graphics, the
+ * [Render API](https://wiki.libsdl.org/SDL3/CategoryRender)
+ * is much easier to use but still hardware-accelerated. That said, even for
+ * 2D applications the performance benefits and expressiveness of the GPU API
+ * are significant.
+ *
+ * The GPU API targets a feature set with a wide range of hardware support and
+ * ease of portability. It is designed so that the app won't have to branch
+ * itself by querying feature support. If you need cutting-edge features with
+ * limited hardware support, this API is probably not for you.
+ *
+ * Examples demonstrating proper usage of this API can be found
+ * [here](https://github.com/TheSpydog/SDL_gpu_examples)
+ * .
  */
 
 #ifndef SDL_gpu_h_
@@ -309,6 +433,9 @@ typedef enum SDL_GPUIndexElementSize
  * a format is supported before using it. However, there are a few guaranteed
  * formats.
  *
+ * FIXME: Check universal support for 32-bit component formats FIXME: Check
+ * universal support for SIMULTANEOUS_READ_WRITE
+ *
  * For SAMPLER usage, the following formats are universally supported:
  *
  * - R8G8B8A8_UNORM
@@ -435,6 +562,9 @@ typedef enum SDL_GPUTextureFormat
     SDL_GPU_TEXTUREFORMAT_R16_UINT,
     SDL_GPU_TEXTUREFORMAT_R16G16_UINT,
     SDL_GPU_TEXTUREFORMAT_R16G16B16A16_UINT,
+    SDL_GPU_TEXTUREFORMAT_R32_UINT,
+    SDL_GPU_TEXTUREFORMAT_R32G32_UINT,
+    SDL_GPU_TEXTUREFORMAT_R32G32B32A32_UINT,
     /* Signed Integer Color Formats */
     SDL_GPU_TEXTUREFORMAT_R8_INT,
     SDL_GPU_TEXTUREFORMAT_R8G8_INT,
@@ -442,6 +572,9 @@ typedef enum SDL_GPUTextureFormat
     SDL_GPU_TEXTUREFORMAT_R16_INT,
     SDL_GPU_TEXTUREFORMAT_R16G16_INT,
     SDL_GPU_TEXTUREFORMAT_R16G16B16A16_INT,
+    SDL_GPU_TEXTUREFORMAT_R32_INT,
+    SDL_GPU_TEXTUREFORMAT_R32G32_INT,
+    SDL_GPU_TEXTUREFORMAT_R32G32B32A32_INT,
     /* SRGB Unsigned Normalized Color Formats */
     SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM_SRGB,
     SDL_GPU_TEXTUREFORMAT_B8G8R8A8_UNORM_SRGB,
@@ -464,18 +597,29 @@ typedef enum SDL_GPUTextureFormat
  * A texture must have at least one usage flag. Note that some usage flag
  * combinations are invalid.
  *
- * \since This enum is available since SDL 3.0.0
+ * With regards to compute storage usage, READ | WRITE means that you can have
+ * shader A that only writes into the texture and shader B that only reads
+ * from the texture and bind the same texture to either shader respectively.
+ * SIMULTANEOUS means that you can do reads and writes within the same shader
+ * or compute pass. It also implies that atomic ops can be used, since those
+ * are read-modify-write operations. If you use SIMULTANEOUS, you are
+ * responsible for avoiding data races, as there is no data synchronization
+ * within a compute pass. Note that SIMULTANEOUS usage is only supported by a
+ * limited number of texture formats.
+ *
+ * \since This datatype is available since SDL 3.0.0
  *
  * \sa SDL_CreateGPUTexture
  */
 typedef Uint32 SDL_GPUTextureUsageFlags;
 
-#define SDL_GPU_TEXTUREUSAGE_SAMPLER               (1u << 0) /**< Texture supports sampling. */
-#define SDL_GPU_TEXTUREUSAGE_COLOR_TARGET          (1u << 1) /**< Texture is a color render target. */
-#define SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET  (1u << 2) /**< Texture is a depth stencil target. */
-#define SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ (1u << 3) /**< Texture supports storage reads in graphics stages. */
-#define SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_READ  (1u << 4) /**< Texture supports storage reads in the compute stage. */
-#define SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_WRITE (1u << 5) /**< Texture supports storage writes in the compute stage. */
+#define SDL_GPU_TEXTUREUSAGE_SAMPLER                                 (1u << 0) /**< Texture supports sampling. */
+#define SDL_GPU_TEXTUREUSAGE_COLOR_TARGET                            (1u << 1) /**< Texture is a color render target. */
+#define SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET                    (1u << 2) /**< Texture is a depth stencil target. */
+#define SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ                   (1u << 3) /**< Texture supports storage reads in graphics stages. */
+#define SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_READ                    (1u << 4) /**< Texture supports storage reads in the compute stage. */
+#define SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_WRITE                   (1u << 5) /**< Texture supports storage writes in the compute stage. */
+#define SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_SIMULTANEOUS_READ_WRITE (1u << 6) /**< Texture supports reads and writes in the same compute shader. This is NOT equivalent to READ | WRITE. */
 
 /**
  * Specifies the type of a texture.
@@ -536,18 +680,21 @@ typedef enum SDL_GPUCubeMapFace
  * A buffer must have at least one usage flag. Note that some usage flag
  * combinations are invalid.
  *
- * \since This enum is available since SDL 3.0.0
+ * Unlike textures, READ | WRITE can be used for simultaneous read-write
+ * usage. The same data synchronization concerns as textures apply.
+ *
+ * \since This datatype is available since SDL 3.0.0
  *
  * \sa SDL_CreateGPUBuffer
  */
 typedef Uint32 SDL_GPUBufferUsageFlags;
 
-#define SDL_GPU_BUFFERUSAGE_VERTEX                (1u << 0) /**< Buffer is a vertex buffer. */
-#define SDL_GPU_BUFFERUSAGE_INDEX                 (1u << 1) /**< Buffer is an index buffer. */
-#define SDL_GPU_BUFFERUSAGE_INDIRECT              (1u << 2) /**< Buffer is an indirect buffer. */
-#define SDL_GPU_BUFFERUSAGE_GRAPHICS_STORAGE_READ (1u << 3) /**< Buffer supports storage reads in graphics stages. */
-#define SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_READ  (1u << 4) /**< Buffer supports storage reads in the compute stage. */
-#define SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_WRITE (1u << 5) /**< Buffer supports storage writes in the compute stage. */
+#define SDL_GPU_BUFFERUSAGE_VERTEX                                  (1u << 0) /**< Buffer is a vertex buffer. */
+#define SDL_GPU_BUFFERUSAGE_INDEX                                   (1u << 1) /**< Buffer is an index buffer. */
+#define SDL_GPU_BUFFERUSAGE_INDIRECT                                (1u << 2) /**< Buffer is an indirect buffer. */
+#define SDL_GPU_BUFFERUSAGE_GRAPHICS_STORAGE_READ                   (1u << 3) /**< Buffer supports storage reads in graphics stages. */
+#define SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_READ                    (1u << 4) /**< Buffer supports storage reads in the compute stage. */
+#define SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_WRITE                   (1u << 5) /**< Buffer supports storage writes in the compute stage. */
 
 /**
  * Specifies how a transfer buffer is intended to be used by the client.
@@ -811,7 +958,7 @@ typedef enum SDL_GPUBlendFactor
 /**
  * Specifies which color components are written in a graphics pipeline.
  *
- * \since This enum is available since SDL 3.0.0
+ * \since This datatype is available since SDL 3.0.0
  *
  * \sa SDL_CreateGPUGraphicsPipeline
  */
@@ -877,15 +1024,15 @@ typedef enum SDL_GPUSamplerAddressMode
  * - VSYNC: Waits for vblank before presenting. No tearing is possible. If
  *   there is a pending image to present, the new image is enqueued for
  *   presentation. Disallows tearing at the cost of visual latency. When using
- *   this present mode, AcquireSwapchainTexture will block if too many frames
- *   are in flight.
+ *   this present mode, AcquireGPUSwapchainTexture will block if too many
+ *   frames are in flight.
  * - IMMEDIATE: Immediately presents. Lowest latency option, but tearing may
- *   occur. When using this mode, AcquireSwapchainTexture will return NULL if
- *   too many frames are in flight.
+ *   occur. When using this mode, AcquireGPUSwapchainTexture will return NULL
+ *   if too many frames are in flight.
  * - MAILBOX: Waits for vblank before presenting. No tearing is possible. If
  *   there is a pending image to present, the pending image is replaced by the
  *   new image. Similar to VSYNC, but with reduced visual latency. When using
- *   this mode, AcquireSwapchainTexture will return NULL if too many frames
+ *   this mode, AcquireGPUSwapchainTexture will return NULL if too many frames
  *   are in flight.
  *
  * \since This enum is available since SDL 3.0.0
@@ -1257,8 +1404,8 @@ typedef struct SDL_GPUColorTargetBlendState
     SDL_GPUColorComponentFlags color_write_mask;  /**< A bitmask specifying which of the RGBA components are enabled for writing. Writes to all channels if enable_color_write_mask is false. */
     bool enable_blend;                        /**< Whether blending is enabled for the color target. */
     bool enable_color_write_mask;             /**< Whether the color write mask is enabled. */
+    Uint8 padding1;
     Uint8 padding2;
-    Uint8 padding3;
 } SDL_GPUColorTargetBlendState;
 
 
@@ -1355,6 +1502,11 @@ typedef struct SDL_GPUTransferBufferCreateInfo
  * A structure specifying the parameters of the graphics pipeline rasterizer
  * state.
  *
+ * NOTE: Some backend APIs (D3D11/12) will enable depth clamping even if
+ * enable_depth_clip is true. If you rely on this clamp+clip behavior,
+ * consider enabling depth clip and then manually clamping depth in your
+ * fragment shaders on Metal and Vulkan.
+ *
  * \since This struct is available since SDL 3.0.0
  *
  * \sa SDL_GPUGraphicsPipelineCreateInfo
@@ -1368,9 +1520,9 @@ typedef struct SDL_GPURasterizerState
     float depth_bias_clamp;            /**< The maximum depth bias of a fragment. */
     float depth_bias_slope_factor;     /**< A scalar factor applied to a fragment's slope in depth calculations. */
     bool enable_depth_bias;        /**< true to bias fragment depth values. */
+    bool enable_depth_clip;        /**< true to enable depth clip, false to enable depth clamp. */
     Uint8 padding1;
     Uint8 padding2;
-    Uint8 padding3;
 } SDL_GPURasterizerState;
 
 /**
@@ -1484,8 +1636,8 @@ typedef struct SDL_GPUComputePipelineCreateInfo
     Uint32 num_samplers;                    /**< The number of samplers defined in the shader. */
     Uint32 num_readonly_storage_textures;   /**< The number of readonly storage textures defined in the shader. */
     Uint32 num_readonly_storage_buffers;    /**< The number of readonly storage buffers defined in the shader. */
-    Uint32 num_writeonly_storage_textures;  /**< The number of writeonly storage textures defined in the shader. */
-    Uint32 num_writeonly_storage_buffers;   /**< The number of writeonly storage buffers defined in the shader. */
+    Uint32 num_readwrite_storage_textures;  /**< The number of read-write storage textures defined in the shader. */
+    Uint32 num_readwrite_storage_buffers;   /**< The number of read-write storage buffers defined in the shader. */
     Uint32 num_uniform_buffers;             /**< The number of uniform buffers defined in the shader. */
     Uint32 threadcount_x;                   /**< The number of threads in the X dimension. This should match the value in the shader. */
     Uint32 threadcount_y;                   /**< The number of threads in the Y dimension. This should match the value in the shader. */
@@ -1623,6 +1775,7 @@ typedef struct SDL_GPUBlitInfo {
     Uint8 padding2;
     Uint8 padding3;
 } SDL_GPUBlitInfo;
+
 /* Binding structs */
 
 /**
@@ -1661,14 +1814,14 @@ typedef struct SDL_GPUTextureSamplerBinding
  *
  * \sa SDL_BeginGPUComputePass
  */
-typedef struct SDL_GPUStorageBufferWriteOnlyBinding
+typedef struct SDL_GPUStorageBufferReadWriteBinding
 {
     SDL_GPUBuffer *buffer;  /**< The buffer to bind. Must have been created with SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_WRITE. */
-    bool cycle;         /**< true cycles the buffer if it is already bound. */
+    bool cycle;             /**< true cycles the buffer if it is already bound. */
     Uint8 padding1;
     Uint8 padding2;
     Uint8 padding3;
-} SDL_GPUStorageBufferWriteOnlyBinding;
+} SDL_GPUStorageBufferReadWriteBinding;
 
 /**
  * A structure specifying parameters related to binding textures in a compute
@@ -1678,16 +1831,16 @@ typedef struct SDL_GPUStorageBufferWriteOnlyBinding
  *
  * \sa SDL_BeginGPUComputePass
  */
-typedef struct SDL_GPUStorageTextureWriteOnlyBinding
+typedef struct SDL_GPUStorageTextureReadWriteBinding
 {
-    SDL_GPUTexture *texture;  /**< The texture to bind. Must have been created with SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_WRITE. */
+    SDL_GPUTexture *texture;  /**< The texture to bind. Must have been created with SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_WRITE or SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_SIMULTANEOUS_READ_WRITE. */
     Uint32 mip_level;         /**< The mip level index to bind. */
     Uint32 layer;             /**< The layer index to bind. */
-    bool cycle;           /**< true cycles the texture if it is already bound. */
+    bool cycle;               /**< true cycles the texture if it is already bound. */
     Uint8 padding1;
     Uint8 padding2;
     Uint8 padding3;
-} SDL_GPUStorageTextureWriteOnlyBinding;
+} SDL_GPUStorageTextureReadWriteBinding;
 
 /* Functions */
 
@@ -1731,7 +1884,8 @@ extern SDL_DECLSPEC bool SDLCALL SDL_GPUSupportsProperties(
  * \param debug_mode enable debug mode properties and validations.
  * \param name the preferred GPU driver, or NULL to let SDL pick the optimal
  *             driver.
- * \returns a GPU context on success or NULL on failure.
+ * \returns a GPU context on success or NULL on failure; call SDL_GetError()
+ *          for more information.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -1778,7 +1932,8 @@ extern SDL_DECLSPEC SDL_GPUDevice *SDLCALL SDL_CreateGPUDevice(
  *   use for all vertex semantics, default is "TEXCOORD".
  *
  * \param props the properties to use.
- * \returns a GPU context on success or NULL on failure.
+ * \returns a GPU context on success or NULL on failure; call SDL_GetError()
+ *          for more information.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -1904,7 +2059,8 @@ extern SDL_DECLSPEC SDL_GPUShaderFormat SDLCALL SDL_GetGPUShaderFormats(SDL_GPUD
  * \param device a GPU Context.
  * \param createinfo a struct describing the state of the compute pipeline to
  *                   create.
- * \returns a compute pipeline object on success, or NULL on failure.
+ * \returns a compute pipeline object on success, or NULL on failure; call
+ *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -1921,7 +2077,8 @@ extern SDL_DECLSPEC SDL_GPUComputePipeline *SDLCALL SDL_CreateGPUComputePipeline
  * \param device a GPU Context.
  * \param createinfo a struct describing the state of the graphics pipeline to
  *                   create.
- * \returns a graphics pipeline object on success, or NULL on failure.
+ * \returns a graphics pipeline object on success, or NULL on failure; call
+ *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -1939,7 +2096,8 @@ extern SDL_DECLSPEC SDL_GPUGraphicsPipeline *SDLCALL SDL_CreateGPUGraphicsPipeli
  *
  * \param device a GPU Context.
  * \param createinfo a struct describing the state of the sampler to create.
- * \returns a sampler object on success, or NULL on failure.
+ * \returns a sampler object on success, or NULL on failure; call
+ *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -2008,7 +2166,8 @@ extern SDL_DECLSPEC SDL_GPUSampler *SDLCALL SDL_CreateGPUSampler(
  *
  * \param device a GPU Context.
  * \param createinfo a struct describing the state of the shader to create.
- * \returns a shader object on success, or NULL on failure.
+ * \returns a shader object on success, or NULL on failure; call
+ *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -2034,7 +2193,8 @@ extern SDL_DECLSPEC SDL_GPUShader *SDLCALL SDL_CreateGPUShader(
  *
  * \param device a GPU Context.
  * \param createinfo a struct describing the state of the texture to create.
- * \returns a texture object on success, or NULL on failure.
+ * \returns a texture object on success, or NULL on failure; call
+ *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -2064,7 +2224,8 @@ extern SDL_DECLSPEC SDL_GPUTexture *SDLCALL SDL_CreateGPUTexture(
  *
  * \param device a GPU Context.
  * \param createinfo a struct describing the state of the buffer to create.
- * \returns a buffer object on success, or NULL on failure.
+ * \returns a buffer object on success, or NULL on failure; call
+ *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -2093,7 +2254,8 @@ extern SDL_DECLSPEC SDL_GPUBuffer *SDLCALL SDL_CreateGPUBuffer(
  * \param device a GPU Context.
  * \param createinfo a struct describing the state of the transfer buffer to
  *                   create.
- * \returns a transfer buffer on success, or NULL on failure.
+ * \returns a transfer buffer on success, or NULL on failure; call
+ *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -2301,7 +2463,8 @@ extern SDL_DECLSPEC void SDLCALL SDL_ReleaseGPUGraphicsPipeline(
  * acquired on.
  *
  * \param device a GPU context.
- * \returns a command buffer.
+ * \returns a command buffer, or NULL on failure; call SDL_GetError() for more
+ *          information.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -2791,17 +2954,23 @@ extern SDL_DECLSPEC void SDLCALL SDL_EndGPURenderPass(
  * Begins a compute pass on a command buffer.
  *
  * A compute pass is defined by a set of texture subresources and buffers that
- * will be written to by compute pipelines. These textures and buffers must
- * have been created with the COMPUTE_STORAGE_WRITE bit. All operations
- * related to compute pipelines must take place inside of a compute pass. You
- * must not begin another compute pass, or a render pass or copy pass before
- * ending the compute pass.
+ * may be written to by compute pipelines. These textures and buffers must
+ * have been created with the COMPUTE_STORAGE_WRITE bit or the
+ * COMPUTE_STORAGE_SIMULTANEOUS_READ_WRITE bit. If you do not create a texture
+ * with COMPUTE_STORAGE_SIMULTANEOUS_READ_WRITE, you must not read from the
+ * texture in the compute pass. All operations related to compute pipelines
+ * must take place inside of a compute pass. You must not begin another
+ * compute pass, or a render pass or copy pass before ending the compute pass.
  *
- * A VERY IMPORTANT NOTE Textures and buffers bound as write-only MUST NOT be
- * read from during the compute pass. Doing so will result in undefined
- * behavior. If your compute work requires reading the output from a previous
- * dispatch, you MUST end the current compute pass and begin a new one before
- * you can safely access the data.
+ * A VERY IMPORTANT NOTE - Reads and writes in compute passes are NOT
+ * implicitly synchronized. This means you may cause data races by both
+ * reading and writing a resource region in a compute pass, or by writing
+ * multiple times to a resource region. If your compute work depends on
+ * reading the completed output from a previous dispatch, you MUST end the
+ * current compute pass and begin a new one before you can safely access the
+ * data. Otherwise you will receive unexpected results. Reading and writing a
+ * texture in the same compute pass is only supported by specific texture
+ * formats. Make sure you check the format support!
  *
  * \param command_buffer a command buffer.
  * \param storage_texture_bindings an array of writeable storage texture
@@ -2820,9 +2989,9 @@ extern SDL_DECLSPEC void SDLCALL SDL_EndGPURenderPass(
  */
 extern SDL_DECLSPEC SDL_GPUComputePass *SDLCALL SDL_BeginGPUComputePass(
     SDL_GPUCommandBuffer *command_buffer,
-    const SDL_GPUStorageTextureWriteOnlyBinding *storage_texture_bindings,
+    const SDL_GPUStorageTextureReadWriteBinding *storage_texture_bindings,
     Uint32 num_storage_texture_bindings,
-    const SDL_GPUStorageBufferWriteOnlyBinding *storage_buffer_bindings,
+    const SDL_GPUStorageBufferReadWriteBinding *storage_buffer_bindings,
     Uint32 num_storage_buffer_bindings);
 
 /**
@@ -2967,7 +3136,8 @@ extern SDL_DECLSPEC void SDLCALL SDL_EndGPUComputePass(
  * \param device a GPU context.
  * \param transfer_buffer a transfer buffer.
  * \param cycle if true, cycles the transfer buffer if it is already bound.
- * \returns the address of the mapped transfer buffer memory.
+ * \returns the address of the mapped transfer buffer memory, or NULL on
+ *          failure; call SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  */
@@ -3183,7 +3353,7 @@ extern SDL_DECLSPEC void SDLCALL SDL_BlitGPUTexture(
  * \param device a GPU context.
  * \param window an SDL_Window.
  * \param swapchain_composition the swapchain composition to check.
- * \returns true if supported, false if unsupported (or on error).
+ * \returns true if supported, false if unsupported.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -3202,7 +3372,7 @@ extern SDL_DECLSPEC bool SDLCALL SDL_WindowSupportsGPUSwapchainComposition(
  * \param device a GPU context.
  * \param window an SDL_Window.
  * \param present_mode the presentation mode to check.
- * \returns true if supported, false if unsupported (or on error).
+ * \returns true if supported, false if unsupported.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -3217,6 +3387,7 @@ extern SDL_DECLSPEC bool SDLCALL SDL_WindowSupportsGPUPresentMode(
  * Claims a window, creating a swapchain structure for it.
  *
  * This must be called before SDL_AcquireGPUSwapchainTexture is called using
+ * the window. You should only call this function from the thread that created
  * the window.
  *
  * The swapchain will be created with SDL_GPU_SWAPCHAINCOMPOSITION_SDR and
@@ -3226,7 +3397,8 @@ extern SDL_DECLSPEC bool SDLCALL SDL_WindowSupportsGPUPresentMode(
  *
  * \param device a GPU context.
  * \param window an SDL_Window.
- * \returns true on success, otherwise false.
+ * \returns true on success, or false on failure; call SDL_GetError() for more
+ *          information.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -3268,7 +3440,8 @@ extern SDL_DECLSPEC void SDLCALL SDL_ReleaseWindowFromGPUDevice(
  * \param window an SDL_Window that has been claimed.
  * \param swapchain_composition the desired composition of the swapchain.
  * \param present_mode the desired present mode for the swapchain.
- * \returns true if successful, false on error.
+ * \returns true if successful, false on error; call SDL_GetError() for more
+ *          information.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -3283,6 +3456,8 @@ extern SDL_DECLSPEC bool SDLCALL SDL_SetGPUSwapchainParameters(
 
 /**
  * Obtains the texture format of the swapchain for the given window.
+ *
+ * Note that this format can change if the swapchain parameters change.
  *
  * \param device a GPU context.
  * \param window an SDL_Window that has been claimed.
@@ -3300,28 +3475,38 @@ extern SDL_DECLSPEC SDL_GPUTextureFormat SDLCALL SDL_GetGPUSwapchainTextureForma
  * When a swapchain texture is acquired on a command buffer, it will
  * automatically be submitted for presentation when the command buffer is
  * submitted. The swapchain texture should only be referenced by the command
- * buffer used to acquire it. May return NULL under certain conditions. This
- * is not necessarily an error. This texture is managed by the implementation
- * and must not be freed by the user. You MUST NOT call this function from any
- * thread other than the one that created the window.
+ * buffer used to acquire it. The swapchain texture handle can be filled in
+ * with NULL under certain conditions. This is not necessarily an error. If
+ * this function returns false then there is an error.
+ *
+ * The swapchain texture is managed by the implementation and must not be
+ * freed by the user. You MUST NOT call this function from any thread other
+ * than the one that created the window.
  *
  * \param command_buffer a command buffer.
  * \param window a window that has been claimed.
- * \param w a pointer filled in with the swapchain width.
- * \param h a pointer filled in with the swapchain height.
- * \returns a swapchain texture.
+ * \param swapchain_texture a pointer filled in with a swapchain texture
+ *                          handle.
+ * \param swapchain_texture_width a pointer filled in with the swapchain
+ *                                texture width, may be NULL.
+ * \param swapchain_texture_height a pointer filled in with the swapchain
+ *                                 texture height, may be NULL.
+ * \returns true on success, false on error; call SDL_GetError() for more
+ *          information.
  *
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_ClaimWindowForGPUDevice
  * \sa SDL_SubmitGPUCommandBuffer
  * \sa SDL_SubmitGPUCommandBufferAndAcquireFence
+ * \sa SDL_GetWindowSizeInPixels
  */
-extern SDL_DECLSPEC SDL_GPUTexture *SDLCALL SDL_AcquireGPUSwapchainTexture(
+extern SDL_DECLSPEC bool SDLCALL SDL_AcquireGPUSwapchainTexture(
     SDL_GPUCommandBuffer *command_buffer,
     SDL_Window *window,
-    Uint32 *w,
-    Uint32 *h);
+    SDL_GPUTexture **swapchain_texture,
+    Uint32 *swapchain_texture_width,
+    Uint32 *swapchain_texture_height);
 
 /**
  * Submits a command buffer so its commands can be processed on the GPU.
@@ -3334,6 +3519,8 @@ extern SDL_DECLSPEC SDL_GPUTexture *SDLCALL SDL_AcquireGPUSwapchainTexture(
  * command in a subsequent submission begins executing.
  *
  * \param command_buffer a command buffer.
+ * \returns true on success, false on failure; call SDL_GetError() for more
+ *          information.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -3341,7 +3528,7 @@ extern SDL_DECLSPEC SDL_GPUTexture *SDLCALL SDL_AcquireGPUSwapchainTexture(
  * \sa SDL_AcquireGPUSwapchainTexture
  * \sa SDL_SubmitGPUCommandBufferAndAcquireFence
  */
-extern SDL_DECLSPEC void SDLCALL SDL_SubmitGPUCommandBuffer(
+extern SDL_DECLSPEC bool SDLCALL SDL_SubmitGPUCommandBuffer(
     SDL_GPUCommandBuffer *command_buffer);
 
 /**
@@ -3357,7 +3544,8 @@ extern SDL_DECLSPEC void SDLCALL SDL_SubmitGPUCommandBuffer(
  * command in a subsequent submission begins executing.
  *
  * \param command_buffer a command buffer.
- * \returns a fence associated with the command buffer.
+ * \returns a fence associated with the command buffer, or NULL on failure;
+ *          call SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -3373,12 +3561,14 @@ extern SDL_DECLSPEC SDL_GPUFence *SDLCALL SDL_SubmitGPUCommandBufferAndAcquireFe
  * Blocks the thread until the GPU is completely idle.
  *
  * \param device a GPU context.
+ * \returns true on success, false on failure; call SDL_GetError() for more
+ *          information.
  *
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_WaitForGPUFences
  */
-extern SDL_DECLSPEC void SDLCALL SDL_WaitForGPUIdle(
+extern SDL_DECLSPEC bool SDLCALL SDL_WaitForGPUIdle(
     SDL_GPUDevice *device);
 
 /**
@@ -3389,13 +3579,15 @@ extern SDL_DECLSPEC void SDLCALL SDL_WaitForGPUIdle(
  *                 fences to be signaled.
  * \param fences an array of fences to wait on.
  * \param num_fences the number of fences in the fences array.
+ * \returns true on success, false on failure; call SDL_GetError() for more
+ *          information.
  *
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_SubmitGPUCommandBufferAndAcquireFence
  * \sa SDL_WaitForGPUIdle
  */
-extern SDL_DECLSPEC void SDLCALL SDL_WaitForGPUFences(
+extern SDL_DECLSPEC bool SDLCALL SDL_WaitForGPUFences(
     SDL_GPUDevice *device,
     bool wait_all,
     SDL_GPUFence *const *fences,

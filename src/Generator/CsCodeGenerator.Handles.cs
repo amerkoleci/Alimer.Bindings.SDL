@@ -71,7 +71,7 @@ partial class CsCodeGenerator
             }
 
             string elementTypeName = GetCsTypeName(typedef.ElementType);
-            _collectedHandles.Add(typedef.Name, elementTypeName);
+           _collectedHandles.Add(typedef.Name, Tuple.Create(elementTypeName, (CppTypeDeclaration)typedef));
         }
 
         foreach (CppClass? cppClass in compilation.Classes)
@@ -92,7 +92,7 @@ partial class CsCodeGenerator
                 AddCsMapping(cppClass.Name, handleName);
             }
 
-            _collectedHandles.Add(handleName, "nint");
+           _collectedHandles.Add(handleName, Tuple.Create("nint", (CppTypeDeclaration)cppClass));
         }
     }
 
@@ -107,16 +107,18 @@ partial class CsCodeGenerator
             );
 
         // First generate primitive types
-        foreach (KeyValuePair<string, string> handlePair in _collectedHandles)
+        foreach (KeyValuePair<string, Tuple<string, CppTypeDeclaration>> handlePair in _collectedHandles)
         {
             string csName = handlePair.Key;
             if (s_csNameMappings.ContainsKey(csName))
                 continue;
 
-            string elementTypeName = handlePair.Value;
+            string elementTypeName = handlePair.Value.Item1;
             bool isPrimitive = elementTypeName != "nint";
             if (!isPrimitive)
                 continue;
+
+            writer.WriteComment(handlePair.Value.Item2.Comment?.ChildrenToString() ?? null);
 
             bool generateEnum = false;
             if (csName.EndsWith("Flags")
@@ -224,16 +226,18 @@ partial class CsCodeGenerator
         }
 
 
-        foreach (KeyValuePair<string, string> handlePair in _collectedHandles)
+        foreach (KeyValuePair<string, Tuple<string, CppTypeDeclaration>> handlePair in _collectedHandles)
         {
             string csName = handlePair.Key;
             if (s_csNameMappings.ContainsKey(csName))
                 continue;
 
-            string elementTypeName = handlePair.Value;
+            string elementTypeName = handlePair.Value.Item1;
             bool isPrimitive = elementTypeName != "nint";
             if (isPrimitive)
                 continue;
+
+            writer.WriteComment(handlePair.Value.Item2.Comment?.ChildrenToString() ?? null);
 
             writer.WriteLine($"[DebuggerDisplay(\"{{DebuggerDisplay,nq}}\")]");
             string typeDeclaration = $"{visibility} readonly partial struct {csName}({elementTypeName} value) : IEquatable<{csName}>";

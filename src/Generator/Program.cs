@@ -120,20 +120,30 @@ public static class Program
             CppCompilation compilation = CppParser.ParseFile(header, options);
 
             // Print diagnostic messages
-            if (compilation.HasErrors)
+            // Null check added in case the Messages gets modified and being able to return null (which is not the case for now).
+            if (compilation.Diagnostics.Messages != null && compilation.Diagnostics.Messages.Count > 0)
             {
+                // Print all of the available logs before returning.
+                bool hadErrors = false;
                 foreach (CppDiagnosticMessage message in compilation.Diagnostics.Messages)
                 {
                     if (message.Type == CppLogMessageType.Error)
                     {
-                        var currentColor = Console.ForegroundColor;
+                        hadErrors = true;
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(message);
-                        Console.ForegroundColor = currentColor;
                     }
+                    else if (message.Type == CppLogMessageType.Warning)
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                    else if (message.Type == CppLogMessageType.Info)
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                    Console.WriteLine($"[{message.Type}] {message}");
+
+                    Console.ResetColor();
                 }
 
-                return 0;
+                if (hadErrors)
+                    return -1; // Let the OS know that the app failed with -1 (can be changed to any error code but 0).
             }
 
             generator.Collect(compilation);

@@ -210,7 +210,7 @@ partial class CsCodeGenerator
                             }
 
                             string enumItemName = GetEnumItemName(csName, macro.Name, constantPrefix);
-                            writer.WriteLine($"{enumItemName} = SDL3.{macro.Name},");
+                            writer.WriteLine($"{enumItemName} = " + _options.ClassName + $".{macro.Name},");
                         }
 
                         if (csName == "SDL_GPUColorComponentFlags")

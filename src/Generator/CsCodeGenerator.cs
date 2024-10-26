@@ -90,7 +90,7 @@ public partial class CsCodeGenerator
 
     private readonly List<CppEnum> _collectedEnums = [];
     private readonly Dictionary<string, CppFunctionType> _collectedCallbackTypedes = [];
-    private readonly Dictionary<string, string> _collectedHandles = [];
+    private readonly Dictionary<string, Tuple<string, CppTypeDeclaration>> _collectedHandles = [];
     private readonly List<CppClass> _collectedStructAndUnions = [];
     private readonly List<CppFunction> _collectedFunctions = [];
 

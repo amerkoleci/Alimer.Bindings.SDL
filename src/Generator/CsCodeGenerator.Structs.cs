@@ -76,6 +76,8 @@ partial class CsCodeGenerator
             typeName = "SDL_HapticDirectionType";
         }
 
+        writer.WriteComment(@struct?.Comment?.ChildrenToString() ?? null);
+
         if (isUnion)
         {
             writer.WriteLine("[StructLayout(LayoutKind.Explicit)]");
@@ -100,6 +102,8 @@ partial class CsCodeGenerator
         string typeName = "")
     {
         string csFieldName = NormalizeFieldName(field.Name);
+
+        writer.WriteComment(field?.Comment?.ChildrenToString() ?? null);
 
         if (isUnion)
         {

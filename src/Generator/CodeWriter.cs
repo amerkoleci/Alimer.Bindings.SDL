@@ -86,6 +86,16 @@ public sealed class CodeWriter : IDisposable
         _writer.WriteLine();
         _shouldIndent = true;
     }
+    
+    public void WriteComment(string comment)
+    {
+        if (comment == null)
+            return;
+
+        _writer.WriteLine(new string('\t', IndentLevel) + "/// <summary>");
+        _writer.WriteLine(new string('\t', IndentLevel) + "/// " + string.Join("<br/>" + "\n" + new string('\t', IndentLevel) + "/// ", comment.Trim().Split(new string[] { "\n" }, StringSplitOptions.TrimEntries)));
+        _writer.WriteLine(new string('\t', IndentLevel) + "/// </summary>");
+    }
 
     public void WriteLineUndindented(string @string)
     {

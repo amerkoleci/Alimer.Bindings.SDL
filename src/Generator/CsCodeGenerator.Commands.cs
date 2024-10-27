@@ -144,6 +144,8 @@ partial class CsCodeGenerator
         bool stringReturnType = false;
         bool freeReturnString = false;
 
+        writer.WriteComment(cppFunction?.Comment?.ChildrenToString() ?? null);
+
         writer.WriteLine($"[LibraryImport(LibName, EntryPoint = \"{cppFunction.Name}\")]");
         if (returnCsName == "SDL_bool" || returnCsName == "bool")
         {

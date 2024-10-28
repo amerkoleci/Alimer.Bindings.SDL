@@ -132,11 +132,6 @@ partial class CsCodeGenerator
 
     private void WriteFunctionInvocation(CppFunction cppFunction, CodeWriter writer)
     {
-        if(cppFunction.Name == "SDL_Metal_CreateView")
-        {
-
-        }
-
         string returnCsName = GetCsTypeName(cppFunction.ReturnType);
         string argumentsString = GetParameterSignature(cppFunction, false);
         string functionName = cppFunction.Name;
@@ -144,7 +139,7 @@ partial class CsCodeGenerator
         bool stringReturnType = false;
         bool freeReturnString = false;
 
-        writer.WriteComment(cppFunction?.Comment?.ChildrenToString() ?? null);
+        writer.WriteComment(cppFunction.Comment?.ChildrenToString() ?? string.Empty);
 
         writer.WriteLine($"[LibraryImport(LibName, EntryPoint = \"{cppFunction.Name}\")]");
         if (returnCsName == "SDL_bool" || returnCsName == "bool")

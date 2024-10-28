@@ -293,29 +293,28 @@ partial class CsCodeGenerator
                     modifier = "const";
                     csDataType = "uint";
 
-                    if(macroValue.StartsWith("SDL_SCANCODE_TO_KEYCODE"))
+                    if (macroValue.StartsWith("SDL_SCANCODE_TO_KEYCODE"))
                     {
                         string enumValueName = GetEnumItemName("SDL_Scancode", cppMacro.Tokens[2].Text, "SDL_SCANCODE");
                         macroValue = $"((int)SDL_Scancode.{enumValueName} | SDLK_SCANCODE_MASK)";
                     }
                 }
-                else if(cppMacro.Name.StartsWith("SDL_KMOD_"))
+                else if (cppMacro.Name.StartsWith("SDL_KMOD_"))
                 {
                     modifier = "const";
                     csDataType = "ushort";
-                    if(macroValue.EndsWith("u"))
+                    if (macroValue.EndsWith("u"))
                         macroValue = macroValue.Substring(0, macroValue.Length - 1);
                 }
 
-                if(cppMacro.Name.StartsWith("SDL_WINDOW_") && cppMacro.Tokens.Count > 2)
+                if (cppMacro.Name.StartsWith("SDL_WINDOW_") && cppMacro.Tokens.Count > 2)
                 {
                     modifier = "const";
                     csDataType = "ulong";
                     macroValue = cppMacro.Tokens[2].Text;
                 }
 
-                if (cppMacro.Name == "SDL_FALSE"
-                    || cppMacro.Name == "SDL_TRUE")
+                if (cppMacro.Name == "SDL_FALSE" || cppMacro.Name == "SDL_TRUE")
                 {
                     csDataType = "SDL_bool";
                     macroValue = $"(SDL_bool)({macroValue})";
@@ -335,7 +334,7 @@ partial class CsCodeGenerator
                     modifier = "const";
                     csDataType = "uint";
                 }
-                else if(cppMacro.Name.StartsWith("SDL_GPU_COLORCOMPONENT_"))
+                else if (cppMacro.Name.StartsWith("SDL_GPU_COLORCOMPONENT_"))
                 {
                     modifier = "const";
                     csDataType = "byte";
@@ -361,5 +360,4 @@ partial class CsCodeGenerator
             }
         }
     }
-
 }

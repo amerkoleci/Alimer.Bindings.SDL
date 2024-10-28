@@ -11,24 +11,65 @@ using System;
 
 namespace SDL3;
 
+/// <summary>
+/// Audio format.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_AUDIO_BITSIZE<br/>
+/// @sa SDL_AUDIO_BYTESIZE<br/>
+/// @sa SDL_AUDIO_ISINT<br/>
+/// @sa SDL_AUDIO_ISFLOAT<br/>
+/// @sa SDL_AUDIO_ISBIGENDIAN<br/>
+/// @sa SDL_AUDIO_ISLITTLEENDIAN<br/>
+/// @sa SDL_AUDIO_ISSIGNED<br/>
+/// @sa SDL_AUDIO_ISUNSIGNED
+/// </summary>
 public enum SDL_AudioFormat : uint
 {
+	/// <summary>
+	/// Unspecified audio format
+	/// </summary>
 	/// <unmanaged>SDL_AUDIO_UNKNOWN</unmanaged>
 	Unknown = 0x0000u,
+	/// <summary>
+	/// Unsigned 8-bit samples
+	/// </summary>
 	/// <unmanaged>SDL_AUDIO_U8</unmanaged>
 	U8 = 0x0008u,
+	/// <summary>
+	/// Signed 8-bit samples
+	/// </summary>
 	/// <unmanaged>SDL_AUDIO_S8</unmanaged>
 	S8 = 0x8008u,
+	/// <summary>
+	/// Signed 16-bit samples
+	/// </summary>
 	/// <unmanaged>SDL_AUDIO_S16LE</unmanaged>
 	S16le = 0x8010u,
+	/// <summary>
+	/// As above, but big-endian byte order
+	/// </summary>
 	/// <unmanaged>SDL_AUDIO_S16BE</unmanaged>
 	S16be = 0x9010u,
+	/// <summary>
+	/// 32-bit integer samples
+	/// </summary>
 	/// <unmanaged>SDL_AUDIO_S32LE</unmanaged>
 	S32le = 0x8020u,
+	/// <summary>
+	/// As above, but big-endian byte order
+	/// </summary>
 	/// <unmanaged>SDL_AUDIO_S32BE</unmanaged>
 	S32be = 0x9020u,
+	/// <summary>
+	/// 32-bit floating point samples
+	/// </summary>
 	/// <unmanaged>SDL_AUDIO_F32LE</unmanaged>
 	F32le = 0x8120u,
+	/// <summary>
+	/// As above, but big-endian byte order
+	/// </summary>
 	/// <unmanaged>SDL_AUDIO_F32BE</unmanaged>
 	F32be = 0x9120u,
 	/// <unmanaged>SDL_AUDIO_S16</unmanaged>
@@ -39,44 +80,111 @@ public enum SDL_AudioFormat : uint
 	F32 = F32le,
 }
 
+/// <summary>
+/// The blend operation used when combining source and destination pixel<br/>
+/// components.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_BlendOperation
 {
+	/// <summary>
+	/// dst + src: supported by all renderers
+	/// </summary>
 	/// <unmanaged>SDL_BLENDOPERATION_ADD</unmanaged>
 	Add = 0x1,
+	/// <summary>
+	/// src - dst : supported by D3D, OpenGL, OpenGLES, and Vulkan
+	/// </summary>
 	/// <unmanaged>SDL_BLENDOPERATION_SUBTRACT</unmanaged>
 	Subtract = 0x2,
+	/// <summary>
+	/// dst - src : supported by D3D, OpenGL, OpenGLES, and Vulkan
+	/// </summary>
 	/// <unmanaged>SDL_BLENDOPERATION_REV_SUBTRACT</unmanaged>
 	RevSubtract = 0x3,
+	/// <summary>
+	/// min(dst, src) : supported by D3D, OpenGL, OpenGLES, and Vulkan
+	/// </summary>
 	/// <unmanaged>SDL_BLENDOPERATION_MINIMUM</unmanaged>
 	Minimum = 0x4,
+	/// <summary>
+	/// max(dst, src) : supported by D3D, OpenGL, OpenGLES, and Vulkan
+	/// </summary>
 	/// <unmanaged>SDL_BLENDOPERATION_MAXIMUM</unmanaged>
 	Maximum = 0x5,
 }
 
+/// <summary>
+/// The normalized factor used to multiply pixel components.<br/>
+/// The blend factors are multiplied with the pixels from a drawing operation<br/>
+/// (src) and the pixels from the render target (dst) before the blend<br/>
+/// operation. The comma-separated factors listed above are always applied in<br/>
+/// the component order red, green, blue, and alpha.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_BlendFactor
 {
+	/// <summary>
+	/// 0, 0, 0, 0
+	/// </summary>
 	/// <unmanaged>SDL_BLENDFACTOR_ZERO</unmanaged>
 	Zero = 0x1,
+	/// <summary>
+	/// 1, 1, 1, 1
+	/// </summary>
 	/// <unmanaged>SDL_BLENDFACTOR_ONE</unmanaged>
 	One = 0x2,
+	/// <summary>
+	/// srcR, srcG, srcB, srcA
+	/// </summary>
 	/// <unmanaged>SDL_BLENDFACTOR_SRC_COLOR</unmanaged>
 	SrcColor = 0x3,
+	/// <summary>
+	/// 1-srcR, 1-srcG, 1-srcB, 1-srcA
+	/// </summary>
 	/// <unmanaged>SDL_BLENDFACTOR_ONE_MINUS_SRC_COLOR</unmanaged>
 	OneMinusSrcColor = 0x4,
+	/// <summary>
+	/// srcA, srcA, srcA, srcA
+	/// </summary>
 	/// <unmanaged>SDL_BLENDFACTOR_SRC_ALPHA</unmanaged>
 	SrcAlpha = 0x5,
+	/// <summary>
+	/// 1-srcA, 1-srcA, 1-srcA, 1-srcA
+	/// </summary>
 	/// <unmanaged>SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA</unmanaged>
 	OneMinusSrcAlpha = 0x6,
+	/// <summary>
+	/// dstR, dstG, dstB, dstA
+	/// </summary>
 	/// <unmanaged>SDL_BLENDFACTOR_DST_COLOR</unmanaged>
 	DstColor = 0x7,
+	/// <summary>
+	/// 1-dstR, 1-dstG, 1-dstB, 1-dstA
+	/// </summary>
 	/// <unmanaged>SDL_BLENDFACTOR_ONE_MINUS_DST_COLOR</unmanaged>
 	OneMinusDstColor = 0x8,
+	/// <summary>
+	/// dstA, dstA, dstA, dstA
+	/// </summary>
 	/// <unmanaged>SDL_BLENDFACTOR_DST_ALPHA</unmanaged>
 	DstAlpha = 0x9,
+	/// <summary>
+	/// 1-dstA, 1-dstA, 1-dstA, 1-dstA
+	/// </summary>
 	/// <unmanaged>SDL_BLENDFACTOR_ONE_MINUS_DST_ALPHA</unmanaged>
 	OneMinusDstAlpha = 0xA,
 }
 
+/// <summary>
+/// The position of camera in relation to system device.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_GetCameraPosition
+/// </summary>
 public enum SDL_CameraPosition
 {
 	/// <unmanaged>SDL_CAMERA_POSITION_UNKNOWN</unmanaged>
@@ -87,294 +195,754 @@ public enum SDL_CameraPosition
 	BackFacing = 2,
 }
 
+/// <summary>
+/// The types of events that can be delivered.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_EventType
 {
+	/// <summary>
+	/// Unused (do not remove)
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_FIRST</unmanaged>
 	First = 0,
+	/// <summary>
+	/// User-requested quit
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_QUIT</unmanaged>
 	Quit = 0x100,
+	/// <summary>
+	/// The application is being terminated by the OS. This event must be handled in a callback set with SDL_AddEventWatch().<br/>
+	/// Called on iOS in applicationWillTerminate()<br/>
+	/// Called on Android in onDestroy()
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_TERMINATING</unmanaged>
 	Terminating = 257,
+	/// <summary>
+	/// The application is low on memory, free memory if possible. This event must be handled in a callback set with SDL_AddEventWatch().<br/>
+	/// Called on iOS in applicationDidReceiveMemoryWarning()<br/>
+	/// Called on Android in onTrimMemory()
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_LOW_MEMORY</unmanaged>
 	LowMemory = 258,
+	/// <summary>
+	/// The application is about to enter the background. This event must be handled in a callback set with SDL_AddEventWatch().<br/>
+	/// Called on iOS in applicationWillResignActive()<br/>
+	/// Called on Android in onPause()
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WILL_ENTER_BACKGROUND</unmanaged>
 	WillEnterBackground = 259,
+	/// <summary>
+	/// The application did enter the background and may not get CPU for some time. This event must be handled in a callback set with SDL_AddEventWatch().<br/>
+	/// Called on iOS in applicationDidEnterBackground()<br/>
+	/// Called on Android in onPause()
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_DID_ENTER_BACKGROUND</unmanaged>
 	DidEnterBackground = 260,
+	/// <summary>
+	/// The application is about to enter the foreground. This event must be handled in a callback set with SDL_AddEventWatch().<br/>
+	/// Called on iOS in applicationWillEnterForeground()<br/>
+	/// Called on Android in onResume()
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WILL_ENTER_FOREGROUND</unmanaged>
 	WillEnterForeground = 261,
+	/// <summary>
+	/// The application is now interactive. This event must be handled in a callback set with SDL_AddEventWatch().<br/>
+	/// Called on iOS in applicationDidBecomeActive()<br/>
+	/// Called on Android in onResume()
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_DID_ENTER_FOREGROUND</unmanaged>
 	DidEnterForeground = 262,
+	/// <summary>
+	/// The user's locale preferences have changed.
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_LOCALE_CHANGED</unmanaged>
 	LocaleChanged = 263,
+	/// <summary>
+	/// The system theme changed
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_SYSTEM_THEME_CHANGED</unmanaged>
 	SystemThemeChanged = 264,
+	/// <summary>
+	/// Display orientation has changed to data1
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_DISPLAY_ORIENTATION</unmanaged>
 	DisplayOrientation = 0x151,
+	/// <summary>
+	/// Display has been added to the system
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_DISPLAY_ADDED</unmanaged>
 	DisplayAdded = 338,
+	/// <summary>
+	/// Display has been removed from the system
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_DISPLAY_REMOVED</unmanaged>
 	DisplayRemoved = 339,
+	/// <summary>
+	/// Display has changed position
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_DISPLAY_MOVED</unmanaged>
 	DisplayMoved = 340,
+	/// <summary>
+	/// Display has changed desktop mode
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_DISPLAY_DESKTOP_MODE_CHANGED</unmanaged>
 	DisplayDesktopModeChanged = 341,
+	/// <summary>
+	/// Display has changed current mode
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_DISPLAY_CURRENT_MODE_CHANGED</unmanaged>
 	DisplayCurrentModeChanged = 342,
+	/// <summary>
+	/// Display has changed content scale
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_DISPLAY_CONTENT_SCALE_CHANGED</unmanaged>
 	DisplayContentScaleChanged = 343,
 	/// <unmanaged>SDL_EVENT_DISPLAY_FIRST</unmanaged>
 	DisplayFirst = DisplayOrientation,
 	/// <unmanaged>SDL_EVENT_DISPLAY_LAST</unmanaged>
 	DisplayLast = DisplayContentScaleChanged,
+	/// <summary>
+	/// Window has been shown
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_SHOWN</unmanaged>
 	WindowShown = 0x202,
+	/// <summary>
+	/// Window has been hidden
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_HIDDEN</unmanaged>
 	WindowHidden = 515,
+	/// <summary>
+	/// Window has been exposed and should be redrawn, and can be redrawn directly from event watchers for this event
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_EXPOSED</unmanaged>
 	WindowExposed = 516,
+	/// <summary>
+	/// Window has been moved to data1, data2
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_MOVED</unmanaged>
 	WindowMoved = 517,
+	/// <summary>
+	/// Window has been resized to data1xdata2
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_RESIZED</unmanaged>
 	WindowResized = 518,
+	/// <summary>
+	/// The pixel size of the window has changed to data1xdata2
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED</unmanaged>
 	WindowPixelSizeChanged = 519,
+	/// <summary>
+	/// The pixel size of a Metal view associated with the window has changed
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_METAL_VIEW_RESIZED</unmanaged>
 	WindowMetalViewResized = 520,
+	/// <summary>
+	/// Window has been minimized
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_MINIMIZED</unmanaged>
 	WindowMinimized = 521,
+	/// <summary>
+	/// Window has been maximized
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_MAXIMIZED</unmanaged>
 	WindowMaximized = 522,
+	/// <summary>
+	/// Window has been restored to normal size and position
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_RESTORED</unmanaged>
 	WindowRestored = 523,
+	/// <summary>
+	/// Window has gained mouse focus
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_MOUSE_ENTER</unmanaged>
 	WindowMouseEnter = 524,
+	/// <summary>
+	/// Window has lost mouse focus
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_MOUSE_LEAVE</unmanaged>
 	WindowMouseLeave = 525,
+	/// <summary>
+	/// Window has gained keyboard focus
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_FOCUS_GAINED</unmanaged>
 	WindowFocusGained = 526,
+	/// <summary>
+	/// Window has lost keyboard focus
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_FOCUS_LOST</unmanaged>
 	WindowFocusLost = 527,
+	/// <summary>
+	/// The window manager requests that the window be closed
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_CLOSE_REQUESTED</unmanaged>
 	WindowCloseRequested = 528,
+	/// <summary>
+	/// Window had a hit test that wasn't SDL_HITTEST_NORMAL
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_HIT_TEST</unmanaged>
 	WindowHitTest = 529,
+	/// <summary>
+	/// The ICC profile of the window's display has changed
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_ICCPROF_CHANGED</unmanaged>
 	WindowIccprofChanged = 530,
+	/// <summary>
+	/// Window has been moved to display data1
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_DISPLAY_CHANGED</unmanaged>
 	WindowDisplayChanged = 531,
+	/// <summary>
+	/// Window display scale has been changed
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED</unmanaged>
 	WindowDisplayScaleChanged = 532,
+	/// <summary>
+	/// The window safe area has been changed
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_SAFE_AREA_CHANGED</unmanaged>
 	WindowSafeAreaChanged = 533,
+	/// <summary>
+	/// The window has been occluded
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_OCCLUDED</unmanaged>
 	WindowOccluded = 534,
+	/// <summary>
+	/// The window has entered fullscreen mode
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_ENTER_FULLSCREEN</unmanaged>
 	WindowEnterFullscreen = 535,
+	/// <summary>
+	/// The window has left fullscreen mode
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_LEAVE_FULLSCREEN</unmanaged>
 	WindowLeaveFullscreen = 536,
+	/// <summary>
+	/// The window with the associated ID is being or has been destroyed. If this message is being handled<br/>
+	/// in an event watcher, the window handle is still valid and can still be used to retrieve any userdata<br/>
+	/// associated with the window. Otherwise, the handle has already been destroyed and all resources<br/>
+	/// associated with it are invalid
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_DESTROYED</unmanaged>
 	WindowDestroyed = 537,
+	/// <summary>
+	/// Window HDR properties have changed
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_HDR_STATE_CHANGED</unmanaged>
 	WindowHDRStateChanged = 538,
 	/// <unmanaged>SDL_EVENT_WINDOW_FIRST</unmanaged>
 	WindowFirst = WindowShown,
 	/// <unmanaged>SDL_EVENT_WINDOW_LAST</unmanaged>
 	WindowLast = WindowHDRStateChanged,
+	/// <summary>
+	/// Key pressed
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_KEY_DOWN</unmanaged>
 	KeyDown = 0x300,
+	/// <summary>
+	/// Key released
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_KEY_UP</unmanaged>
 	KeyUp = 769,
+	/// <summary>
+	/// Keyboard text editing (composition)
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_TEXT_EDITING</unmanaged>
 	TextEditing = 770,
+	/// <summary>
+	/// Keyboard text input
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_TEXT_INPUT</unmanaged>
 	TextInput = 771,
+	/// <summary>
+	/// Keymap changed due to a system event such as an<br/>
+	/// input language or keyboard layout change.
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_KEYMAP_CHANGED</unmanaged>
 	KeymapChanged = 772,
+	/// <summary>
+	/// A new keyboard has been inserted into the system
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_KEYBOARD_ADDED</unmanaged>
 	KeyboardAdded = 773,
+	/// <summary>
+	/// A keyboard has been removed
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_KEYBOARD_REMOVED</unmanaged>
 	KeyboardRemoved = 774,
+	/// <summary>
+	/// Keyboard text editing candidates
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_TEXT_EDITING_CANDIDATES</unmanaged>
 	TextEditingCandidates = 775,
+	/// <summary>
+	/// Mouse moved
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_MOUSE_MOTION</unmanaged>
 	MouseMotion = 0x400,
+	/// <summary>
+	/// Mouse button pressed
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_MOUSE_BUTTON_DOWN</unmanaged>
 	MouseButtonDown = 1025,
+	/// <summary>
+	/// Mouse button released
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_MOUSE_BUTTON_UP</unmanaged>
 	MouseButtonUp = 1026,
+	/// <summary>
+	/// Mouse wheel motion
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_MOUSE_WHEEL</unmanaged>
 	MouseWheel = 1027,
+	/// <summary>
+	/// A new mouse has been inserted into the system
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_MOUSE_ADDED</unmanaged>
 	MouseAdded = 1028,
+	/// <summary>
+	/// A mouse has been removed
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_MOUSE_REMOVED</unmanaged>
 	MouseRemoved = 1029,
+	/// <summary>
+	/// Joystick axis motion
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_JOYSTICK_AXIS_MOTION</unmanaged>
 	JoystickAxisMotion = 0x600,
+	/// <summary>
+	/// Joystick trackball motion
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_JOYSTICK_BALL_MOTION</unmanaged>
 	JoystickBallMotion = 1537,
+	/// <summary>
+	/// Joystick hat position change
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_JOYSTICK_HAT_MOTION</unmanaged>
 	JoystickHatMotion = 1538,
+	/// <summary>
+	/// Joystick button pressed
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_JOYSTICK_BUTTON_DOWN</unmanaged>
 	JoystickButtonDown = 1539,
+	/// <summary>
+	/// Joystick button released
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_JOYSTICK_BUTTON_UP</unmanaged>
 	JoystickButtonUp = 1540,
+	/// <summary>
+	/// A new joystick has been inserted into the system
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_JOYSTICK_ADDED</unmanaged>
 	JoystickAdded = 1541,
+	/// <summary>
+	/// An opened joystick has been removed
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_JOYSTICK_REMOVED</unmanaged>
 	JoystickRemoved = 1542,
+	/// <summary>
+	/// Joystick battery level change
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_JOYSTICK_BATTERY_UPDATED</unmanaged>
 	JoystickBatteryUpdated = 1543,
+	/// <summary>
+	/// Joystick update is complete
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_JOYSTICK_UPDATE_COMPLETE</unmanaged>
 	JoystickUpdateComplete = 1544,
+	/// <summary>
+	/// Gamepad axis motion
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_GAMEPAD_AXIS_MOTION</unmanaged>
 	GamepadAxisMotion = 0x650,
+	/// <summary>
+	/// Gamepad button pressed
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_GAMEPAD_BUTTON_DOWN</unmanaged>
 	GamepadButtonDown = 1617,
+	/// <summary>
+	/// Gamepad button released
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_GAMEPAD_BUTTON_UP</unmanaged>
 	GamepadButtonUp = 1618,
+	/// <summary>
+	/// A new gamepad has been inserted into the system
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_GAMEPAD_ADDED</unmanaged>
 	GamepadAdded = 1619,
+	/// <summary>
+	/// A gamepad has been removed
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_GAMEPAD_REMOVED</unmanaged>
 	GamepadRemoved = 1620,
+	/// <summary>
+	/// The gamepad mapping was updated
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_GAMEPAD_REMAPPED</unmanaged>
 	GamepadRemapped = 1621,
+	/// <summary>
+	/// Gamepad touchpad was touched
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_GAMEPAD_TOUCHPAD_DOWN</unmanaged>
 	GamepadTouchpadDown = 1622,
+	/// <summary>
+	/// Gamepad touchpad finger was moved
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_GAMEPAD_TOUCHPAD_MOTION</unmanaged>
 	GamepadTouchpadMotion = 1623,
+	/// <summary>
+	/// Gamepad touchpad finger was lifted
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_GAMEPAD_TOUCHPAD_UP</unmanaged>
 	GamepadTouchpadUp = 1624,
+	/// <summary>
+	/// Gamepad sensor was updated
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_GAMEPAD_SENSOR_UPDATE</unmanaged>
 	GamepadSensorUpdate = 1625,
+	/// <summary>
+	/// Gamepad update is complete
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_GAMEPAD_UPDATE_COMPLETE</unmanaged>
 	GamepadUpdateComplete = 1626,
+	/// <summary>
+	/// Gamepad Steam handle has changed
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_GAMEPAD_STEAM_HANDLE_UPDATED</unmanaged>
 	GamepadSteamHandleUpdated = 1627,
+	/// <summary>
+	/// Touch events
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_FINGER_DOWN</unmanaged>
 	FingerDown = 0x700,
+	/// <summary>
+	/// Touch events
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_FINGER_UP</unmanaged>
 	FingerUp = 1793,
+	/// <summary>
+	/// Touch events
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_FINGER_MOTION</unmanaged>
 	FingerMotion = 1794,
+	/// <summary>
+	/// The clipboard or primary selection changed
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_CLIPBOARD_UPDATE</unmanaged>
 	ClipboardUpdate = 0x900,
+	/// <summary>
+	/// The system requests a file open
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_DROP_FILE</unmanaged>
 	DropFile = 0x1000,
+	/// <summary>
+	/// text/plain drag-and-drop event
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_DROP_TEXT</unmanaged>
 	DropText = 4097,
+	/// <summary>
+	/// A new set of drops is beginning (NULL filename)
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_DROP_BEGIN</unmanaged>
 	DropBegin = 4098,
+	/// <summary>
+	/// Current set of drops is now complete (NULL filename)
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_DROP_COMPLETE</unmanaged>
 	DropComplete = 4099,
+	/// <summary>
+	/// Position while moving over the window
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_DROP_POSITION</unmanaged>
 	DropPosition = 4100,
+	/// <summary>
+	/// A new audio device is available
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_AUDIO_DEVICE_ADDED</unmanaged>
 	AudioDeviceAdded = 0x1100,
+	/// <summary>
+	/// An audio device has been removed.
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_AUDIO_DEVICE_REMOVED</unmanaged>
 	AudioDeviceRemoved = 4353,
+	/// <summary>
+	/// An audio device's format has been changed by the system.
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_AUDIO_DEVICE_FORMAT_CHANGED</unmanaged>
 	AudioDeviceFormatChanged = 4354,
+	/// <summary>
+	/// A sensor was updated
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_SENSOR_UPDATE</unmanaged>
 	SensorUpdate = 0x1200,
+	/// <summary>
+	/// Pressure-sensitive pen has become available
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_PEN_PROXIMITY_IN</unmanaged>
 	PenProximityIn = 0x1300,
+	/// <summary>
+	/// Pressure-sensitive pen has become unavailable
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_PEN_PROXIMITY_OUT</unmanaged>
 	PenProximityOut = 4865,
+	/// <summary>
+	/// Pressure-sensitive pen touched drawing surface
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_PEN_DOWN</unmanaged>
 	PenDown = 4866,
+	/// <summary>
+	/// Pressure-sensitive pen stopped touching drawing surface
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_PEN_UP</unmanaged>
 	PenUp = 4867,
+	/// <summary>
+	/// Pressure-sensitive pen button pressed
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_PEN_BUTTON_DOWN</unmanaged>
 	PenButtonDown = 4868,
+	/// <summary>
+	/// Pressure-sensitive pen button released
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_PEN_BUTTON_UP</unmanaged>
 	PenButtonUp = 4869,
+	/// <summary>
+	/// Pressure-sensitive pen is moving on the tablet
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_PEN_MOTION</unmanaged>
 	PenMotion = 4870,
+	/// <summary>
+	/// Pressure-sensitive pen angle/pressure/etc changed
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_PEN_AXIS</unmanaged>
 	PenAxis = 4871,
+	/// <summary>
+	/// A new camera device is available
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_CAMERA_DEVICE_ADDED</unmanaged>
 	CameraDeviceAdded = 0x1400,
+	/// <summary>
+	/// A camera device has been removed.
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_CAMERA_DEVICE_REMOVED</unmanaged>
 	CameraDeviceRemoved = 5121,
+	/// <summary>
+	/// A camera device has been approved for use by the user.
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_CAMERA_DEVICE_APPROVED</unmanaged>
 	CameraDeviceApproved = 5122,
+	/// <summary>
+	/// A camera device has been denied for use by the user.
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_CAMERA_DEVICE_DENIED</unmanaged>
 	CameraDeviceDenied = 5123,
+	/// <summary>
+	/// The render targets have been reset and their contents need to be updated
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_RENDER_TARGETS_RESET</unmanaged>
 	RenderTargetsReset = 0x2000,
+	/// <summary>
+	/// The device has been reset and all textures need to be recreated
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_RENDER_DEVICE_RESET</unmanaged>
 	RenderDeviceReset = 8193,
+	/// <summary>
+	/// Signals the end of an event poll cycle
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_POLL_SENTINEL</unmanaged>
 	PollSentinel = 0x7F00,
+	/// <summary>
+	/// Events SDL_EVENT_USER through SDL_EVENT_LAST are for your use,<br/>
+	/// and should be allocated with SDL_RegisterEvents()
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_USER</unmanaged>
 	User = 0x8000,
+	/// <summary>
+	/// This last event is only for bounding internal arrays
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_LAST</unmanaged>
 	Last = 0xFFFF,
+	/// <summary>
+	/// This just makes sure the enum is the size of Uint32
+	/// </summary>
 	/// <unmanaged>SDL_EVENT_ENUM_PADDING</unmanaged>
 	EnumPadding = 0x7FFFFFFF,
 }
 
+/// <summary>
+/// The type of action to request from SDL_PeepEvents().<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_EventAction
 {
+	/// <summary>
+	/// Add events to the back of the queue.
+	/// </summary>
 	/// <unmanaged>SDL_ADDEVENT</unmanaged>
 	AddEvent = 0,
+	/// <summary>
+	/// Check but don't remove events from the queue front.
+	/// </summary>
 	/// <unmanaged>SDL_PEEKEVENT</unmanaged>
 	PeekEvent = 1,
+	/// <summary>
+	/// Retrieve/remove events from the front of the queue.
+	/// </summary>
 	/// <unmanaged>SDL_GETEVENT</unmanaged>
 	GetEvent = 2,
 }
 
+/// <summary>
+/// The type of the OS-provided default folder for a specific purpose.<br/>
+/// Note that the Trash folder isn't included here, because trashing files<br/>
+/// usually involves extra OS-specific functionality to remember the file's<br/>
+/// original location.<br/>
+/// The folders supported per platform are:<br/>
+/// |             | Windows | macOS/iOS | tvOS | Unix (XDG) | Haiku | Emscripten |<br/>
+/// | ----------- | ------- | --------- | ---- | ---------- | ----- | ---------- |<br/>
+/// | HOME        | X       | X         |      | X          | X     | X          |<br/>
+/// | DESKTOP     | X       | X         |      | X          | X     |            |<br/>
+/// | DOCUMENTS   | X       | X         |      | X          |       |            |<br/>
+/// | DOWNLOADS   | Vista+  | X         |      | X          |       |            |<br/>
+/// | MUSIC       | X       | X         |      | X          |       |            |<br/>
+/// | PICTURES    | X       | X         |      | X          |       |            |<br/>
+/// | PUBLICSHARE |         | X         |      | X          |       |            |<br/>
+/// | SAVEDGAMES  | Vista+  |           |      |            |       |            |<br/>
+/// | SCREENSHOTS | Vista+  |           |      |            |       |            |<br/>
+/// | TEMPLATES   | X       | X         |      | X          |       |            |<br/>
+/// | VIDEOS      | X       | X*        |      | X          |       |            |<br/>
+/// Note that on macOS/iOS, the Videos folder is called "Movies".<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_GetUserFolder
+/// </summary>
 public enum SDL_Folder
 {
+	/// <summary>
+	/// The folder which contains all of the current user's data, preferences, and documents. It usually contains most of the other folders. If a requested folder does not exist, the home folder can be considered a safe fallback to store a user's documents.
+	/// </summary>
 	/// <unmanaged>SDL_FOLDER_HOME</unmanaged>
 	SDL_FOLDER_HOME = 0,
+	/// <summary>
+	/// The folder of files that are displayed on the desktop. Note that the existence of a desktop folder does not guarantee that the system does show icons on its desktop; certain GNU/Linux distros with a graphical environment may not have desktop icons.
+	/// </summary>
 	/// <unmanaged>SDL_FOLDER_DESKTOP</unmanaged>
 	SDL_FOLDER_DESKTOP = 1,
+	/// <summary>
+	/// User document files, possibly application-specific. This is a good place to save a user's projects.
+	/// </summary>
 	/// <unmanaged>SDL_FOLDER_DOCUMENTS</unmanaged>
 	SDL_FOLDER_DOCUMENTS = 2,
+	/// <summary>
+	/// Standard folder for user files downloaded from the internet.
+	/// </summary>
 	/// <unmanaged>SDL_FOLDER_DOWNLOADS</unmanaged>
 	SDL_FOLDER_DOWNLOADS = 3,
+	/// <summary>
+	/// Music files that can be played using a standard music player (mp3, ogg...).
+	/// </summary>
 	/// <unmanaged>SDL_FOLDER_MUSIC</unmanaged>
 	SDL_FOLDER_MUSIC = 4,
+	/// <summary>
+	/// Image files that can be displayed using a standard viewer (png, jpg...).
+	/// </summary>
 	/// <unmanaged>SDL_FOLDER_PICTURES</unmanaged>
 	SDL_FOLDER_PICTURES = 5,
+	/// <summary>
+	/// Files that are meant to be shared with other users on the same computer.
+	/// </summary>
 	/// <unmanaged>SDL_FOLDER_PUBLICSHARE</unmanaged>
 	SDL_FOLDER_PUBLICSHARE = 6,
+	/// <summary>
+	/// Save files for games.
+	/// </summary>
 	/// <unmanaged>SDL_FOLDER_SAVEDGAMES</unmanaged>
 	SDL_FOLDER_SAVEDGAMES = 7,
+	/// <summary>
+	/// Application screenshots.
+	/// </summary>
 	/// <unmanaged>SDL_FOLDER_SCREENSHOTS</unmanaged>
 	SDL_FOLDER_SCREENSHOTS = 8,
+	/// <summary>
+	/// Template files to be used when the user requests the desktop environment to create a new file in a certain folder, such as "New Text File.txt".  Any file in the Templates folder can be used as a starting point for a new file.
+	/// </summary>
 	/// <unmanaged>SDL_FOLDER_TEMPLATES</unmanaged>
 	SDL_FOLDER_TEMPLATES = 9,
+	/// <summary>
+	/// Video files that can be played using a standard video player (mp4, webm...).
+	/// </summary>
 	/// <unmanaged>SDL_FOLDER_VIDEOS</unmanaged>
 	SDL_FOLDER_VIDEOS = 10,
+	/// <summary>
+	/// Total number of types in this enum, not a folder type by itself.
+	/// </summary>
 	/// <unmanaged>SDL_FOLDER_COUNT</unmanaged>
 	SDL_FOLDER_COUNT = 11,
 }
 
+/// <summary>
+/// Abstract filesystem interface
+/// </summary>
 public enum SDL_PathType
 {
+	/// <summary>
+	/// path does not exist
+	/// </summary>
 	/// <unmanaged>SDL_PATHTYPE_NONE</unmanaged>
 	SDL_PATHTYPE_NONE = 0,
+	/// <summary>
+	/// a normal file
+	/// </summary>
 	/// <unmanaged>SDL_PATHTYPE_FILE</unmanaged>
 	SDL_PATHTYPE_FILE = 1,
+	/// <summary>
+	/// a directory
+	/// </summary>
 	/// <unmanaged>SDL_PATHTYPE_DIRECTORY</unmanaged>
 	SDL_PATHTYPE_DIRECTORY = 2,
+	/// <summary>
+	/// something completely different like a device node (not a symlink, those are always followed)
+	/// </summary>
 	/// <unmanaged>SDL_PATHTYPE_OTHER</unmanaged>
 	SDL_PATHTYPE_OTHER = 3,
 }
 
+/// <summary>
+/// Possible results from an enumeration callback.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_EnumerateDirectoryCallback
+/// </summary>
 public enum SDL_EnumerationResult
 {
+	/// <summary>
+	/// Value that requests that enumeration continue.
+	/// </summary>
 	/// <unmanaged>SDL_ENUM_CONTINUE</unmanaged>
 	SDL_ENUM_CONTINUE = 0,
+	/// <summary>
+	/// Value that requests that enumeration stop, successfully.
+	/// </summary>
 	/// <unmanaged>SDL_ENUM_SUCCESS</unmanaged>
 	SDL_ENUM_SUCCESS = 1,
+	/// <summary>
+	/// Value that requests that enumeration stop, as a failure.
+	/// </summary>
 	/// <unmanaged>SDL_ENUM_FAILURE</unmanaged>
 	SDL_ENUM_FAILURE = 2,
 }
 
+/// <summary>
+/// Standard gamepad types.<br/>
+/// This type does not necessarily map to first-party controllers from<br/>
+/// Microsoft/Sony/Nintendo; in many cases, third-party controllers can report<br/>
+/// as these, either because they were designed for a specific console, or they<br/>
+/// simply most closely match that console's controllers (does it have A/B/X/Y<br/>
+/// buttons or X/O/Square/Triangle? Does it have a touchpad? etc).
+/// </summary>
 public enum SDL_GamepadType
 {
 	/// <unmanaged>SDL_GAMEPAD_TYPE_UNKNOWN</unmanaged>
@@ -402,16 +970,47 @@ public enum SDL_GamepadType
 	Count = 11,
 }
 
+/// <summary>
+/// The list of buttons available on a gamepad<br/>
+/// For controllers that use a diamond pattern for the face buttons, the<br/>
+/// south/east/west/north buttons below correspond to the locations in the<br/>
+/// diamond pattern. For Xbox controllers, this would be A/B/X/Y, for Nintendo<br/>
+/// Switch controllers, this would be B/A/Y/X, for PlayStation controllers this<br/>
+/// would be Cross/Circle/Square/Triangle.<br/>
+/// For controllers that don't use a diamond pattern for the face buttons, the<br/>
+/// south/east/west/north buttons indicate the buttons labeled A, B, C, D, or<br/>
+/// 1, 2, 3, 4, or for controllers that aren't labeled, they are the primary,<br/>
+/// secondary, etc. buttons.<br/>
+/// The activate action is often the south button and the cancel action is<br/>
+/// often the east button, but in some regions this is reversed, so your game<br/>
+/// should allow remapping actions based on user preferences.<br/>
+/// You can query the labels for the face buttons using<br/>
+/// SDL_GetGamepadButtonLabel()<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_GamepadButton
 {
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_INVALID</unmanaged>
 	Invalid = -1,
+	/// <summary>
+	/// Bottom face button (e.g. Xbox A button)
+	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_SOUTH</unmanaged>
 	South = 0,
+	/// <summary>
+	/// Right face button (e.g. Xbox B button)
+	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_EAST</unmanaged>
 	East = 1,
+	/// <summary>
+	/// Left face button (e.g. Xbox X button)
+	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_WEST</unmanaged>
 	West = 2,
+	/// <summary>
+	/// Top face button (e.g. Xbox Y button)
+	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_NORTH</unmanaged>
 	North = 3,
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_BACK</unmanaged>
@@ -436,31 +1035,73 @@ public enum SDL_GamepadButton
 	DpadLeft = 13,
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_DPAD_RIGHT</unmanaged>
 	DpadRight = 14,
+	/// <summary>
+	/// Additional button (e.g. Xbox Series X share button, PS5 microphone button, Nintendo Switch Pro capture button, Amazon Luna microphone button, Google Stadia capture button)
+	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC1</unmanaged>
 	Misc1 = 15,
+	/// <summary>
+	/// Upper or primary paddle, under your right hand (e.g. Xbox Elite paddle P1)
+	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_RIGHT_PADDLE1</unmanaged>
 	RightPaddle1 = 16,
+	/// <summary>
+	/// Upper or primary paddle, under your left hand (e.g. Xbox Elite paddle P3)
+	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_LEFT_PADDLE1</unmanaged>
 	LeftPaddle1 = 17,
+	/// <summary>
+	/// Lower or secondary paddle, under your right hand (e.g. Xbox Elite paddle P2)
+	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_RIGHT_PADDLE2</unmanaged>
 	RightPaddle2 = 18,
+	/// <summary>
+	/// Lower or secondary paddle, under your left hand (e.g. Xbox Elite paddle P4)
+	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_LEFT_PADDLE2</unmanaged>
 	LeftPaddle2 = 19,
+	/// <summary>
+	/// PS4/PS5 touchpad button
+	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_TOUCHPAD</unmanaged>
 	Touchpad = 20,
+	/// <summary>
+	/// Additional button
+	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC2</unmanaged>
 	Misc2 = 21,
+	/// <summary>
+	/// Additional button
+	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC3</unmanaged>
 	Misc3 = 22,
+	/// <summary>
+	/// Additional button
+	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC4</unmanaged>
 	Misc4 = 23,
+	/// <summary>
+	/// Additional button
+	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC5</unmanaged>
 	Misc5 = 24,
+	/// <summary>
+	/// Additional button
+	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC6</unmanaged>
 	Misc6 = 25,
 	Count = 26,
 }
 
+/// <summary>
+/// The set of gamepad button labels<br/>
+/// This isn't a complete set, just the face buttons to make it easy to show<br/>
+/// button prompts.<br/>
+/// For a complete set, you should look at the button and gamepad type and have<br/>
+/// a set of symbols that work well with your art style.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_GamepadButtonLabel
 {
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_LABEL_UNKNOWN</unmanaged>
@@ -483,6 +1124,18 @@ public enum SDL_GamepadButtonLabel
 	Triangle = 8,
 }
 
+/// <summary>
+/// The list of axes available on a gamepad<br/>
+/// Thumbstick axis values range from SDL_JOYSTICK_AXIS_MIN to<br/>
+/// SDL_JOYSTICK_AXIS_MAX, and are centered within ~8000 of zero, though<br/>
+/// advanced UI will allow users to set or autodetect the dead zone, which<br/>
+/// varies between gamepads.<br/>
+/// Trigger axis values range from 0 (released) to SDL_JOYSTICK_AXIS_MAX (fully<br/>
+/// pressed) when reported by SDL_GetGamepadAxis(). Note that this is not the<br/>
+/// same range that will be reported by the lower-level SDL_GetJoystickAxis().<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_GamepadAxis
 {
 	/// <unmanaged>SDL_GAMEPAD_AXIS_INVALID</unmanaged>
@@ -502,6 +1155,15 @@ public enum SDL_GamepadAxis
 	Count = 6,
 }
 
+/// <summary>
+/// Types of gamepad control bindings.<br/>
+/// A gamepad is a collection of bindings that map arbitrary joystick buttons,<br/>
+/// axes and hat switches to specific positions on a generic console-style<br/>
+/// gamepad. This enum is used as part of SDL_GamepadBinding to specify those<br/>
+/// mappings.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_GamepadBindingType
 {
 	/// <unmanaged>SDL_GAMEPAD_BINDTYPE_NONE</unmanaged>
@@ -514,20 +1176,55 @@ public enum SDL_GamepadBindingType
 	Hat = 3,
 }
 
+/// <summary>
+/// HID underlying bus types.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_hid_bus_type
 {
+	/// <summary>
+	/// Unknown bus type
+	/// </summary>
 	/// <unmanaged>SDL_HID_API_BUS_UNKNOWN</unmanaged>
 	SDL_HID_API_BUS_UNKNOWN = 0x00,
+	/// <summary>
+	/// USB bus<br/>
+	/// Specifications:<br/>
+	/// https://usb.org/hid
+	/// </summary>
 	/// <unmanaged>SDL_HID_API_BUS_USB</unmanaged>
 	SDL_HID_API_BUS_USB = 0x01,
+	/// <summary>
+	/// Bluetooth or Bluetooth LE bus<br/>
+	/// Specifications:<br/>
+	/// https://www.bluetooth.com/specifications/specs/human-interface-device-profile-1-1-1/<br/>
+	/// https://www.bluetooth.com/specifications/specs/hid-service-1-0/<br/>
+	/// https://www.bluetooth.com/specifications/specs/hid-over-gatt-profile-1-0/
+	/// </summary>
 	/// <unmanaged>SDL_HID_API_BUS_BLUETOOTH</unmanaged>
 	SDL_HID_API_BUS_BLUETOOTH = 0x02,
+	/// <summary>
+	/// I2C bus<br/>
+	/// Specifications:<br/>
+	/// https://docs.microsoft.com/previous-versions/windows/hardware/design/dn642101(v=vs.85)
+	/// </summary>
 	/// <unmanaged>SDL_HID_API_BUS_I2C</unmanaged>
 	SDL_HID_API_BUS_I2C = 0x03,
+	/// <summary>
+	/// SPI bus<br/>
+	/// Specifications:<br/>
+	/// https://www.microsoft.com/download/details.aspx?id=103325
+	/// </summary>
 	/// <unmanaged>SDL_HID_API_BUS_SPI</unmanaged>
 	SDL_HID_API_BUS_SPI = 0x04,
 }
 
+/// <summary>
+/// An enumeration of hint priorities.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_HintPriority
 {
 	/// <unmanaged>SDL_HINT_NORMAL</unmanaged>
@@ -536,42 +1233,117 @@ public enum SDL_HintPriority
 	Override = 2,
 }
 
+/// <summary>
+/// Return values for optional main callbacks.<br/>
+/// Returning SDL_APP_SUCCESS or SDL_APP_FAILURE from SDL_AppInit,<br/>
+/// SDL_AppEvent, or SDL_AppIterate will terminate the program and report<br/>
+/// success/failure to the operating system. What that means is<br/>
+/// platform-dependent. On Unix, for example, on success, the process error<br/>
+/// code will be zero, and on failure it will be 1. This interface doesn't<br/>
+/// allow you to return specific exit codes, just whether there was an error<br/>
+/// generally or not.<br/>
+/// Returning SDL_APP_CONTINUE from these functions will let the app continue<br/>
+/// to run.<br/>
+/// See<br/>
+/// [Main callbacks in SDL3](https://wiki.libsdl.org/SDL3/README/main-functions#main-callbacks-in-sdl3)<br/>
+/// for complete details.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_AppResult
 {
+	/// <summary>
+	/// Value that requests that the app continue from the main callbacks.
+	/// </summary>
 	/// <unmanaged>SDL_APP_CONTINUE</unmanaged>
 	Continue = 0,
+	/// <summary>
+	/// Value that requests termination with success from the main callbacks.
+	/// </summary>
 	/// <unmanaged>SDL_APP_SUCCESS</unmanaged>
 	Success = 1,
+	/// <summary>
+	/// Value that requests termination with error from the main callbacks.
+	/// </summary>
 	/// <unmanaged>SDL_APP_FAILURE</unmanaged>
 	Failure = 2,
 }
 
+/// <summary>
+/// SDL_IOStream status, set by a read or write operation.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_IOStatus
 {
+	/// <summary>
+	/// Everything is ready (no errors and not EOF).
+	/// </summary>
 	/// <unmanaged>SDL_IO_STATUS_READY</unmanaged>
 	Ready = 0,
+	/// <summary>
+	/// Read or write I/O error
+	/// </summary>
 	/// <unmanaged>SDL_IO_STATUS_ERROR</unmanaged>
 	Error = 1,
+	/// <summary>
+	/// End of file
+	/// </summary>
 	/// <unmanaged>SDL_IO_STATUS_EOF</unmanaged>
 	Eof = 2,
+	/// <summary>
+	/// Non blocking I/O, not ready
+	/// </summary>
 	/// <unmanaged>SDL_IO_STATUS_NOT_READY</unmanaged>
 	NotReady = 3,
+	/// <summary>
+	/// Tried to write a read-only buffer
+	/// </summary>
 	/// <unmanaged>SDL_IO_STATUS_READONLY</unmanaged>
 	Readonly = 4,
+	/// <summary>
+	/// Tried to read a write-only buffer
+	/// </summary>
 	/// <unmanaged>SDL_IO_STATUS_WRITEONLY</unmanaged>
 	Writeonly = 5,
 }
 
+/// <summary>
+/// Possible `whence` values for SDL_IOStream seeking.<br/>
+/// These map to the same "whence" concept that `fseek` or `lseek` use in the<br/>
+/// standard C runtime.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_IOWhence
 {
+	/// <summary>
+	/// Seek from the beginning of data
+	/// </summary>
 	/// <unmanaged>SDL_IO_SEEK_SET</unmanaged>
 	SDL_IO_SEEK_SET = 0,
+	/// <summary>
+	/// Seek relative to current read point
+	/// </summary>
 	/// <unmanaged>SDL_IO_SEEK_CUR</unmanaged>
 	SDL_IO_SEEK_CUR = 1,
+	/// <summary>
+	/// Seek relative to the end of data
+	/// </summary>
 	/// <unmanaged>SDL_IO_SEEK_END</unmanaged>
 	SDL_IO_SEEK_END = 2,
 }
 
+/// <summary>
+/// An enum of some common joystick types.<br/>
+/// In some cases, SDL can identify a low-level joystick as being a certain<br/>
+/// type of device, and will report it through SDL_GetJoystickType (or<br/>
+/// SDL_GetJoystickTypeForID).<br/>
+/// This is by no means a complete list of everything that can be plugged into<br/>
+/// a computer.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_JoystickType
 {
 	/// <unmanaged>SDL_JOYSTICK_TYPE_UNKNOWN</unmanaged>
@@ -597,6 +1369,13 @@ public enum SDL_JoystickType
 	Count = 10,
 }
 
+/// <summary>
+/// Possible connection states for a joystick device.<br/>
+/// This is used by SDL_GetJoystickConnectionState to report how a device is<br/>
+/// connected to the system.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_JoystickConnectionState
 {
 	/// <unmanaged>SDL_JOYSTICK_CONNECTION_INVALID</unmanaged>
@@ -609,40 +1388,108 @@ public enum SDL_JoystickConnectionState
 	Wireless = 2,
 }
 
+/// <summary>
+/// Text input type.<br/>
+/// These are the valid values for SDL_PROP_TEXTINPUT_TYPE_NUMBER. Not every<br/>
+/// value is valid on every platform, but where a value isn't supported, a<br/>
+/// reasonable fallback will be used.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_StartTextInputWithProperties
+/// </summary>
 public enum SDL_TextInputType
 {
+	/// <summary>
+	/// The input is text
+	/// </summary>
 	/// <unmanaged>SDL_TEXTINPUT_TYPE_TEXT</unmanaged>
 	SDL_TEXTINPUT_TYPE_TEXT = 0,
+	/// <summary>
+	/// The input is a person's name
+	/// </summary>
 	/// <unmanaged>SDL_TEXTINPUT_TYPE_TEXT_NAME</unmanaged>
 	SDL_TEXTINPUT_TYPE_TEXT_NAME = 1,
+	/// <summary>
+	/// The input is an e-mail address
+	/// </summary>
 	/// <unmanaged>SDL_TEXTINPUT_TYPE_TEXT_EMAIL</unmanaged>
 	SDL_TEXTINPUT_TYPE_TEXT_EMAIL = 2,
+	/// <summary>
+	/// The input is a username
+	/// </summary>
 	/// <unmanaged>SDL_TEXTINPUT_TYPE_TEXT_USERNAME</unmanaged>
 	SDL_TEXTINPUT_TYPE_TEXT_USERNAME = 3,
+	/// <summary>
+	/// The input is a secure password that is hidden
+	/// </summary>
 	/// <unmanaged>SDL_TEXTINPUT_TYPE_TEXT_PASSWORD_HIDDEN</unmanaged>
 	SDL_TEXTINPUT_TYPE_TEXT_PASSWORD_HIDDEN = 4,
+	/// <summary>
+	/// The input is a secure password that is visible
+	/// </summary>
 	/// <unmanaged>SDL_TEXTINPUT_TYPE_TEXT_PASSWORD_VISIBLE</unmanaged>
 	SDL_TEXTINPUT_TYPE_TEXT_PASSWORD_VISIBLE = 5,
+	/// <summary>
+	/// The input is a number
+	/// </summary>
 	/// <unmanaged>SDL_TEXTINPUT_TYPE_NUMBER</unmanaged>
 	SDL_TEXTINPUT_TYPE_NUMBER = 6,
+	/// <summary>
+	/// The input is a secure PIN that is hidden
+	/// </summary>
 	/// <unmanaged>SDL_TEXTINPUT_TYPE_NUMBER_PASSWORD_HIDDEN</unmanaged>
 	SDL_TEXTINPUT_TYPE_NUMBER_PASSWORD_HIDDEN = 7,
+	/// <summary>
+	/// The input is a secure PIN that is visible
+	/// </summary>
 	/// <unmanaged>SDL_TEXTINPUT_TYPE_NUMBER_PASSWORD_VISIBLE</unmanaged>
 	SDL_TEXTINPUT_TYPE_NUMBER_PASSWORD_VISIBLE = 8,
 }
 
+/// <summary>
+/// Auto capitalization type.<br/>
+/// These are the valid values for<br/>
+/// SDL_PROP_TEXTINPUT_AUTOCAPITALIZATION_NUMBER. Not every value is valid on<br/>
+/// every platform, but where a value isn't supported, a reasonable fallback<br/>
+/// will be used.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_StartTextInputWithProperties
+/// </summary>
 public enum SDL_Capitalization
 {
+	/// <summary>
+	/// No auto-capitalization will be done
+	/// </summary>
 	/// <unmanaged>SDL_CAPITALIZE_NONE</unmanaged>
 	SDL_CAPITALIZE_NONE = 0,
+	/// <summary>
+	/// The first letter of sentences will be capitalized
+	/// </summary>
 	/// <unmanaged>SDL_CAPITALIZE_SENTENCES</unmanaged>
 	SDL_CAPITALIZE_SENTENCES = 1,
+	/// <summary>
+	/// The first letter of words will be capitalized
+	/// </summary>
 	/// <unmanaged>SDL_CAPITALIZE_WORDS</unmanaged>
 	SDL_CAPITALIZE_WORDS = 2,
+	/// <summary>
+	/// All letters will be capitalized
+	/// </summary>
 	/// <unmanaged>SDL_CAPITALIZE_LETTERS</unmanaged>
 	SDL_CAPITALIZE_LETTERS = 3,
 }
 
+/// <summary>
+/// The predefined log categories<br/>
+/// By default the application and gpu categories are enabled at the INFO<br/>
+/// level, the assert category is enabled at the WARN level, test is enabled at<br/>
+/// the VERBOSE level and all other categories are enabled at the ERROR level.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_LogCategory
 {
 	/// <unmanaged>SDL_LOG_CATEGORY_APPLICATION</unmanaged>
@@ -665,28 +1512,69 @@ public enum SDL_LogCategory
 	Test = 8,
 	/// <unmanaged>SDL_LOG_CATEGORY_GPU</unmanaged>
 	GPU = 9,
+	/// <summary>
+	/// Reserved for future SDL library use
+	/// </summary>
 	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED2</unmanaged>
 	Reserved2 = 10,
+	/// <summary>
+	/// Reserved for future SDL library use
+	/// </summary>
 	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED3</unmanaged>
 	Reserved3 = 11,
+	/// <summary>
+	/// Reserved for future SDL library use
+	/// </summary>
 	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED4</unmanaged>
 	Reserved4 = 12,
+	/// <summary>
+	/// Reserved for future SDL library use
+	/// </summary>
 	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED5</unmanaged>
 	Reserved5 = 13,
+	/// <summary>
+	/// Reserved for future SDL library use
+	/// </summary>
 	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED6</unmanaged>
 	Reserved6 = 14,
+	/// <summary>
+	/// Reserved for future SDL library use
+	/// </summary>
 	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED7</unmanaged>
 	Reserved7 = 15,
+	/// <summary>
+	/// Reserved for future SDL library use
+	/// </summary>
 	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED8</unmanaged>
 	Reserved8 = 16,
+	/// <summary>
+	/// Reserved for future SDL library use
+	/// </summary>
 	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED9</unmanaged>
 	Reserved9 = 17,
+	/// <summary>
+	/// Reserved for future SDL library use
+	/// </summary>
 	/// <unmanaged>SDL_LOG_CATEGORY_RESERVED10</unmanaged>
 	Reserved10 = 18,
+	/// <summary>
+	/// Beyond this point is reserved for application use, e.g.<br/>
+	/// enum {<br/>
+	/// MYAPP_CATEGORY_AWESOME1 = SDL_LOG_CATEGORY_CUSTOM,<br/>
+	/// MYAPP_CATEGORY_AWESOME2,<br/>
+	/// MYAPP_CATEGORY_AWESOME3,<br/>
+	/// ...<br/>
+	/// };
+	/// </summary>
 	/// <unmanaged>SDL_LOG_CATEGORY_CUSTOM</unmanaged>
 	Custom = 19,
 }
 
+/// <summary>
+/// The predefined log priorities<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_LogPriority
 {
 	/// <unmanaged>SDL_LOG_PRIORITY_INVALID</unmanaged>
@@ -708,6 +1596,10 @@ public enum SDL_LogPriority
 	Count = 8,
 }
 
+/// <summary>
+/// An enumeration of indices inside the colors array of<br/>
+/// SDL_MessageBoxColorScheme.
+/// </summary>
 public enum SDL_MessageBoxColorType
 {
 	/// <unmanaged>SDL_MESSAGEBOX_COLOR_BACKGROUND</unmanaged>
@@ -720,60 +1612,141 @@ public enum SDL_MessageBoxColorType
 	ButtonBackground = 3,
 	/// <unmanaged>SDL_MESSAGEBOX_COLOR_BUTTON_SELECTED</unmanaged>
 	ButtonSelected = 4,
+	/// <summary>
+	/// Size of the colors array of SDL_MessageBoxColorScheme.
+	/// </summary>
 	Count = 5,
 }
 
+/// <summary>
+/// Cursor types for SDL_CreateSystemCursor().<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_SystemCursor
 {
+	/// <summary>
+	/// Text selection. Usually an I-beam.
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_CURSOR_TEXT</unmanaged>
 	Text = 1,
+	/// <summary>
+	/// Wait. Usually an hourglass or watch or spinning ball.
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_CURSOR_WAIT</unmanaged>
 	Wait = 2,
+	/// <summary>
+	/// Crosshair.
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_CURSOR_CROSSHAIR</unmanaged>
 	Crosshair = 3,
+	/// <summary>
+	/// Program is busy but still interactive. Usually it's WAIT with an arrow.
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_CURSOR_PROGRESS</unmanaged>
 	Progress = 4,
+	/// <summary>
+	/// Double arrow pointing northwest and southeast.
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_CURSOR_NWSE_RESIZE</unmanaged>
 	NwseResize = 5,
+	/// <summary>
+	/// Double arrow pointing northeast and southwest.
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_CURSOR_NESW_RESIZE</unmanaged>
 	NeswResize = 6,
+	/// <summary>
+	/// Double arrow pointing west and east.
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_CURSOR_EW_RESIZE</unmanaged>
 	EwResize = 7,
+	/// <summary>
+	/// Double arrow pointing north and south.
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_CURSOR_NS_RESIZE</unmanaged>
 	NsResize = 8,
+	/// <summary>
+	/// Four pointed arrow pointing north, south, east, and west.
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_CURSOR_MOVE</unmanaged>
 	Move = 9,
+	/// <summary>
+	/// Not permitted. Usually a slashed circle or crossbones.
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_CURSOR_NOT_ALLOWED</unmanaged>
 	NotAllowed = 10,
+	/// <summary>
+	/// Pointer that indicates a link. Usually a pointing hand.
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_CURSOR_POINTER</unmanaged>
 	Pointer = 11,
+	/// <summary>
+	/// Window resize top-left. This may be a single arrow or a double arrow like NWSE_RESIZE.
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_CURSOR_NW_RESIZE</unmanaged>
 	NwResize = 12,
+	/// <summary>
+	/// Window resize top. May be NS_RESIZE.
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_CURSOR_N_RESIZE</unmanaged>
 	NResize = 13,
+	/// <summary>
+	/// Window resize top-right. May be NESW_RESIZE.
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_CURSOR_NE_RESIZE</unmanaged>
 	NeResize = 14,
+	/// <summary>
+	/// Window resize right. May be EW_RESIZE.
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_CURSOR_E_RESIZE</unmanaged>
 	EResize = 15,
+	/// <summary>
+	/// Window resize bottom-right. May be NWSE_RESIZE.
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_CURSOR_SE_RESIZE</unmanaged>
 	SeResize = 16,
+	/// <summary>
+	/// Window resize bottom. May be NS_RESIZE.
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_CURSOR_S_RESIZE</unmanaged>
 	SResize = 17,
+	/// <summary>
+	/// Window resize bottom-left. May be NESW_RESIZE.
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_CURSOR_SW_RESIZE</unmanaged>
 	SwResize = 18,
+	/// <summary>
+	/// Window resize left. May be EW_RESIZE.
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_CURSOR_W_RESIZE</unmanaged>
 	WResize = 19,
 	Count = 20,
 }
 
+/// <summary>
+/// Scroll direction types for the Scroll event<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_MouseWheelDirection
 {
+	/// <summary>
+	/// The scroll direction is normal
+	/// </summary>
 	/// <unmanaged>SDL_MOUSEWHEEL_NORMAL</unmanaged>
 	Normal = 0,
+	/// <summary>
+	/// The scroll direction is flipped / natural
+	/// </summary>
 	/// <unmanaged>SDL_MOUSEWHEEL_FLIPPED</unmanaged>
 	Flipped = 1,
 }
 
+/// <summary>
+/// The current status of an SDL_InitState structure.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_InitStatus
 {
 	/// <unmanaged>SDL_INIT_STATUS_UNINITIALIZED</unmanaged>
@@ -786,25 +1759,66 @@ public enum SDL_InitStatus
 	SDL_INIT_STATUS_UNINITIALIZING = 3,
 }
 
+/// <summary>
+/// Pen axis indices.<br/>
+/// These are the valid values for the `axis` field in SDL_PenAxisEvent. All<br/>
+/// axes are either normalised to 0..1 or report a (positive or negative) angle<br/>
+/// in degrees, with 0.0 representing the centre. Not all pens/backends support<br/>
+/// all axes: unsupported axes are always zero.<br/>
+/// To convert angles for tilt and rotation into vector representation, use<br/>
+/// SDL_sinf on the XTILT, YTILT, or ROTATION component, for example:<br/>
+/// `SDL_sinf(xtilt * SDL_PI_F / 180.0)`.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0
+/// </summary>
 public enum SDL_PenAxis
 {
+	/// <summary>
+	/// Pen pressure.  Unidirectional: 0 to 1.0
+	/// </summary>
 	/// <unmanaged>SDL_PEN_AXIS_PRESSURE</unmanaged>
 	Pressure = 0,
+	/// <summary>
+	/// Pen horizontal tilt angle.  Bidirectional: -90.0 to 90.0 (left-to-right).
+	/// </summary>
 	/// <unmanaged>SDL_PEN_AXIS_XTILT</unmanaged>
 	Xtilt = 1,
+	/// <summary>
+	/// Pen vertical tilt angle.  Bidirectional: -90.0 to 90.0 (top-to-down).
+	/// </summary>
 	/// <unmanaged>SDL_PEN_AXIS_YTILT</unmanaged>
 	Ytilt = 2,
+	/// <summary>
+	/// Pen distance to drawing surface.  Unidirectional: 0.0 to 1.0
+	/// </summary>
 	/// <unmanaged>SDL_PEN_AXIS_DISTANCE</unmanaged>
 	Distance = 3,
+	/// <summary>
+	/// Pen barrel rotation.  Bidirectional: -180 to 179.9 (clockwise, 0 is facing up, -180.0 is facing down).
+	/// </summary>
 	/// <unmanaged>SDL_PEN_AXIS_ROTATION</unmanaged>
 	Rotation = 4,
+	/// <summary>
+	/// Pen finger wheel or slider (e.g., Airbrush Pen).  Unidirectional: 0 to 1.0
+	/// </summary>
 	/// <unmanaged>SDL_PEN_AXIS_SLIDER</unmanaged>
 	Slider = 5,
+	/// <summary>
+	/// Pressure from squeezing the pen ("barrel pressure").
+	/// </summary>
 	/// <unmanaged>SDL_PEN_AXIS_TANGENTIAL_PRESSURE</unmanaged>
 	TangentialPressure = 6,
+	/// <summary>
+	/// Total known pen axis types in this version of SDL. This number may grow in future releases!
+	/// </summary>
 	Count = 7,
 }
 
+/// <summary>
+/// Pixel type.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_PixelType
 {
 	/// <unmanaged>SDL_PIXELTYPE_UNKNOWN</unmanaged>
@@ -831,10 +1845,18 @@ public enum SDL_PixelType
 	ArrayF16 = 10,
 	/// <unmanaged>SDL_PIXELTYPE_ARRAYF32</unmanaged>
 	ArrayF32 = 11,
+	/// <summary>
+	/// appended at the end for compatibility with sdl2-compat:
+	/// </summary>
 	/// <unmanaged>SDL_PIXELTYPE_INDEX2</unmanaged>
 	Index2 = 12,
 }
 
+/// <summary>
+/// Bitmap pixel order, high bit -> low bit.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_BitmapOrder
 {
 	/// <unmanaged>SDL_BITMAPORDER_NONE</unmanaged>
@@ -845,6 +1867,11 @@ public enum SDL_BitmapOrder
 	_1234 = 2,
 }
 
+/// <summary>
+/// Packed component order, high bit -> low bit.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_PackedOrder
 {
 	/// <unmanaged>SDL_PACKEDORDER_NONE</unmanaged>
@@ -867,6 +1894,11 @@ public enum SDL_PackedOrder
 	Bgra = 8,
 }
 
+/// <summary>
+/// Array component order, low byte -> high byte.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_ArrayOrder
 {
 	/// <unmanaged>SDL_ARRAYORDER_NONE</unmanaged>
@@ -885,6 +1917,11 @@ public enum SDL_ArrayOrder
 	Abgr = 6,
 }
 
+/// <summary>
+/// Packed component layout.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_PackedLayout
 {
 	/// <unmanaged>SDL_PACKEDLAYOUT_NONE</unmanaged>
@@ -907,134 +1944,354 @@ public enum SDL_PackedLayout
 	_1010102 = 8,
 }
 
+/// <summary>
+/// Pixel format.<br/>
+/// SDL's pixel formats have the following naming convention:<br/>
+/// - Names with a list of components and a single bit count, such as RGB24 and<br/>
+/// ABGR32, define a platform-independent encoding into bytes in the order<br/>
+/// specified. For example, in RGB24 data, each pixel is encoded in 3 bytes<br/>
+/// (red, green, blue) in that order, and in ABGR32 data, each pixel is<br/>
+/// encoded in 4 bytes alpha, blue, green, red) in that order. Use these<br/>
+/// names if the property of a format that is important to you is the order<br/>
+/// of the bytes in memory or on disk.<br/>
+/// - Names with a bit count per component, such as ARGB8888 and XRGB1555, are<br/>
+/// "packed" into an appropriately-sized integer in the platform's native<br/>
+/// endianness. For example, ARGB8888 is a sequence of 32-bit integers; in<br/>
+/// each integer, the most significant bits are alpha, and the least<br/>
+/// significant bits are blue. On a little-endian CPU such as x86, the least<br/>
+/// significant bits of each integer are arranged first in memory, but on a<br/>
+/// big-endian CPU such as s390x, the most significant bits are arranged<br/>
+/// first. Use these names if the property of a format that is important to<br/>
+/// you is the meaning of each bit position within a native-endianness<br/>
+/// integer.<br/>
+/// - In indexed formats such as INDEX4LSB, each pixel is represented by<br/>
+/// encoding an index into the palette into the indicated number of bits,<br/>
+/// with multiple pixels packed into each byte if appropriate. In LSB<br/>
+/// formats, the first (leftmost) pixel is stored in the least-significant<br/>
+/// bits of the byte; in MSB formats, it's stored in the most-significant<br/>
+/// bits. INDEX8 does not need LSB/MSB variants, because each pixel exactly<br/>
+/// fills one byte.<br/>
+/// The 32-bit byte-array encodings such as RGBA32 are aliases for the<br/>
+/// appropriate 8888 encoding for the current platform. For example, RGBA32 is<br/>
+/// an alias for ABGR8888 on little-endian CPUs like x86, or an alias for<br/>
+/// RGBA8888 on big-endian CPUs.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_PixelFormat : uint
 {
 	/// <unmanaged>SDL_PIXELFORMAT_UNKNOWN</unmanaged>
 	Unknown = 0,
 	/// <unmanaged>SDL_PIXELFORMAT_INDEX1LSB</unmanaged>
 	Index1lsb = 0x11100100u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX1, SDL_BITMAPORDER_4321, 0, 1, 0),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_INDEX1MSB</unmanaged>
 	Index1msb = 0x11200100u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX1, SDL_BITMAPORDER_1234, 0, 1, 0),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_INDEX2LSB</unmanaged>
 	Index2lsb = 0x1c100200u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX2, SDL_BITMAPORDER_4321, 0, 2, 0),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_INDEX2MSB</unmanaged>
 	Index2msb = 0x1c200200u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX2, SDL_BITMAPORDER_1234, 0, 2, 0),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_INDEX4LSB</unmanaged>
 	Index4lsb = 0x12100400u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX4, SDL_BITMAPORDER_4321, 0, 4, 0),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_INDEX4MSB</unmanaged>
 	Index4msb = 0x12200400u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX4, SDL_BITMAPORDER_1234, 0, 4, 0),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_INDEX8</unmanaged>
 	Index8 = 0x13000801u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX8, 0, 0, 8, 1),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_RGB332</unmanaged>
 	Rgb332 = 0x14110801u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED8, SDL_PACKEDORDER_XRGB, SDL_PACKEDLAYOUT_332, 8, 1),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_XRGB4444</unmanaged>
 	Xrgb4444 = 0x15120c02u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_XRGB, SDL_PACKEDLAYOUT_4444, 12, 2),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_XBGR4444</unmanaged>
 	Xbgr4444 = 0x15520c02u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_XBGR, SDL_PACKEDLAYOUT_4444, 12, 2),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_XRGB1555</unmanaged>
 	Xrgb1555 = 0x15130f02u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_XRGB, SDL_PACKEDLAYOUT_1555, 15, 2),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_XBGR1555</unmanaged>
 	Xbgr1555 = 0x15530f02u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_XBGR, SDL_PACKEDLAYOUT_1555, 15, 2),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_ARGB4444</unmanaged>
 	Argb4444 = 0x15321002u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_ARGB, SDL_PACKEDLAYOUT_4444, 16, 2),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_RGBA4444</unmanaged>
 	Rgba4444 = 0x15421002u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_RGBA, SDL_PACKEDLAYOUT_4444, 16, 2),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_ABGR4444</unmanaged>
 	Abgr4444 = 0x15721002u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_ABGR, SDL_PACKEDLAYOUT_4444, 16, 2),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_BGRA4444</unmanaged>
 	Bgra4444 = 0x15821002u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_BGRA, SDL_PACKEDLAYOUT_4444, 16, 2),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_ARGB1555</unmanaged>
 	Argb1555 = 0x15331002u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_ARGB, SDL_PACKEDLAYOUT_1555, 16, 2),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_RGBA5551</unmanaged>
 	Rgba5551 = 0x15441002u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_RGBA, SDL_PACKEDLAYOUT_5551, 16, 2),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_ABGR1555</unmanaged>
 	Abgr1555 = 0x15731002u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_ABGR, SDL_PACKEDLAYOUT_1555, 16, 2),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_BGRA5551</unmanaged>
 	Bgra5551 = 0x15841002u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_BGRA, SDL_PACKEDLAYOUT_5551, 16, 2),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_RGB565</unmanaged>
 	Rgb565 = 0x15151002u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_XRGB, SDL_PACKEDLAYOUT_565, 16, 2),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_BGR565</unmanaged>
 	Bgr565 = 0x15551002u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_XBGR, SDL_PACKEDLAYOUT_565, 16, 2),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_RGB24</unmanaged>
 	Rgb24 = 0x17101803u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYU8, SDL_ARRAYORDER_RGB, 0, 24, 3),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_BGR24</unmanaged>
 	Bgr24 = 0x17401803u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYU8, SDL_ARRAYORDER_BGR, 0, 24, 3),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_XRGB8888</unmanaged>
 	Xrgb8888 = 0x16161804u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_XRGB, SDL_PACKEDLAYOUT_8888, 24, 4),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_RGBX8888</unmanaged>
 	Rgbx8888 = 0x16261804u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_RGBX, SDL_PACKEDLAYOUT_8888, 24, 4),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_XBGR8888</unmanaged>
 	Xbgr8888 = 0x16561804u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_XBGR, SDL_PACKEDLAYOUT_8888, 24, 4),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_BGRX8888</unmanaged>
 	Bgrx8888 = 0x16661804u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_BGRX, SDL_PACKEDLAYOUT_8888, 24, 4),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_ARGB8888</unmanaged>
 	Argb8888 = 0x16362004u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_ARGB, SDL_PACKEDLAYOUT_8888, 32, 4),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_RGBA8888</unmanaged>
 	Rgba8888 = 0x16462004u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_RGBA, SDL_PACKEDLAYOUT_8888, 32, 4),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_ABGR8888</unmanaged>
 	Abgr8888 = 0x16762004u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_ABGR, SDL_PACKEDLAYOUT_8888, 32, 4),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_BGRA8888</unmanaged>
 	Bgra8888 = 0x16862004u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_BGRA, SDL_PACKEDLAYOUT_8888, 32, 4),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_XRGB2101010</unmanaged>
 	Xrgb2101010 = 0x16172004u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_XRGB, SDL_PACKEDLAYOUT_2101010, 32, 4),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_XBGR2101010</unmanaged>
 	Xbgr2101010 = 0x16572004u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_XBGR, SDL_PACKEDLAYOUT_2101010, 32, 4),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_ARGB2101010</unmanaged>
 	Argb2101010 = 0x16372004u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_ARGB, SDL_PACKEDLAYOUT_2101010, 32, 4),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_ABGR2101010</unmanaged>
 	Abgr2101010 = 0x16772004u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_ABGR, SDL_PACKEDLAYOUT_2101010, 32, 4),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_RGB48</unmanaged>
 	Rgb48 = 0x18103006u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYU16, SDL_ARRAYORDER_RGB, 0, 48, 6),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_BGR48</unmanaged>
 	Bgr48 = 0x18403006u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYU16, SDL_ARRAYORDER_BGR, 0, 48, 6),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_RGBA64</unmanaged>
 	Rgba64 = 0x18204008u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYU16, SDL_ARRAYORDER_RGBA, 0, 64, 8),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_ARGB64</unmanaged>
 	Argb64 = 0x18304008u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYU16, SDL_ARRAYORDER_ARGB, 0, 64, 8),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_BGRA64</unmanaged>
 	Bgra64 = 0x18504008u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYU16, SDL_ARRAYORDER_BGRA, 0, 64, 8),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_ABGR64</unmanaged>
 	Abgr64 = 0x18604008u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYU16, SDL_ARRAYORDER_ABGR, 0, 64, 8),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_RGB48_FLOAT</unmanaged>
 	Rgb48Float = 0x1a103006u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYF16, SDL_ARRAYORDER_RGB, 0, 48, 6),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_BGR48_FLOAT</unmanaged>
 	Bgr48Float = 0x1a403006u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYF16, SDL_ARRAYORDER_BGR, 0, 48, 6),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_RGBA64_FLOAT</unmanaged>
 	Rgba64Float = 0x1a204008u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYF16, SDL_ARRAYORDER_RGBA, 0, 64, 8),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_ARGB64_FLOAT</unmanaged>
 	Argb64Float = 0x1a304008u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYF16, SDL_ARRAYORDER_ARGB, 0, 64, 8),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_BGRA64_FLOAT</unmanaged>
 	Bgra64Float = 0x1a504008u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYF16, SDL_ARRAYORDER_BGRA, 0, 64, 8),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_ABGR64_FLOAT</unmanaged>
 	Abgr64Float = 0x1a604008u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYF16, SDL_ARRAYORDER_ABGR, 0, 64, 8),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_RGB96_FLOAT</unmanaged>
 	Rgb96Float = 0x1b10600cu,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYF32, SDL_ARRAYORDER_RGB, 0, 96, 12),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_BGR96_FLOAT</unmanaged>
 	Bgr96Float = 0x1b40600cu,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYF32, SDL_ARRAYORDER_BGR, 0, 96, 12),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_RGBA128_FLOAT</unmanaged>
 	Rgba128Float = 0x1b208010u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYF32, SDL_ARRAYORDER_RGBA, 0, 128, 16),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_ARGB128_FLOAT</unmanaged>
 	Argb128Float = 0x1b308010u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYF32, SDL_ARRAYORDER_ARGB, 0, 128, 16),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_BGRA128_FLOAT</unmanaged>
 	Bgra128Float = 0x1b508010u,
+	/// <summary>
+	/// SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYF32, SDL_ARRAYORDER_BGRA, 0, 128, 16),
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_ABGR128_FLOAT</unmanaged>
 	Abgr128Float = 0x1b608010u,
+	/// <summary>
+	/// Planar mode: Y + V + U  (3 planes)
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_YV12</unmanaged>
 	Yv12 = 0x32315659u,
+	/// <summary>
+	/// Planar mode: Y + U + V  (3 planes)
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_IYUV</unmanaged>
 	Iyuv = 0x56555949u,
+	/// <summary>
+	/// Packed mode: Y0+U0+Y1+V0 (1 plane)
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_YUY2</unmanaged>
 	Yuy2 = 0x32595559u,
+	/// <summary>
+	/// Packed mode: U0+Y0+V0+Y1 (1 plane)
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_UYVY</unmanaged>
 	Uyvy = 0x59565955u,
+	/// <summary>
+	/// Packed mode: Y0+V0+Y1+U0 (1 plane)
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_YVYU</unmanaged>
 	Yvyu = 0x55595659u,
+	/// <summary>
+	/// Planar mode: Y + U/V interleaved  (2 planes)
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_NV12</unmanaged>
 	Nv12 = 0x3231564eu,
+	/// <summary>
+	/// Planar mode: Y + V/U interleaved  (2 planes)
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_NV21</unmanaged>
 	Nv21 = 0x3132564eu,
+	/// <summary>
+	/// Planar mode: Y + U/V interleaved  (2 planes)
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_P010</unmanaged>
 	P010 = 0x30313050u,
+	/// <summary>
+	/// Android video texture format
+	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_EXTERNAL_OES</unmanaged>
 	ExternalOes = 0x2053454fu,
 	/// <unmanaged>SDL_PIXELFORMAT_RGBA32</unmanaged>
@@ -1055,6 +2312,11 @@ public enum SDL_PixelFormat : uint
 	Xbgr32 = Rgbx8888,
 }
 
+/// <summary>
+/// Colorspace color type.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_ColorType
 {
 	/// <unmanaged>SDL_COLOR_TYPE_UNKNOWN</unmanaged>
@@ -1065,62 +2327,136 @@ public enum SDL_ColorType
 	Ycbcr = 2,
 }
 
+/// <summary>
+/// Colorspace color range, as described by<br/>
+/// https://www.itu.int/rec/R-REC-BT.2100-2-201807-I/en<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_ColorRange
 {
 	/// <unmanaged>SDL_COLOR_RANGE_UNKNOWN</unmanaged>
 	Unknown = 0,
+	/// <summary>
+	/// Narrow range, e.g. 16-235 for 8-bit RGB and luma, and 16-240 for 8-bit chroma
+	/// </summary>
 	/// <unmanaged>SDL_COLOR_RANGE_LIMITED</unmanaged>
 	Limited = 1,
+	/// <summary>
+	/// Full range, e.g. 0-255 for 8-bit RGB and luma, and 1-255 for 8-bit chroma
+	/// </summary>
 	/// <unmanaged>SDL_COLOR_RANGE_FULL</unmanaged>
 	Full = 2,
 }
 
+/// <summary>
+/// Colorspace color primaries, as described by<br/>
+/// https://www.itu.int/rec/T-REC-H.273-201612-S/en<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_ColorPrimaries
 {
 	/// <unmanaged>SDL_COLOR_PRIMARIES_UNKNOWN</unmanaged>
 	Unknown = 0,
+	/// <summary>
+	/// ITU-R BT.709-6
+	/// </summary>
 	/// <unmanaged>SDL_COLOR_PRIMARIES_BT709</unmanaged>
 	Bt709 = 1,
 	/// <unmanaged>SDL_COLOR_PRIMARIES_UNSPECIFIED</unmanaged>
 	Unspecified = 2,
+	/// <summary>
+	/// ITU-R BT.470-6 System M
+	/// </summary>
 	/// <unmanaged>SDL_COLOR_PRIMARIES_BT470M</unmanaged>
 	Bt470m = 4,
+	/// <summary>
+	/// ITU-R BT.470-6 System B, G / ITU-R BT.601-7 625
+	/// </summary>
 	/// <unmanaged>SDL_COLOR_PRIMARIES_BT470BG</unmanaged>
 	Bt470bg = 5,
+	/// <summary>
+	/// ITU-R BT.601-7 525, SMPTE 170M
+	/// </summary>
 	/// <unmanaged>SDL_COLOR_PRIMARIES_BT601</unmanaged>
 	Bt601 = 6,
+	/// <summary>
+	/// SMPTE 240M, functionally the same as SDL_COLOR_PRIMARIES_BT601
+	/// </summary>
 	/// <unmanaged>SDL_COLOR_PRIMARIES_SMPTE240</unmanaged>
 	Smpte240 = 7,
+	/// <summary>
+	/// Generic film (color filters using Illuminant C)
+	/// </summary>
 	/// <unmanaged>SDL_COLOR_PRIMARIES_GENERIC_FILM</unmanaged>
 	GenericFilm = 8,
+	/// <summary>
+	/// ITU-R BT.2020-2 / ITU-R BT.2100-0
+	/// </summary>
 	/// <unmanaged>SDL_COLOR_PRIMARIES_BT2020</unmanaged>
 	Bt2020 = 9,
+	/// <summary>
+	/// SMPTE ST 428-1
+	/// </summary>
 	/// <unmanaged>SDL_COLOR_PRIMARIES_XYZ</unmanaged>
 	Xyz = 10,
+	/// <summary>
+	/// SMPTE RP 431-2
+	/// </summary>
 	/// <unmanaged>SDL_COLOR_PRIMARIES_SMPTE431</unmanaged>
 	Smpte431 = 11,
+	/// <summary>
+	/// SMPTE EG 432-1 / DCI P3
+	/// </summary>
 	/// <unmanaged>SDL_COLOR_PRIMARIES_SMPTE432</unmanaged>
 	Smpte432 = 12,
+	/// <summary>
+	/// EBU Tech. 3213-E
+	/// </summary>
 	/// <unmanaged>SDL_COLOR_PRIMARIES_EBU3213</unmanaged>
 	Ebu3213 = 22,
 	/// <unmanaged>SDL_COLOR_PRIMARIES_CUSTOM</unmanaged>
 	Custom = 31,
 }
 
+/// <summary>
+/// Colorspace transfer characteristics.<br/>
+/// These are as described by https://www.itu.int/rec/T-REC-H.273-201612-S/en<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_TransferCharacteristics
 {
 	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_UNKNOWN</unmanaged>
 	Unknown = 0,
+	/// <summary>
+	/// Rec. ITU-R BT.709-6 / ITU-R BT1361
+	/// </summary>
 	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_BT709</unmanaged>
 	Bt709 = 1,
 	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_UNSPECIFIED</unmanaged>
 	Unspecified = 2,
+	/// <summary>
+	/// ITU-R BT.470-6 System M / ITU-R BT1700 625 PAL<br/>
+	/// &<br/>
+	/// SECAM
+	/// </summary>
 	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_GAMMA22</unmanaged>
 	Gamma22 = 4,
+	/// <summary>
+	/// ITU-R BT.470-6 System B, G
+	/// </summary>
 	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_GAMMA28</unmanaged>
 	Gamma28 = 5,
+	/// <summary>
+	/// SMPTE ST 170M / ITU-R BT.601-7 525 or 625
+	/// </summary>
 	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_BT601</unmanaged>
 	Bt601 = 6,
+	/// <summary>
+	/// SMPTE ST 240M
+	/// </summary>
 	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_SMPTE240</unmanaged>
 	Smpte240 = 7,
 	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_LINEAR</unmanaged>
@@ -1129,118 +2465,271 @@ public enum SDL_TransferCharacteristics
 	Log100 = 9,
 	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_LOG100_SQRT10</unmanaged>
 	Log100Sqrt10 = 10,
+	/// <summary>
+	/// IEC 61966-2-4
+	/// </summary>
 	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_IEC61966</unmanaged>
 	Iec61966 = 11,
+	/// <summary>
+	/// ITU-R BT1361 Extended Colour Gamut
+	/// </summary>
 	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_BT1361</unmanaged>
 	Bt1361 = 12,
+	/// <summary>
+	/// IEC 61966-2-1 (sRGB or sYCC)
+	/// </summary>
 	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_SRGB</unmanaged>
 	Srgb = 13,
+	/// <summary>
+	/// ITU-R BT2020 for 10-bit system
+	/// </summary>
 	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_BT2020_10BIT</unmanaged>
 	Bt202010bit = 14,
+	/// <summary>
+	/// ITU-R BT2020 for 12-bit system
+	/// </summary>
 	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_BT2020_12BIT</unmanaged>
 	Bt202012bit = 15,
+	/// <summary>
+	/// SMPTE ST 2084 for 10-, 12-, 14- and 16-bit systems
+	/// </summary>
 	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_PQ</unmanaged>
 	Pq = 16,
+	/// <summary>
+	/// SMPTE ST 428-1
+	/// </summary>
 	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_SMPTE428</unmanaged>
 	Smpte428 = 17,
+	/// <summary>
+	/// ARIB STD-B67, known as "hybrid log-gamma" (HLG)
+	/// </summary>
 	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_HLG</unmanaged>
 	Hlg = 18,
 	/// <unmanaged>SDL_TRANSFER_CHARACTERISTICS_CUSTOM</unmanaged>
 	Custom = 31,
 }
 
+/// <summary>
+/// Colorspace matrix coefficients.<br/>
+/// These are as described by https://www.itu.int/rec/T-REC-H.273-201612-S/en<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_MatrixCoefficients
 {
 	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_IDENTITY</unmanaged>
 	Identity = 0,
+	/// <summary>
+	/// ITU-R BT.709-6
+	/// </summary>
 	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_BT709</unmanaged>
 	Bt709 = 1,
 	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_UNSPECIFIED</unmanaged>
 	Unspecified = 2,
+	/// <summary>
+	/// US FCC Title 47
+	/// </summary>
 	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_FCC</unmanaged>
 	Fcc = 4,
+	/// <summary>
+	/// ITU-R BT.470-6 System B, G / ITU-R BT.601-7 625, functionally the same as SDL_MATRIX_COEFFICIENTS_BT601
+	/// </summary>
 	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_BT470BG</unmanaged>
 	Bt470bg = 5,
+	/// <summary>
+	/// ITU-R BT.601-7 525
+	/// </summary>
 	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_BT601</unmanaged>
 	Bt601 = 6,
+	/// <summary>
+	/// SMPTE 240M
+	/// </summary>
 	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_SMPTE240</unmanaged>
 	Smpte240 = 7,
 	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_YCGCO</unmanaged>
 	Ycgco = 8,
+	/// <summary>
+	/// ITU-R BT.2020-2 non-constant luminance
+	/// </summary>
 	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_BT2020_NCL</unmanaged>
 	Bt2020Ncl = 9,
+	/// <summary>
+	/// ITU-R BT.2020-2 constant luminance
+	/// </summary>
 	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_BT2020_CL</unmanaged>
 	Bt2020Cl = 10,
+	/// <summary>
+	/// SMPTE ST 2085
+	/// </summary>
 	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_SMPTE2085</unmanaged>
 	Smpte2085 = 11,
 	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_CHROMA_DERIVED_NCL</unmanaged>
 	ChromaDerivedNcl = 12,
 	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_CHROMA_DERIVED_CL</unmanaged>
 	ChromaDerivedCl = 13,
+	/// <summary>
+	/// ITU-R BT.2100-0 ICTCP
+	/// </summary>
 	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_ICTCP</unmanaged>
 	Ictcp = 14,
 	/// <unmanaged>SDL_MATRIX_COEFFICIENTS_CUSTOM</unmanaged>
 	Custom = 31,
 }
 
+/// <summary>
+/// Colorspace chroma sample location.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_ChromaLocation
 {
+	/// <summary>
+	/// RGB, no chroma sampling
+	/// </summary>
 	/// <unmanaged>SDL_CHROMA_LOCATION_NONE</unmanaged>
 	None = 0,
+	/// <summary>
+	/// In MPEG-2, MPEG-4, and AVC, Cb and Cr are taken on midpoint of the left-edge of the 2x2 square. In other words, they have the same horizontal location as the top-left pixel, but is shifted one-half pixel down vertically.
+	/// </summary>
 	/// <unmanaged>SDL_CHROMA_LOCATION_LEFT</unmanaged>
 	Left = 1,
+	/// <summary>
+	/// In JPEG/JFIF, H.261, and MPEG-1, Cb and Cr are taken at the center of the 2x2 square. In other words, they are offset one-half pixel to the right and one-half pixel down compared to the top-left pixel.
+	/// </summary>
 	/// <unmanaged>SDL_CHROMA_LOCATION_CENTER</unmanaged>
 	Center = 2,
+	/// <summary>
+	/// In HEVC for BT.2020 and BT.2100 content (in particular on Blu-rays), Cb and Cr are sampled at the same location as the group's top-left Y pixel ("co-sited", "co-located").
+	/// </summary>
 	/// <unmanaged>SDL_CHROMA_LOCATION_TOPLEFT</unmanaged>
 	Topleft = 3,
 }
 
+/// <summary>
+/// Colorspace definitions.<br/>
+/// Since similar colorspaces may vary in their details (matrix, transfer<br/>
+/// function, etc.), this is not an exhaustive list, but rather a<br/>
+/// representative sample of the kinds of colorspaces supported in SDL.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_ColorPrimaries<br/>
+/// @sa SDL_ColorRange<br/>
+/// @sa SDL_ColorType<br/>
+/// @sa SDL_MatrixCoefficients<br/>
+/// @sa SDL_TransferCharacteristics
+/// </summary>
 public enum SDL_Colorspace
 {
 	/// <unmanaged>SDL_COLORSPACE_UNKNOWN</unmanaged>
 	Unknown = 0,
+	/// <summary>
+	/// Equivalent to DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P709
+	/// </summary>
 	/// <unmanaged>SDL_COLORSPACE_SRGB</unmanaged>
 	Srgb = 301991328,
+	/// <summary>
+	/// Equivalent to DXGI_COLOR_SPACE_RGB_FULL_G10_NONE_P709
+	/// </summary>
 	/// <unmanaged>SDL_COLORSPACE_SRGB_LINEAR</unmanaged>
 	SrgbLinear = 301991168,
+	/// <summary>
+	/// Equivalent to DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020
+	/// </summary>
 	/// <unmanaged>SDL_COLORSPACE_HDR10</unmanaged>
 	Hdr10 = 301999616,
+	/// <summary>
+	/// Equivalent to DXGI_COLOR_SPACE_YCBCR_FULL_G22_NONE_P709_X601
+	/// </summary>
 	/// <unmanaged>SDL_COLORSPACE_JPEG</unmanaged>
 	Jpeg = 570426566,
+	/// <summary>
+	/// Equivalent to DXGI_COLOR_SPACE_YCBCR_STUDIO_G22_LEFT_P601
+	/// </summary>
 	/// <unmanaged>SDL_COLORSPACE_BT601_LIMITED</unmanaged>
 	Bt601Limited = 554703046,
+	/// <summary>
+	/// Equivalent to DXGI_COLOR_SPACE_YCBCR_STUDIO_G22_LEFT_P601
+	/// </summary>
 	/// <unmanaged>SDL_COLORSPACE_BT601_FULL</unmanaged>
 	Bt601Full = 571480262,
+	/// <summary>
+	/// Equivalent to DXGI_COLOR_SPACE_YCBCR_STUDIO_G22_LEFT_P709
+	/// </summary>
 	/// <unmanaged>SDL_COLORSPACE_BT709_LIMITED</unmanaged>
 	Bt709Limited = 554697761,
+	/// <summary>
+	/// Equivalent to DXGI_COLOR_SPACE_YCBCR_STUDIO_G22_LEFT_P709
+	/// </summary>
 	/// <unmanaged>SDL_COLORSPACE_BT709_FULL</unmanaged>
 	Bt709Full = 571474977,
+	/// <summary>
+	/// Equivalent to DXGI_COLOR_SPACE_YCBCR_STUDIO_G22_LEFT_P2020
+	/// </summary>
 	/// <unmanaged>SDL_COLORSPACE_BT2020_LIMITED</unmanaged>
 	Bt2020Limited = 554706441,
+	/// <summary>
+	/// Equivalent to DXGI_COLOR_SPACE_YCBCR_FULL_G22_LEFT_P2020
+	/// </summary>
 	/// <unmanaged>SDL_COLORSPACE_BT2020_FULL</unmanaged>
 	Bt2020Full = 571483657,
+	/// <summary>
+	/// The default colorspace for RGB surfaces if no colorspace is specified
+	/// </summary>
 	/// <unmanaged>SDL_COLORSPACE_RGB_DEFAULT</unmanaged>
 	RgbDefault = 301991328,
+	/// <summary>
+	/// The default colorspace for YUV surfaces if no colorspace is specified
+	/// </summary>
 	/// <unmanaged>SDL_COLORSPACE_YUV_DEFAULT</unmanaged>
 	YuvDefault = 570426566,
 }
 
+/// <summary>
+/// The basic state for the system's power supply.<br/>
+/// These are results returned by SDL_GetPowerInfo().<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0
+/// </summary>
 public enum SDL_PowerState
 {
+	/// <summary>
+	/// error determining power status
+	/// </summary>
 	/// <unmanaged>SDL_POWERSTATE_ERROR</unmanaged>
 	Error = -1,
+	/// <summary>
+	/// cannot determine power status
+	/// </summary>
 	/// <unmanaged>SDL_POWERSTATE_UNKNOWN</unmanaged>
 	Unknown = 0,
+	/// <summary>
+	/// Not plugged in, running on the battery
+	/// </summary>
 	/// <unmanaged>SDL_POWERSTATE_ON_BATTERY</unmanaged>
 	OnBattery = 1,
+	/// <summary>
+	/// Plugged in, no battery available
+	/// </summary>
 	/// <unmanaged>SDL_POWERSTATE_NO_BATTERY</unmanaged>
 	NoBattery = 2,
+	/// <summary>
+	/// Plugged in, charging battery
+	/// </summary>
 	/// <unmanaged>SDL_POWERSTATE_CHARGING</unmanaged>
 	Charging = 3,
+	/// <summary>
+	/// Plugged in, battery charged
+	/// </summary>
 	/// <unmanaged>SDL_POWERSTATE_CHARGED</unmanaged>
 	Charged = 4,
 }
 
+/// <summary>
+/// SDL property type<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_PropertyType
 {
 	/// <unmanaged>SDL_PROPERTY_TYPE_INVALID</unmanaged>
@@ -1257,132 +2746,493 @@ public enum SDL_PropertyType
 	Boolean = 5,
 }
 
+/// <summary>
+/// The access pattern allowed for a texture.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_TextureAccess
 {
+	/// <summary>
+	/// Changes rarely, not lockable
+	/// </summary>
 	/// <unmanaged>SDL_TEXTUREACCESS_STATIC</unmanaged>
 	SDL_TEXTUREACCESS_STATIC = 0,
+	/// <summary>
+	/// Changes frequently, lockable
+	/// </summary>
 	/// <unmanaged>SDL_TEXTUREACCESS_STREAMING</unmanaged>
 	SDL_TEXTUREACCESS_STREAMING = 1,
+	/// <summary>
+	/// Texture can be used as a render target
+	/// </summary>
 	/// <unmanaged>SDL_TEXTUREACCESS_TARGET</unmanaged>
 	SDL_TEXTUREACCESS_TARGET = 2,
 }
 
+/// <summary>
+/// How the logical size is mapped to the output.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_RendererLogicalPresentation
 {
+	/// <summary>
+	/// There is no logical size in effect
+	/// </summary>
 	/// <unmanaged>SDL_LOGICAL_PRESENTATION_DISABLED</unmanaged>
 	SDL_LOGICAL_PRESENTATION_DISABLED = 0,
+	/// <summary>
+	/// The rendered content is stretched to the output resolution
+	/// </summary>
 	/// <unmanaged>SDL_LOGICAL_PRESENTATION_STRETCH</unmanaged>
 	SDL_LOGICAL_PRESENTATION_STRETCH = 1,
+	/// <summary>
+	/// The rendered content is fit to the largest dimension and the other dimension is letterboxed with black bars
+	/// </summary>
 	/// <unmanaged>SDL_LOGICAL_PRESENTATION_LETTERBOX</unmanaged>
 	SDL_LOGICAL_PRESENTATION_LETTERBOX = 2,
+	/// <summary>
+	/// The rendered content is fit to the smallest dimension and the other dimension extends beyond the output bounds
+	/// </summary>
 	/// <unmanaged>SDL_LOGICAL_PRESENTATION_OVERSCAN</unmanaged>
 	SDL_LOGICAL_PRESENTATION_OVERSCAN = 3,
+	/// <summary>
+	/// The rendered content is scaled up by integer multiples to fit the output resolution
+	/// </summary>
 	/// <unmanaged>SDL_LOGICAL_PRESENTATION_INTEGER_SCALE</unmanaged>
 	SDL_LOGICAL_PRESENTATION_INTEGER_SCALE = 4,
 }
 
+/// <summary>
+/// The SDL keyboard scancode representation.<br/>
+/// An SDL scancode is the physical representation of a key on the keyboard,<br/>
+/// independent of language and keyboard mapping.<br/>
+/// Values of this type are used to represent keyboard keys, among other places<br/>
+/// in the `scancode` field of the SDL_KeyboardEvent structure.<br/>
+/// The values in this enumeration are based on the USB usage page standard:<br/>
+/// https://usb.org/sites/default/files/hut1_5.pdf<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_Scancode
 {
 	/// <unmanaged>SDL_SCANCODE_UNKNOWN</unmanaged>
 	Unknown = 0,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_A</unmanaged>
 	A = 4,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_B</unmanaged>
 	B = 5,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_C</unmanaged>
 	C = 6,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_D</unmanaged>
 	D = 7,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_E</unmanaged>
 	E = 8,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_F</unmanaged>
 	F = 9,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_G</unmanaged>
 	G = 10,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_H</unmanaged>
 	H = 11,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_I</unmanaged>
 	I = 12,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_J</unmanaged>
 	J = 13,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_K</unmanaged>
 	K = 14,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_L</unmanaged>
 	L = 15,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_M</unmanaged>
 	M = 16,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_N</unmanaged>
 	N = 17,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_O</unmanaged>
 	O = 18,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_P</unmanaged>
 	P = 19,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_Q</unmanaged>
 	Q = 20,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_R</unmanaged>
 	R = 21,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_S</unmanaged>
 	S = 22,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_T</unmanaged>
 	T = 23,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_U</unmanaged>
 	U = 24,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_V</unmanaged>
 	V = 25,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_W</unmanaged>
 	W = 26,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_X</unmanaged>
 	X = 27,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_Y</unmanaged>
 	Y = 28,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_Z</unmanaged>
 	Z = 29,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_1</unmanaged>
 	_1 = 30,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_2</unmanaged>
 	_2 = 31,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_3</unmanaged>
 	_3 = 32,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_4</unmanaged>
 	_4 = 33,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_5</unmanaged>
 	_5 = 34,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_6</unmanaged>
 	_6 = 35,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_7</unmanaged>
 	_7 = 36,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_8</unmanaged>
 	_8 = 37,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_9</unmanaged>
 	_9 = 38,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_0</unmanaged>
 	_0 = 39,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_RETURN</unmanaged>
 	Return = 40,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_ESCAPE</unmanaged>
 	Escape = 41,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_BACKSPACE</unmanaged>
 	Backspace = 42,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_TAB</unmanaged>
 	Tab = 43,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_SPACE</unmanaged>
 	Space = 44,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_MINUS</unmanaged>
 	Minus = 45,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_EQUALS</unmanaged>
 	Equals = 46,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_LEFTBRACKET</unmanaged>
 	LeftBracket = 47,
+	/// <summary>
+	/// Usage page 0x07<br/>
+	/// These values are from usage page 0x07 (USB keyboard page).<br/>
+	/// @<br/>
+	/// {
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_RIGHTBRACKET</unmanaged>
 	RightBracket = 48,
+	/// <summary>
+	/// Located at the lower left of the return<br/>
+	/// key on ISO keyboards and at the right end<br/>
+	/// of the QWERTY row on ANSI keyboards.<br/>
+	/// Produces REVERSE SOLIDUS (backslash) and<br/>
+	/// VERTICAL LINE in a US layout, REVERSE<br/>
+	/// SOLIDUS and VERTICAL LINE in a UK Mac<br/>
+	/// layout, NUMBER SIGN and TILDE in a UK<br/>
+	/// Windows layout, DOLLAR SIGN and POUND SIGN<br/>
+	/// in a Swiss German layout, NUMBER SIGN and<br/>
+	/// APOSTROPHE in a German layout, GRAVE<br/>
+	/// ACCENT and POUND SIGN in a French Mac<br/>
+	/// layout, and ASTERISK and MICRO SIGN in a<br/>
+	/// French Windows layout.
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_BACKSLASH</unmanaged>
 	Backslash = 49,
+	/// <summary>
+	/// ISO USB keyboards actually use this code<br/>
+	/// instead of 49 for the same key, but all<br/>
+	/// OSes I've seen treat the two codes<br/>
+	/// identically. So, as an implementor, unless<br/>
+	/// your keyboard generates both of those<br/>
+	/// codes and your OS treats them differently,<br/>
+	/// you should generate SDL_SCANCODE_BACKSLASH<br/>
+	/// instead of this code. As a user, you<br/>
+	/// should not rely on this code because SDL<br/>
+	/// will never generate it with most (all?)<br/>
+	/// keyboards.
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_NONUSHASH</unmanaged>
 	NonusHash = 50,
 	/// <unmanaged>SDL_SCANCODE_SEMICOLON</unmanaged>
 	Semicolon = 51,
 	/// <unmanaged>SDL_SCANCODE_APOSTROPHE</unmanaged>
 	Apostrophe = 52,
+	/// <summary>
+	/// Located in the top left corner (on both ANSI<br/>
+	/// and ISO keyboards). Produces GRAVE ACCENT and<br/>
+	/// TILDE in a US Windows layout and in US and UK<br/>
+	/// Mac layouts on ANSI keyboards, GRAVE ACCENT<br/>
+	/// and NOT SIGN in a UK Windows layout, SECTION<br/>
+	/// SIGN and PLUS-MINUS SIGN in US and UK Mac<br/>
+	/// layouts on ISO keyboards, SECTION SIGN and<br/>
+	/// DEGREE SIGN in a Swiss German layout (Mac:<br/>
+	/// only on ISO keyboards), CIRCUMFLEX ACCENT and<br/>
+	/// DEGREE SIGN in a German layout (Mac: only on<br/>
+	/// ISO keyboards), SUPERSCRIPT TWO and TILDE in a<br/>
+	/// French Windows layout, COMMERCIAL AT and<br/>
+	/// NUMBER SIGN in a French Mac layout on ISO<br/>
+	/// keyboards, and LESS-THAN SIGN and GREATER-THAN<br/>
+	/// SIGN in a Swiss German, German, or French Mac<br/>
+	/// layout on ANSI keyboards.
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_GRAVE</unmanaged>
 	Grave = 53,
 	/// <unmanaged>SDL_SCANCODE_COMMA</unmanaged>
@@ -1423,6 +3273,10 @@ public enum SDL_Scancode
 	ScrollLock = 71,
 	/// <unmanaged>SDL_SCANCODE_PAUSE</unmanaged>
 	Pause = 72,
+	/// <summary>
+	/// insert on PC, help on some Mac keyboards (but<br/>
+	/// does send code 73, not 117)
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_INSERT</unmanaged>
 	Insert = 73,
 	/// <unmanaged>SDL_SCANCODE_HOME</unmanaged>
@@ -1443,6 +3297,9 @@ public enum SDL_Scancode
 	Down = 81,
 	/// <unmanaged>SDL_SCANCODE_UP</unmanaged>
 	Up = 82,
+	/// <summary>
+	/// num lock on PC, clear on Mac keyboards
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_NUMLOCKCLEAR</unmanaged>
 	NumLockClear = 83,
 	/// <unmanaged>SDL_SCANCODE_KP_DIVIDE</unmanaged>
@@ -1477,10 +3334,30 @@ public enum SDL_Scancode
 	Kp0 = 98,
 	/// <unmanaged>SDL_SCANCODE_KP_PERIOD</unmanaged>
 	KpPeriod = 99,
+	/// <summary>
+	/// This is the additional key that ISO<br/>
+	/// keyboards have over ANSI ones,<br/>
+	/// located between left shift and Y.<br/>
+	/// Produces GRAVE ACCENT and TILDE in a<br/>
+	/// US or UK Mac layout, REVERSE SOLIDUS<br/>
+	/// (backslash) and VERTICAL LINE in a<br/>
+	/// US or UK Windows layout, and<br/>
+	/// LESS-THAN SIGN and GREATER-THAN SIGN<br/>
+	/// in a Swiss German, German, or French<br/>
+	/// layout.
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_NONUSBACKSLASH</unmanaged>
 	Nonusbackslash = 100,
+	/// <summary>
+	/// windows contextual menu, compose
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_APPLICATION</unmanaged>
 	Application = 101,
+	/// <summary>
+	/// The USB document says this is a status flag,<br/>
+	/// not a physical key - but some Mac keyboards<br/>
+	/// do have a power key.
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_POWER</unmanaged>
 	Power = 102,
 	/// <unmanaged>SDL_SCANCODE_KP_EQUALS</unmanaged>
@@ -1511,24 +3388,51 @@ public enum SDL_Scancode
 	F24 = 115,
 	/// <unmanaged>SDL_SCANCODE_EXECUTE</unmanaged>
 	Execute = 116,
+	/// <summary>
+	/// AL Integrated Help Center
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_HELP</unmanaged>
 	Help = 117,
+	/// <summary>
+	/// Menu (show menu)
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_MENU</unmanaged>
 	Menu = 118,
 	/// <unmanaged>SDL_SCANCODE_SELECT</unmanaged>
 	Select = 119,
+	/// <summary>
+	/// AC Stop
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_STOP</unmanaged>
 	Stop = 120,
+	/// <summary>
+	/// AC Redo/Repeat
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_AGAIN</unmanaged>
 	Again = 121,
+	/// <summary>
+	/// AC Undo
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_UNDO</unmanaged>
 	Undo = 122,
+	/// <summary>
+	/// AC Cut
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_CUT</unmanaged>
 	Cut = 123,
+	/// <summary>
+	/// AC Copy
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_COPY</unmanaged>
 	Copy = 124,
+	/// <summary>
+	/// AC Paste
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_PASTE</unmanaged>
 	Paste = 125,
+	/// <summary>
+	/// AC Find
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_FIND</unmanaged>
 	Find = 126,
 	/// <unmanaged>SDL_SCANCODE_MUTE</unmanaged>
@@ -1537,14 +3441,33 @@ public enum SDL_Scancode
 	VolumeUp = 128,
 	/// <unmanaged>SDL_SCANCODE_VOLUMEDOWN</unmanaged>
 	VolumeDown = 129,
+	/// <summary>
+	/// not sure whether there's a reason to enable these<br/>
+	/// SDL_SCANCODE_LOCKINGCAPSLOCK = 130,<br/>
+	/// SDL_SCANCODE_LOCKINGNUMLOCK = 131,<br/>
+	/// SDL_SCANCODE_LOCKINGSCROLLLOCK = 132,
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_KP_COMMA</unmanaged>
 	KpComma = 133,
+	/// <summary>
+	/// not sure whether there's a reason to enable these<br/>
+	/// SDL_SCANCODE_LOCKINGCAPSLOCK = 130,<br/>
+	/// SDL_SCANCODE_LOCKINGNUMLOCK = 131,<br/>
+	/// SDL_SCANCODE_LOCKINGSCROLLLOCK = 132,
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_KP_EQUALSAS400</unmanaged>
 	KpEqualsas400 = 134,
+	/// <summary>
+	/// used on Asian keyboards, see<br/>
+	/// footnotes in USB doc
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_INTERNATIONAL1</unmanaged>
 	International1 = 135,
 	/// <unmanaged>SDL_SCANCODE_INTERNATIONAL2</unmanaged>
 	International2 = 136,
+	/// <summary>
+	/// Yen
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_INTERNATIONAL3</unmanaged>
 	International3 = 137,
 	/// <unmanaged>SDL_SCANCODE_INTERNATIONAL4</unmanaged>
@@ -1559,28 +3482,61 @@ public enum SDL_Scancode
 	International8 = 142,
 	/// <unmanaged>SDL_SCANCODE_INTERNATIONAL9</unmanaged>
 	International9 = 143,
+	/// <summary>
+	/// Hangul/English toggle
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_LANG1</unmanaged>
 	Lang1 = 144,
+	/// <summary>
+	/// Hanja conversion
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_LANG2</unmanaged>
 	Lang2 = 145,
+	/// <summary>
+	/// Katakana
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_LANG3</unmanaged>
 	Lang3 = 146,
+	/// <summary>
+	/// Hiragana
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_LANG4</unmanaged>
 	Lang4 = 147,
+	/// <summary>
+	/// Zenkaku/Hankaku
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_LANG5</unmanaged>
 	Lang5 = 148,
+	/// <summary>
+	/// reserved
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_LANG6</unmanaged>
 	Lang6 = 149,
+	/// <summary>
+	/// reserved
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_LANG7</unmanaged>
 	Lang7 = 150,
+	/// <summary>
+	/// reserved
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_LANG8</unmanaged>
 	Lang8 = 151,
+	/// <summary>
+	/// reserved
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_LANG9</unmanaged>
 	Lang9 = 152,
+	/// <summary>
+	/// Erase-Eaze
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_ALTERASE</unmanaged>
 	Alterase = 153,
 	/// <unmanaged>SDL_SCANCODE_SYSREQ</unmanaged>
 	Sysreq = 154,
+	/// <summary>
+	/// AC Cancel
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_CANCEL</unmanaged>
 	Cancel = 155,
 	/// <unmanaged>SDL_SCANCODE_CLEAR</unmanaged>
@@ -1697,133 +3653,359 @@ public enum SDL_Scancode
 	LeftControl = 224,
 	/// <unmanaged>SDL_SCANCODE_LSHIFT</unmanaged>
 	LeftShift = 225,
+	/// <summary>
+	/// alt, option
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_LALT</unmanaged>
 	LeftAlt = 226,
+	/// <summary>
+	/// windows, command (apple), meta
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_LGUI</unmanaged>
 	LeftGui = 227,
 	/// <unmanaged>SDL_SCANCODE_RCTRL</unmanaged>
 	RightControl = 228,
 	/// <unmanaged>SDL_SCANCODE_RSHIFT</unmanaged>
 	RightShift = 229,
+	/// <summary>
+	/// alt gr, option
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_RALT</unmanaged>
 	RightAlt = 230,
+	/// <summary>
+	/// windows, command (apple), meta
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_RGUI</unmanaged>
 	RightGui = 231,
+	/// <summary>
+	/// I'm not sure if this is really not covered<br/>
+	/// by any of the above, but since there's a<br/>
+	/// special SDL_KMOD_MODE for it I'm adding it here
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_MODE</unmanaged>
 	Mode = 257,
+	/// <summary>
+	/// Sleep
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_SLEEP</unmanaged>
 	Sleep = 258,
+	/// <summary>
+	/// Wake
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_WAKE</unmanaged>
 	Wake = 259,
+	/// <summary>
+	/// Channel Increment
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_CHANNEL_INCREMENT</unmanaged>
 	ChannelIncrement = 260,
+	/// <summary>
+	/// Channel Decrement
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_CHANNEL_DECREMENT</unmanaged>
 	ChannelDecrement = 261,
+	/// <summary>
+	/// Play
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_MEDIA_PLAY</unmanaged>
 	MediaPlay = 262,
+	/// <summary>
+	/// Pause
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_MEDIA_PAUSE</unmanaged>
 	MediaPause = 263,
+	/// <summary>
+	/// Record
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_MEDIA_RECORD</unmanaged>
 	MediaRecord = 264,
+	/// <summary>
+	/// Fast Forward
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_MEDIA_FAST_FORWARD</unmanaged>
 	MediaFastForward = 265,
+	/// <summary>
+	/// Rewind
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_MEDIA_REWIND</unmanaged>
 	MediaRewind = 266,
+	/// <summary>
+	/// Next Track
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_MEDIA_NEXT_TRACK</unmanaged>
 	MediaNextTrack = 267,
+	/// <summary>
+	/// Previous Track
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_MEDIA_PREVIOUS_TRACK</unmanaged>
 	MediaPreviousTrack = 268,
+	/// <summary>
+	/// Stop
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_MEDIA_STOP</unmanaged>
 	MediaStop = 269,
+	/// <summary>
+	/// Eject
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_MEDIA_EJECT</unmanaged>
 	MediaEject = 270,
+	/// <summary>
+	/// Play / Pause
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_MEDIA_PLAY_PAUSE</unmanaged>
 	MediaPlayPause = 271,
+	/// <summary>
+	/// Media Select
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_MEDIA_SELECT</unmanaged>
 	MediaSelect = 272,
+	/// <summary>
+	/// AC New
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_AC_NEW</unmanaged>
 	AcNew = 273,
+	/// <summary>
+	/// AC Open
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_AC_OPEN</unmanaged>
 	AcOpen = 274,
+	/// <summary>
+	/// AC Close
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_AC_CLOSE</unmanaged>
 	AcClose = 275,
+	/// <summary>
+	/// AC Exit
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_AC_EXIT</unmanaged>
 	AcExit = 276,
+	/// <summary>
+	/// AC Save
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_AC_SAVE</unmanaged>
 	AcSave = 277,
+	/// <summary>
+	/// AC Print
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_AC_PRINT</unmanaged>
 	AcPrint = 278,
+	/// <summary>
+	/// AC Properties
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_AC_PROPERTIES</unmanaged>
 	AcProperties = 279,
+	/// <summary>
+	/// AC Search
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_AC_SEARCH</unmanaged>
 	AcSearch = 280,
+	/// <summary>
+	/// AC Home
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_AC_HOME</unmanaged>
 	AcHome = 281,
+	/// <summary>
+	/// AC Back
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_AC_BACK</unmanaged>
 	AcBack = 282,
+	/// <summary>
+	/// AC Forward
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_AC_FORWARD</unmanaged>
 	AcForward = 283,
+	/// <summary>
+	/// AC Stop
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_AC_STOP</unmanaged>
 	AcStop = 284,
+	/// <summary>
+	/// AC Refresh
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_AC_REFRESH</unmanaged>
 	AcRefresh = 285,
+	/// <summary>
+	/// AC Bookmarks
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_AC_BOOKMARKS</unmanaged>
 	AcBookmarks = 286,
+	/// <summary>
+	/// Usually situated below the display on phones and<br/>
+	/// used as a multi-function feature key for selecting<br/>
+	/// a software defined function shown on the bottom left<br/>
+	/// of the display.
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_SOFTLEFT</unmanaged>
 	Softleft = 287,
+	/// <summary>
+	/// Usually situated below the display on phones and<br/>
+	/// used as a multi-function feature key for selecting<br/>
+	/// a software defined function shown on the bottom right<br/>
+	/// of the display.
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_SOFTRIGHT</unmanaged>
 	Softright = 288,
+	/// <summary>
+	/// Used for accepting phone calls.
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_CALL</unmanaged>
 	Call = 289,
+	/// <summary>
+	/// Used for rejecting phone calls.
+	/// </summary>
 	/// <unmanaged>SDL_SCANCODE_ENDCALL</unmanaged>
 	Endcall = 290,
+	/// <summary>
+	/// not a key, just marks the number of scancodes for array bounds
+	/// </summary>
 	Count = 512,
 }
 
+/// <summary>
+/// The different sensors defined by SDL.<br/>
+/// Additional sensors may be available, using platform dependent semantics.<br/>
+/// Here are the additional Android sensors:<br/>
+/// https://developer.android.com/reference/android/hardware/SensorEvent.html#values<br/>
+/// Accelerometer sensor notes:<br/>
+/// The accelerometer returns the current acceleration in SI meters per second<br/>
+/// squared. This measurement includes the force of gravity, so a device at<br/>
+/// rest will have an value of SDL_STANDARD_GRAVITY away from the center of the<br/>
+/// earth, which is a positive Y value.<br/>
+/// - `values[0]`: Acceleration on the x axis<br/>
+/// - `values[1]`: Acceleration on the y axis<br/>
+/// - `values[2]`: Acceleration on the z axis<br/>
+/// For phones and tablets held in natural orientation and game controllers<br/>
+/// held in front of you, the axes are defined as follows:<br/>
+/// - -X ... +X : left ... right<br/>
+/// - -Y ... +Y : bottom ... top<br/>
+/// - -Z ... +Z : farther ... closer<br/>
+/// The accelerometer axis data is not changed when the device is rotated.<br/>
+/// Gyroscope sensor notes:<br/>
+/// The gyroscope returns the current rate of rotation in radians per second.<br/>
+/// The rotation is positive in the counter-clockwise direction. That is, an<br/>
+/// observer looking from a positive location on one of the axes would see<br/>
+/// positive rotation on that axis when it appeared to be rotating<br/>
+/// counter-clockwise.<br/>
+/// - `values[0]`: Angular speed around the x axis (pitch)<br/>
+/// - `values[1]`: Angular speed around the y axis (yaw)<br/>
+/// - `values[2]`: Angular speed around the z axis (roll)<br/>
+/// For phones and tablets held in natural orientation and game controllers<br/>
+/// held in front of you, the axes are defined as follows:<br/>
+/// - -X ... +X : left ... right<br/>
+/// - -Y ... +Y : bottom ... top<br/>
+/// - -Z ... +Z : farther ... closer<br/>
+/// The gyroscope axis data is not changed when the device is rotated.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_GetCurrentDisplayOrientation
+/// </summary>
 public enum SDL_SensorType
 {
+	/// <summary>
+	/// Returned for an invalid sensor
+	/// </summary>
 	/// <unmanaged>SDL_SENSOR_INVALID</unmanaged>
 	Invalid = -1,
+	/// <summary>
+	/// Unknown sensor type
+	/// </summary>
 	/// <unmanaged>SDL_SENSOR_UNKNOWN</unmanaged>
 	Unknown = 0,
+	/// <summary>
+	/// Accelerometer
+	/// </summary>
 	/// <unmanaged>SDL_SENSOR_ACCEL</unmanaged>
 	Accel = 1,
+	/// <summary>
+	/// Gyroscope
+	/// </summary>
 	/// <unmanaged>SDL_SENSOR_GYRO</unmanaged>
 	Gyro = 2,
+	/// <summary>
+	/// Accelerometer for left Joy-Con controller and Wii nunchuk
+	/// </summary>
 	/// <unmanaged>SDL_SENSOR_ACCEL_L</unmanaged>
 	AccelL = 3,
+	/// <summary>
+	/// Gyroscope for left Joy-Con controller
+	/// </summary>
 	/// <unmanaged>SDL_SENSOR_GYRO_L</unmanaged>
 	GyroL = 4,
+	/// <summary>
+	/// Accelerometer for right Joy-Con controller
+	/// </summary>
 	/// <unmanaged>SDL_SENSOR_ACCEL_R</unmanaged>
 	AccelR = 5,
+	/// <summary>
+	/// Gyroscope for right Joy-Con controller
+	/// </summary>
 	/// <unmanaged>SDL_SENSOR_GYRO_R</unmanaged>
 	GyroR = 6,
 }
 
+/// <summary>
+/// TODO: include/SDL_stdinc.h:390: error: size of array 'SDL_dummy_enum' is negative
+/// </summary>
 public enum SDL_DUMMY_ENUM
 {
 	/// <unmanaged>DUMMY_ENUM_VALUE</unmanaged>
 	DUMMY_ENUM_VALUE = 0,
 }
 
+/// <summary>
+/// The scaling mode.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_ScaleMode
 {
+	/// <summary>
+	/// nearest pixel sampling
+	/// </summary>
 	/// <unmanaged>SDL_SCALEMODE_NEAREST</unmanaged>
 	Nearest = 0,
+	/// <summary>
+	/// linear filtering
+	/// </summary>
 	/// <unmanaged>SDL_SCALEMODE_LINEAR</unmanaged>
 	Linear = 1,
 }
 
+/// <summary>
+/// The flip mode.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_FlipMode
 {
+	/// <summary>
+	/// Do not flip
+	/// </summary>
 	/// <unmanaged>SDL_FLIP_NONE</unmanaged>
 	None = 0,
+	/// <summary>
+	/// flip horizontally
+	/// </summary>
 	/// <unmanaged>SDL_FLIP_HORIZONTAL</unmanaged>
 	Horizontal = 1,
+	/// <summary>
+	/// flip vertically
+	/// </summary>
 	/// <unmanaged>SDL_FLIP_VERTICAL</unmanaged>
 	Vertical = 2,
 }
 
+/// <summary>
+/// The SDL thread priority.<br/>
+/// SDL will make system changes as necessary in order to apply the thread<br/>
+/// priority. Code which attempts to control thread state related to priority<br/>
+/// should be aware that calling SDL_SetCurrentThreadPriority may alter such<br/>
+/// state. SDL_HINT_THREAD_PRIORITY_POLICY can be used to control aspects of<br/>
+/// this behavior.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_ThreadPriority
 {
 	/// <unmanaged>SDL_THREAD_PRIORITY_LOW</unmanaged>
@@ -1836,20 +4018,49 @@ public enum SDL_ThreadPriority
 	SDL_THREAD_PRIORITY_TIME_CRITICAL = 3,
 }
 
+/// <summary>
+/// The preferred date format of the current system locale.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_GetDateTimeLocalePreferences
+/// </summary>
 public enum SDL_DateFormat
 {
+	/// <summary>
+	/// Year/Month/Day
+	/// </summary>
 	/// <unmanaged>SDL_DATE_FORMAT_YYYYMMDD</unmanaged>
 	Yyyymmdd = 0,
+	/// <summary>
+	/// Day/Month/Year
+	/// </summary>
 	/// <unmanaged>SDL_DATE_FORMAT_DDMMYYYY</unmanaged>
 	Ddmmyyyy = 1,
+	/// <summary>
+	/// Month/Day/Year
+	/// </summary>
 	/// <unmanaged>SDL_DATE_FORMAT_MMDDYYYY</unmanaged>
 	Mmddyyyy = 2,
 }
 
+/// <summary>
+/// The preferred time format of the current system locale.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_GetDateTimeLocalePreferences
+/// </summary>
 public enum SDL_TimeFormat
 {
+	/// <summary>
+	/// 24 hour time
+	/// </summary>
 	/// <unmanaged>SDL_TIME_FORMAT_24HR</unmanaged>
 	_24hr = 0,
+	/// <summary>
+	/// 12 hour time
+	/// </summary>
 	/// <unmanaged>SDL_TIME_FORMAT_12HR</unmanaged>
 	_12hr = 1,
 }
@@ -1858,98 +4069,245 @@ public enum SDL_TouchDeviceType
 {
 	/// <unmanaged>SDL_TOUCH_DEVICE_INVALID</unmanaged>
 	Invalid = -1,
+	/// <summary>
+	/// touch screen with window-relative coordinates
+	/// </summary>
 	/// <unmanaged>SDL_TOUCH_DEVICE_DIRECT</unmanaged>
 	Direct = 0,
+	/// <summary>
+	/// trackpad with absolute device coordinates
+	/// </summary>
 	/// <unmanaged>SDL_TOUCH_DEVICE_INDIRECT_ABSOLUTE</unmanaged>
 	IndirectAbsolute = 1,
+	/// <summary>
+	/// trackpad with screen cursor-relative coordinates
+	/// </summary>
 	/// <unmanaged>SDL_TOUCH_DEVICE_INDIRECT_RELATIVE</unmanaged>
 	IndirectRelative = 2,
 }
 
+/// <summary>
+/// System theme.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_SystemTheme
 {
+	/// <summary>
+	/// Unknown system theme
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_THEME_UNKNOWN</unmanaged>
 	Unknown = 0,
+	/// <summary>
+	/// Light colored system theme
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_THEME_LIGHT</unmanaged>
 	Light = 1,
+	/// <summary>
+	/// Dark colored system theme
+	/// </summary>
 	/// <unmanaged>SDL_SYSTEM_THEME_DARK</unmanaged>
 	Dark = 2,
 }
 
+/// <summary>
+/// Display orientation values; the way a display is rotated.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_DisplayOrientation
 {
+	/// <summary>
+	/// The display orientation can't be determined
+	/// </summary>
 	/// <unmanaged>SDL_ORIENTATION_UNKNOWN</unmanaged>
 	Unknown = 0,
+	/// <summary>
+	/// The display is in landscape mode, with the right side up, relative to portrait mode
+	/// </summary>
 	/// <unmanaged>SDL_ORIENTATION_LANDSCAPE</unmanaged>
 	Landscape = 1,
+	/// <summary>
+	/// The display is in landscape mode, with the left side up, relative to portrait mode
+	/// </summary>
 	/// <unmanaged>SDL_ORIENTATION_LANDSCAPE_FLIPPED</unmanaged>
 	LandscapeFlipped = 2,
+	/// <summary>
+	/// The display is in portrait mode
+	/// </summary>
 	/// <unmanaged>SDL_ORIENTATION_PORTRAIT</unmanaged>
 	Portrait = 3,
+	/// <summary>
+	/// The display is in portrait mode, upside down
+	/// </summary>
 	/// <unmanaged>SDL_ORIENTATION_PORTRAIT_FLIPPED</unmanaged>
 	PortraitFlipped = 4,
 }
 
+/// <summary>
+/// Window flash operation.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_FlashOperation
 {
+	/// <summary>
+	/// Cancel any window flash state
+	/// </summary>
 	/// <unmanaged>SDL_FLASH_CANCEL</unmanaged>
 	Cancel = 0,
+	/// <summary>
+	/// Flash the window briefly to get attention
+	/// </summary>
 	/// <unmanaged>SDL_FLASH_BRIEFLY</unmanaged>
 	Briefly = 1,
+	/// <summary>
+	/// Flash the window until it gets focus
+	/// </summary>
 	/// <unmanaged>SDL_FLASH_UNTIL_FOCUSED</unmanaged>
 	UntilFocused = 2,
 }
 
+/// <summary>
+/// An enumeration of OpenGL configuration attributes.<br/>
+/// While you can set most OpenGL attributes normally, the attributes listed<br/>
+/// above must be known before SDL creates the window that will be used with<br/>
+/// the OpenGL context. These attributes are set and read with<br/>
+/// SDL_GL_SetAttribute() and SDL_GL_GetAttribute().<br/>
+/// In some cases, these attributes are minimum requests; the GL does not<br/>
+/// promise to give you exactly what you asked for. It's possible to ask for a<br/>
+/// 16-bit depth buffer and get a 24-bit one instead, for example, or to ask<br/>
+/// for no stencil buffer and still have one available. Context creation should<br/>
+/// fail if the GL can't provide your requested attributes at a minimum, but<br/>
+/// you should check to see exactly what you got.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 public enum SDL_GLattr
 {
+	/// <summary>
+	/// the minimum number of bits for the red channel of the color buffer; defaults to 3.
+	/// </summary>
 	/// <unmanaged>SDL_GL_RED_SIZE</unmanaged>
 	RedSize = 0,
+	/// <summary>
+	/// the minimum number of bits for the green channel of the color buffer; defaults to 3.
+	/// </summary>
 	/// <unmanaged>SDL_GL_GREEN_SIZE</unmanaged>
 	GreenSize = 1,
+	/// <summary>
+	/// the minimum number of bits for the blue channel of the color buffer; defaults to 2.
+	/// </summary>
 	/// <unmanaged>SDL_GL_BLUE_SIZE</unmanaged>
 	BlueSize = 2,
+	/// <summary>
+	/// the minimum number of bits for the alpha channel of the color buffer; defaults to 0.
+	/// </summary>
 	/// <unmanaged>SDL_GL_ALPHA_SIZE</unmanaged>
 	AlphaSize = 3,
+	/// <summary>
+	/// the minimum number of bits for frame buffer size; defaults to 0.
+	/// </summary>
 	/// <unmanaged>SDL_GL_BUFFER_SIZE</unmanaged>
 	BufferSize = 4,
+	/// <summary>
+	/// whether the output is single or double buffered; defaults to double buffering on.
+	/// </summary>
 	/// <unmanaged>SDL_GL_DOUBLEBUFFER</unmanaged>
 	Doublebuffer = 5,
+	/// <summary>
+	/// the minimum number of bits in the depth buffer; defaults to 16.
+	/// </summary>
 	/// <unmanaged>SDL_GL_DEPTH_SIZE</unmanaged>
 	DepthSize = 6,
+	/// <summary>
+	/// the minimum number of bits in the stencil buffer; defaults to 0.
+	/// </summary>
 	/// <unmanaged>SDL_GL_STENCIL_SIZE</unmanaged>
 	StencilSize = 7,
+	/// <summary>
+	/// the minimum number of bits for the red channel of the accumulation buffer; defaults to 0.
+	/// </summary>
 	/// <unmanaged>SDL_GL_ACCUM_RED_SIZE</unmanaged>
 	AccumRedSize = 8,
+	/// <summary>
+	/// the minimum number of bits for the green channel of the accumulation buffer; defaults to 0.
+	/// </summary>
 	/// <unmanaged>SDL_GL_ACCUM_GREEN_SIZE</unmanaged>
 	AccumGreenSize = 9,
+	/// <summary>
+	/// the minimum number of bits for the blue channel of the accumulation buffer; defaults to 0.
+	/// </summary>
 	/// <unmanaged>SDL_GL_ACCUM_BLUE_SIZE</unmanaged>
 	AccumBlueSize = 10,
+	/// <summary>
+	/// the minimum number of bits for the alpha channel of the accumulation buffer; defaults to 0.
+	/// </summary>
 	/// <unmanaged>SDL_GL_ACCUM_ALPHA_SIZE</unmanaged>
 	AccumAlphaSize = 11,
+	/// <summary>
+	/// whether the output is stereo 3D; defaults to off.
+	/// </summary>
 	/// <unmanaged>SDL_GL_STEREO</unmanaged>
 	Stereo = 12,
+	/// <summary>
+	/// the number of buffers used for multisample anti-aliasing; defaults to 0.
+	/// </summary>
 	/// <unmanaged>SDL_GL_MULTISAMPLEBUFFERS</unmanaged>
 	MultisampleBuffers = 13,
+	/// <summary>
+	/// the number of samples used around the current pixel used for multisample anti-aliasing.
+	/// </summary>
 	/// <unmanaged>SDL_GL_MULTISAMPLESAMPLES</unmanaged>
 	MultisampleSamples = 14,
+	/// <summary>
+	/// set to 1 to require hardware acceleration, set to 0 to force software rendering; defaults to allow either.
+	/// </summary>
 	/// <unmanaged>SDL_GL_ACCELERATED_VISUAL</unmanaged>
 	AcceleratedVisual = 15,
+	/// <summary>
+	/// not used (deprecated).
+	/// </summary>
 	/// <unmanaged>SDL_GL_RETAINED_BACKING</unmanaged>
 	RetainedBacking = 16,
+	/// <summary>
+	/// OpenGL context major version.
+	/// </summary>
 	/// <unmanaged>SDL_GL_CONTEXT_MAJOR_VERSION</unmanaged>
 	ContextMajorVersion = 17,
+	/// <summary>
+	/// OpenGL context minor version.
+	/// </summary>
 	/// <unmanaged>SDL_GL_CONTEXT_MINOR_VERSION</unmanaged>
 	ContextMinorVersion = 18,
+	/// <summary>
+	/// some combination of 0 or more of elements of the SDL_GLcontextFlag enumeration; defaults to 0.
+	/// </summary>
 	/// <unmanaged>SDL_GL_CONTEXT_FLAGS</unmanaged>
 	ContextFlags = 19,
+	/// <summary>
+	/// type of GL context (Core, Compatibility, ES). See SDL_GLprofile; default value depends on platform.
+	/// </summary>
 	/// <unmanaged>SDL_GL_CONTEXT_PROFILE_MASK</unmanaged>
 	ContextProfileMask = 20,
+	/// <summary>
+	/// OpenGL context sharing; defaults to 0.
+	/// </summary>
 	/// <unmanaged>SDL_GL_SHARE_WITH_CURRENT_CONTEXT</unmanaged>
 	ShareWithCurrentContext = 21,
+	/// <summary>
+	/// requests sRGB capable visual; defaults to 0.
+	/// </summary>
 	/// <unmanaged>SDL_GL_FRAMEBUFFER_SRGB_CAPABLE</unmanaged>
 	FramebufferSrgbCapable = 22,
+	/// <summary>
+	/// sets context the release behavior. See SDL_GLcontextReleaseFlag; defaults to FLUSH.
+	/// </summary>
 	/// <unmanaged>SDL_GL_CONTEXT_RELEASE_BEHAVIOR</unmanaged>
 	ContextReleaseBehavior = 23,
+	/// <summary>
+	/// set context reset notification. See SDL_GLContextResetNotification; defaults to NO_NOTIFICATION.
+	/// </summary>
 	/// <unmanaged>SDL_GL_CONTEXT_RESET_NOTIFICATION</unmanaged>
 	ContextResetNotification = 24,
 	/// <unmanaged>SDL_GL_CONTEXT_NO_ERROR</unmanaged>
@@ -1960,6 +4318,11 @@ public enum SDL_GLattr
 	EglPlatform = 27,
 }
 
+/// <summary>
+/// Possible values to be set for the SDL_GL_CONTEXT_PROFILE_MASK attribute.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 [Flags]
 public enum SDL_GLprofile
 {
@@ -1968,10 +4331,18 @@ public enum SDL_GLprofile
 	Core = 0x0001,
 	/// <unmanaged>SDL_GL_CONTEXT_PROFILE_COMPATIBILITY</unmanaged>
 	Compatibility = 0x0002,
+	/// <summary>
+	/// GLX_CONTEXT_ES2_PROFILE_BIT_EXT
+	/// </summary>
 	/// <unmanaged>SDL_GL_CONTEXT_PROFILE_ES</unmanaged>
 	Es = 0x0004,
 }
 
+/// <summary>
+/// Possible values to be set for the SDL_GL_CONTEXT_FLAGS attribute.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 [Flags]
 public enum SDL_GLcontextFlag
 {
@@ -1986,6 +4357,12 @@ public enum SDL_GLcontextFlag
 	ResetIsolationFlag = 0x0008,
 }
 
+/// <summary>
+/// Possible values to be set for the SDL_GL_CONTEXT_RELEASE_BEHAVIOR<br/>
+/// attribute.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 [Flags]
 public enum SDL_GLcontextReleaseFlag
 {
@@ -1995,6 +4372,11 @@ public enum SDL_GLcontextReleaseFlag
 	Flush = 0x0001,
 }
 
+/// <summary>
+/// Possible values to be set SDL_GL_CONTEXT_RESET_NOTIFICATION attribute.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.
+/// </summary>
 [Flags]
 public enum SDL_GLContextResetNotification
 {
@@ -2005,230 +4387,650 @@ public enum SDL_GLContextResetNotification
 	LoseContext = 0x0001,
 }
 
+/// <summary>
+/// Possible return values from the SDL_HitTest callback.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_HitTest
+/// </summary>
 public enum SDL_HitTestResult
 {
+	/// <summary>
+	/// Region is normal. No special properties.
+	/// </summary>
 	/// <unmanaged>SDL_HITTEST_NORMAL</unmanaged>
 	Normal = 0,
+	/// <summary>
+	/// Region can drag entire window.
+	/// </summary>
 	/// <unmanaged>SDL_HITTEST_DRAGGABLE</unmanaged>
 	Draggable = 1,
+	/// <summary>
+	/// Region is the resizable top-left corner border.
+	/// </summary>
 	/// <unmanaged>SDL_HITTEST_RESIZE_TOPLEFT</unmanaged>
 	ResizeTopleft = 2,
+	/// <summary>
+	/// Region is the resizable top border.
+	/// </summary>
 	/// <unmanaged>SDL_HITTEST_RESIZE_TOP</unmanaged>
 	ResizeTop = 3,
+	/// <summary>
+	/// Region is the resizable top-right corner border.
+	/// </summary>
 	/// <unmanaged>SDL_HITTEST_RESIZE_TOPRIGHT</unmanaged>
 	ResizeTopright = 4,
+	/// <summary>
+	/// Region is the resizable right border.
+	/// </summary>
 	/// <unmanaged>SDL_HITTEST_RESIZE_RIGHT</unmanaged>
 	ResizeRight = 5,
+	/// <summary>
+	/// Region is the resizable bottom-right corner border.
+	/// </summary>
 	/// <unmanaged>SDL_HITTEST_RESIZE_BOTTOMRIGHT</unmanaged>
 	ResizeBottomright = 6,
+	/// <summary>
+	/// Region is the resizable bottom border.
+	/// </summary>
 	/// <unmanaged>SDL_HITTEST_RESIZE_BOTTOM</unmanaged>
 	ResizeBottom = 7,
+	/// <summary>
+	/// Region is the resizable bottom-left corner border.
+	/// </summary>
 	/// <unmanaged>SDL_HITTEST_RESIZE_BOTTOMLEFT</unmanaged>
 	ResizeBottomleft = 8,
+	/// <summary>
+	/// Region is the resizable left border.
+	/// </summary>
 	/// <unmanaged>SDL_HITTEST_RESIZE_LEFT</unmanaged>
 	ResizeLeft = 9,
 }
 
+/// <summary>
+/// Specifies the primitive topology of a graphics pipeline.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUGraphicsPipeline
+/// </summary>
 public enum SDL_GPUPrimitiveType
 {
+	/// <summary>
+	/// A series of separate triangles.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_PRIMITIVETYPE_TRIANGLELIST</unmanaged>
 	TriangleList = 0,
+	/// <summary>
+	/// A series of connected triangles.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_PRIMITIVETYPE_TRIANGLESTRIP</unmanaged>
 	TriangleStrip = 1,
+	/// <summary>
+	/// A series of separate lines.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_PRIMITIVETYPE_LINELIST</unmanaged>
 	LineList = 2,
+	/// <summary>
+	/// A series of connected lines.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_PRIMITIVETYPE_LINESTRIP</unmanaged>
 	LineStrip = 3,
+	/// <summary>
+	/// A series of separate points.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_PRIMITIVETYPE_POINTLIST</unmanaged>
 	PointList = 4,
 }
 
+/// <summary>
+/// Specifies how the contents of a texture attached to a render pass are<br/>
+/// treated at the beginning of the render pass.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_BeginGPURenderPass
+/// </summary>
 public enum SDL_GPULoadOp
 {
+	/// <summary>
+	/// The previous contents of the texture will be preserved.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_LOADOP_LOAD</unmanaged>
 	Load = 0,
+	/// <summary>
+	/// The contents of the texture will be cleared to a color.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_LOADOP_CLEAR</unmanaged>
 	Clear = 1,
+	/// <summary>
+	/// The previous contents of the texture need not be preserved. The contents will be undefined.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_LOADOP_DONT_CARE</unmanaged>
 	DontCare = 2,
 }
 
+/// <summary>
+/// Specifies how the contents of a texture attached to a render pass are<br/>
+/// treated at the end of the render pass.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_BeginGPURenderPass
+/// </summary>
 public enum SDL_GPUStoreOp
 {
+	/// <summary>
+	/// The contents generated during the render pass will be written to memory.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_STOREOP_STORE</unmanaged>
 	Store = 0,
+	/// <summary>
+	/// The contents generated during the render pass are not needed and may be discarded. The contents will be undefined.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_STOREOP_DONT_CARE</unmanaged>
 	DontCare = 1,
+	/// <summary>
+	/// The multisample contents generated during the render pass will be resolved to a non-multisample texture. The contents in the multisample texture may then be discarded and will be undefined.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_STOREOP_RESOLVE</unmanaged>
 	Resolve = 2,
+	/// <summary>
+	/// The multisample contents generated during the render pass will be resolved to a non-multisample texture. The contents in the multisample texture will be written to memory.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_STOREOP_RESOLVE_AND_STORE</unmanaged>
 	ResolveAndStore = 3,
 }
 
+/// <summary>
+/// Specifies the size of elements in an index buffer.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUGraphicsPipeline
+/// </summary>
 public enum SDL_GPUIndexElementSize
 {
+	/// <summary>
+	/// The index elements are 16-bit.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_INDEXELEMENTSIZE_16BIT</unmanaged>
 	UInt16 = 0,
+	/// <summary>
+	/// The index elements are 32-bit.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_INDEXELEMENTSIZE_32BIT</unmanaged>
 	UInt32 = 1,
 }
 
+/// <summary>
+/// Specifies the pixel format of a texture.<br/>
+/// Texture format support varies depending on driver, hardware, and usage<br/>
+/// flags. In general, you should use SDL_GPUTextureSupportsFormat to query if<br/>
+/// a format is supported before using it. However, there are a few guaranteed<br/>
+/// formats.<br/>
+/// FIXME: Check universal support for 32-bit component formats FIXME: Check<br/>
+/// universal support for SIMULTANEOUS_READ_WRITE<br/>
+/// For SAMPLER usage, the following formats are universally supported:<br/>
+/// - R8G8B8A8_UNORM<br/>
+/// - B8G8R8A8_UNORM<br/>
+/// - R8_UNORM<br/>
+/// - R8_SNORM<br/>
+/// - R8G8_UNORM<br/>
+/// - R8G8_SNORM<br/>
+/// - R8G8B8A8_SNORM<br/>
+/// - R16_FLOAT<br/>
+/// - R16G16_FLOAT<br/>
+/// - R16G16B16A16_FLOAT<br/>
+/// - R32_FLOAT<br/>
+/// - R32G32_FLOAT<br/>
+/// - R32G32B32A32_FLOAT<br/>
+/// - R11G11B10_UFLOAT<br/>
+/// - R8G8B8A8_UNORM_SRGB<br/>
+/// - B8G8R8A8_UNORM_SRGB<br/>
+/// - D16_UNORM<br/>
+/// For COLOR_TARGET usage, the following formats are universally supported:<br/>
+/// - R8G8B8A8_UNORM<br/>
+/// - B8G8R8A8_UNORM<br/>
+/// - R8_UNORM<br/>
+/// - R16_FLOAT<br/>
+/// - R16G16_FLOAT<br/>
+/// - R16G16B16A16_FLOAT<br/>
+/// - R32_FLOAT<br/>
+/// - R32G32_FLOAT<br/>
+/// - R32G32B32A32_FLOAT<br/>
+/// - R8_UINT<br/>
+/// - R8G8_UINT<br/>
+/// - R8G8B8A8_UINT<br/>
+/// - R16_UINT<br/>
+/// - R16G16_UINT<br/>
+/// - R16G16B16A16_UINT<br/>
+/// - R8_INT<br/>
+/// - R8G8_INT<br/>
+/// - R8G8B8A8_INT<br/>
+/// - R16_INT<br/>
+/// - R16G16_INT<br/>
+/// - R16G16B16A16_INT<br/>
+/// - R8G8B8A8_UNORM_SRGB<br/>
+/// - B8G8R8A8_UNORM_SRGB<br/>
+/// For STORAGE usages, the following formats are universally supported:<br/>
+/// - R8G8B8A8_UNORM<br/>
+/// - R8G8B8A8_SNORM<br/>
+/// - R16G16B16A16_FLOAT<br/>
+/// - R32_FLOAT<br/>
+/// - R32G32_FLOAT<br/>
+/// - R32G32B32A32_FLOAT<br/>
+/// - R8G8B8A8_UINT<br/>
+/// - R16G16B16A16_UINT<br/>
+/// - R8G8B8A8_INT<br/>
+/// - R16G16B16A16_INT<br/>
+/// For DEPTH_STENCIL_TARGET usage, the following formats are universally<br/>
+/// supported:<br/>
+/// - D16_UNORM<br/>
+/// - Either (but not necessarily both!) D24_UNORM or D32_SFLOAT<br/>
+/// - Either (but not necessarily both!) D24_UNORM_S8_UINT or<br/>
+/// D32_SFLOAT_S8_UINT<br/>
+/// Unless D16_UNORM is sufficient for your purposes, always check which of<br/>
+/// D24/D32 is supported before creating a depth-stencil texture!<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUTexture<br/>
+/// @sa SDL_GPUTextureSupportsFormat
+/// </summary>
 public enum SDL_GPUTextureFormat
 {
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_INVALID</unmanaged>
 	Invalid = 0,
+	/// <summary>
+	/// Unsigned Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_A8_UNORM</unmanaged>
 	A8Unorm = 1,
+	/// <summary>
+	/// Unsigned Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8_UNORM</unmanaged>
 	R8Unorm = 2,
+	/// <summary>
+	/// Unsigned Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8_UNORM</unmanaged>
 	R8G8Unorm = 3,
+	/// <summary>
+	/// Unsigned Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM</unmanaged>
 	R8G8B8A8Unorm = 4,
+	/// <summary>
+	/// Unsigned Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16_UNORM</unmanaged>
 	R16Unorm = 5,
+	/// <summary>
+	/// Unsigned Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16_UNORM</unmanaged>
 	R16G16Unorm = 6,
+	/// <summary>
+	/// Unsigned Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16B16A16_UNORM</unmanaged>
 	R16G16B16A16Unorm = 7,
+	/// <summary>
+	/// Unsigned Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R10G10B10A2_UNORM</unmanaged>
 	R10G10B10A2Unorm = 8,
+	/// <summary>
+	/// Unsigned Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_B5G6R5_UNORM</unmanaged>
 	B5G6R5Unorm = 9,
+	/// <summary>
+	/// Unsigned Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_B5G5R5A1_UNORM</unmanaged>
 	B5G5R5A1Unorm = 10,
+	/// <summary>
+	/// Unsigned Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_B4G4R4A4_UNORM</unmanaged>
 	B4G4R4A4Unorm = 11,
+	/// <summary>
+	/// Unsigned Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_B8G8R8A8_UNORM</unmanaged>
 	B8G8R8A8Unorm = 12,
+	/// <summary>
+	/// Compressed Unsigned Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC1_RGBA_UNORM</unmanaged>
 	BC1RGBAUnorm = 13,
+	/// <summary>
+	/// Compressed Unsigned Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC2_RGBA_UNORM</unmanaged>
 	BC2RGBAUnorm = 14,
+	/// <summary>
+	/// Compressed Unsigned Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC3_RGBA_UNORM</unmanaged>
 	BC3RGBAUnorm = 15,
+	/// <summary>
+	/// Compressed Unsigned Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC4_R_UNORM</unmanaged>
 	BC4RUnorm = 16,
+	/// <summary>
+	/// Compressed Unsigned Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC5_RG_UNORM</unmanaged>
 	BC5RGUnorm = 17,
+	/// <summary>
+	/// Compressed Unsigned Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC7_RGBA_UNORM</unmanaged>
 	BC7RGBAUnorm = 18,
+	/// <summary>
+	/// Compressed Signed Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC6H_RGB_FLOAT</unmanaged>
 	BC6HRGBFloat = 19,
+	/// <summary>
+	/// Compressed Unsigned Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC6H_RGB_UFLOAT</unmanaged>
 	BC6HRGBUfloat = 20,
+	/// <summary>
+	/// Signed Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8_SNORM</unmanaged>
 	R8Snorm = 21,
+	/// <summary>
+	/// Signed Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8_SNORM</unmanaged>
 	R8G8Snorm = 22,
+	/// <summary>
+	/// Signed Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8B8A8_SNORM</unmanaged>
 	R8G8B8A8Snorm = 23,
+	/// <summary>
+	/// Signed Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16_SNORM</unmanaged>
 	R16Snorm = 24,
+	/// <summary>
+	/// Signed Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16_SNORM</unmanaged>
 	R16G16Snorm = 25,
+	/// <summary>
+	/// Signed Normalized Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16B16A16_SNORM</unmanaged>
 	R16G16B16A16Snorm = 26,
+	/// <summary>
+	/// Signed Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16_FLOAT</unmanaged>
 	R16Float = 27,
+	/// <summary>
+	/// Signed Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16_FLOAT</unmanaged>
 	R16G16Float = 28,
+	/// <summary>
+	/// Signed Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16B16A16_FLOAT</unmanaged>
 	R16G16B16A16Float = 29,
+	/// <summary>
+	/// Signed Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R32_FLOAT</unmanaged>
 	R32Float = 30,
+	/// <summary>
+	/// Signed Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R32G32_FLOAT</unmanaged>
 	R32G32Float = 31,
+	/// <summary>
+	/// Signed Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R32G32B32A32_FLOAT</unmanaged>
 	R32G32B32A32Float = 32,
+	/// <summary>
+	/// Unsigned Float Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R11G11B10_UFLOAT</unmanaged>
 	R11G11B10Ufloat = 33,
+	/// <summary>
+	/// Unsigned Integer Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8_UINT</unmanaged>
 	R8Uint = 34,
+	/// <summary>
+	/// Unsigned Integer Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8_UINT</unmanaged>
 	R8G8Uint = 35,
+	/// <summary>
+	/// Unsigned Integer Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UINT</unmanaged>
 	R8G8B8A8Uint = 36,
+	/// <summary>
+	/// Unsigned Integer Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16_UINT</unmanaged>
 	R16Uint = 37,
+	/// <summary>
+	/// Unsigned Integer Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16_UINT</unmanaged>
 	R16G16Uint = 38,
+	/// <summary>
+	/// Unsigned Integer Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16B16A16_UINT</unmanaged>
 	R16G16B16A16Uint = 39,
+	/// <summary>
+	/// Unsigned Integer Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R32_UINT</unmanaged>
 	R32Uint = 40,
+	/// <summary>
+	/// Unsigned Integer Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R32G32_UINT</unmanaged>
 	R32G32Uint = 41,
+	/// <summary>
+	/// Unsigned Integer Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R32G32B32A32_UINT</unmanaged>
 	R32G32B32A32Uint = 42,
+	/// <summary>
+	/// Signed Integer Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8_INT</unmanaged>
 	R8Int = 43,
+	/// <summary>
+	/// Signed Integer Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8_INT</unmanaged>
 	R8G8Int = 44,
+	/// <summary>
+	/// Signed Integer Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8B8A8_INT</unmanaged>
 	R8G8B8A8Int = 45,
+	/// <summary>
+	/// Signed Integer Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16_INT</unmanaged>
 	R16Int = 46,
+	/// <summary>
+	/// Signed Integer Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16_INT</unmanaged>
 	R16G16Int = 47,
+	/// <summary>
+	/// Signed Integer Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R16G16B16A16_INT</unmanaged>
 	R16G16B16A16Int = 48,
+	/// <summary>
+	/// Signed Integer Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R32_INT</unmanaged>
 	R32Int = 49,
+	/// <summary>
+	/// Signed Integer Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R32G32_INT</unmanaged>
 	R32G32Int = 50,
+	/// <summary>
+	/// Signed Integer Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R32G32B32A32_INT</unmanaged>
 	R32G32B32A32Int = 51,
+	/// <summary>
+	/// SRGB Unsigned Normalized Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM_SRGB</unmanaged>
 	R8G8B8A8UnormSrgb = 52,
+	/// <summary>
+	/// SRGB Unsigned Normalized Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_B8G8R8A8_UNORM_SRGB</unmanaged>
 	B8G8R8A8UnormSrgb = 53,
+	/// <summary>
+	/// Compressed SRGB Unsigned Normalized Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC1_RGBA_UNORM_SRGB</unmanaged>
 	BC1RGBAUnormSrgb = 54,
+	/// <summary>
+	/// Compressed SRGB Unsigned Normalized Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC2_RGBA_UNORM_SRGB</unmanaged>
 	BC2RGBAUnormSrgb = 55,
+	/// <summary>
+	/// Compressed SRGB Unsigned Normalized Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC3_RGBA_UNORM_SRGB</unmanaged>
 	BC3RGBAUnormSrgb = 56,
+	/// <summary>
+	/// Compressed SRGB Unsigned Normalized Color Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_BC7_RGBA_UNORM_SRGB</unmanaged>
 	BC7RGBAUnormSrgb = 57,
+	/// <summary>
+	/// Depth Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_D16_UNORM</unmanaged>
 	D16Unorm = 58,
+	/// <summary>
+	/// Depth Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_D24_UNORM</unmanaged>
 	D24Unorm = 59,
+	/// <summary>
+	/// Depth Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_D32_FLOAT</unmanaged>
 	D32Float = 60,
+	/// <summary>
+	/// Depth Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_D24_UNORM_S8_UINT</unmanaged>
 	D24UnormS8Uint = 61,
+	/// <summary>
+	/// Depth Formats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTUREFORMAT_D32_FLOAT_S8_UINT</unmanaged>
 	D32FloatS8Uint = 62,
 }
 
+/// <summary>
+/// Specifies the type of a texture.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUTexture
+/// </summary>
 public enum SDL_GPUTextureType
 {
+	/// <summary>
+	/// The texture is a 2-dimensional image.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTURETYPE_2D</unmanaged>
 	Type2D = 0,
+	/// <summary>
+	/// The texture is a 2-dimensional array image.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTURETYPE_2D_ARRAY</unmanaged>
 	Type2DArray = 1,
+	/// <summary>
+	/// The texture is a 3-dimensional image.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTURETYPE_3D</unmanaged>
 	Type3D = 2,
+	/// <summary>
+	/// The texture is a cube image.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTURETYPE_CUBE</unmanaged>
 	Cube = 3,
+	/// <summary>
+	/// The texture is a cube array image.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_TEXTURETYPE_CUBE_ARRAY</unmanaged>
 	CubeArray = 4,
 }
 
+/// <summary>
+/// Specifies the sample count of a texture.<br/>
+/// Used in multisampling. Note that this value only applies when the texture<br/>
+/// is used as a render target.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUTexture<br/>
+/// @sa SDL_GPUTextureSupportsSampleCount
+/// </summary>
 public enum SDL_GPUSampleCount
 {
+	/// <summary>
+	/// No multisampling.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_SAMPLECOUNT_1</unmanaged>
 	Count1 = 0,
+	/// <summary>
+	/// MSAA 2x
+	/// </summary>
 	/// <unmanaged>SDL_GPU_SAMPLECOUNT_2</unmanaged>
 	Count2 = 1,
+	/// <summary>
+	/// MSAA 4x
+	/// </summary>
 	/// <unmanaged>SDL_GPU_SAMPLECOUNT_4</unmanaged>
 	Count4 = 2,
+	/// <summary>
+	/// MSAA 8x
+	/// </summary>
 	/// <unmanaged>SDL_GPU_SAMPLECOUNT_8</unmanaged>
 	Count8 = 3,
 }
 
+/// <summary>
+/// Specifies the face of a cube map.<br/>
+/// Can be passed in as the layer field in texture-related structs.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0
+/// </summary>
 public enum SDL_GPUCubeMapFace
 {
 	/// <unmanaged>SDL_GPU_CUBEMAPFACE_POSITIVEX</unmanaged>
@@ -2245,6 +5047,15 @@ public enum SDL_GPUCubeMapFace
 	NegativeZ = 5,
 }
 
+/// <summary>
+/// Specifies how a transfer buffer is intended to be used by the client.<br/>
+/// Note that mapping and copying FROM an upload transfer buffer or TO a<br/>
+/// download transfer buffer is undefined behavior.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUTransferBuffer
+/// </summary>
 public enum SDL_GPUTransferBufferUsage
 {
 	/// <unmanaged>SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD</unmanaged>
@@ -2253,6 +5064,13 @@ public enum SDL_GPUTransferBufferUsage
 	Download = 1,
 }
 
+/// <summary>
+/// Specifies which stage a shader program corresponds to.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUShader
+/// </summary>
 public enum SDL_GPUShaderStage
 {
 	/// <unmanaged>SDL_GPU_SHADERSTAGE_VERTEX</unmanaged>
@@ -2261,224 +5079,589 @@ public enum SDL_GPUShaderStage
 	Fragment = 1,
 }
 
+/// <summary>
+/// Specifies the format of a vertex attribute.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUGraphicsPipeline
+/// </summary>
 public enum SDL_GPUVertexElementFormat
 {
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_INVALID</unmanaged>
 	Invalid = 0,
+	/// <summary>
+	/// 32-bit Signed Integers
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_INT</unmanaged>
 	Int = 1,
+	/// <summary>
+	/// 32-bit Signed Integers
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_INT2</unmanaged>
 	Int2 = 2,
+	/// <summary>
+	/// 32-bit Signed Integers
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_INT3</unmanaged>
 	Int3 = 3,
+	/// <summary>
+	/// 32-bit Signed Integers
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_INT4</unmanaged>
 	Int4 = 4,
+	/// <summary>
+	/// 32-bit Unsigned Integers
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_UINT</unmanaged>
 	UInt = 5,
+	/// <summary>
+	/// 32-bit Unsigned Integers
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_UINT2</unmanaged>
 	UInt2 = 6,
+	/// <summary>
+	/// 32-bit Unsigned Integers
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_UINT3</unmanaged>
 	UInt3 = 7,
+	/// <summary>
+	/// 32-bit Unsigned Integers
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_UINT4</unmanaged>
 	UInt4 = 8,
+	/// <summary>
+	/// 32-bit Floats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_FLOAT</unmanaged>
 	Float = 9,
+	/// <summary>
+	/// 32-bit Floats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2</unmanaged>
 	Float2 = 10,
+	/// <summary>
+	/// 32-bit Floats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3</unmanaged>
 	Float3 = 11,
+	/// <summary>
+	/// 32-bit Floats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_FLOAT4</unmanaged>
 	Float4 = 12,
+	/// <summary>
+	/// 8-bit Signed Integers
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_BYTE2</unmanaged>
 	Byte2 = 13,
+	/// <summary>
+	/// 8-bit Signed Integers
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_BYTE4</unmanaged>
 	Byte4 = 14,
+	/// <summary>
+	/// 8-bit Unsigned Integers
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_UBYTE2</unmanaged>
 	UByte2 = 15,
+	/// <summary>
+	/// 8-bit Unsigned Integers
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_UBYTE4</unmanaged>
 	UByte4 = 16,
+	/// <summary>
+	/// 8-bit Signed Normalized
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_BYTE2_NORM</unmanaged>
 	Byte2Norm = 17,
+	/// <summary>
+	/// 8-bit Signed Normalized
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_BYTE4_NORM</unmanaged>
 	Byte4Norm = 18,
+	/// <summary>
+	/// 8-bit Unsigned Normalized
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_UBYTE2_NORM</unmanaged>
 	UByte2Norm = 19,
+	/// <summary>
+	/// 8-bit Unsigned Normalized
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_UBYTE4_NORM</unmanaged>
 	UByte4Norm = 20,
+	/// <summary>
+	/// 16-bit Signed Integers
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_SHORT2</unmanaged>
 	Short2 = 21,
+	/// <summary>
+	/// 16-bit Signed Integers
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_SHORT4</unmanaged>
 	Short4 = 22,
+	/// <summary>
+	/// 16-bit Unsigned Integers
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_USHORT2</unmanaged>
 	UShort2 = 23,
+	/// <summary>
+	/// 16-bit Unsigned Integers
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_USHORT4</unmanaged>
 	Ushort4 = 24,
+	/// <summary>
+	/// 16-bit Signed Normalized
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_SHORT2_NORM</unmanaged>
 	Short2Norm = 25,
+	/// <summary>
+	/// 16-bit Signed Normalized
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_SHORT4_NORM</unmanaged>
 	Short4Norm = 26,
+	/// <summary>
+	/// 16-bit Unsigned Normalized
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_USHORT2_NORM</unmanaged>
 	UShort2Norm = 27,
+	/// <summary>
+	/// 16-bit Unsigned Normalized
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_USHORT4_NORM</unmanaged>
 	Ushort4Norm = 28,
+	/// <summary>
+	/// 16-bit Floats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_HALF2</unmanaged>
 	Half2 = 29,
+	/// <summary>
+	/// 16-bit Floats
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXELEMENTFORMAT_HALF4</unmanaged>
 	Half4 = 30,
 }
 
+/// <summary>
+/// Specifies the rate at which vertex attributes are pulled from buffers.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUGraphicsPipeline
+/// </summary>
 public enum SDL_GPUVertexInputRate
 {
+	/// <summary>
+	/// Attribute addressing is a function of the vertex index.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXINPUTRATE_VERTEX</unmanaged>
 	Vertex = 0,
+	/// <summary>
+	/// Attribute addressing is a function of the instance index.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_VERTEXINPUTRATE_INSTANCE</unmanaged>
 	Instance = 1,
 }
 
+/// <summary>
+/// Specifies the fill mode of the graphics pipeline.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUGraphicsPipeline
+/// </summary>
 public enum SDL_GPUFillMode
 {
+	/// <summary>
+	/// Polygons will be rendered via rasterization.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_FILLMODE_FILL</unmanaged>
 	Fill = 0,
+	/// <summary>
+	/// Polygon edges will be drawn as line segments.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_FILLMODE_LINE</unmanaged>
 	Line = 1,
 }
 
+/// <summary>
+/// Specifies the facing direction in which triangle faces will be culled.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUGraphicsPipeline
+/// </summary>
 public enum SDL_GPUCullMode
 {
+	/// <summary>
+	/// No triangles are culled.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_CULLMODE_NONE</unmanaged>
 	None = 0,
+	/// <summary>
+	/// Front-facing triangles are culled.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_CULLMODE_FRONT</unmanaged>
 	Front = 1,
+	/// <summary>
+	/// Back-facing triangles are culled.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_CULLMODE_BACK</unmanaged>
 	Back = 2,
 }
 
+/// <summary>
+/// Specifies the vertex winding that will cause a triangle to be determined to<br/>
+/// be front-facing.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUGraphicsPipeline
+/// </summary>
 public enum SDL_GPUFrontFace
 {
+	/// <summary>
+	/// A triangle with counter-clockwise vertex winding will be considered front-facing.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_FRONTFACE_COUNTER_CLOCKWISE</unmanaged>
 	CounterClockwise = 0,
+	/// <summary>
+	/// A triangle with clockwise vertex winding will be considered front-facing.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_FRONTFACE_CLOCKWISE</unmanaged>
 	Clockwise = 1,
 }
 
+/// <summary>
+/// Specifies a comparison operator for depth, stencil and sampler operations.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUGraphicsPipeline
+/// </summary>
 public enum SDL_GPUCompareOp
 {
 	/// <unmanaged>SDL_GPU_COMPAREOP_INVALID</unmanaged>
 	Invalid = 0,
+	/// <summary>
+	/// The comparison always evaluates false.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_COMPAREOP_NEVER</unmanaged>
 	Never = 1,
+	/// <summary>
+	/// The comparison evaluates reference<br/>
+	/// <<br/>
+	/// test.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_COMPAREOP_LESS</unmanaged>
 	Less = 2,
+	/// <summary>
+	/// The comparison evaluates reference == test.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_COMPAREOP_EQUAL</unmanaged>
 	Equal = 3,
+	/// <summary>
+	/// The comparison evaluates reference<br/>
+	/// <<br/>
+	/// = test.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_COMPAREOP_LESS_OR_EQUAL</unmanaged>
 	LessOrEqual = 4,
+	/// <summary>
+	/// The comparison evaluates reference > test.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_COMPAREOP_GREATER</unmanaged>
 	Greater = 5,
+	/// <summary>
+	/// The comparison evaluates reference != test.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_COMPAREOP_NOT_EQUAL</unmanaged>
 	NotEqual = 6,
+	/// <summary>
+	/// The comparison evalutes reference >= test.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_COMPAREOP_GREATER_OR_EQUAL</unmanaged>
 	GreaterOrEqual = 7,
+	/// <summary>
+	/// The comparison always evaluates true.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_COMPAREOP_ALWAYS</unmanaged>
 	Always = 8,
 }
 
+/// <summary>
+/// Specifies what happens to a stored stencil value if stencil tests fail or<br/>
+/// pass.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUGraphicsPipeline
+/// </summary>
 public enum SDL_GPUStencilOp
 {
 	/// <unmanaged>SDL_GPU_STENCILOP_INVALID</unmanaged>
 	Invalid = 0,
+	/// <summary>
+	/// Keeps the current value.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_STENCILOP_KEEP</unmanaged>
 	Keep = 1,
+	/// <summary>
+	/// Sets the value to 0.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_STENCILOP_ZERO</unmanaged>
 	Zero = 2,
+	/// <summary>
+	/// Sets the value to reference.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_STENCILOP_REPLACE</unmanaged>
 	Replace = 3,
+	/// <summary>
+	/// Increments the current value and clamps to the maximum value.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_STENCILOP_INCREMENT_AND_CLAMP</unmanaged>
 	IncrementAndClamp = 4,
+	/// <summary>
+	/// Decrements the current value and clamps to 0.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_STENCILOP_DECREMENT_AND_CLAMP</unmanaged>
 	DecrementAndClamp = 5,
+	/// <summary>
+	/// Bitwise-inverts the current value.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_STENCILOP_INVERT</unmanaged>
 	Invert = 6,
+	/// <summary>
+	/// Increments the current value and wraps back to 0.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_STENCILOP_INCREMENT_AND_WRAP</unmanaged>
 	IncrementAndWrap = 7,
+	/// <summary>
+	/// Decrements the current value and wraps to the maximum value.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_STENCILOP_DECREMENT_AND_WRAP</unmanaged>
 	DecrementAndWrap = 8,
 }
 
+/// <summary>
+/// Specifies the operator to be used when pixels in a render target are<br/>
+/// blended with existing pixels in the texture.<br/>
+/// The source color is the value written by the fragment shader. The<br/>
+/// destination color is the value currently existing in the texture.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUGraphicsPipeline
+/// </summary>
 public enum SDL_GPUBlendOp
 {
 	/// <unmanaged>SDL_GPU_BLENDOP_INVALID</unmanaged>
 	Invalid = 0,
+	/// <summary>
+	/// (source * source_factor) + (destination * destination_factor)
+	/// </summary>
 	/// <unmanaged>SDL_GPU_BLENDOP_ADD</unmanaged>
 	Add = 1,
+	/// <summary>
+	/// (source * source_factor) - (destination * destination_factor)
+	/// </summary>
 	/// <unmanaged>SDL_GPU_BLENDOP_SUBTRACT</unmanaged>
 	Subtract = 2,
+	/// <summary>
+	/// (destination * destination_factor) - (source * source_factor)
+	/// </summary>
 	/// <unmanaged>SDL_GPU_BLENDOP_REVERSE_SUBTRACT</unmanaged>
 	ReverseSubtract = 3,
+	/// <summary>
+	/// min(source, destination)
+	/// </summary>
 	/// <unmanaged>SDL_GPU_BLENDOP_MIN</unmanaged>
 	Min = 4,
+	/// <summary>
+	/// max(source, destination)
+	/// </summary>
 	/// <unmanaged>SDL_GPU_BLENDOP_MAX</unmanaged>
 	Max = 5,
 }
 
+/// <summary>
+/// Specifies a blending factor to be used when pixels in a render target are<br/>
+/// blended with existing pixels in the texture.<br/>
+/// The source color is the value written by the fragment shader. The<br/>
+/// destination color is the value currently existing in the texture.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUGraphicsPipeline
+/// </summary>
 public enum SDL_GPUBlendFactor
 {
 	/// <unmanaged>SDL_GPU_BLENDFACTOR_INVALID</unmanaged>
 	Invalid = 0,
+	/// <summary>
+	/// 0
+	/// </summary>
 	/// <unmanaged>SDL_GPU_BLENDFACTOR_ZERO</unmanaged>
 	Zero = 1,
+	/// <summary>
+	/// 1
+	/// </summary>
 	/// <unmanaged>SDL_GPU_BLENDFACTOR_ONE</unmanaged>
 	One = 2,
+	/// <summary>
+	/// source color
+	/// </summary>
 	/// <unmanaged>SDL_GPU_BLENDFACTOR_SRC_COLOR</unmanaged>
 	SrcColor = 3,
+	/// <summary>
+	/// 1 - source color
+	/// </summary>
 	/// <unmanaged>SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_COLOR</unmanaged>
 	OneMinusSrcColor = 4,
+	/// <summary>
+	/// destination color
+	/// </summary>
 	/// <unmanaged>SDL_GPU_BLENDFACTOR_DST_COLOR</unmanaged>
 	DstColor = 5,
+	/// <summary>
+	/// 1 - destination color
+	/// </summary>
 	/// <unmanaged>SDL_GPU_BLENDFACTOR_ONE_MINUS_DST_COLOR</unmanaged>
 	OneMinusDstColor = 6,
+	/// <summary>
+	/// source alpha
+	/// </summary>
 	/// <unmanaged>SDL_GPU_BLENDFACTOR_SRC_ALPHA</unmanaged>
 	SrcAlpha = 7,
+	/// <summary>
+	/// 1 - source alpha
+	/// </summary>
 	/// <unmanaged>SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_ALPHA</unmanaged>
 	OneMinusSrcAlpha = 8,
+	/// <summary>
+	/// destination alpha
+	/// </summary>
 	/// <unmanaged>SDL_GPU_BLENDFACTOR_DST_ALPHA</unmanaged>
 	DstAlpha = 9,
+	/// <summary>
+	/// 1 - destination alpha
+	/// </summary>
 	/// <unmanaged>SDL_GPU_BLENDFACTOR_ONE_MINUS_DST_ALPHA</unmanaged>
 	OneMinusDstAlpha = 10,
+	/// <summary>
+	/// blend constant
+	/// </summary>
 	/// <unmanaged>SDL_GPU_BLENDFACTOR_CONSTANT_COLOR</unmanaged>
 	ConstantColor = 11,
+	/// <summary>
+	/// 1 - blend constant
+	/// </summary>
 	/// <unmanaged>SDL_GPU_BLENDFACTOR_ONE_MINUS_CONSTANT_COLOR</unmanaged>
 	OneMinusConstantColor = 12,
+	/// <summary>
+	/// min(source alpha, 1 - destination alpha)
+	/// </summary>
 	/// <unmanaged>SDL_GPU_BLENDFACTOR_SRC_ALPHA_SATURATE</unmanaged>
 	SrcAlphaSaturate = 13,
 }
 
+/// <summary>
+/// Specifies a filter operation used by a sampler.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUSampler
+/// </summary>
 public enum SDL_GPUFilter
 {
+	/// <summary>
+	/// Point filtering.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_FILTER_NEAREST</unmanaged>
 	Nearest = 0,
+	/// <summary>
+	/// Linear filtering.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_FILTER_LINEAR</unmanaged>
 	Linear = 1,
 }
 
+/// <summary>
+/// Specifies a mipmap mode used by a sampler.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUSampler
+/// </summary>
 public enum SDL_GPUSamplerMipmapMode
 {
+	/// <summary>
+	/// Point filtering.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_SAMPLERMIPMAPMODE_NEAREST</unmanaged>
 	Nearest = 0,
+	/// <summary>
+	/// Linear filtering.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_SAMPLERMIPMAPMODE_LINEAR</unmanaged>
 	Linear = 1,
 }
 
+/// <summary>
+/// Specifies behavior of texture sampling when the coordinates exceed the 0-1<br/>
+/// range.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUSampler
+/// </summary>
 public enum SDL_GPUSamplerAddressMode
 {
+	/// <summary>
+	/// Specifies that the coordinates will wrap around.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_SAMPLERADDRESSMODE_REPEAT</unmanaged>
 	Repeat = 0,
+	/// <summary>
+	/// Specifies that the coordinates will wrap around mirrored.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_SAMPLERADDRESSMODE_MIRRORED_REPEAT</unmanaged>
 	MirroredRepeat = 1,
+	/// <summary>
+	/// Specifies that the coordinates will clamp to the 0-1 range.
+	/// </summary>
 	/// <unmanaged>SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE</unmanaged>
 	ClampToEdge = 2,
 }
 
+/// <summary>
+/// Specifies the timing that will be used to present swapchain textures to the<br/>
+/// OS.<br/>
+/// Note that this value affects the behavior of<br/>
+/// SDL_AcquireGPUSwapchainTexture. VSYNC mode will always be supported.<br/>
+/// IMMEDIATE and MAILBOX modes may not be supported on certain systems.<br/>
+/// It is recommended to query SDL_WindowSupportsGPUPresentMode after claiming<br/>
+/// the window if you wish to change the present mode to IMMEDIATE or MAILBOX.<br/>
+/// - VSYNC: Waits for vblank before presenting. No tearing is possible. If<br/>
+/// there is a pending image to present, the new image is enqueued for<br/>
+/// presentation. Disallows tearing at the cost of visual latency. When using<br/>
+/// this present mode, AcquireGPUSwapchainTexture will block if too many<br/>
+/// frames are in flight.<br/>
+/// - IMMEDIATE: Immediately presents. Lowest latency option, but tearing may<br/>
+/// occur. When using this mode, AcquireGPUSwapchainTexture will return NULL<br/>
+/// if too many frames are in flight.<br/>
+/// - MAILBOX: Waits for vblank before presenting. No tearing is possible. If<br/>
+/// there is a pending image to present, the pending image is replaced by the<br/>
+/// new image. Similar to VSYNC, but with reduced visual latency. When using<br/>
+/// this mode, AcquireGPUSwapchainTexture will return NULL if too many frames<br/>
+/// are in flight.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_SetGPUSwapchainParameters<br/>
+/// @sa SDL_WindowSupportsGPUPresentMode<br/>
+/// @sa SDL_AcquireGPUSwapchainTexture
+/// </summary>
 public enum SDL_GPUPresentMode
 {
 	/// <unmanaged>SDL_GPU_PRESENTMODE_VSYNC</unmanaged>
@@ -2489,6 +5672,28 @@ public enum SDL_GPUPresentMode
 	Mailbox = 2,
 }
 
+/// <summary>
+/// Specifies the texture format and colorspace of the swapchain textures.<br/>
+/// SDR will always be supported. Other compositions may not be supported on<br/>
+/// certain systems.<br/>
+/// It is recommended to query SDL_WindowSupportsGPUSwapchainComposition after<br/>
+/// claiming the window if you wish to change the swapchain composition from<br/>
+/// SDR.<br/>
+/// - SDR: B8G8R8A8 or R8G8B8A8 swapchain. Pixel values are in nonlinear sRGB<br/>
+/// encoding.<br/>
+/// - SDR_LINEAR: B8G8R8A8_SRGB or R8G8B8A8_SRGB swapchain. Pixel values are in<br/>
+/// nonlinear sRGB encoding.<br/>
+/// - HDR_EXTENDED_LINEAR: R16G16B16A16_SFLOAT swapchain. Pixel values are in<br/>
+/// extended linear encoding.<br/>
+/// - HDR10_ST2048: A2R10G10B10 or A2B10G10R10 swapchain. Pixel values are in<br/>
+/// PQ ST2048 encoding.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_SetGPUSwapchainParameters<br/>
+/// @sa SDL_WindowSupportsGPUSwapchainComposition<br/>
+/// @sa SDL_AcquireGPUSwapchainTexture
+/// </summary>
 public enum SDL_GPUSwapchainComposition
 {
 	/// <unmanaged>SDL_GPU_SWAPCHAINCOMPOSITION_SDR</unmanaged>
@@ -2501,14 +5706,63 @@ public enum SDL_GPUSwapchainComposition
 	Hdr10St2048 = 3,
 }
 
+/// <summary>
+/// Description of where standard I/O should be directed when creating a<br/>
+/// process.<br/>
+/// If a standard I/O stream is set to SDL_PROCESS_STDIO_INHERIT, it will go to<br/>
+/// the same place as the application's I/O stream. This is the default for<br/>
+/// standard output and standard error.<br/>
+/// If a standard I/O stream is set to SDL_PROCESS_STDIO_NULL, it is connected<br/>
+/// to `NUL:` on Windows and `/dev/null` on POSIX systems. This is the default<br/>
+/// for standard input.<br/>
+/// If a standard I/O stream is set to SDL_PROCESS_STDIO_APP, it is connected<br/>
+/// to a new SDL_IOStream that is available to the application. Standard input<br/>
+/// will be available as `SDL_PROP_PROCESS_STDIN_POINTER` and allows<br/>
+/// SDL_GetProcessInput(), standard output will be available as<br/>
+/// `SDL_PROP_PROCESS_STDOUT_POINTER` and allows SDL_ReadProcess() and<br/>
+/// SDL_GetProcessOutput(), and standard error will be available as<br/>
+/// `SDL_PROP_PROCESS_STDERR_POINTER` in the properties for the created<br/>
+/// process.<br/>
+/// If a standard I/O stream is set to SDL_PROCESS_STDIO_REDIRECT, it is<br/>
+/// connected to an existing SDL_IOStream provided by the application. Standard<br/>
+/// input is provided using `SDL_PROP_PROCESS_CREATE_STDIN_POINTER`, standard<br/>
+/// output is provided using `SDL_PROP_PROCESS_CREATE_STDOUT_POINTER`, and<br/>
+/// standard error is provided using `SDL_PROP_PROCESS_CREATE_STDERR_POINTER`<br/>
+/// in the creation properties. These existing streams should be closed by the<br/>
+/// application once the new process is created.<br/>
+/// In order to use an SDL_IOStream with SDL_PROCESS_STDIO_REDIRECT, it must<br/>
+/// have `SDL_PROP_IOSTREAM_WINDOWS_HANDLE_POINTER` or<br/>
+/// `SDL_PROP_IOSTREAM_FILE_DESCRIPTOR_NUMBER` set. This is true for streams<br/>
+/// representing files and process I/O.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_CreateProcessWithProperties<br/>
+/// @sa SDL_GetProcessProperties<br/>
+/// @sa SDL_ReadProcess<br/>
+/// @sa SDL_GetProcessInput<br/>
+/// @sa SDL_GetProcessOutput
+/// </summary>
 public enum SDL_ProcessIO
 {
+	/// <summary>
+	/// The I/O stream is inherited from the application.
+	/// </summary>
 	/// <unmanaged>SDL_PROCESS_STDIO_INHERITED</unmanaged>
 	SDL_PROCESS_STDIO_INHERITED = 0,
+	/// <summary>
+	/// The I/O stream is ignored.
+	/// </summary>
 	/// <unmanaged>SDL_PROCESS_STDIO_NULL</unmanaged>
 	SDL_PROCESS_STDIO_NULL = 1,
+	/// <summary>
+	/// The I/O stream is connected to a new SDL_IOStream that the application can read or write
+	/// </summary>
 	/// <unmanaged>SDL_PROCESS_STDIO_APP</unmanaged>
 	SDL_PROCESS_STDIO_APP = 2,
+	/// <summary>
+	/// The I/O stream is redirected to an existing SDL_IOStream.
+	/// </summary>
 	/// <unmanaged>SDL_PROCESS_STDIO_REDIRECT</unmanaged>
 	SDL_PROCESS_STDIO_REDIRECT = 3,
 }

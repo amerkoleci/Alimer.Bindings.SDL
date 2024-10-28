@@ -87,9 +87,9 @@ public sealed class CodeWriter : IDisposable
         _shouldIndent = true;
     }
     
-    public void WriteComment(string comment)
+    public void WriteComment(string? comment)
     {
-        if (comment == null)
+        if (string.IsNullOrEmpty(comment))
             return;
 
         _writer.WriteLine(new string('\t', IndentLevel) + "/// <summary>");

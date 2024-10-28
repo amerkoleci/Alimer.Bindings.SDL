@@ -118,7 +118,7 @@ partial class CsCodeGenerator
             if (!isPrimitive)
                 continue;
 
-            writer.WriteComment(handlePair.Value.Item2.Comment?.ChildrenToString() ?? null);
+            writer.WriteComment(handlePair.Value.Item2.Comment?.ChildrenToString() ?? string.Empty);
 
             bool generateEnum = false;
             if (csName.EndsWith("Flags")
@@ -237,7 +237,7 @@ partial class CsCodeGenerator
             if (isPrimitive)
                 continue;
 
-            writer.WriteComment(handlePair.Value.Item2.Comment?.ChildrenToString() ?? null);
+            writer.WriteComment(handlePair.Value.Item2.Comment?.ChildrenToString() ?? string.Empty);
 
             writer.WriteLine($"[DebuggerDisplay(\"{{DebuggerDisplay,nq}}\")]");
             string typeDeclaration = $"{visibility} readonly partial struct {csName}({elementTypeName} value) : IEquatable<{csName}>";

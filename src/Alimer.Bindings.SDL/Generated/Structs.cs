@@ -15,538 +15,1643 @@ using System.Drawing;
 #pragma warning disable CS0649
 namespace SDL3;
 
+/// <summary>
+/// A type representing an atomic integer value.<br/>
+/// This can be used to manage a value that is synchronized across multiple<br/>
+/// CPUs without a race condition; when an app sets a value with<br/>
+/// SDL_SetAtomicInt all other threads, regardless of the CPU it is running on,<br/>
+/// will see that value when retrieved with SDL_GetAtomicInt, regardless of CPU<br/>
+/// caches, etc.<br/>
+/// This is also useful for atomic compare-and-swap operations: a thread can<br/>
+/// change the value as long as its current value matches expectations. When<br/>
+/// done in a loop, one can guarantee data consistency across threads without a<br/>
+/// lock (but the usual warnings apply: if you don't know what you're doing, or<br/>
+/// you don't do it carefully, you can confidently cause any number of<br/>
+/// disasters with this, so in most cases, you _should_ use a mutex instead of<br/>
+/// this!).<br/>
+/// This is a struct so people don't accidentally use numeric operations on it<br/>
+/// directly. You have to use SDL atomic functions.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_CompareAndSwapAtomicInt<br/>
+/// @sa SDL_GetAtomicInt<br/>
+/// @sa SDL_SetAtomicInt<br/>
+/// @sa SDL_AddAtomicInt
+/// </summary>
 public partial struct SDL_AtomicInt
 {
 	public int value;
 }
 
+/// <summary>
+/// A type representing an atomic unsigned 32-bit value.<br/>
+/// This can be used to manage a value that is synchronized across multiple<br/>
+/// CPUs without a race condition; when an app sets a value with<br/>
+/// SDL_SetAtomicU32 all other threads, regardless of the CPU it is running on,<br/>
+/// will see that value when retrieved with SDL_GetAtomicU32, regardless of CPU<br/>
+/// caches, etc.<br/>
+/// This is also useful for atomic compare-and-swap operations: a thread can<br/>
+/// change the value as long as its current value matches expectations. When<br/>
+/// done in a loop, one can guarantee data consistency across threads without a<br/>
+/// lock (but the usual warnings apply: if you don't know what you're doing, or<br/>
+/// you don't do it carefully, you can confidently cause any number of<br/>
+/// disasters with this, so in most cases, you _should_ use a mutex instead of<br/>
+/// this!).<br/>
+/// This is a struct so people don't accidentally use numeric operations on it<br/>
+/// directly. You have to use SDL atomic functions.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_CompareAndSwapAtomicU32<br/>
+/// @sa SDL_GetAtomicU32<br/>
+/// @sa SDL_SetAtomicU32<br/>
+/// @sa SDL_AddAtomicU32
+/// </summary>
 public partial struct SDL_AtomicU32
 {
 	public uint value;
 }
 
+/// <summary>
+/// Format specifier for audio data.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_AudioFormat
+/// </summary>
 public partial struct SDL_AudioSpec
 {
+	/// <summary>
+	/// Audio data format
+	/// </summary>
 	public SDL_AudioFormat format;
+	/// <summary>
+	/// Number of channels: 1 mono, 2 stereo, etc
+	/// </summary>
 	public int channels;
+	/// <summary>
+	/// sample rate: sample frames per second
+	/// </summary>
 	public int freq;
 }
 
+/// <summary>
+/// The details of an output format for a camera device.<br/>
+/// Cameras often support multiple formats; each one will be encapsulated in<br/>
+/// this struct.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_GetCameraSupportedFormats<br/>
+/// @sa SDL_GetCameraFormat
+/// </summary>
 public partial struct SDL_CameraSpec
 {
+	/// <summary>
+	/// Frame format
+	/// </summary>
 	public SDL_PixelFormat format;
+	/// <summary>
+	/// Frame colorspace
+	/// </summary>
 	public SDL_Colorspace colorspace;
+	/// <summary>
+	/// Frame width
+	/// </summary>
 	public int width;
+	/// <summary>
+	/// Frame height
+	/// </summary>
 	public int height;
+	/// <summary>
+	/// Frame rate numerator ((num / denom) == FPS, (denom / num) == duration in seconds)
+	/// </summary>
 	public int framerate_numerator;
+	/// <summary>
+	/// Frame rate demoninator ((num / denom) == FPS, (denom / num) == duration in seconds)
+	/// </summary>
 	public int framerate_denominator;
 }
 
+/// <summary>
+/// An entry for filters for file dialogs.<br/>
+/// `name` is a user-readable label for the filter (for example, "Office<br/>
+/// document").<br/>
+/// `pattern` is a semicolon-separated list of file extensions (for example,<br/>
+/// "doc;docx"). File extensions may only contain alphanumeric characters,<br/>
+/// hyphens, underscores and periods. Alternatively, the whole string can be a<br/>
+/// single asterisk ("*"), which serves as an "All files" filter.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_DialogFileCallback<br/>
+/// @sa SDL_ShowOpenFileDialog<br/>
+/// @sa SDL_ShowSaveFileDialog<br/>
+/// @sa SDL_ShowOpenFolderDialog
+/// </summary>
 public partial struct SDL_DialogFileFilter
 {
 	public unsafe byte* name;
 	public unsafe byte* pattern;
 }
 
+/// <summary>
+/// Fields shared by every event<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_CommonEvent
 {
+	/// <summary>
+	/// Event type, shared with all events, Uint32 to cover user events which are not in the SDL_EventType enumeration
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
 }
 
+/// <summary>
+/// Display state change event data (event.display.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_DisplayEvent
 {
+	/// <summary>
+	/// SDL_DISPLAYEVENT_*
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The associated display
+	/// </summary>
 	public SDL_DisplayID displayID;
+	/// <summary>
+	/// event dependent data
+	/// </summary>
 	public int data1;
+	/// <summary>
+	/// event dependent data
+	/// </summary>
 	public int data2;
 }
 
+/// <summary>
+/// Window state change event data (event.window.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_WindowEvent
 {
+	/// <summary>
+	/// SDL_EVENT_WINDOW_*
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The associated window
+	/// </summary>
 	public SDL_WindowID windowID;
+	/// <summary>
+	/// event dependent data
+	/// </summary>
 	public int data1;
+	/// <summary>
+	/// event dependent data
+	/// </summary>
 	public int data2;
 }
 
+/// <summary>
+/// Keyboard device event structure (event.kdevice.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_KeyboardDeviceEvent
 {
+	/// <summary>
+	/// SDL_EVENT_KEYBOARD_ADDED or SDL_EVENT_KEYBOARD_REMOVED
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The keyboard instance id
+	/// </summary>
 	public SDL_KeyboardID which;
 }
 
+/// <summary>
+/// Keyboard button event structure (event.key.*)<br/>
+/// The `key` is the base SDL_Keycode generated by pressing the `scancode`<br/>
+/// using the current keyboard layout, applying any options specified in<br/>
+/// SDL_HINT_KEYCODE_OPTIONS. You can get the SDL_Keycode corresponding to the<br/>
+/// event scancode and modifiers directly from the keyboard layout, bypassing<br/>
+/// SDL_HINT_KEYCODE_OPTIONS, by calling SDL_GetKeyFromScancode().<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_GetKeyFromScancode<br/>
+/// @sa SDL_HINT_KEYCODE_OPTIONS
+/// </summary>
 public partial struct SDL_KeyboardEvent
 {
+	/// <summary>
+	/// SDL_EVENT_KEY_DOWN or SDL_EVENT_KEY_UP
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The window with keyboard focus, if any
+	/// </summary>
 	public SDL_WindowID windowID;
+	/// <summary>
+	/// The keyboard instance id, or 0 if unknown or virtual
+	/// </summary>
 	public SDL_KeyboardID which;
+	/// <summary>
+	/// SDL physical key code
+	/// </summary>
 	public SDL_Scancode scancode;
+	/// <summary>
+	/// SDL virtual key code
+	/// </summary>
 	public SDL_Keycode key;
+	/// <summary>
+	/// current key modifiers
+	/// </summary>
 	public SDL_Keymod mod;
+	/// <summary>
+	/// The platform dependent scancode for this event
+	/// </summary>
 	public ushort raw;
+	/// <summary>
+	/// true if the key is pressed
+	/// </summary>
 	public bool down;
+	/// <summary>
+	/// true if this is a key repeat
+	/// </summary>
 	public bool repeat;
 }
 
+/// <summary>
+/// Keyboard text editing event structure (event.edit.*)<br/>
+/// The start cursor is the position, in UTF-8 characters, where new typing<br/>
+/// will be inserted into the editing text. The length is the number of UTF-8<br/>
+/// characters that will be replaced by new typing.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_TextEditingEvent
 {
+	/// <summary>
+	/// SDL_EVENT_TEXT_EDITING
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The window with keyboard focus, if any
+	/// </summary>
 	public SDL_WindowID windowID;
+	/// <summary>
+	/// The editing text
+	/// </summary>
 	public unsafe byte* text;
+	/// <summary>
+	/// The start cursor of selected editing text, or -1 if not set
+	/// </summary>
 	public int start;
+	/// <summary>
+	/// The length of selected editing text, or -1 if not set
+	/// </summary>
 	public int length;
 }
 
+/// <summary>
+/// Keyboard IME candidates event structure (event.edit_candidates.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_TextEditingCandidatesEvent
 {
+	/// <summary>
+	/// SDL_EVENT_TEXT_EDITING_CANDIDATES
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The window with keyboard focus, if any
+	/// </summary>
 	public SDL_WindowID windowID;
+	/// <summary>
+	/// The list of candidates, or NULL if there are no candidates available
+	/// </summary>
 	public unsafe byte** candidates;
+	/// <summary>
+	/// The number of strings in `candidates`
+	/// </summary>
 	public int num_candidates;
+	/// <summary>
+	/// The index of the selected candidate, or -1 if no candidate is selected
+	/// </summary>
 	public int selected_candidate;
+	/// <summary>
+	/// true if the list is horizontal, false if it's vertical
+	/// </summary>
 	public bool horizontal;
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;
 }
 
+/// <summary>
+/// Keyboard text input event structure (event.text.*)<br/>
+/// This event will never be delivered unless text input is enabled by calling<br/>
+/// SDL_StartTextInput(). Text input is disabled by default!<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_StartTextInput<br/>
+/// @sa SDL_StopTextInput
+/// </summary>
 public partial struct SDL_TextInputEvent
 {
+	/// <summary>
+	/// SDL_EVENT_TEXT_INPUT
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The window with keyboard focus, if any
+	/// </summary>
 	public SDL_WindowID windowID;
+	/// <summary>
+	/// The input text, UTF-8 encoded
+	/// </summary>
 	public unsafe byte* text;
 }
 
+/// <summary>
+/// Mouse device event structure (event.mdevice.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_MouseDeviceEvent
 {
+	/// <summary>
+	/// SDL_EVENT_MOUSE_ADDED or SDL_EVENT_MOUSE_REMOVED
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The mouse instance id
+	/// </summary>
 	public SDL_MouseID which;
 }
 
+/// <summary>
+/// Mouse motion event structure (event.motion.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_MouseMotionEvent
 {
+	/// <summary>
+	/// SDL_EVENT_MOUSE_MOTION
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The window with mouse focus, if any
+	/// </summary>
 	public SDL_WindowID windowID;
+	/// <summary>
+	/// The mouse instance id or SDL_TOUCH_MOUSEID
+	/// </summary>
 	public SDL_MouseID which;
+	/// <summary>
+	/// The current button state
+	/// </summary>
 	public SDL_MouseButtonFlags state;
+	/// <summary>
+	/// X coordinate, relative to window
+	/// </summary>
 	public float x;
+	/// <summary>
+	/// Y coordinate, relative to window
+	/// </summary>
 	public float y;
+	/// <summary>
+	/// The relative motion in the X direction
+	/// </summary>
 	public float xrel;
+	/// <summary>
+	/// The relative motion in the Y direction
+	/// </summary>
 	public float yrel;
 }
 
+/// <summary>
+/// Mouse button event structure (event.button.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_MouseButtonEvent
 {
+	/// <summary>
+	/// SDL_EVENT_MOUSE_BUTTON_DOWN or SDL_EVENT_MOUSE_BUTTON_UP
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The window with mouse focus, if any
+	/// </summary>
 	public SDL_WindowID windowID;
+	/// <summary>
+	/// The mouse instance id, SDL_TOUCH_MOUSEID
+	/// </summary>
 	public SDL_MouseID which;
+	/// <summary>
+	/// The mouse button index
+	/// </summary>
 	public byte button;
+	/// <summary>
+	/// true if the button is pressed
+	/// </summary>
 	public bool down;
+	/// <summary>
+	/// 1 for single-click, 2 for double-click, etc.
+	/// </summary>
 	public byte clicks;
 	public byte padding;
+	/// <summary>
+	/// X coordinate, relative to window
+	/// </summary>
 	public float x;
+	/// <summary>
+	/// Y coordinate, relative to window
+	/// </summary>
 	public float y;
 }
 
+/// <summary>
+/// Mouse wheel event structure (event.wheel.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_MouseWheelEvent
 {
+	/// <summary>
+	/// SDL_EVENT_MOUSE_WHEEL
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The window with mouse focus, if any
+	/// </summary>
 	public SDL_WindowID windowID;
+	/// <summary>
+	/// The mouse instance id, SDL_TOUCH_MOUSEID
+	/// </summary>
 	public SDL_MouseID which;
+	/// <summary>
+	/// The amount scrolled horizontally, positive to the right and negative to the left
+	/// </summary>
 	public float x;
+	/// <summary>
+	/// The amount scrolled vertically, positive away from the user and negative toward the user
+	/// </summary>
 	public float y;
+	/// <summary>
+	/// Set to one of the SDL_MOUSEWHEEL_* defines. When FLIPPED the values in X and Y will be opposite. Multiply by -1 to change them back
+	/// </summary>
 	public SDL_MouseWheelDirection direction;
+	/// <summary>
+	/// X coordinate, relative to window
+	/// </summary>
 	public float mouse_x;
+	/// <summary>
+	/// Y coordinate, relative to window
+	/// </summary>
 	public float mouse_y;
 }
 
+/// <summary>
+/// Joystick axis motion event structure (event.jaxis.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_JoyAxisEvent
 {
+	/// <summary>
+	/// SDL_EVENT_JOYSTICK_AXIS_MOTION
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The joystick instance id
+	/// </summary>
 	public SDL_JoystickID which;
+	/// <summary>
+	/// The joystick axis index
+	/// </summary>
 	public byte axis;
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;
+	/// <summary>
+	/// The axis value (range: -32768 to 32767)
+	/// </summary>
 	public short value;
 	public ushort padding4;
 }
 
+/// <summary>
+/// Joystick trackball motion event structure (event.jball.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_JoyBallEvent
 {
+	/// <summary>
+	/// SDL_EVENT_JOYSTICK_BALL_MOTION
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The joystick instance id
+	/// </summary>
 	public SDL_JoystickID which;
+	/// <summary>
+	/// The joystick trackball index
+	/// </summary>
 	public byte ball;
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;
+	/// <summary>
+	/// The relative motion in the X direction
+	/// </summary>
 	public short xrel;
+	/// <summary>
+	/// The relative motion in the Y direction
+	/// </summary>
 	public short yrel;
 }
 
+/// <summary>
+/// Joystick hat position change event structure (event.jhat.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_JoyHatEvent
 {
+	/// <summary>
+	/// SDL_EVENT_JOYSTICK_HAT_MOTION
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The joystick instance id
+	/// </summary>
 	public SDL_JoystickID which;
+	/// <summary>
+	/// The joystick hat index
+	/// </summary>
 	public byte hat;
+	/// <summary>
+	/// The hat position value.<br/>
+	/// <br/>
+	/// @sa SDL_HAT_LEFTUP SDL_HAT_UP SDL_HAT_RIGHTUP<br/>
+	/// @sa SDL_HAT_LEFT SDL_HAT_CENTERED SDL_HAT_RIGHT<br/>
+	/// @sa SDL_HAT_LEFTDOWN SDL_HAT_DOWN SDL_HAT_RIGHTDOWN<br/>
+	/// Note that zero means the POV is centered.
+	/// </summary>
 	public byte value;
 	public byte padding1;
 	public byte padding2;
 }
 
+/// <summary>
+/// Joystick button event structure (event.jbutton.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_JoyButtonEvent
 {
+	/// <summary>
+	/// SDL_EVENT_JOYSTICK_BUTTON_DOWN or SDL_EVENT_JOYSTICK_BUTTON_UP
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The joystick instance id
+	/// </summary>
 	public SDL_JoystickID which;
+	/// <summary>
+	/// The joystick button index
+	/// </summary>
 	public byte button;
+	/// <summary>
+	/// true if the button is pressed
+	/// </summary>
 	public bool down;
 	public byte padding1;
 	public byte padding2;
 }
 
+/// <summary>
+/// Joystick device event structure (event.jdevice.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_JoyDeviceEvent
 {
+	/// <summary>
+	/// SDL_EVENT_JOYSTICK_ADDED or SDL_EVENT_JOYSTICK_REMOVED or SDL_EVENT_JOYSTICK_UPDATE_COMPLETE
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The joystick instance id
+	/// </summary>
 	public SDL_JoystickID which;
 }
 
+/// <summary>
+/// Joysick battery level change event structure (event.jbattery.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_JoyBatteryEvent
 {
+	/// <summary>
+	/// SDL_EVENT_JOYSTICK_BATTERY_UPDATED
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The joystick instance id
+	/// </summary>
 	public SDL_JoystickID which;
+	/// <summary>
+	/// The joystick battery state
+	/// </summary>
 	public SDL_PowerState state;
+	/// <summary>
+	/// The joystick battery percent charge remaining
+	/// </summary>
 	public int percent;
 }
 
+/// <summary>
+/// Gamepad axis motion event structure (event.gaxis.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_GamepadAxisEvent
 {
+	/// <summary>
+	/// SDL_EVENT_GAMEPAD_AXIS_MOTION
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The joystick instance id
+	/// </summary>
 	public SDL_JoystickID which;
+	/// <summary>
+	/// The gamepad axis (SDL_GamepadAxis)
+	/// </summary>
 	public byte axis;
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;
+	/// <summary>
+	/// The axis value (range: -32768 to 32767)
+	/// </summary>
 	public short value;
 	public ushort padding4;
 }
 
+/// <summary>
+/// Gamepad button event structure (event.gbutton.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_GamepadButtonEvent
 {
+	/// <summary>
+	/// SDL_EVENT_GAMEPAD_BUTTON_DOWN or SDL_EVENT_GAMEPAD_BUTTON_UP
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The joystick instance id
+	/// </summary>
 	public SDL_JoystickID which;
+	/// <summary>
+	/// The gamepad button (SDL_GamepadButton)
+	/// </summary>
 	public byte button;
+	/// <summary>
+	/// true if the button is pressed
+	/// </summary>
 	public bool down;
 	public byte padding1;
 	public byte padding2;
 }
 
+/// <summary>
+/// Gamepad device event structure (event.gdevice.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_GamepadDeviceEvent
 {
+	/// <summary>
+	/// SDL_EVENT_GAMEPAD_ADDED, SDL_EVENT_GAMEPAD_REMOVED, or SDL_EVENT_GAMEPAD_REMAPPED, SDL_EVENT_GAMEPAD_UPDATE_COMPLETE or SDL_EVENT_GAMEPAD_STEAM_HANDLE_UPDATED
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The joystick instance id
+	/// </summary>
 	public SDL_JoystickID which;
 }
 
+/// <summary>
+/// Gamepad touchpad event structure (event.gtouchpad.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_GamepadTouchpadEvent
 {
+	/// <summary>
+	/// SDL_EVENT_GAMEPAD_TOUCHPAD_DOWN or SDL_EVENT_GAMEPAD_TOUCHPAD_MOTION or SDL_EVENT_GAMEPAD_TOUCHPAD_UP
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The joystick instance id
+	/// </summary>
 	public SDL_JoystickID which;
+	/// <summary>
+	/// The index of the touchpad
+	/// </summary>
 	public int touchpad;
+	/// <summary>
+	/// The index of the finger on the touchpad
+	/// </summary>
 	public int finger;
+	/// <summary>
+	/// Normalized in the range 0...1 with 0 being on the left
+	/// </summary>
 	public float x;
+	/// <summary>
+	/// Normalized in the range 0...1 with 0 being at the top
+	/// </summary>
 	public float y;
+	/// <summary>
+	/// Normalized in the range 0...1
+	/// </summary>
 	public float pressure;
 }
 
+/// <summary>
+/// Gamepad sensor event structure (event.gsensor.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_GamepadSensorEvent
 {
+	/// <summary>
+	/// SDL_EVENT_GAMEPAD_SENSOR_UPDATE
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The joystick instance id
+	/// </summary>
 	public SDL_JoystickID which;
+	/// <summary>
+	/// The type of the sensor, one of the values of SDL_SensorType
+	/// </summary>
 	public int sensor;
+	/// <summary>
+	/// Up to 3 values from the sensor, as defined in SDL_sensor.h
+	/// </summary>
 	public unsafe fixed float data[3];
+	/// <summary>
+	/// The timestamp of the sensor reading in nanoseconds, not necessarily synchronized with the system clock
+	/// </summary>
 	public ulong sensor_timestamp;
 }
 
+/// <summary>
+/// Audio device event structure (event.adevice.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_AudioDeviceEvent
 {
+	/// <summary>
+	/// SDL_EVENT_AUDIO_DEVICE_ADDED, or SDL_EVENT_AUDIO_DEVICE_REMOVED, or SDL_EVENT_AUDIO_DEVICE_FORMAT_CHANGED
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// SDL_AudioDeviceID for the device being added or removed or changing
+	/// </summary>
 	public SDL_AudioDeviceID which;
+	/// <summary>
+	/// false if a playback device, true if a recording device.
+	/// </summary>
 	public bool recording;
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;
 }
 
+/// <summary>
+/// Camera device event structure (event.cdevice.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_CameraDeviceEvent
 {
+	/// <summary>
+	/// SDL_EVENT_CAMERA_DEVICE_ADDED, SDL_EVENT_CAMERA_DEVICE_REMOVED, SDL_EVENT_CAMERA_DEVICE_APPROVED, SDL_EVENT_CAMERA_DEVICE_DENIED
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// SDL_CameraID for the device being added or removed or changing
+	/// </summary>
 	public SDL_CameraID which;
 }
 
+/// <summary>
+/// Touch finger event structure (event.tfinger.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_TouchFingerEvent
 {
+	/// <summary>
+	/// SDL_EVENT_FINGER_MOTION or SDL_EVENT_FINGER_DOWN or SDL_EVENT_FINGER_UP
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The touch device id
+	/// </summary>
 	public SDL_TouchID touchID;
 	public SDL_FingerID fingerID;
+	/// <summary>
+	/// Normalized in the range 0...1
+	/// </summary>
 	public float x;
+	/// <summary>
+	/// Normalized in the range 0...1
+	/// </summary>
 	public float y;
+	/// <summary>
+	/// Normalized in the range -1...1
+	/// </summary>
 	public float dx;
+	/// <summary>
+	/// Normalized in the range -1...1
+	/// </summary>
 	public float dy;
+	/// <summary>
+	/// Normalized in the range 0...1
+	/// </summary>
 	public float pressure;
+	/// <summary>
+	/// The window underneath the finger, if any
+	/// </summary>
 	public SDL_WindowID windowID;
 }
 
+/// <summary>
+/// Pressure-sensitive pen proximity event structure (event.pmotion.*)<br/>
+/// When a pen becomes visible to the system (it is close enough to a tablet,<br/>
+/// etc), SDL will send an SDL_EVENT_PEN_PROXIMITY_IN event with the new pen's<br/>
+/// ID. This ID is valid until the pen leaves proximity again (has been removed<br/>
+/// from the tablet's area, the tablet has been unplugged, etc). If the same<br/>
+/// pen reenters proximity again, it will be given a new ID.<br/>
+/// Note that "proximity" means "close enough for the tablet to know the tool<br/>
+/// is there." The pen touching and lifting off from the tablet while not<br/>
+/// leaving the area are handled by SDL_EVENT_PEN_DOWN and SDL_EVENT_PEN_UP.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_PenProximityEvent
 {
+	/// <summary>
+	/// SDL_EVENT_PEN_PROXIMITY_IN or SDL_EVENT_PEN_PROXIMITY_OUT
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The window with mouse focus, if any
+	/// </summary>
 	public SDL_WindowID windowID;
+	/// <summary>
+	/// The pen instance id
+	/// </summary>
 	public SDL_PenID which;
 }
 
+/// <summary>
+/// Pressure-sensitive pen motion event structure (event.pmotion.*)<br/>
+/// Depending on the hardware, you may get motion events when the pen is not<br/>
+/// touching a tablet, for tracking a pen even when it isn't drawing. You<br/>
+/// should listen for SDL_EVENT_PEN_DOWN and SDL_EVENT_PEN_UP events, or check<br/>
+/// `pen_state<br/>
+/// &<br/>
+/// SDL_PEN_INPUT_DOWN` to decide if a pen is "drawing" when<br/>
+/// dealing with pen motion.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_PenMotionEvent
 {
+	/// <summary>
+	/// SDL_EVENT_PEN_MOTION
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The window with mouse focus, if any
+	/// </summary>
 	public SDL_WindowID windowID;
+	/// <summary>
+	/// The pen instance id
+	/// </summary>
 	public SDL_PenID which;
+	/// <summary>
+	/// Complete pen input state at time of event
+	/// </summary>
 	public SDL_PenInputFlags pen_state;
+	/// <summary>
+	/// X coordinate, relative to window
+	/// </summary>
 	public float x;
+	/// <summary>
+	/// Y coordinate, relative to window
+	/// </summary>
 	public float y;
 }
 
+/// <summary>
+/// Pressure-sensitive pen touched event structure (event.ptouch.*)<br/>
+/// These events come when a pen touches a surface (a tablet, etc), or lifts<br/>
+/// off from one.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_PenTouchEvent
 {
+	/// <summary>
+	/// SDL_EVENT_PEN_DOWN or SDL_EVENT_PEN_UP
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The window with pen focus, if any
+	/// </summary>
 	public SDL_WindowID windowID;
+	/// <summary>
+	/// The pen instance id
+	/// </summary>
 	public SDL_PenID which;
+	/// <summary>
+	/// Complete pen input state at time of event
+	/// </summary>
 	public SDL_PenInputFlags pen_state;
+	/// <summary>
+	/// X coordinate, relative to window
+	/// </summary>
 	public float x;
+	/// <summary>
+	/// Y coordinate, relative to window
+	/// </summary>
 	public float y;
+	/// <summary>
+	/// true if eraser end is used (not all pens support this).
+	/// </summary>
 	public bool eraser;
+	/// <summary>
+	/// true if the pen is touching or false if the pen is lifted off
+	/// </summary>
 	public bool down;
 }
 
+/// <summary>
+/// Pressure-sensitive pen button event structure (event.pbutton.*)<br/>
+/// This is for buttons on the pen itself that the user might click. The pen<br/>
+/// itself pressing down to draw triggers a SDL_EVENT_PEN_DOWN event instead.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_PenButtonEvent
 {
+	/// <summary>
+	/// SDL_EVENT_PEN_BUTTON_DOWN or SDL_EVENT_PEN_BUTTON_UP
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The window with mouse focus, if any
+	/// </summary>
 	public SDL_WindowID windowID;
+	/// <summary>
+	/// The pen instance id
+	/// </summary>
 	public SDL_PenID which;
+	/// <summary>
+	/// Complete pen input state at time of event
+	/// </summary>
 	public SDL_PenInputFlags pen_state;
+	/// <summary>
+	/// X coordinate, relative to window
+	/// </summary>
 	public float x;
+	/// <summary>
+	/// Y coordinate, relative to window
+	/// </summary>
 	public float y;
+	/// <summary>
+	/// The pen button index (first button is 1).
+	/// </summary>
 	public byte button;
+	/// <summary>
+	/// true if the button is pressed
+	/// </summary>
 	public bool down;
 }
 
+/// <summary>
+/// Pressure-sensitive pen pressure / angle event structure (event.paxis.*)<br/>
+/// You might get some of these events even if the pen isn't touching the<br/>
+/// tablet.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_PenAxisEvent
 {
+	/// <summary>
+	/// SDL_EVENT_PEN_AXIS
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The window with pen focus, if any
+	/// </summary>
 	public SDL_WindowID windowID;
+	/// <summary>
+	/// The pen instance id
+	/// </summary>
 	public SDL_PenID which;
+	/// <summary>
+	/// Complete pen input state at time of event
+	/// </summary>
 	public SDL_PenInputFlags pen_state;
+	/// <summary>
+	/// X coordinate, relative to window
+	/// </summary>
 	public float x;
+	/// <summary>
+	/// Y coordinate, relative to window
+	/// </summary>
 	public float y;
+	/// <summary>
+	/// Axis that has changed
+	/// </summary>
 	public SDL_PenAxis axis;
+	/// <summary>
+	/// New value of axis
+	/// </summary>
 	public float value;
 }
 
+/// <summary>
+/// An event used to drop text or request a file open by the system<br/>
+/// (event.drop.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_DropEvent
 {
+	/// <summary>
+	/// SDL_EVENT_DROP_BEGIN or SDL_EVENT_DROP_FILE or SDL_EVENT_DROP_TEXT or SDL_EVENT_DROP_COMPLETE or SDL_EVENT_DROP_POSITION
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The window that was dropped on, if any
+	/// </summary>
 	public SDL_WindowID windowID;
+	/// <summary>
+	/// X coordinate, relative to window (not on begin)
+	/// </summary>
 	public float x;
+	/// <summary>
+	/// Y coordinate, relative to window (not on begin)
+	/// </summary>
 	public float y;
+	/// <summary>
+	/// The source app that sent this drop event, or NULL if that isn't available
+	/// </summary>
 	public unsafe byte* source;
+	/// <summary>
+	/// The text for SDL_EVENT_DROP_TEXT and the file name for SDL_EVENT_DROP_FILE, NULL for other events
+	/// </summary>
 	public unsafe byte* data;
 }
 
+/// <summary>
+/// An event triggered when the clipboard contents have changed<br/>
+/// (event.clipboard.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_ClipboardEvent
 {
+	/// <summary>
+	/// SDL_EVENT_CLIPBOARD_UPDATE
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
 }
 
+/// <summary>
+/// Sensor event structure (event.sensor.*)<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_SensorEvent
 {
+	/// <summary>
+	/// SDL_EVENT_SENSOR_UPDATE
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The instance ID of the sensor
+	/// </summary>
 	public SDL_SensorID which;
+	/// <summary>
+	/// Up to 6 values from the sensor - additional values can be queried using SDL_GetSensorData()
+	/// </summary>
 	public unsafe fixed float data[6];
+	/// <summary>
+	/// The timestamp of the sensor reading in nanoseconds, not necessarily synchronized with the system clock
+	/// </summary>
 	public ulong sensor_timestamp;
 }
 
+/// <summary>
+/// The "quit requested" event<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_QuitEvent
 {
+	/// <summary>
+	/// SDL_EVENT_QUIT
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
 }
 
+/// <summary>
+/// A user-defined event type (event.user.*)<br/>
+/// This event is unique; it is never created by SDL, but only by the<br/>
+/// application. The event can be pushed onto the event queue using<br/>
+/// SDL_PushEvent(). The contents of the structure members are completely up to<br/>
+/// the programmer; the only requirement is that '''type''' is a value obtained<br/>
+/// from SDL_RegisterEvents().<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_UserEvent
 {
+	/// <summary>
+	/// SDL_EVENT_USER through SDL_EVENT_LAST-1, Uint32 because these are not in the SDL_EventType enumeration
+	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
 	public ulong timestamp;
+	/// <summary>
+	/// The associated window if any
+	/// </summary>
 	public SDL_WindowID windowID;
+	/// <summary>
+	/// User defined event code
+	/// </summary>
 	public int code;
+	/// <summary>
+	/// User defined data pointer
+	/// </summary>
 	public nint data1;
+	/// <summary>
+	/// User defined data pointer
+	/// </summary>
 	public nint data2;
 }
 
+/// <summary>
+/// The structure for all events in SDL.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 [StructLayout(LayoutKind.Explicit)]
 public partial struct SDL_Event
 {
+	/// <summary>
+	/// Event type, shared with all events, Uint32 to cover user events which are not in the SDL_EventType enumeration
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_EventType type;
+	/// <summary>
+	/// Common event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_CommonEvent common;
+	/// <summary>
+	/// Display event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_DisplayEvent display;
+	/// <summary>
+	/// Window event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_WindowEvent window;
+	/// <summary>
+	/// Keyboard device change event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_KeyboardDeviceEvent kdevice;
+	/// <summary>
+	/// Keyboard event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_KeyboardEvent key;
+	/// <summary>
+	/// Text editing event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_TextEditingEvent edit;
+	/// <summary>
+	/// Text editing candidates event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_TextEditingCandidatesEvent edit_candidates;
+	/// <summary>
+	/// Text input event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_TextInputEvent text;
+	/// <summary>
+	/// Mouse device change event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_MouseDeviceEvent mdevice;
+	/// <summary>
+	/// Mouse motion event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_MouseMotionEvent motion;
+	/// <summary>
+	/// Mouse button event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_MouseButtonEvent button;
+	/// <summary>
+	/// Mouse wheel event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_MouseWheelEvent wheel;
+	/// <summary>
+	/// Joystick device change event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_JoyDeviceEvent jdevice;
+	/// <summary>
+	/// Joystick axis event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_JoyAxisEvent jaxis;
+	/// <summary>
+	/// Joystick ball event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_JoyBallEvent jball;
+	/// <summary>
+	/// Joystick hat event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_JoyHatEvent jhat;
+	/// <summary>
+	/// Joystick button event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_JoyButtonEvent jbutton;
+	/// <summary>
+	/// Joystick battery event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_JoyBatteryEvent jbattery;
+	/// <summary>
+	/// Gamepad device event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_GamepadDeviceEvent gdevice;
+	/// <summary>
+	/// Gamepad axis event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_GamepadAxisEvent gaxis;
+	/// <summary>
+	/// Gamepad button event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_GamepadButtonEvent gbutton;
+	/// <summary>
+	/// Gamepad touchpad event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_GamepadTouchpadEvent gtouchpad;
+	/// <summary>
+	/// Gamepad sensor event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_GamepadSensorEvent gsensor;
+	/// <summary>
+	/// Audio device event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_AudioDeviceEvent adevice;
+	/// <summary>
+	/// Camera device event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_CameraDeviceEvent cdevice;
+	/// <summary>
+	/// Sensor event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_SensorEvent sensor;
+	/// <summary>
+	/// Quit request event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_QuitEvent quit;
+	/// <summary>
+	/// Custom event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_UserEvent user;
+	/// <summary>
+	/// Touch finger event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_TouchFingerEvent tfinger;
+	/// <summary>
+	/// Pen proximity event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_PenProximityEvent pproximity;
+	/// <summary>
+	/// Pen tip touching event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_PenTouchEvent ptouch;
+	/// <summary>
+	/// Pen motion event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_PenMotionEvent pmotion;
+	/// <summary>
+	/// Pen button event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_PenButtonEvent pbutton;
+	/// <summary>
+	/// Pen axis event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_PenAxisEvent paxis;
+	/// <summary>
+	/// Drag and drop event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_DropEvent drop;
+	/// <summary>
+	/// Clipboard event data
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_ClipboardEvent clipboard;
+	/// <summary>
+	/// This is necessary for ABI compatibility between Visual C++ and GCC.<br/>
+	/// Visual C++ will respect the push pack pragma and use 52 bytes (size of<br/>
+	/// SDL_TextEditingEvent, the largest structure for 32-bit and 64-bit<br/>
+	/// architectures) for this union, and GCC will use the alignment of the<br/>
+	/// largest datatype within the union, which is 8 bytes on 64-bit<br/>
+	/// architectures.<br/>
+	/// So... we'll add padding to force the size to be the same for both.<br/>
+	/// On architectures where pointers are 16 bytes, this needs rounding up to<br/>
+	/// the next multiple of 16, 64, and on architectures where pointers are<br/>
+	/// even larger the size of SDL_UserEvent will dominate as being 3 pointers.
+	/// </summary>
 	[FieldOffset(0)]
 	public unsafe fixed byte padding[128];
 }
 
 public partial struct SDL_PathInfo
 {
+	/// <summary>
+	/// the path type
+	/// </summary>
 	public SDL_PathType type;
+	/// <summary>
+	/// the file size in bytes
+	/// </summary>
 	public ulong size;
+	/// <summary>
+	/// the time when the path was created
+	/// </summary>
 	public long create_time;
+	/// <summary>
+	/// the last time the path was modified
+	/// </summary>
 	public long modify_time;
+	/// <summary>
+	/// the last time the path was read
+	/// </summary>
 	public long access_time;
 }
 
+/// <summary>
+/// A mapping between one joystick input to a gamepad control.<br/>
+/// A gamepad has a collection of several bindings, to say, for example, when<br/>
+/// joystick button number 5 is pressed, that should be treated like the<br/>
+/// gamepad's "start" button.<br/>
+/// SDL has these bindings built-in for many popular controllers, and can add<br/>
+/// more with a simple text string. Those strings are parsed into a collection<br/>
+/// of these structs to make it easier to operate on the data.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_GetGamepadBindings
+/// </summary>
 public partial struct SDL_GamepadBinding
 {
 	public SDL_GamepadBindingType input_type;
@@ -595,207 +1700,1055 @@ public partial struct SDL_GamepadBinding
 	}
 }
 
+/// <summary>
+/// Structure that represents a haptic direction.<br/>
+/// This is the direction where the force comes from, instead of the direction<br/>
+/// in which the force is exerted.<br/>
+/// Directions can be specified by:<br/>
+/// - SDL_HAPTIC_POLAR : Specified by polar coordinates.<br/>
+/// - SDL_HAPTIC_CARTESIAN : Specified by cartesian coordinates.<br/>
+/// - SDL_HAPTIC_SPHERICAL : Specified by spherical coordinates.<br/>
+/// Cardinal directions of the haptic device are relative to the positioning of<br/>
+/// the device. North is considered to be away from the user.<br/>
+/// The following diagram represents the cardinal directions:<br/>
+/// ```<br/>
+/// .--.<br/>
+/// |__| .-------.<br/>
+/// |=.| |.-----.|<br/>
+/// |--| ||     ||<br/>
+/// |  | |'-----'|<br/>
+/// |__|~')_____('<br/>
+/// [ COMPUTER ]<br/>
+/// North (0,-1)<br/>
+/// ^<br/>
+/// |<br/>
+/// |<br/>
+/// (-1,0)  West<br/>
+/// <<br/>
+/// ----[ HAPTIC ]----> East (1,0)<br/>
+/// |<br/>
+/// |<br/>
+/// v<br/>
+/// South (0,1)<br/>
+/// [ USER ]<br/>
+/// \<br/>
+/// |||/<br/>
+/// (o o)<br/>
+/// ---ooO-(_)-Ooo---<br/>
+/// ```<br/>
+/// If type is SDL_HAPTIC_POLAR, direction is encoded by hundredths of a degree<br/>
+/// starting north and turning clockwise. SDL_HAPTIC_POLAR only uses the first<br/>
+/// `dir` parameter. The cardinal directions would be:<br/>
+/// - North: 0 (0 degrees)<br/>
+/// - East: 9000 (90 degrees)<br/>
+/// - South: 18000 (180 degrees)<br/>
+/// - West: 27000 (270 degrees)<br/>
+/// If type is SDL_HAPTIC_CARTESIAN, direction is encoded by three positions (X<br/>
+/// axis, Y axis and Z axis (with 3 axes)). SDL_HAPTIC_CARTESIAN uses the first<br/>
+/// three `dir` parameters. The cardinal directions would be:<br/>
+/// - North: 0,-1, 0<br/>
+/// - East: 1, 0, 0<br/>
+/// - South: 0, 1, 0<br/>
+/// - West: -1, 0, 0<br/>
+/// The Z axis represents the height of the effect if supported, otherwise it's<br/>
+/// unused. In cartesian encoding (1, 2) would be the same as (2, 4), you can<br/>
+/// use any multiple you want, only the direction matters.<br/>
+/// If type is SDL_HAPTIC_SPHERICAL, direction is encoded by two rotations. The<br/>
+/// first two `dir` parameters are used. The `dir` parameters are as follows<br/>
+/// (all values are in hundredths of degrees):<br/>
+/// - Degrees from (1, 0) rotated towards (0, 1).<br/>
+/// - Degrees towards (0, 0, 1) (device needs at least 3 axes).<br/>
+/// Example of force coming from the south with all encodings (force coming<br/>
+/// from the south means the user will have to pull the stick to counteract):<br/>
+/// ```c<br/>
+/// SDL_HapticDirection direction;<br/>
+/// // Cartesian directions<br/>
+/// direction.type = SDL_HAPTIC_CARTESIAN; // Using cartesian direction encoding.<br/>
+/// direction.dir[0] = 0; // X position<br/>
+/// direction.dir[1] = 1; // Y position<br/>
+/// // Assuming the device has 2 axes, we don't need to specify third parameter.<br/>
+/// // Polar directions<br/>
+/// direction.type = SDL_HAPTIC_POLAR; // We'll be using polar direction encoding.<br/>
+/// direction.dir[0] = 18000; // Polar only uses first parameter<br/>
+/// // Spherical coordinates<br/>
+/// direction.type = SDL_HAPTIC_SPHERICAL; // Spherical encoding<br/>
+/// direction.dir[0] = 9000; // Since we only have two axes we don't need more parameters.<br/>
+/// ```<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_HAPTIC_POLAR<br/>
+/// @sa SDL_HAPTIC_CARTESIAN<br/>
+/// @sa SDL_HAPTIC_SPHERICAL<br/>
+/// @sa SDL_HAPTIC_STEERING_AXIS<br/>
+/// @sa SDL_HapticEffect<br/>
+/// @sa SDL_GetNumHapticAxes
+/// </summary>
 public partial struct SDL_HapticDirection
 {
+	/// <summary>
+	/// The type of encoding.
+	/// </summary>
 	public SDL_HapticDirectionType type;
+	/// <summary>
+	/// The encoded direction.
+	/// </summary>
 	public unsafe fixed int dir[3];
 }
 
+/// <summary>
+/// A structure containing a template for a Constant effect.<br/>
+/// This struct is exclusively for the SDL_HAPTIC_CONSTANT effect.<br/>
+/// A constant effect applies a constant force in the specified direction to<br/>
+/// the joystick.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_HAPTIC_CONSTANT<br/>
+/// @sa SDL_HapticEffect
+/// </summary>
 public partial struct SDL_HapticConstant
 {
+	/// <summary>
+	/// SDL_HAPTIC_CONSTANT
+	/// </summary>
 	public ushort type;
+	/// <summary>
+	/// Direction of the effect.
+	/// </summary>
 	public SDL_HapticDirection direction;
+	/// <summary>
+	/// Duration of the effect.
+	/// </summary>
 	public uint length;
+	/// <summary>
+	/// Delay before starting the effect.
+	/// </summary>
 	public ushort delay;
+	/// <summary>
+	/// Button that triggers the effect.
+	/// </summary>
 	public ushort button;
+	/// <summary>
+	/// How soon it can be triggered again after button.
+	/// </summary>
 	public ushort interval;
+	/// <summary>
+	/// Strength of the constant effect.
+	/// </summary>
 	public short level;
+	/// <summary>
+	/// Duration of the attack.
+	/// </summary>
 	public ushort attack_length;
+	/// <summary>
+	/// Level at the start of the attack.
+	/// </summary>
 	public ushort attack_level;
+	/// <summary>
+	/// Duration of the fade.
+	/// </summary>
 	public ushort fade_length;
+	/// <summary>
+	/// Level at the end of the fade.
+	/// </summary>
 	public ushort fade_level;
 }
 
+/// <summary>
+/// A structure containing a template for a Periodic effect.<br/>
+/// The struct handles the following effects:<br/>
+/// - SDL_HAPTIC_SINE<br/>
+/// - SDL_HAPTIC_SQUARE<br/>
+/// - SDL_HAPTIC_TRIANGLE<br/>
+/// - SDL_HAPTIC_SAWTOOTHUP<br/>
+/// - SDL_HAPTIC_SAWTOOTHDOWN<br/>
+/// A periodic effect consists in a wave-shaped effect that repeats itself over<br/>
+/// time. The type determines the shape of the wave and the parameters<br/>
+/// determine the dimensions of the wave.<br/>
+/// Phase is given by hundredth of a degree meaning that giving the phase a<br/>
+/// value of 9000 will displace it 25% of its period. Here are sample values:<br/>
+/// - 0: No phase displacement.<br/>
+/// - 9000: Displaced 25% of its period.<br/>
+/// - 18000: Displaced 50% of its period.<br/>
+/// - 27000: Displaced 75% of its period.<br/>
+/// - 36000: Displaced 100% of its period, same as 0, but 0 is preferred.<br/>
+/// Examples:<br/>
+/// ```<br/>
+/// SDL_HAPTIC_SINE<br/>
+/// __      __      __      __<br/>
+/// /<br/>
+/// \<br/>
+/// /<br/>
+/// \<br/>
+/// /<br/>
+/// \<br/>
+/// /<br/>
+/// /<br/>
+/// \<br/>
+/// __/<br/>
+/// \<br/>
+/// __/<br/>
+/// \<br/>
+/// __/<br/>
+/// SDL_HAPTIC_SQUARE<br/>
+/// __    __    __    __    __<br/>
+/// |  |  |  |  |  |  |  |  |  |<br/>
+/// |  |__|  |__|  |__|  |__|  |<br/>
+/// SDL_HAPTIC_TRIANGLE<br/>
+/// /<br/>
+/// \<br/>
+/// /<br/>
+/// \<br/>
+/// /<br/>
+/// \<br/>
+/// /<br/>
+/// \<br/>
+/// /<br/>
+/// \<br/>
+/// /<br/>
+/// \<br/>
+/// /<br/>
+/// \<br/>
+/// /<br/>
+/// \<br/>
+/// /<br/>
+/// \<br/>
+/// /<br/>
+/// /<br/>
+/// \<br/>
+/// /<br/>
+/// \<br/>
+/// /<br/>
+/// \<br/>
+/// /<br/>
+/// \<br/>
+/// /<br/>
+/// SDL_HAPTIC_SAWTOOTHUP<br/>
+/// /|  /|  /|  /|  /|  /|  /|<br/>
+/// / | / | / | / | / | / | / |<br/>
+/// /  |/  |/  |/  |/  |/  |/  |<br/>
+/// SDL_HAPTIC_SAWTOOTHDOWN<br/>
+/// \<br/>
+/// |<br/>
+/// \<br/>
+/// |<br/>
+/// \<br/>
+/// |<br/>
+/// \<br/>
+/// |<br/>
+/// \<br/>
+/// |<br/>
+/// \<br/>
+/// |<br/>
+/// \<br/>
+/// |<br/>
+/// \<br/>
+/// |<br/>
+/// \<br/>
+/// |<br/>
+/// \<br/>
+/// |<br/>
+/// \<br/>
+/// |<br/>
+/// \<br/>
+/// |<br/>
+/// \<br/>
+/// |<br/>
+/// \<br/>
+/// |<br/>
+/// \<br/>
+/// |<br/>
+/// \<br/>
+/// |<br/>
+/// \<br/>
+/// |<br/>
+/// \<br/>
+/// |<br/>
+/// \<br/>
+/// |<br/>
+/// \<br/>
+/// |<br/>
+/// \<br/>
+/// |<br/>
+/// ```<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_HAPTIC_SINE<br/>
+/// @sa SDL_HAPTIC_SQUARE<br/>
+/// @sa SDL_HAPTIC_TRIANGLE<br/>
+/// @sa SDL_HAPTIC_SAWTOOTHUP<br/>
+/// @sa SDL_HAPTIC_SAWTOOTHDOWN<br/>
+/// @sa SDL_HapticEffect
+/// </summary>
 public partial struct SDL_HapticPeriodic
 {
+	/// <summary>
+	/// SDL_HAPTIC_SINE, SDL_HAPTIC_SQUARE<br/>
+	/// SDL_HAPTIC_TRIANGLE, SDL_HAPTIC_SAWTOOTHUP or<br/>
+	/// SDL_HAPTIC_SAWTOOTHDOWN
+	/// </summary>
 	public ushort type;
+	/// <summary>
+	/// Direction of the effect.
+	/// </summary>
 	public SDL_HapticDirection direction;
+	/// <summary>
+	/// Duration of the effect.
+	/// </summary>
 	public uint length;
+	/// <summary>
+	/// Delay before starting the effect.
+	/// </summary>
 	public ushort delay;
+	/// <summary>
+	/// Button that triggers the effect.
+	/// </summary>
 	public ushort button;
+	/// <summary>
+	/// How soon it can be triggered again after button.
+	/// </summary>
 	public ushort interval;
+	/// <summary>
+	/// Period of the wave.
+	/// </summary>
 	public ushort period;
+	/// <summary>
+	/// Peak value; if negative, equivalent to 180 degrees extra phase shift.
+	/// </summary>
 	public short magnitude;
+	/// <summary>
+	/// Mean value of the wave.
+	/// </summary>
 	public short offset;
+	/// <summary>
+	/// Positive phase shift given by hundredth of a degree.
+	/// </summary>
 	public ushort phase;
+	/// <summary>
+	/// Duration of the attack.
+	/// </summary>
 	public ushort attack_length;
+	/// <summary>
+	/// Level at the start of the attack.
+	/// </summary>
 	public ushort attack_level;
+	/// <summary>
+	/// Duration of the fade.
+	/// </summary>
 	public ushort fade_length;
+	/// <summary>
+	/// Level at the end of the fade.
+	/// </summary>
 	public ushort fade_level;
 }
 
+/// <summary>
+/// A structure containing a template for a Condition effect.<br/>
+/// The struct handles the following effects:<br/>
+/// - SDL_HAPTIC_SPRING: Effect based on axes position.<br/>
+/// - SDL_HAPTIC_DAMPER: Effect based on axes velocity.<br/>
+/// - SDL_HAPTIC_INERTIA: Effect based on axes acceleration.<br/>
+/// - SDL_HAPTIC_FRICTION: Effect based on axes movement.<br/>
+/// Direction is handled by condition internals instead of a direction member.<br/>
+/// The condition effect specific members have three parameters. The first<br/>
+/// refers to the X axis, the second refers to the Y axis and the third refers<br/>
+/// to the Z axis. The right terms refer to the positive side of the axis and<br/>
+/// the left terms refer to the negative side of the axis. Please refer to the<br/>
+/// SDL_HapticDirection diagram for which side is positive and which is<br/>
+/// negative.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_HapticDirection<br/>
+/// @sa SDL_HAPTIC_SPRING<br/>
+/// @sa SDL_HAPTIC_DAMPER<br/>
+/// @sa SDL_HAPTIC_INERTIA<br/>
+/// @sa SDL_HAPTIC_FRICTION<br/>
+/// @sa SDL_HapticEffect
+/// </summary>
 public partial struct SDL_HapticCondition
 {
+	/// <summary>
+	/// SDL_HAPTIC_SPRING, SDL_HAPTIC_DAMPER,<br/>
+	/// SDL_HAPTIC_INERTIA or SDL_HAPTIC_FRICTION
+	/// </summary>
 	public ushort type;
+	/// <summary>
+	/// Direction of the effect - Not used ATM.
+	/// </summary>
 	public SDL_HapticDirection direction;
+	/// <summary>
+	/// Duration of the effect.
+	/// </summary>
 	public uint length;
+	/// <summary>
+	/// Delay before starting the effect.
+	/// </summary>
 	public ushort delay;
+	/// <summary>
+	/// Button that triggers the effect.
+	/// </summary>
 	public ushort button;
+	/// <summary>
+	/// How soon it can be triggered again after button.
+	/// </summary>
 	public ushort interval;
+	/// <summary>
+	/// Level when joystick is to the positive side; max 0xFFFF.
+	/// </summary>
 	public unsafe fixed ushort right_sat[3];
+	/// <summary>
+	/// Level when joystick is to the negative side; max 0xFFFF.
+	/// </summary>
 	public unsafe fixed ushort left_sat[3];
+	/// <summary>
+	/// How fast to increase the force towards the positive side.
+	/// </summary>
 	public unsafe fixed short right_coeff[3];
+	/// <summary>
+	/// How fast to increase the force towards the negative side.
+	/// </summary>
 	public unsafe fixed short left_coeff[3];
+	/// <summary>
+	/// Size of the dead zone; max 0xFFFF: whole axis-range when 0-centered.
+	/// </summary>
 	public unsafe fixed ushort deadband[3];
+	/// <summary>
+	/// Position of the dead zone.
+	/// </summary>
 	public unsafe fixed short center[3];
 }
 
+/// <summary>
+/// A structure containing a template for a Ramp effect.<br/>
+/// This struct is exclusively for the SDL_HAPTIC_RAMP effect.<br/>
+/// The ramp effect starts at start strength and ends at end strength. It<br/>
+/// augments in linear fashion. If you use attack and fade with a ramp the<br/>
+/// effects get added to the ramp effect making the effect become quadratic<br/>
+/// instead of linear.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_HAPTIC_RAMP<br/>
+/// @sa SDL_HapticEffect
+/// </summary>
 public partial struct SDL_HapticRamp
 {
+	/// <summary>
+	/// SDL_HAPTIC_RAMP
+	/// </summary>
 	public ushort type;
+	/// <summary>
+	/// Direction of the effect.
+	/// </summary>
 	public SDL_HapticDirection direction;
+	/// <summary>
+	/// Duration of the effect.
+	/// </summary>
 	public uint length;
+	/// <summary>
+	/// Delay before starting the effect.
+	/// </summary>
 	public ushort delay;
+	/// <summary>
+	/// Button that triggers the effect.
+	/// </summary>
 	public ushort button;
+	/// <summary>
+	/// How soon it can be triggered again after button.
+	/// </summary>
 	public ushort interval;
+	/// <summary>
+	/// Beginning strength level.
+	/// </summary>
 	public short start;
+	/// <summary>
+	/// Ending strength level.
+	/// </summary>
 	public short end;
+	/// <summary>
+	/// Duration of the attack.
+	/// </summary>
 	public ushort attack_length;
+	/// <summary>
+	/// Level at the start of the attack.
+	/// </summary>
 	public ushort attack_level;
+	/// <summary>
+	/// Duration of the fade.
+	/// </summary>
 	public ushort fade_length;
+	/// <summary>
+	/// Level at the end of the fade.
+	/// </summary>
 	public ushort fade_level;
 }
 
+/// <summary>
+/// A structure containing a template for a Left/Right effect.<br/>
+/// This struct is exclusively for the SDL_HAPTIC_LEFTRIGHT effect.<br/>
+/// The Left/Right effect is used to explicitly control the large and small<br/>
+/// motors, commonly found in modern game controllers. The small (right) motor<br/>
+/// is high frequency, and the large (left) motor is low frequency.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_HAPTIC_LEFTRIGHT<br/>
+/// @sa SDL_HapticEffect
+/// </summary>
 public partial struct SDL_HapticLeftRight
 {
+	/// <summary>
+	/// SDL_HAPTIC_LEFTRIGHT
+	/// </summary>
 	public ushort type;
+	/// <summary>
+	/// Duration of the effect in milliseconds.
+	/// </summary>
 	public uint length;
+	/// <summary>
+	/// Control of the large controller motor.
+	/// </summary>
 	public ushort large_magnitude;
+	/// <summary>
+	/// Control of the small controller motor.
+	/// </summary>
 	public ushort small_magnitude;
 }
 
+/// <summary>
+/// A structure containing a template for the SDL_HAPTIC_CUSTOM effect.<br/>
+/// This struct is exclusively for the SDL_HAPTIC_CUSTOM effect.<br/>
+/// A custom force feedback effect is much like a periodic effect, where the<br/>
+/// application can define its exact shape. You will have to allocate the data<br/>
+/// yourself. Data should consist of channels * samples Uint16 samples.<br/>
+/// If channels is one, the effect is rotated using the defined direction.<br/>
+/// Otherwise it uses the samples in data for the different axes.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_HAPTIC_CUSTOM<br/>
+/// @sa SDL_HapticEffect
+/// </summary>
 public partial struct SDL_HapticCustom
 {
+	/// <summary>
+	/// SDL_HAPTIC_CUSTOM
+	/// </summary>
 	public ushort type;
+	/// <summary>
+	/// Direction of the effect.
+	/// </summary>
 	public SDL_HapticDirection direction;
+	/// <summary>
+	/// Duration of the effect.
+	/// </summary>
 	public uint length;
+	/// <summary>
+	/// Delay before starting the effect.
+	/// </summary>
 	public ushort delay;
+	/// <summary>
+	/// Button that triggers the effect.
+	/// </summary>
 	public ushort button;
+	/// <summary>
+	/// How soon it can be triggered again after button.
+	/// </summary>
 	public ushort interval;
+	/// <summary>
+	/// Axes to use, minimum of one.
+	/// </summary>
 	public byte channels;
+	/// <summary>
+	/// Sample periods.
+	/// </summary>
 	public ushort period;
+	/// <summary>
+	/// Amount of samples.
+	/// </summary>
 	public ushort samples;
+	/// <summary>
+	/// Should contain channels*samples items.
+	/// </summary>
 	public unsafe ushort* data;
+	/// <summary>
+	/// Duration of the attack.
+	/// </summary>
 	public ushort attack_length;
+	/// <summary>
+	/// Level at the start of the attack.
+	/// </summary>
 	public ushort attack_level;
+	/// <summary>
+	/// Duration of the fade.
+	/// </summary>
 	public ushort fade_length;
+	/// <summary>
+	/// Level at the end of the fade.
+	/// </summary>
 	public ushort fade_level;
 }
 
+/// <summary>
+/// The generic template for any haptic effect.<br/>
+/// All values max at 32767 (0x7FFF). Signed values also can be negative. Time<br/>
+/// values unless specified otherwise are in milliseconds.<br/>
+/// You can also pass SDL_HAPTIC_INFINITY to length instead of a 0-32767 value.<br/>
+/// Neither delay, interval, attack_length nor fade_length support<br/>
+/// SDL_HAPTIC_INFINITY. Fade will also not be used since effect never ends.<br/>
+/// Additionally, the SDL_HAPTIC_RAMP effect does not support a duration of<br/>
+/// SDL_HAPTIC_INFINITY.<br/>
+/// Button triggers may not be supported on all devices, it is advised to not<br/>
+/// use them if possible. Buttons start at index 1 instead of index 0 like the<br/>
+/// joystick.<br/>
+/// If both attack_length and fade_level are 0, the envelope is not used,<br/>
+/// otherwise both values are used.<br/>
+/// Common parts:<br/>
+/// ```c<br/>
+/// // Replay - All effects have this<br/>
+/// Uint32 length;        // Duration of effect (ms).<br/>
+/// Uint16 delay;         // Delay before starting effect.<br/>
+/// // Trigger - All effects have this<br/>
+/// Uint16 button;        // Button that triggers effect.<br/>
+/// Uint16 interval;      // How soon before effect can be triggered again.<br/>
+/// // Envelope - All effects except condition effects have this<br/>
+/// Uint16 attack_length; // Duration of the attack (ms).<br/>
+/// Uint16 attack_level;  // Level at the start of the attack.<br/>
+/// Uint16 fade_length;   // Duration of the fade out (ms).<br/>
+/// Uint16 fade_level;    // Level at the end of the fade.<br/>
+/// ```<br/>
+/// Here we have an example of a constant effect evolution in time:<br/>
+/// ```<br/>
+/// Strength<br/>
+/// ^<br/>
+/// |<br/>
+/// |    effect level -->  _________________<br/>
+/// |                     /<br/>
+/// \<br/>
+/// |                    /<br/>
+/// \<br/>
+/// |                   /<br/>
+/// \<br/>
+/// |                  /<br/>
+/// \<br/>
+/// | attack_level --> |<br/>
+/// \<br/>
+/// |                  |                        |<br/>
+/// <<br/>
+/// ---  fade_level<br/>
+/// |<br/>
+/// +--------------------------------------------------> Time<br/>
+/// [--]                 [---]<br/>
+/// attack_length        fade_length<br/>
+/// [------------------][-----------------------]<br/>
+/// delay               length<br/>
+/// ```<br/>
+/// Note either the attack_level or the fade_level may be above the actual<br/>
+/// effect level.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_HapticConstant<br/>
+/// @sa SDL_HapticPeriodic<br/>
+/// @sa SDL_HapticCondition<br/>
+/// @sa SDL_HapticRamp<br/>
+/// @sa SDL_HapticLeftRight<br/>
+/// @sa SDL_HapticCustom
+/// </summary>
 [StructLayout(LayoutKind.Explicit)]
 public partial struct SDL_HapticEffect
 {
+	/// <summary>
+	/// Effect type.
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_HapticEffectType type;
+	/// <summary>
+	/// Constant effect.
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_HapticConstant constant;
+	/// <summary>
+	/// Periodic effect.
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_HapticPeriodic periodic;
+	/// <summary>
+	/// Condition effect.
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_HapticCondition condition;
+	/// <summary>
+	/// Ramp effect.
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_HapticRamp ramp;
+	/// <summary>
+	/// Left/Right effect.
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_HapticLeftRight leftright;
+	/// <summary>
+	/// Custom effect.
+	/// </summary>
 	[FieldOffset(0)]
 	public SDL_HapticCustom custom;
 }
 
+/// <summary>
+/// Information about a connected HID device<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_hid_device_info
 {
+	/// <summary>
+	/// Platform-specific device path
+	/// </summary>
 	public unsafe byte* path;
+	/// <summary>
+	/// Device Vendor ID
+	/// </summary>
 	public ushort vendor_id;
+	/// <summary>
+	/// Device Product ID
+	/// </summary>
 	public ushort product_id;
+	/// <summary>
+	/// Serial Number
+	/// </summary>
 	public unsafe char* serial_number;
+	/// <summary>
+	/// Device Release Number in binary-coded decimal,<br/>
+	/// also known as Device Version Number
+	/// </summary>
 	public ushort release_number;
+	/// <summary>
+	/// Manufacturer String
+	/// </summary>
 	public unsafe char* manufacturer_string;
+	/// <summary>
+	/// Product string
+	/// </summary>
 	public unsafe char* product_string;
+	/// <summary>
+	/// Usage Page for this Device/Interface<br/>
+	/// (Windows/Mac/hidraw only)
+	/// </summary>
 	public ushort usage_page;
+	/// <summary>
+	/// Usage for this Device/Interface<br/>
+	/// (Windows/Mac/hidraw only)
+	/// </summary>
 	public ushort usage;
+	/// <summary>
+	/// The USB interface which this logical device<br/>
+	/// represents.<br/>
+	/// Valid only if the device is a USB HID device.<br/>
+	/// Set to -1 in all other cases.
+	/// </summary>
 	public int interface_number;
+	/// <summary>
+	/// Additional information about the USB interface.<br/>
+	/// Valid on libusb and Android implementations.
+	/// </summary>
 	public int interface_class;
 	public int interface_subclass;
 	public int interface_protocol;
+	/// <summary>
+	/// Underlying bus type
+	/// </summary>
 	public SDL_hid_bus_type bus_type;
+	/// <summary>
+	/// Pointer to the next device
+	/// </summary>
 	public unsafe SDL_hid_device_info* next;
 }
 
+/// <summary>
+/// The function pointers that drive an SDL_IOStream.<br/>
+/// Applications can provide this struct to SDL_OpenIO() to create their own<br/>
+/// implementation of SDL_IOStream. This is not necessarily required, as SDL<br/>
+/// already offers several common types of I/O streams, via functions like<br/>
+/// SDL_IOFromFile() and SDL_IOFromMem().<br/>
+/// This structure should be initialized using SDL_INIT_INTERFACE()<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_INIT_INTERFACE
+/// </summary>
 public partial struct SDL_IOStreamInterface
 {
+	/// <summary>
+	/// The version of this interface
+	/// </summary>
 	public uint version;
+	/// <summary>
+	/// Return the number of bytes in this SDL_IOStream<br/>
+	/// <br/>
+	/// @return the total size of the data stream, or -1 on error.
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, long> size;
+	/// <summary>
+	/// Seek to `offset` relative to `whence`, one of stdio's whence values:<br/>
+	/// SDL_IO_SEEK_SET, SDL_IO_SEEK_CUR, SDL_IO_SEEK_END<br/>
+	/// <br/>
+	/// @return the final offset in the data stream, or -1 on error.
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, long, SDL_IOWhence, long> seek;
+	/// <summary>
+	/// Read up to `size` bytes from the data stream to the area pointed<br/>
+	/// at by `ptr`.<br/>
+	/// On an incomplete read, you should set `*status` to a value from the<br/>
+	/// SDL_IOStatus enum. You do not have to explicitly set this on<br/>
+	/// a complete, successful read.<br/>
+	/// <br/>
+	/// @return the number of bytes read
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, nint, nuint, SDL_IOStatus*, nuint> read;
+	/// <summary>
+	/// Write exactly `size` bytes from the area pointed at by `ptr`<br/>
+	/// to data stream.<br/>
+	/// On an incomplete write, you should set `*status` to a value from the<br/>
+	/// SDL_IOStatus enum. You do not have to explicitly set this on<br/>
+	/// a complete, successful write.<br/>
+	/// <br/>
+	/// @return the number of bytes written
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, nint, nuint, SDL_IOStatus*, nuint> write;
+	/// <summary>
+	/// If the stream is buffering, make sure the data is written out.<br/>
+	/// On failure, you should set `*status` to a value from the<br/>
+	/// SDL_IOStatus enum. You do not have to explicitly set this on<br/>
+	/// a successful flush.<br/>
+	/// <br/>
+	/// @return true if successful or false on write error when flushing data.
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, SDL_IOStatus*, bool> flush;
+	/// <summary>
+	/// Close and free any allocated resources.<br/>
+	/// This does not guarantee file writes will sync to physical media; they<br/>
+	/// can be in the system's file cache, waiting to go to disk.<br/>
+	/// The SDL_IOStream is still destroyed even if this fails, so clean up anything<br/>
+	/// even if flushing buffers, etc, returns an error.<br/>
+	/// <br/>
+	/// @return true if successful or false on write error when flushing data.
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, bool> close;
 }
 
+/// <summary>
+/// The structure that describes a virtual joystick touchpad.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_VirtualJoystickDesc
+/// </summary>
 public partial struct SDL_VirtualJoystickTouchpadDesc
 {
+	/// <summary>
+	/// the number of simultaneous fingers on this touchpad
+	/// </summary>
 	public ushort nfingers;
 	public unsafe fixed ushort padding[3];
 }
 
+/// <summary>
+/// The structure that describes a virtual joystick sensor.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_VirtualJoystickDesc
+/// </summary>
 public partial struct SDL_VirtualJoystickSensorDesc
 {
+	/// <summary>
+	/// the type of this sensor
+	/// </summary>
 	public SDL_SensorType type;
+	/// <summary>
+	/// the update frequency of this sensor, may be 0.0f
+	/// </summary>
 	public float rate;
 }
 
+/// <summary>
+/// The structure that describes a virtual joystick.<br/>
+/// This structure should be initialized using SDL_INIT_INTERFACE(). All<br/>
+/// elements of this structure are optional.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_AttachVirtualJoystick<br/>
+/// @sa SDL_INIT_INTERFACE<br/>
+/// @sa SDL_VirtualJoystickSensorDesc<br/>
+/// @sa SDL_VirtualJoystickTouchpadDesc
+/// </summary>
 public partial struct SDL_VirtualJoystickDesc
 {
+	/// <summary>
+	/// the version of this interface
+	/// </summary>
 	public uint version;
+	/// <summary>
+	/// `SDL_JoystickType`
+	/// </summary>
 	public ushort type;
+	/// <summary>
+	/// unused
+	/// </summary>
 	public ushort padding;
+	/// <summary>
+	/// the USB vendor ID of this joystick
+	/// </summary>
 	public ushort vendor_id;
+	/// <summary>
+	/// the USB product ID of this joystick
+	/// </summary>
 	public ushort product_id;
+	/// <summary>
+	/// the number of axes on this joystick
+	/// </summary>
 	public ushort naxes;
+	/// <summary>
+	/// the number of buttons on this joystick
+	/// </summary>
 	public ushort nbuttons;
+	/// <summary>
+	/// the number of balls on this joystick
+	/// </summary>
 	public ushort nballs;
+	/// <summary>
+	/// the number of hats on this joystick
+	/// </summary>
 	public ushort nhats;
+	/// <summary>
+	/// the number of touchpads on this joystick, requires `touchpads` to point at valid descriptions
+	/// </summary>
 	public ushort ntouchpads;
+	/// <summary>
+	/// the number of sensors on this joystick, requires `sensors` to point at valid descriptions
+	/// </summary>
 	public ushort nsensors;
+	/// <summary>
+	/// unused
+	/// </summary>
 	public unsafe fixed ushort padding2[2];
+	/// <summary>
+	/// A mask of which buttons are valid for this controller<br/>
+	/// e.g. (1<br/>
+	/// <<br/>
+	/// <<br/>
+	/// SDL_GAMEPAD_BUTTON_SOUTH)
+	/// </summary>
 	public uint button_mask;
+	/// <summary>
+	/// A mask of which axes are valid for this controller<br/>
+	/// e.g. (1<br/>
+	/// <<br/>
+	/// <<br/>
+	/// SDL_GAMEPAD_AXIS_LEFTX)
+	/// </summary>
 	public uint axis_mask;
+	/// <summary>
+	/// the name of the joystick
+	/// </summary>
 	public unsafe byte* name;
+	/// <summary>
+	/// A pointer to an array of touchpad descriptions, required if `ntouchpads` is > 0
+	/// </summary>
 	public unsafe SDL_VirtualJoystickTouchpadDesc* touchpads;
+	/// <summary>
+	/// A pointer to an array of sensor descriptions, required if `nsensors` is > 0
+	/// </summary>
 	public unsafe SDL_VirtualJoystickSensorDesc* sensors;
+	/// <summary>
+	/// User data pointer passed to callbacks
+	/// </summary>
 	public nint userdata;
+	/// <summary>
+	/// Called when the joystick state should be updated
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, void> Update;
+	/// <summary>
+	/// Called when the player index is set
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, int, void> SetPlayerIndex;
+	/// <summary>
+	/// Implements SDL_RumbleJoystick()
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, ushort, ushort, bool> Rumble;
+	/// <summary>
+	/// Implements SDL_RumbleJoystickTriggers()
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, ushort, ushort, bool> RumbleTriggers;
+	/// <summary>
+	/// Implements SDL_SetJoystickLED()
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, byte, byte, byte, bool> SetLED;
+	/// <summary>
+	/// Implements SDL_SendJoystickEffect()
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, nint, int, bool> SendEffect;
+	/// <summary>
+	/// Implements SDL_SetGamepadSensorEnabled()
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, bool, bool> SetSensorsEnabled;
+	/// <summary>
+	/// Cleans up the userdata when the joystick is detached
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, void> Cleanup;
 }
 
+/// <summary>
+/// A struct to provide locale data.<br/>
+/// Locale data is split into a spoken language, like English, and an optional<br/>
+/// country, like Canada. The language will be in ISO-639 format (so English<br/>
+/// would be "en"), and the country, if not NULL, will be an ISO-3166 country<br/>
+/// code (so Canada would be "CA").<br/>
+/// <br/>
+/// @since This function is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_GetPreferredLocales
+/// </summary>
 public partial struct SDL_Locale
 {
+	/// <summary>
+	/// A language name, like "en" for English.
+	/// </summary>
 	public unsafe byte* language;
+	/// <summary>
+	/// A country, like "US" for America. Can be NULL.
+	/// </summary>
 	public unsafe byte* country;
 }
 
+/// <summary>
+/// Individual button data.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_MessageBoxButtonData
 {
 	public SDL_MessageBoxButtonFlags flags;
+	/// <summary>
+	/// User defined button id (value returned via SDL_ShowMessageBox)
+	/// </summary>
 	public int buttonID;
+	/// <summary>
+	/// The UTF-8 button text
+	/// </summary>
 	public unsafe byte* text;
 }
 
+/// <summary>
+/// RGB value used in a message box color scheme<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_MessageBoxColor
 {
 	public byte r;
@@ -803,6 +2756,11 @@ public partial struct SDL_MessageBoxColor
 	public byte b;
 }
 
+/// <summary>
+/// A set of colors to use for message box dialogs<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_MessageBoxColorScheme
 {
 	public colors__FixedBuffer colors;
@@ -834,17 +2792,90 @@ public partial struct SDL_MessageBoxColorScheme
 	}
 }
 
+/// <summary>
+/// MessageBox structure containing title, text, window, etc.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_MessageBoxData
 {
 	public SDL_MessageBoxFlags flags;
+	/// <summary>
+	/// Parent window, can be NULL
+	/// </summary>
 	public SDL_Window window;
+	/// <summary>
+	/// UTF-8 title
+	/// </summary>
 	public unsafe byte* title;
+	/// <summary>
+	/// UTF-8 message text
+	/// </summary>
 	public unsafe byte* message;
 	public int numbuttons;
 	public unsafe SDL_MessageBoxButtonData* buttons;
+	/// <summary>
+	/// SDL_MessageBoxColorScheme, can be NULL to use system settings
+	/// </summary>
 	public unsafe SDL_MessageBoxColorScheme* colorScheme;
 }
 
+/// <summary>
+/// A structure used for thread-safe initialization and shutdown.<br/>
+/// Here is an example of using this:<br/>
+/// ```c<br/>
+/// static SDL_AtomicInitState init;<br/>
+/// bool InitSystem(void)<br/>
+/// {<br/>
+/// if (!SDL_ShouldInit(<br/>
+/// &init<br/>
+/// )) {<br/>
+/// // The system is initialized<br/>
+/// return true;<br/>
+/// }<br/>
+/// // At this point, you should not leave this function without calling SDL_SetInitialized()<br/>
+/// bool initialized = DoInitTasks();<br/>
+/// SDL_SetInitialized(<br/>
+/// &init<br/>
+/// , initialized);<br/>
+/// return initialized;<br/>
+/// }<br/>
+/// bool UseSubsystem(void)<br/>
+/// {<br/>
+/// if (SDL_ShouldInit(<br/>
+/// &init<br/>
+/// )) {<br/>
+/// // Error, the subsystem isn't initialized<br/>
+/// SDL_SetInitialized(<br/>
+/// &init<br/>
+/// , false);<br/>
+/// return false;<br/>
+/// }<br/>
+/// // Do work using the initialized subsystem<br/>
+/// return true;<br/>
+/// }<br/>
+/// void QuitSystem(void)<br/>
+/// {<br/>
+/// if (!SDL_ShouldQuit(<br/>
+/// &init<br/>
+/// )) {<br/>
+/// // The system is not initialized<br/>
+/// return true;<br/>
+/// }<br/>
+/// // At this point, you should not leave this function without calling SDL_SetInitialized()<br/>
+/// DoQuitTasks();<br/>
+/// SDL_SetInitialized(<br/>
+/// &init<br/>
+/// , false);<br/>
+/// }<br/>
+/// ```<br/>
+/// Note that this doesn't protect any resources created during initialization,<br/>
+/// or guarantee that nobody is using those resources during cleanup. You<br/>
+/// should use other mechanisms to protect those, if that's a concern for your<br/>
+/// code.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_InitState
 {
 	public SDL_AtomicInt status;
@@ -852,6 +2883,15 @@ public partial struct SDL_InitState
 	public nint reserved;
 }
 
+/// <summary>
+/// A structure that represents a color as RGBA components.<br/>
+/// The bits of this structure can be directly reinterpreted as an<br/>
+/// integer-packed color which uses the SDL_PIXELFORMAT_RGBA32 format<br/>
+/// (SDL_PIXELFORMAT_ABGR8888 on little-endian systems and<br/>
+/// SDL_PIXELFORMAT_RGBA8888 on big-endian systems).<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_Color
 {
 	public byte r;
@@ -860,6 +2900,12 @@ public partial struct SDL_Color
 	public byte a;
 }
 
+/// <summary>
+/// The bits of this structure can be directly reinterpreted as a float-packed<br/>
+/// color which uses the SDL_PIXELFORMAT_RGBA128_FLOAT format<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_FColor
 {
 	public float r;
@@ -868,14 +2914,38 @@ public partial struct SDL_FColor
 	public float a;
 }
 
+/// <summary>
+/// A set of indexed colors representing a palette.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_SetPaletteColors
+/// </summary>
 public partial struct SDL_Palette
 {
+	/// <summary>
+	/// number of elements in `colors`.
+	/// </summary>
 	public int ncolors;
+	/// <summary>
+	/// an array of colors, `ncolors` long.
+	/// </summary>
 	public unsafe SDL_Color* colors;
+	/// <summary>
+	/// internal use only, do not touch.
+	/// </summary>
 	public uint version;
+	/// <summary>
+	/// internal use only, do not touch.
+	/// </summary>
 	public int refcount;
 }
 
+/// <summary>
+/// Details about the format of a pixel.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_PixelFormatDetails
 {
 	public SDL_PixelFormat format;
@@ -896,18 +2966,47 @@ public partial struct SDL_PixelFormatDetails
 	public byte Ashift;
 }
 
+/// <summary>
+/// The structure that defines a point (using integers).<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_GetRectEnclosingPoints<br/>
+/// @sa SDL_PointInRect
+/// </summary>
 public partial struct SDL_Point
 {
 	public int x;
 	public int y;
 }
 
+/// <summary>
+/// The structure that defines a point (using floating point values).<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_GetRectEnclosingPointsFloat<br/>
+/// @sa SDL_PointInRectFloat
+/// </summary>
 public partial struct SDL_FPoint
 {
 	public float x;
 	public float y;
 }
 
+/// <summary>
+/// A rectangle, with the origin at the upper left (using integers).<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_RectEmpty<br/>
+/// @sa SDL_RectsEqual<br/>
+/// @sa SDL_HasRectIntersection<br/>
+/// @sa SDL_GetRectIntersection<br/>
+/// @sa SDL_GetRectAndLineIntersection<br/>
+/// @sa SDL_GetRectUnion<br/>
+/// @sa SDL_GetRectEnclosingPoints
+/// </summary>
 public partial struct SDL_Rect
 {
 	public int x;
@@ -916,6 +3015,22 @@ public partial struct SDL_Rect
 	public int h;
 }
 
+/// <summary>
+/// A rectangle, with the origin at the upper left (using floating point<br/>
+/// values).<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_RectEmptyFloat<br/>
+/// @sa SDL_RectsEqualFloat<br/>
+/// @sa SDL_RectsEqualEpsilon<br/>
+/// @sa SDL_HasRectIntersectionFloat<br/>
+/// @sa SDL_GetRectIntersectionFloat<br/>
+/// @sa SDL_GetRectAndLineIntersectionFloat<br/>
+/// @sa SDL_GetRectUnionFloat<br/>
+/// @sa SDL_GetRectEnclosingPointsFloat<br/>
+/// @sa SDL_PointInRectFloat
+/// </summary>
 public partial struct SDL_FRect
 {
 	public float x;
@@ -924,18 +3039,54 @@ public partial struct SDL_FRect
 	public float h;
 }
 
+/// <summary>
+/// Vertex structure.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_Vertex
 {
+	/// <summary>
+	/// Vertex position, in SDL_Renderer coordinates
+	/// </summary>
 	public PointF position;
+	/// <summary>
+	/// Vertex color
+	/// </summary>
 	public SDL_FColor color;
+	/// <summary>
+	/// Normalized texture coordinates, if needed
+	/// </summary>
 	public PointF tex_coord;
 }
 
+/// <summary>
+/// An efficient driver-specific representation of pixel data<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_CreateTexture<br/>
+/// @sa SDL_CreateTextureFromSurface<br/>
+/// @sa SDL_CreateTextureWithProperties<br/>
+/// @sa SDL_DestroyTexture
+/// </summary>
 public partial struct SDL_Texture
 {
+	/// <summary>
+	/// The format of the texture, read-only
+	/// </summary>
 	public SDL_PixelFormat format;
+	/// <summary>
+	/// The width of the texture, read-only.
+	/// </summary>
 	public int w;
+	/// <summary>
+	/// The height of the texture, read-only.
+	/// </summary>
 	public int h;
+	/// <summary>
+	/// Application reference count, used when freeing texture
+	/// </summary>
 	public int refcount;
 }
 
@@ -945,429 +3096,1556 @@ public partial struct SDL_alignment_test
 	public nint b;
 }
 
+/// <summary>
+/// Function interface for SDL_Storage.<br/>
+/// Apps that want to supply a custom implementation of SDL_Storage will fill<br/>
+/// in all the functions in this struct, and then pass it to SDL_OpenStorage to<br/>
+/// create a custom SDL_Storage object.<br/>
+/// It is not usually necessary to do this; SDL provides standard<br/>
+/// implementations for many things you might expect to do with an SDL_Storage.<br/>
+/// This structure should be initialized using SDL_INIT_INTERFACE()<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_INIT_INTERFACE
+/// </summary>
 public partial struct SDL_StorageInterface
 {
+	/// <summary>
+	/// The version of this interface
+	/// </summary>
 	public uint version;
+	/// <summary>
+	/// Called when the storage is closed
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, bool> close;
+	/// <summary>
+	/// Optional, returns whether the storage is currently ready for access
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, bool> ready;
+	/// <summary>
+	/// Enumerate a directory, optional for write-only storage
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, byte*, delegate* unmanaged<nint, byte*, byte*, SDL_EnumerationResult>*, nint, bool> enumerate;
+	/// <summary>
+	/// Get path information, optional for write-only storage
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, byte*, SDL_PathInfo*, bool> info;
+	/// <summary>
+	/// Read a file from storage, optional for write-only storage
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, byte*, nint, ulong, bool> read_file;
+	/// <summary>
+	/// Write a file to storage, optional for read-only storage
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, byte*, nint, ulong, bool> write_file;
+	/// <summary>
+	/// Create a directory, optional for read-only storage
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, byte*, bool> mkdir;
+	/// <summary>
+	/// Remove a file or empty directory, optional for read-only storage
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, byte*, bool> remove;
+	/// <summary>
+	/// Rename a path, optional for read-only storage
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, byte*, byte*, bool> rename;
+	/// <summary>
+	/// Copy a file, optional for read-only storage
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, byte*, byte*, bool> copy;
+	/// <summary>
+	/// Get the space remaining, optional for read-only storage
+	/// </summary>
 	public unsafe delegate* unmanaged<nint, ulong> space_remaining;
 }
 
+/// <summary>
+/// A collection of pixels used in software blitting.<br/>
+/// Pixels are arranged in memory in rows, with the top row first. Each row<br/>
+/// occupies an amount of memory given by the pitch (sometimes known as the row<br/>
+/// stride in non-SDL APIs).<br/>
+/// Within each row, pixels are arranged from left to right until the width is<br/>
+/// reached. Each pixel occupies a number of bits appropriate for its format,<br/>
+/// with most formats representing each pixel as one or more whole bytes (in<br/>
+/// some indexed formats, instead multiple pixels are packed into each byte),<br/>
+/// and a byte order given by the format. After encoding all pixels, any<br/>
+/// remaining bytes to reach the pitch are used as padding to reach a desired<br/>
+/// alignment, and have undefined contents.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_CreateSurface<br/>
+/// @sa SDL_DestroySurface
+/// </summary>
 public partial struct SDL_Surface
 {
+	/// <summary>
+	/// The flags of the surface, read-only
+	/// </summary>
 	public SDL_SurfaceFlags flags;
+	/// <summary>
+	/// The format of the surface, read-only
+	/// </summary>
 	public SDL_PixelFormat format;
+	/// <summary>
+	/// The width of the surface, read-only.
+	/// </summary>
 	public int w;
+	/// <summary>
+	/// The height of the surface, read-only.
+	/// </summary>
 	public int h;
+	/// <summary>
+	/// The distance in bytes between rows of pixels, read-only
+	/// </summary>
 	public int pitch;
+	/// <summary>
+	/// A pointer to the pixels of the surface, the pixels are writeable if non-NULL
+	/// </summary>
 	public nint pixels;
+	/// <summary>
+	/// Application reference count, used when freeing surface
+	/// </summary>
 	public int refcount;
+	/// <summary>
+	/// Reserved for internal use
+	/// </summary>
 	public nint reserved;
 }
 
+/// <summary>
+/// A structure holding a calendar date and time broken down into its<br/>
+/// components.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.
+/// </summary>
 public partial struct SDL_DateTime
 {
+	/// <summary>
+	/// Year
+	/// </summary>
 	public int year;
+	/// <summary>
+	/// Month [01-12]
+	/// </summary>
 	public int month;
+	/// <summary>
+	/// Day of the month [01-31]
+	/// </summary>
 	public int day;
+	/// <summary>
+	/// Hour [0-23]
+	/// </summary>
 	public int hour;
+	/// <summary>
+	/// Minute [0-59]
+	/// </summary>
 	public int minute;
+	/// <summary>
+	/// Seconds [0-60]
+	/// </summary>
 	public int second;
+	/// <summary>
+	/// Nanoseconds [0-999999999]
+	/// </summary>
 	public int nanosecond;
+	/// <summary>
+	/// Day of the week [0-6] (0 being Sunday)
+	/// </summary>
 	public int day_of_week;
+	/// <summary>
+	/// Seconds east of UTC
+	/// </summary>
 	public int utc_offset;
 }
 
+/// <summary>
+/// Data about a single finger in a multitouch event.<br/>
+/// Each touch even is a collection of fingers that are simultaneously in<br/>
+/// contact with the touch device (so a "touch" can be a "multitouch," in<br/>
+/// reality), and this struct reports details of the specific fingers.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_GetTouchFingers
+/// </summary>
 public partial struct SDL_Finger
 {
+	/// <summary>
+	/// the finger ID
+	/// </summary>
 	public SDL_FingerID id;
+	/// <summary>
+	/// the x-axis location of the touch event, normalized (0...1)
+	/// </summary>
 	public float x;
+	/// <summary>
+	/// the y-axis location of the touch event, normalized (0...1)
+	/// </summary>
 	public float y;
+	/// <summary>
+	/// the quantity of pressure applied, normalized (0...1)
+	/// </summary>
 	public float pressure;
 }
 
+/// <summary>
+/// The structure that defines a display mode.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0.<br/>
+/// <br/>
+/// @sa SDL_GetFullscreenDisplayModes<br/>
+/// @sa SDL_GetDesktopDisplayMode<br/>
+/// @sa SDL_GetCurrentDisplayMode<br/>
+/// @sa SDL_SetWindowFullscreenMode<br/>
+/// @sa SDL_GetWindowFullscreenMode
+/// </summary>
 public partial struct SDL_DisplayMode
 {
+	/// <summary>
+	/// the display this mode is associated with
+	/// </summary>
 	public SDL_DisplayID displayID;
+	/// <summary>
+	/// pixel format
+	/// </summary>
 	public SDL_PixelFormat format;
+	/// <summary>
+	/// width
+	/// </summary>
 	public int w;
+	/// <summary>
+	/// height
+	/// </summary>
 	public int h;
+	/// <summary>
+	/// scale converting size to pixels (e.g. a 1920x1080 mode with 2.0 scale would have 3840x2160 pixels)
+	/// </summary>
 	public float pixel_density;
+	/// <summary>
+	/// refresh rate (or 0.0f for unspecified)
+	/// </summary>
 	public float refresh_rate;
+	/// <summary>
+	/// precise refresh rate numerator (or 0 for unspecified)
+	/// </summary>
 	public int refresh_rate_numerator;
+	/// <summary>
+	/// precise refresh rate denominator
+	/// </summary>
 	public int refresh_rate_denominator;
+	/// <summary>
+	/// Private
+	/// </summary>
 	public SDL_DisplayModeData @internal;
 }
 
+/// <summary>
+/// A structure specifying a viewport.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_SetGPUViewport
+/// </summary>
 public partial struct SDL_GPUViewport
 {
+	/// <summary>
+	/// The left offset of the viewport.
+	/// </summary>
 	public float x;
+	/// <summary>
+	/// The top offset of the viewport.
+	/// </summary>
 	public float y;
+	/// <summary>
+	/// The width of the viewport.
+	/// </summary>
 	public float w;
+	/// <summary>
+	/// The height of the viewport.
+	/// </summary>
 	public float h;
+	/// <summary>
+	/// The minimum depth of the viewport.
+	/// </summary>
 	public float min_depth;
+	/// <summary>
+	/// The maximum depth of the viewport.
+	/// </summary>
 	public float max_depth;
 }
 
+/// <summary>
+/// A structure specifying parameters related to transferring data to or from a<br/>
+/// texture.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_UploadToGPUTexture<br/>
+/// @sa SDL_DownloadFromGPUTexture
+/// </summary>
 public partial struct SDL_GPUTextureTransferInfo
 {
+	/// <summary>
+	/// The transfer buffer used in the transfer operation.
+	/// </summary>
 	public SDL_GPUTransferBuffer transfer_buffer;
+	/// <summary>
+	/// The starting byte of the image data in the transfer buffer.
+	/// </summary>
 	public uint offset;
+	/// <summary>
+	/// The number of pixels from one row to the next.
+	/// </summary>
 	public uint pixels_per_row;
+	/// <summary>
+	/// The number of rows from one layer/depth-slice to the next.
+	/// </summary>
 	public uint rows_per_layer;
 }
 
+/// <summary>
+/// A structure specifying a location in a transfer buffer.<br/>
+/// Used when transferring buffer data to or from a transfer buffer.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_UploadToGPUBuffer<br/>
+/// @sa SDL_DownloadFromGPUBuffer
+/// </summary>
 public partial struct SDL_GPUTransferBufferLocation
 {
+	/// <summary>
+	/// The transfer buffer used in the transfer operation.
+	/// </summary>
 	public SDL_GPUTransferBuffer transfer_buffer;
+	/// <summary>
+	/// The starting byte of the buffer data in the transfer buffer.
+	/// </summary>
 	public uint offset;
 }
 
+/// <summary>
+/// A structure specifying a location in a texture.<br/>
+/// Used when copying data from one texture to another.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CopyGPUTextureToTexture
+/// </summary>
 public partial struct SDL_GPUTextureLocation
 {
+	/// <summary>
+	/// The texture used in the copy operation.
+	/// </summary>
 	public SDL_GPUTexture texture;
+	/// <summary>
+	/// The mip level index of the location.
+	/// </summary>
 	public uint mip_level;
+	/// <summary>
+	/// The layer index of the location.
+	/// </summary>
 	public uint layer;
+	/// <summary>
+	/// The left offset of the location.
+	/// </summary>
 	public uint x;
+	/// <summary>
+	/// The top offset of the location.
+	/// </summary>
 	public uint y;
+	/// <summary>
+	/// The front offset of the location.
+	/// </summary>
 	public uint z;
 }
 
+/// <summary>
+/// A structure specifying a region of a texture.<br/>
+/// Used when transferring data to or from a texture.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_UploadToGPUTexture<br/>
+/// @sa SDL_DownloadFromGPUTexture
+/// </summary>
 public partial struct SDL_GPUTextureRegion
 {
+	/// <summary>
+	/// The texture used in the copy operation.
+	/// </summary>
 	public SDL_GPUTexture texture;
+	/// <summary>
+	/// The mip level index to transfer.
+	/// </summary>
 	public uint mip_level;
+	/// <summary>
+	/// The layer index to transfer.
+	/// </summary>
 	public uint layer;
+	/// <summary>
+	/// The left offset of the region.
+	/// </summary>
 	public uint x;
+	/// <summary>
+	/// The top offset of the region.
+	/// </summary>
 	public uint y;
+	/// <summary>
+	/// The front offset of the region.
+	/// </summary>
 	public uint z;
+	/// <summary>
+	/// The width of the region.
+	/// </summary>
 	public uint w;
+	/// <summary>
+	/// The height of the region.
+	/// </summary>
 	public uint h;
+	/// <summary>
+	/// The depth of the region.
+	/// </summary>
 	public uint d;
 }
 
+/// <summary>
+/// A structure specifying a region of a texture used in the blit operation.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_BlitGPUTexture
+/// </summary>
 public partial struct SDL_GPUBlitRegion
 {
+	/// <summary>
+	/// The texture.
+	/// </summary>
 	public SDL_GPUTexture texture;
+	/// <summary>
+	/// The mip level index of the region.
+	/// </summary>
 	public uint mip_level;
+	/// <summary>
+	/// The layer index or depth plane of the region. This value is treated as a layer index on 2D array and cube textures, and as a depth plane on 3D textures.
+	/// </summary>
 	public uint layer_or_depth_plane;
+	/// <summary>
+	/// The left offset of the region.
+	/// </summary>
 	public uint x;
+	/// <summary>
+	/// The top offset of the region.
+	/// </summary>
 	public uint y;
+	/// <summary>
+	/// The width of the region.
+	/// </summary>
 	public uint w;
+	/// <summary>
+	/// The height of the region.
+	/// </summary>
 	public uint h;
 }
 
+/// <summary>
+/// A structure specifying a location in a buffer.<br/>
+/// Used when copying data between buffers.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CopyGPUBufferToBuffer
+/// </summary>
 public partial struct SDL_GPUBufferLocation
 {
+	/// <summary>
+	/// The buffer.
+	/// </summary>
 	public SDL_GPUBuffer buffer;
+	/// <summary>
+	/// The starting byte within the buffer.
+	/// </summary>
 	public uint offset;
 }
 
+/// <summary>
+/// A structure specifying a region of a buffer.<br/>
+/// Used when transferring data to or from buffers.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_UploadToGPUBuffer<br/>
+/// @sa SDL_DownloadFromGPUBuffer
+/// </summary>
 public partial struct SDL_GPUBufferRegion
 {
+	/// <summary>
+	/// The buffer.
+	/// </summary>
 	public SDL_GPUBuffer buffer;
+	/// <summary>
+	/// The starting byte within the buffer.
+	/// </summary>
 	public uint offset;
+	/// <summary>
+	/// The size in bytes of the region.
+	/// </summary>
 	public uint size;
 }
 
+/// <summary>
+/// A structure specifying the parameters of an indirect draw command.<br/>
+/// Note that the `first_vertex` and `first_instance` parameters are NOT<br/>
+/// compatible with built-in vertex/instance ID variables in shaders (for<br/>
+/// example, SV_VertexID). If your shader depends on these variables, the<br/>
+/// correlating draw call parameter MUST be 0.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_DrawGPUPrimitivesIndirect
+/// </summary>
 public partial struct SDL_GPUIndirectDrawCommand
 {
+	/// <summary>
+	/// The number of vertices to draw.
+	/// </summary>
 	public uint num_vertices;
+	/// <summary>
+	/// The number of instances to draw.
+	/// </summary>
 	public uint num_instances;
+	/// <summary>
+	/// The index of the first vertex to draw.
+	/// </summary>
 	public uint first_vertex;
+	/// <summary>
+	/// The ID of the first instance to draw.
+	/// </summary>
 	public uint first_instance;
 }
 
+/// <summary>
+/// A structure specifying the parameters of an indexed indirect draw command.<br/>
+/// Note that the `first_vertex` and `first_instance` parameters are NOT<br/>
+/// compatible with built-in vertex/instance ID variables in shaders (for<br/>
+/// example, SV_VertexID). If your shader depends on these variables, the<br/>
+/// correlating draw call parameter MUST be 0.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_DrawGPUIndexedPrimitivesIndirect
+/// </summary>
 public partial struct SDL_GPUIndexedIndirectDrawCommand
 {
+	/// <summary>
+	/// The number of indices to draw per instance.
+	/// </summary>
 	public uint num_indices;
+	/// <summary>
+	/// The number of instances to draw.
+	/// </summary>
 	public uint num_instances;
+	/// <summary>
+	/// The base index within the index buffer.
+	/// </summary>
 	public uint first_index;
+	/// <summary>
+	/// The value added to the vertex index before indexing into the vertex buffer.
+	/// </summary>
 	public int vertex_offset;
+	/// <summary>
+	/// The ID of the first instance to draw.
+	/// </summary>
 	public uint first_instance;
 }
 
+/// <summary>
+/// A structure specifying the parameters of an indexed dispatch command.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_DispatchGPUComputeIndirect
+/// </summary>
 public partial struct SDL_GPUIndirectDispatchCommand
 {
+	/// <summary>
+	/// The number of local workgroups to dispatch in the X dimension.
+	/// </summary>
 	public uint groupcount_x;
+	/// <summary>
+	/// The number of local workgroups to dispatch in the Y dimension.
+	/// </summary>
 	public uint groupcount_y;
+	/// <summary>
+	/// The number of local workgroups to dispatch in the Z dimension.
+	/// </summary>
 	public uint groupcount_z;
 }
 
+/// <summary>
+/// A structure specifying the parameters of a sampler.<br/>
+/// <br/>
+/// @since This function is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUSampler
+/// </summary>
 public partial struct SDL_GPUSamplerCreateInfo
 {
+	/// <summary>
+	/// The minification filter to apply to lookups.
+	/// </summary>
 	public SDL_GPUFilter min_filter;
+	/// <summary>
+	/// The magnification filter to apply to lookups.
+	/// </summary>
 	public SDL_GPUFilter mag_filter;
+	/// <summary>
+	/// The mipmap filter to apply to lookups.
+	/// </summary>
 	public SDL_GPUSamplerMipmapMode mipmap_mode;
+	/// <summary>
+	/// The addressing mode for U coordinates outside [0, 1).
+	/// </summary>
 	public SDL_GPUSamplerAddressMode address_mode_u;
+	/// <summary>
+	/// The addressing mode for V coordinates outside [0, 1).
+	/// </summary>
 	public SDL_GPUSamplerAddressMode address_mode_v;
+	/// <summary>
+	/// The addressing mode for W coordinates outside [0, 1).
+	/// </summary>
 	public SDL_GPUSamplerAddressMode address_mode_w;
+	/// <summary>
+	/// The bias to be added to mipmap LOD calculation.
+	/// </summary>
 	public float mip_lod_bias;
+	/// <summary>
+	/// The anisotropy value clamp used by the sampler. If enable_anisotropy is false, this is ignored.
+	/// </summary>
 	public float max_anisotropy;
+	/// <summary>
+	/// The comparison operator to apply to fetched data before filtering.
+	/// </summary>
 	public SDL_GPUCompareOp compare_op;
+	/// <summary>
+	/// Clamps the minimum of the computed LOD value.
+	/// </summary>
 	public float min_lod;
+	/// <summary>
+	/// Clamps the maximum of the computed LOD value.
+	/// </summary>
 	public float max_lod;
+	/// <summary>
+	/// true to enable anisotropic filtering.
+	/// </summary>
 	public bool enable_anisotropy;
+	/// <summary>
+	/// true to enable comparison against a reference value during lookups.
+	/// </summary>
 	public bool enable_compare;
 	public byte padding1;
 	public byte padding2;
+	/// <summary>
+	/// A properties ID for extensions. Should be 0 if no extensions are needed.
+	/// </summary>
 	public SDL_PropertiesID props;
 }
 
+/// <summary>
+/// A structure specifying the parameters of vertex buffers used in a graphics<br/>
+/// pipeline.<br/>
+/// When you call SDL_BindGPUVertexBuffers, you specify the binding slots of<br/>
+/// the vertex buffers. For example if you called SDL_BindGPUVertexBuffers with<br/>
+/// a first_slot of 2 and num_bindings of 3, the binding slots 2, 3, 4 would be<br/>
+/// used by the vertex buffers you pass in.<br/>
+/// Vertex attributes are linked to buffers via the buffer_slot field of<br/>
+/// SDL_GPUVertexAttribute. For example, if an attribute has a buffer_slot of<br/>
+/// 0, then that attribute belongs to the vertex buffer bound at slot 0.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_GPUVertexAttribute<br/>
+/// @sa SDL_GPUVertexInputState
+/// </summary>
 public partial struct SDL_GPUVertexBufferDescription
 {
+	/// <summary>
+	/// The binding slot of the vertex buffer.
+	/// </summary>
 	public uint slot;
+	/// <summary>
+	/// The byte pitch between consecutive elements of the vertex buffer.
+	/// </summary>
 	public uint pitch;
+	/// <summary>
+	/// Whether attribute addressing is a function of the vertex index or instance index.
+	/// </summary>
 	public SDL_GPUVertexInputRate input_rate;
+	/// <summary>
+	/// The number of instances to draw using the same per-instance data before advancing in the instance buffer by one element. Ignored unless input_rate is SDL_GPU_VERTEXINPUTRATE_INSTANCE
+	/// </summary>
 	public uint instance_step_rate;
 }
 
+/// <summary>
+/// A structure specifying a vertex attribute.<br/>
+/// All vertex attribute locations provided to an SDL_GPUVertexInputState must<br/>
+/// be unique.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_GPUVertexBufferDescription<br/>
+/// @sa SDL_GPUVertexInputState
+/// </summary>
 public partial struct SDL_GPUVertexAttribute
 {
+	/// <summary>
+	/// The shader input location index.
+	/// </summary>
 	public uint location;
+	/// <summary>
+	/// The binding slot of the associated vertex buffer.
+	/// </summary>
 	public uint buffer_slot;
+	/// <summary>
+	/// The size and type of the attribute data.
+	/// </summary>
 	public SDL_GPUVertexElementFormat format;
+	/// <summary>
+	/// The byte offset of this attribute relative to the start of the vertex element.
+	/// </summary>
 	public uint offset;
 }
 
+/// <summary>
+/// A structure specifying the parameters of a graphics pipeline vertex input<br/>
+/// state.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_GPUGraphicsPipelineCreateInfo
+/// </summary>
 public partial struct SDL_GPUVertexInputState
 {
+	/// <summary>
+	/// A pointer to an array of vertex buffer descriptions.
+	/// </summary>
 	public unsafe SDL_GPUVertexBufferDescription* vertex_buffer_descriptions;
+	/// <summary>
+	/// The number of vertex buffer descriptions in the above array.
+	/// </summary>
 	public uint num_vertex_buffers;
+	/// <summary>
+	/// A pointer to an array of vertex attribute descriptions.
+	/// </summary>
 	public unsafe SDL_GPUVertexAttribute* vertex_attributes;
+	/// <summary>
+	/// The number of vertex attribute descriptions in the above array.
+	/// </summary>
 	public uint num_vertex_attributes;
 }
 
+/// <summary>
+/// A structure specifying the stencil operation state of a graphics pipeline.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_GPUDepthStencilState
+/// </summary>
 public partial struct SDL_GPUStencilOpState
 {
+	/// <summary>
+	/// The action performed on samples that fail the stencil test.
+	/// </summary>
 	public SDL_GPUStencilOp fail_op;
+	/// <summary>
+	/// The action performed on samples that pass the depth and stencil tests.
+	/// </summary>
 	public SDL_GPUStencilOp pass_op;
+	/// <summary>
+	/// The action performed on samples that pass the stencil test and fail the depth test.
+	/// </summary>
 	public SDL_GPUStencilOp depth_fail_op;
+	/// <summary>
+	/// The comparison operator used in the stencil test.
+	/// </summary>
 	public SDL_GPUCompareOp compare_op;
 }
 
+/// <summary>
+/// A structure specifying the blend state of a color target.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_GPUColorTargetDescription
+/// </summary>
 public partial struct SDL_GPUColorTargetBlendState
 {
+	/// <summary>
+	/// The value to be multiplied by the source RGB value.
+	/// </summary>
 	public SDL_GPUBlendFactor src_color_blendfactor;
+	/// <summary>
+	/// The value to be multiplied by the destination RGB value.
+	/// </summary>
 	public SDL_GPUBlendFactor dst_color_blendfactor;
+	/// <summary>
+	/// The blend operation for the RGB components.
+	/// </summary>
 	public SDL_GPUBlendOp color_blend_op;
+	/// <summary>
+	/// The value to be multiplied by the source alpha.
+	/// </summary>
 	public SDL_GPUBlendFactor src_alpha_blendfactor;
+	/// <summary>
+	/// The value to be multiplied by the destination alpha.
+	/// </summary>
 	public SDL_GPUBlendFactor dst_alpha_blendfactor;
+	/// <summary>
+	/// The blend operation for the alpha component.
+	/// </summary>
 	public SDL_GPUBlendOp alpha_blend_op;
+	/// <summary>
+	/// A bitmask specifying which of the RGBA components are enabled for writing. Writes to all channels if enable_color_write_mask is false.
+	/// </summary>
 	public SDL_GPUColorComponentFlags color_write_mask;
+	/// <summary>
+	/// Whether blending is enabled for the color target.
+	/// </summary>
 	public bool enable_blend;
+	/// <summary>
+	/// Whether the color write mask is enabled.
+	/// </summary>
 	public bool enable_color_write_mask;
 	public byte padding1;
 	public byte padding2;
 }
 
+/// <summary>
+/// A structure specifying code and metadata for creating a shader object.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUShader
+/// </summary>
 public partial struct SDL_GPUShaderCreateInfo
 {
+	/// <summary>
+	/// The size in bytes of the code pointed to.
+	/// </summary>
 	public nuint code_size;
+	/// <summary>
+	/// A pointer to shader code.
+	/// </summary>
 	public unsafe byte* code;
+	/// <summary>
+	/// A pointer to a null-terminated UTF-8 string specifying the entry point function name for the shader.
+	/// </summary>
 	public unsafe byte* entrypoint;
+	/// <summary>
+	/// The format of the shader code.
+	/// </summary>
 	public SDL_GPUShaderFormat format;
+	/// <summary>
+	/// The stage the shader program corresponds to.
+	/// </summary>
 	public SDL_GPUShaderStage stage;
+	/// <summary>
+	/// The number of samplers defined in the shader.
+	/// </summary>
 	public uint num_samplers;
+	/// <summary>
+	/// The number of storage textures defined in the shader.
+	/// </summary>
 	public uint num_storage_textures;
+	/// <summary>
+	/// The number of storage buffers defined in the shader.
+	/// </summary>
 	public uint num_storage_buffers;
+	/// <summary>
+	/// The number of uniform buffers defined in the shader.
+	/// </summary>
 	public uint num_uniform_buffers;
+	/// <summary>
+	/// A properties ID for extensions. Should be 0 if no extensions are needed.
+	/// </summary>
 	public SDL_PropertiesID props;
 }
 
+/// <summary>
+/// A structure specifying the parameters of a texture.<br/>
+/// Usage flags can be bitwise OR'd together for combinations of usages. Note<br/>
+/// that certain usage combinations are invalid, for example SAMPLER and<br/>
+/// GRAPHICS_STORAGE.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUTexture
+/// </summary>
 public partial struct SDL_GPUTextureCreateInfo
 {
+	/// <summary>
+	/// The base dimensionality of the texture.
+	/// </summary>
 	public SDL_GPUTextureType type;
+	/// <summary>
+	/// The pixel format of the texture.
+	/// </summary>
 	public SDL_GPUTextureFormat format;
+	/// <summary>
+	/// How the texture is intended to be used by the client.
+	/// </summary>
 	public SDL_GPUTextureUsageFlags usage;
+	/// <summary>
+	/// The width of the texture.
+	/// </summary>
 	public uint width;
+	/// <summary>
+	/// The height of the texture.
+	/// </summary>
 	public uint height;
+	/// <summary>
+	/// The layer count or depth of the texture. This value is treated as a layer count on 2D array textures, and as a depth value on 3D textures.
+	/// </summary>
 	public uint layer_count_or_depth;
+	/// <summary>
+	/// The number of mip levels in the texture.
+	/// </summary>
 	public uint num_levels;
+	/// <summary>
+	/// The number of samples per texel. Only applies if the texture is used as a render target.
+	/// </summary>
 	public SDL_GPUSampleCount sample_count;
+	/// <summary>
+	/// A properties ID for extensions. Should be 0 if no extensions are needed.
+	/// </summary>
 	public SDL_PropertiesID props;
 }
 
+/// <summary>
+/// A structure specifying the parameters of a buffer.<br/>
+/// Usage flags can be bitwise OR'd together for combinations of usages. Note<br/>
+/// that certain combinations are invalid, for example VERTEX and INDEX.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUBuffer
+/// </summary>
 public partial struct SDL_GPUBufferCreateInfo
 {
+	/// <summary>
+	/// How the buffer is intended to be used by the client.
+	/// </summary>
 	public SDL_GPUBufferUsageFlags usage;
+	/// <summary>
+	/// The size in bytes of the buffer.
+	/// </summary>
 	public uint size;
+	/// <summary>
+	/// A properties ID for extensions. Should be 0 if no extensions are needed.
+	/// </summary>
 	public SDL_PropertiesID props;
 }
 
+/// <summary>
+/// A structure specifying the parameters of a transfer buffer.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUTransferBuffer
+/// </summary>
 public partial struct SDL_GPUTransferBufferCreateInfo
 {
+	/// <summary>
+	/// How the transfer buffer is intended to be used by the client.
+	/// </summary>
 	public SDL_GPUTransferBufferUsage usage;
+	/// <summary>
+	/// The size in bytes of the transfer buffer.
+	/// </summary>
 	public uint size;
+	/// <summary>
+	/// A properties ID for extensions. Should be 0 if no extensions are needed.
+	/// </summary>
 	public SDL_PropertiesID props;
 }
 
+/// <summary>
+/// A structure specifying the parameters of the graphics pipeline rasterizer<br/>
+/// state.<br/>
+/// NOTE: Some backend APIs (D3D11/12) will enable depth clamping even if<br/>
+/// enable_depth_clip is true. If you rely on this clamp+clip behavior,<br/>
+/// consider enabling depth clip and then manually clamping depth in your<br/>
+/// fragment shaders on Metal and Vulkan.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_GPUGraphicsPipelineCreateInfo
+/// </summary>
 public partial struct SDL_GPURasterizerState
 {
+	/// <summary>
+	/// Whether polygons will be filled in or drawn as lines.
+	/// </summary>
 	public SDL_GPUFillMode fill_mode;
+	/// <summary>
+	/// The facing direction in which triangles will be culled.
+	/// </summary>
 	public SDL_GPUCullMode cull_mode;
+	/// <summary>
+	/// The vertex winding that will cause a triangle to be determined as front-facing.
+	/// </summary>
 	public SDL_GPUFrontFace front_face;
+	/// <summary>
+	/// A scalar factor controlling the depth value added to each fragment.
+	/// </summary>
 	public float depth_bias_constant_factor;
+	/// <summary>
+	/// The maximum depth bias of a fragment.
+	/// </summary>
 	public float depth_bias_clamp;
+	/// <summary>
+	/// A scalar factor applied to a fragment's slope in depth calculations.
+	/// </summary>
 	public float depth_bias_slope_factor;
+	/// <summary>
+	/// true to bias fragment depth values.
+	/// </summary>
 	public bool enable_depth_bias;
+	/// <summary>
+	/// true to enable depth clip, false to enable depth clamp.
+	/// </summary>
 	public bool enable_depth_clip;
 	public byte padding1;
 	public byte padding2;
 }
 
+/// <summary>
+/// A structure specifying the parameters of the graphics pipeline multisample<br/>
+/// state.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_GPUGraphicsPipelineCreateInfo
+/// </summary>
 public partial struct SDL_GPUMultisampleState
 {
+	/// <summary>
+	/// The number of samples to be used in rasterization.
+	/// </summary>
 	public SDL_GPUSampleCount sample_count;
+	/// <summary>
+	/// Determines which samples get updated in the render targets. Treated as 0xFFFFFFFF if enable_mask is false.
+	/// </summary>
 	public uint sample_mask;
+	/// <summary>
+	/// Enables sample masking.
+	/// </summary>
 	public bool enable_mask;
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;
 }
 
+/// <summary>
+/// A structure specifying the parameters of the graphics pipeline depth<br/>
+/// stencil state.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_GPUGraphicsPipelineCreateInfo
+/// </summary>
 public partial struct SDL_GPUDepthStencilState
 {
+	/// <summary>
+	/// The comparison operator used for depth testing.
+	/// </summary>
 	public SDL_GPUCompareOp compare_op;
+	/// <summary>
+	/// The stencil op state for back-facing triangles.
+	/// </summary>
 	public SDL_GPUStencilOpState back_stencil_state;
+	/// <summary>
+	/// The stencil op state for front-facing triangles.
+	/// </summary>
 	public SDL_GPUStencilOpState front_stencil_state;
+	/// <summary>
+	/// Selects the bits of the stencil values participating in the stencil test.
+	/// </summary>
 	public byte compare_mask;
+	/// <summary>
+	/// Selects the bits of the stencil values updated by the stencil test.
+	/// </summary>
 	public byte write_mask;
+	/// <summary>
+	/// true enables the depth test.
+	/// </summary>
 	public bool enable_depth_test;
+	/// <summary>
+	/// true enables depth writes. Depth writes are always disabled when enable_depth_test is false.
+	/// </summary>
 	public bool enable_depth_write;
+	/// <summary>
+	/// true enables the stencil test.
+	/// </summary>
 	public bool enable_stencil_test;
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;
 }
 
+/// <summary>
+/// A structure specifying the parameters of color targets used in a graphics<br/>
+/// pipeline.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_GPUGraphicsPipelineTargetInfo
+/// </summary>
 public partial struct SDL_GPUColorTargetDescription
 {
+	/// <summary>
+	/// The pixel format of the texture to be used as a color target.
+	/// </summary>
 	public SDL_GPUTextureFormat format;
+	/// <summary>
+	/// The blend state to be used for the color target.
+	/// </summary>
 	public SDL_GPUColorTargetBlendState blend_state;
 }
 
+/// <summary>
+/// A structure specifying the descriptions of render targets used in a<br/>
+/// graphics pipeline.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_GPUGraphicsPipelineCreateInfo
+/// </summary>
 public partial struct SDL_GPUGraphicsPipelineTargetInfo
 {
+	/// <summary>
+	/// A pointer to an array of color target descriptions.
+	/// </summary>
 	public unsafe SDL_GPUColorTargetDescription* color_target_descriptions;
+	/// <summary>
+	/// The number of color target descriptions in the above array.
+	/// </summary>
 	public uint num_color_targets;
+	/// <summary>
+	/// The pixel format of the depth-stencil target. Ignored if has_depth_stencil_target is false.
+	/// </summary>
 	public SDL_GPUTextureFormat depth_stencil_format;
+	/// <summary>
+	/// true specifies that the pipeline uses a depth-stencil target.
+	/// </summary>
 	public bool has_depth_stencil_target;
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;
 }
 
+/// <summary>
+/// A structure specifying the parameters of a graphics pipeline state.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUGraphicsPipeline
+/// </summary>
 public partial struct SDL_GPUGraphicsPipelineCreateInfo
 {
+	/// <summary>
+	/// The vertex shader used by the graphics pipeline.
+	/// </summary>
 	public SDL_GPUShader vertex_shader;
+	/// <summary>
+	/// The fragment shader used by the graphics pipeline.
+	/// </summary>
 	public SDL_GPUShader fragment_shader;
+	/// <summary>
+	/// The vertex layout of the graphics pipeline.
+	/// </summary>
 	public SDL_GPUVertexInputState vertex_input_state;
+	/// <summary>
+	/// The primitive topology of the graphics pipeline.
+	/// </summary>
 	public SDL_GPUPrimitiveType primitive_type;
+	/// <summary>
+	/// The rasterizer state of the graphics pipeline.
+	/// </summary>
 	public SDL_GPURasterizerState rasterizer_state;
+	/// <summary>
+	/// The multisample state of the graphics pipeline.
+	/// </summary>
 	public SDL_GPUMultisampleState multisample_state;
+	/// <summary>
+	/// The depth-stencil state of the graphics pipeline.
+	/// </summary>
 	public SDL_GPUDepthStencilState depth_stencil_state;
+	/// <summary>
+	/// Formats and blend modes for the render targets of the graphics pipeline.
+	/// </summary>
 	public SDL_GPUGraphicsPipelineTargetInfo target_info;
+	/// <summary>
+	/// A properties ID for extensions. Should be 0 if no extensions are needed.
+	/// </summary>
 	public SDL_PropertiesID props;
 }
 
+/// <summary>
+/// A structure specifying the parameters of a compute pipeline state.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_CreateGPUComputePipeline
+/// </summary>
 public partial struct SDL_GPUComputePipelineCreateInfo
 {
+	/// <summary>
+	/// The size in bytes of the compute shader code pointed to.
+	/// </summary>
 	public nuint code_size;
+	/// <summary>
+	/// A pointer to compute shader code.
+	/// </summary>
 	public unsafe byte* code;
+	/// <summary>
+	/// A pointer to a null-terminated UTF-8 string specifying the entry point function name for the shader.
+	/// </summary>
 	public unsafe byte* entrypoint;
+	/// <summary>
+	/// The format of the compute shader code.
+	/// </summary>
 	public SDL_GPUShaderFormat format;
+	/// <summary>
+	/// The number of samplers defined in the shader.
+	/// </summary>
 	public uint num_samplers;
+	/// <summary>
+	/// The number of readonly storage textures defined in the shader.
+	/// </summary>
 	public uint num_readonly_storage_textures;
+	/// <summary>
+	/// The number of readonly storage buffers defined in the shader.
+	/// </summary>
 	public uint num_readonly_storage_buffers;
+	/// <summary>
+	/// The number of read-write storage textures defined in the shader.
+	/// </summary>
 	public uint num_readwrite_storage_textures;
+	/// <summary>
+	/// The number of read-write storage buffers defined in the shader.
+	/// </summary>
 	public uint num_readwrite_storage_buffers;
+	/// <summary>
+	/// The number of uniform buffers defined in the shader.
+	/// </summary>
 	public uint num_uniform_buffers;
+	/// <summary>
+	/// The number of threads in the X dimension. This should match the value in the shader.
+	/// </summary>
 	public uint threadcount_x;
+	/// <summary>
+	/// The number of threads in the Y dimension. This should match the value in the shader.
+	/// </summary>
 	public uint threadcount_y;
+	/// <summary>
+	/// The number of threads in the Z dimension. This should match the value in the shader.
+	/// </summary>
 	public uint threadcount_z;
+	/// <summary>
+	/// A properties ID for extensions. Should be 0 if no extensions are needed.
+	/// </summary>
 	public SDL_PropertiesID props;
 }
 
+/// <summary>
+/// A structure specifying the parameters of a color target used by a render<br/>
+/// pass.<br/>
+/// The load_op field determines what is done with the texture at the beginning<br/>
+/// of the render pass.<br/>
+/// - LOAD: Loads the data currently in the texture. Not recommended for<br/>
+/// multisample textures as it requires significant memory bandwidth.<br/>
+/// - CLEAR: Clears the texture to a single color.<br/>
+/// - DONT_CARE: The driver will do whatever it wants with the texture memory.<br/>
+/// This is a good option if you know that every single pixel will be touched<br/>
+/// in the render pass.<br/>
+/// The store_op field determines what is done with the color results of the<br/>
+/// render pass.<br/>
+/// - STORE: Stores the results of the render pass in the texture. Not<br/>
+/// recommended for multisample textures as it requires significant memory<br/>
+/// bandwidth.<br/>
+/// - DONT_CARE: The driver will do whatever it wants with the texture memory.<br/>
+/// This is often a good option for depth/stencil textures.<br/>
+/// - RESOLVE: Resolves a multisample texture into resolve_texture, which must<br/>
+/// have a sample count of 1. Then the driver may discard the multisample<br/>
+/// texture memory. This is the most performant method of resolving a<br/>
+/// multisample target.<br/>
+/// - RESOLVE_AND_STORE: Resolves a multisample texture into the<br/>
+/// resolve_texture, which must have a sample count of 1. Then the driver<br/>
+/// stores the multisample texture's contents. Not recommended as it requires<br/>
+/// significant memory bandwidth.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_BeginGPURenderPass
+/// </summary>
 public partial struct SDL_GPUColorTargetInfo
 {
+	/// <summary>
+	/// The texture that will be used as a color target by a render pass.
+	/// </summary>
 	public SDL_GPUTexture texture;
+	/// <summary>
+	/// The mip level to use as a color target.
+	/// </summary>
 	public uint mip_level;
+	/// <summary>
+	/// The layer index or depth plane to use as a color target. This value is treated as a layer index on 2D array and cube textures, and as a depth plane on 3D textures.
+	/// </summary>
 	public uint layer_or_depth_plane;
+	/// <summary>
+	/// The color to clear the color target to at the start of the render pass. Ignored if SDL_GPU_LOADOP_CLEAR is not used.
+	/// </summary>
 	public SDL_FColor clear_color;
+	/// <summary>
+	/// What is done with the contents of the color target at the beginning of the render pass.
+	/// </summary>
 	public SDL_GPULoadOp load_op;
+	/// <summary>
+	/// What is done with the results of the render pass.
+	/// </summary>
 	public SDL_GPUStoreOp store_op;
+	/// <summary>
+	/// The texture that will receive the results of a multisample resolve operation. Ignored if a RESOLVE* store_op is not used.
+	/// </summary>
 	public SDL_GPUTexture resolve_texture;
+	/// <summary>
+	/// The mip level of the resolve texture to use for the resolve operation. Ignored if a RESOLVE* store_op is not used.
+	/// </summary>
 	public uint resolve_mip_level;
+	/// <summary>
+	/// The layer index of the resolve texture to use for the resolve operation. Ignored if a RESOLVE* store_op is not used.
+	/// </summary>
 	public uint resolve_layer;
+	/// <summary>
+	/// true cycles the texture if the texture is bound and load_op is not LOAD
+	/// </summary>
 	public bool cycle;
+	/// <summary>
+	/// true cycles the resolve texture if the resolve texture is bound. Ignored if a RESOLVE* store_op is not used.
+	/// </summary>
 	public bool cycle_resolve_texture;
 	public byte padding1;
 	public byte padding2;
 }
 
+/// <summary>
+/// A structure specifying the parameters of a depth-stencil target used by a<br/>
+/// render pass.<br/>
+/// The load_op field determines what is done with the depth contents of the<br/>
+/// texture at the beginning of the render pass.<br/>
+/// - LOAD: Loads the depth values currently in the texture.<br/>
+/// - CLEAR: Clears the texture to a single depth.<br/>
+/// - DONT_CARE: The driver will do whatever it wants with the memory. This is<br/>
+/// a good option if you know that every single pixel will be touched in the<br/>
+/// render pass.<br/>
+/// The store_op field determines what is done with the depth results of the<br/>
+/// render pass.<br/>
+/// - STORE: Stores the depth results in the texture.<br/>
+/// - DONT_CARE: The driver will do whatever it wants with the depth results.<br/>
+/// This is often a good option for depth/stencil textures that don't need to<br/>
+/// be reused again.<br/>
+/// The stencil_load_op field determines what is done with the stencil contents<br/>
+/// of the texture at the beginning of the render pass.<br/>
+/// - LOAD: Loads the stencil values currently in the texture.<br/>
+/// - CLEAR: Clears the stencil values to a single value.<br/>
+/// - DONT_CARE: The driver will do whatever it wants with the memory. This is<br/>
+/// a good option if you know that every single pixel will be touched in the<br/>
+/// render pass.<br/>
+/// The stencil_store_op field determines what is done with the stencil results<br/>
+/// of the render pass.<br/>
+/// - STORE: Stores the stencil results in the texture.<br/>
+/// - DONT_CARE: The driver will do whatever it wants with the stencil results.<br/>
+/// This is often a good option for depth/stencil textures that don't need to<br/>
+/// be reused again.<br/>
+/// Note that depth/stencil targets do not support multisample resolves.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_BeginGPURenderPass
+/// </summary>
 public partial struct SDL_GPUDepthStencilTargetInfo
 {
+	/// <summary>
+	/// The texture that will be used as the depth stencil target by the render pass.
+	/// </summary>
 	public SDL_GPUTexture texture;
+	/// <summary>
+	/// The value to clear the depth component to at the beginning of the render pass. Ignored if SDL_GPU_LOADOP_CLEAR is not used.
+	/// </summary>
 	public float clear_depth;
+	/// <summary>
+	/// What is done with the depth contents at the beginning of the render pass.
+	/// </summary>
 	public SDL_GPULoadOp load_op;
+	/// <summary>
+	/// What is done with the depth results of the render pass.
+	/// </summary>
 	public SDL_GPUStoreOp store_op;
+	/// <summary>
+	/// What is done with the stencil contents at the beginning of the render pass.
+	/// </summary>
 	public SDL_GPULoadOp stencil_load_op;
+	/// <summary>
+	/// What is done with the stencil results of the render pass.
+	/// </summary>
 	public SDL_GPUStoreOp stencil_store_op;
+	/// <summary>
+	/// true cycles the texture if the texture is bound and any load ops are not LOAD
+	/// </summary>
 	public bool cycle;
+	/// <summary>
+	/// The value to clear the stencil component to at the beginning of the render pass. Ignored if SDL_GPU_LOADOP_CLEAR is not used.
+	/// </summary>
 	public byte clear_stencil;
 	public byte padding1;
 	public byte padding2;
 }
 
+/// <summary>
+/// A structure containing parameters for a blit command.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_BlitGPUTexture
+/// </summary>
 public partial struct SDL_GPUBlitInfo
 {
+	/// <summary>
+	/// The source region for the blit.
+	/// </summary>
 	public SDL_GPUBlitRegion source;
+	/// <summary>
+	/// The destination region for the blit.
+	/// </summary>
 	public SDL_GPUBlitRegion destination;
+	/// <summary>
+	/// What is done with the contents of the destination before the blit.
+	/// </summary>
 	public SDL_GPULoadOp load_op;
+	/// <summary>
+	/// The color to clear the destination region to before the blit. Ignored if load_op is not SDL_GPU_LOADOP_CLEAR.
+	/// </summary>
 	public SDL_FColor clear_color;
+	/// <summary>
+	/// The flip mode for the source region.
+	/// </summary>
 	public SDL_FlipMode flip_mode;
+	/// <summary>
+	/// The filter mode used when blitting.
+	/// </summary>
 	public SDL_GPUFilter filter;
+	/// <summary>
+	/// true cycles the destination texture if it is already bound.
+	/// </summary>
 	public bool cycle;
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;
 }
 
+/// <summary>
+/// A structure specifying parameters in a buffer binding call.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_BindGPUVertexBuffers<br/>
+/// @sa SDL_BindGPUIndexBuffers
+/// </summary>
 public partial struct SDL_GPUBufferBinding
 {
+	/// <summary>
+	/// The buffer to bind. Must have been created with SDL_GPU_BUFFERUSAGE_VERTEX for SDL_BindGPUVertexBuffers, or SDL_GPU_BUFFERUSAGE_INDEX for SDL_BindGPUIndexBuffers.
+	/// </summary>
 	public SDL_GPUBuffer buffer;
+	/// <summary>
+	/// The starting byte of the data to bind in the buffer.
+	/// </summary>
 	public uint offset;
 }
 
+/// <summary>
+/// A structure specifying parameters in a sampler binding call.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_BindGPUVertexSamplers<br/>
+/// @sa SDL_BindGPUFragmentSamplers
+/// </summary>
 public partial struct SDL_GPUTextureSamplerBinding
 {
+	/// <summary>
+	/// The texture to bind. Must have been created with SDL_GPU_TEXTUREUSAGE_SAMPLER.
+	/// </summary>
 	public SDL_GPUTexture texture;
+	/// <summary>
+	/// The sampler to bind.
+	/// </summary>
 	public SDL_GPUSampler sampler;
 }
 
+/// <summary>
+/// A structure specifying parameters related to binding buffers in a compute<br/>
+/// pass.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_BeginGPUComputePass
+/// </summary>
 public partial struct SDL_GPUStorageBufferReadWriteBinding
 {
+	/// <summary>
+	/// The buffer to bind. Must have been created with SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_WRITE.
+	/// </summary>
 	public SDL_GPUBuffer buffer;
+	/// <summary>
+	/// true cycles the buffer if it is already bound.
+	/// </summary>
 	public bool cycle;
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;
 }
 
+/// <summary>
+/// A structure specifying parameters related to binding textures in a compute<br/>
+/// pass.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.0.0<br/>
+/// <br/>
+/// @sa SDL_BeginGPUComputePass
+/// </summary>
 public partial struct SDL_GPUStorageTextureReadWriteBinding
 {
+	/// <summary>
+	/// The texture to bind. Must have been created with SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_WRITE or SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_SIMULTANEOUS_READ_WRITE.
+	/// </summary>
 	public SDL_GPUTexture texture;
+	/// <summary>
+	/// The mip level index to bind.
+	/// </summary>
 	public uint mip_level;
+	/// <summary>
+	/// The layer index to bind.
+	/// </summary>
 	public uint layer;
+	/// <summary>
+	/// true cycles the texture if it is already bound.
+	/// </summary>
 	public bool cycle;
 	public byte padding1;
 	public byte padding2;

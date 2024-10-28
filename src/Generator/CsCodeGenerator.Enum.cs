@@ -254,7 +254,7 @@ partial class CsCodeGenerator
                 cppEnum.Name == "SDL_GLContextResetNotification" ||
                 cppEnum.Name == "SDL_BlendMode";
 
-            writer.WriteComment(cppEnum?.Comment?.ChildrenToString() ?? null);
+            writer.WriteComment(cppEnum.Comment?.ChildrenToString() ?? string.Empty);
 
             if (isBitmask)
             {
@@ -311,7 +311,7 @@ partial class CsCodeGenerator
                         continue;
                     }
 
-                    writer.WriteComment(enumItem?.Comment?.ChildrenToString() ?? null);
+                    writer.WriteComment(enumItem.Comment?.ChildrenToString() ?? string.Empty);
 
                     if (enumItemName != "Count" && _options.EnumWriteUnmanagedTag)
                     {

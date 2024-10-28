@@ -190,6 +190,7 @@ public static unsafe partial class SDL3
         SDL_SetLogPriority((int)category, priority);
     }
 
+    /// <inheritdoc cref="SDL_SetLogOutputFunction(delegate* unmanaged{nint, int, SDL_LogPriority, byte*, void}, nint)" />
     public static void SDL_SetLogOutputFunction(SDL_LogOutputFunction? callback)
     {
         s_logCallback = callback;

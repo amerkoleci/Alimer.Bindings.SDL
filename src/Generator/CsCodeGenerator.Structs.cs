@@ -226,7 +226,13 @@ partial class CsCodeGenerator
 
                 string returnCsName = GetCsTypeName(functionType.ReturnType);
                 builder.Append(returnCsName);
-                writer.WriteLine($"public unsafe delegate* unmanaged<{builder}> {csFieldName};");
+                string callingConventionCall = string.Empty;
+                if (!string.IsNullOrEmpty(_options.CallingConvention))
+                {
+                    callingConventionCall = $"[{_options.CallingConvention}]";
+                }
+
+                writer.WriteLine($"public unsafe delegate* unmanaged{callingConventionCall}<{builder}> {csFieldName};");
                 return;
             }
 

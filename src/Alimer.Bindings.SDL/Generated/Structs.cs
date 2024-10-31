@@ -307,11 +307,11 @@ public partial struct SDL_KeyboardEvent
 	/// <summary>
 	/// true if the key is pressed
 	/// </summary>
-	public bool down;
+	public SDLBool down;
 	/// <summary>
 	/// true if this is a key repeat
 	/// </summary>
-	public bool repeat;
+	public SDLBool repeat;
 }
 
 /// <summary>
@@ -386,7 +386,7 @@ public partial struct SDL_TextEditingCandidatesEvent
 	/// <summary>
 	/// true if the list is horizontal, false if it's vertical
 	/// </summary>
-	public bool horizontal;
+	public SDLBool horizontal;
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;
@@ -522,7 +522,7 @@ public partial struct SDL_MouseButtonEvent
 	/// <summary>
 	/// true if the button is pressed
 	/// </summary>
-	public bool down;
+	public SDLBool down;
 	/// <summary>
 	/// 1 for single-click, 2 for double-click, etc.
 	/// </summary>
@@ -719,7 +719,7 @@ public partial struct SDL_JoyButtonEvent
 	/// <summary>
 	/// true if the button is pressed
 	/// </summary>
-	public bool down;
+	public SDLBool down;
 	public byte padding1;
 	public byte padding2;
 }
@@ -837,7 +837,7 @@ public partial struct SDL_GamepadButtonEvent
 	/// <summary>
 	/// true if the button is pressed
 	/// </summary>
-	public bool down;
+	public SDLBool down;
 	public byte padding1;
 	public byte padding2;
 }
@@ -963,7 +963,7 @@ public partial struct SDL_AudioDeviceEvent
 	/// <summary>
 	/// false if a playback device, true if a recording device.
 	/// </summary>
-	public bool recording;
+	public SDLBool recording;
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;
@@ -1158,11 +1158,11 @@ public partial struct SDL_PenTouchEvent
 	/// <summary>
 	/// true if eraser end is used (not all pens support this).
 	/// </summary>
-	public bool eraser;
+	public SDLBool eraser;
 	/// <summary>
 	/// true if the pen is touching or false if the pen is lifted off
 	/// </summary>
-	public bool down;
+	public SDLBool down;
 }
 
 /// <summary>
@@ -1210,7 +1210,7 @@ public partial struct SDL_PenButtonEvent
 	/// <summary>
 	/// true if the button is pressed
 	/// </summary>
-	public bool down;
+	public SDLBool down;
 }
 
 /// <summary>
@@ -2491,14 +2491,14 @@ public partial struct SDL_IOStreamInterface
 	/// <br/>
 	/// @return the total size of the data stream, or -1 on error.
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, long> size;
+	public unsafe delegate* unmanaged[Cdecl]<nint, long> size;
 	/// <summary>
 	/// Seek to `offset` relative to `whence`, one of stdio's whence values:<br/>
 	/// SDL_IO_SEEK_SET, SDL_IO_SEEK_CUR, SDL_IO_SEEK_END<br/>
 	/// <br/>
 	/// @return the final offset in the data stream, or -1 on error.
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, long, SDL_IOWhence, long> seek;
+	public unsafe delegate* unmanaged[Cdecl]<nint, long, SDL_IOWhence, long> seek;
 	/// <summary>
 	/// Read up to `size` bytes from the data stream to the area pointed<br/>
 	/// at by `ptr`.<br/>
@@ -2508,7 +2508,7 @@ public partial struct SDL_IOStreamInterface
 	/// <br/>
 	/// @return the number of bytes read
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, nint, nuint, SDL_IOStatus*, nuint> read;
+	public unsafe delegate* unmanaged[Cdecl]<nint, nint, nuint, SDL_IOStatus*, nuint> read;
 	/// <summary>
 	/// Write exactly `size` bytes from the area pointed at by `ptr`<br/>
 	/// to data stream.<br/>
@@ -2518,7 +2518,7 @@ public partial struct SDL_IOStreamInterface
 	/// <br/>
 	/// @return the number of bytes written
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, nint, nuint, SDL_IOStatus*, nuint> write;
+	public unsafe delegate* unmanaged[Cdecl]<nint, nint, nuint, SDL_IOStatus*, nuint> write;
 	/// <summary>
 	/// If the stream is buffering, make sure the data is written out.<br/>
 	/// On failure, you should set `*status` to a value from the<br/>
@@ -2527,7 +2527,7 @@ public partial struct SDL_IOStreamInterface
 	/// <br/>
 	/// @return true if successful or false on write error when flushing data.
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, SDL_IOStatus*, bool> flush;
+	public unsafe delegate* unmanaged[Cdecl]<nint, SDL_IOStatus*, SDLBool> flush;
 	/// <summary>
 	/// Close and free any allocated resources.<br/>
 	/// This does not guarantee file writes will sync to physical media; they<br/>
@@ -2537,7 +2537,7 @@ public partial struct SDL_IOStreamInterface
 	/// <br/>
 	/// @return true if successful or false on write error when flushing data.
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, bool> close;
+	public unsafe delegate* unmanaged[Cdecl]<nint, SDLBool> close;
 }
 
 /// <summary>
@@ -2672,35 +2672,35 @@ public partial struct SDL_VirtualJoystickDesc
 	/// <summary>
 	/// Called when the joystick state should be updated
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, void> Update;
+	public unsafe delegate* unmanaged[Cdecl]<nint, void> Update;
 	/// <summary>
 	/// Called when the player index is set
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, int, void> SetPlayerIndex;
+	public unsafe delegate* unmanaged[Cdecl]<nint, int, void> SetPlayerIndex;
 	/// <summary>
 	/// Implements SDL_RumbleJoystick()
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, ushort, ushort, bool> Rumble;
+	public unsafe delegate* unmanaged[Cdecl]<nint, ushort, ushort, SDLBool> Rumble;
 	/// <summary>
 	/// Implements SDL_RumbleJoystickTriggers()
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, ushort, ushort, bool> RumbleTriggers;
+	public unsafe delegate* unmanaged[Cdecl]<nint, ushort, ushort, SDLBool> RumbleTriggers;
 	/// <summary>
 	/// Implements SDL_SetJoystickLED()
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, byte, byte, byte, bool> SetLED;
+	public unsafe delegate* unmanaged[Cdecl]<nint, byte, byte, byte, SDLBool> SetLED;
 	/// <summary>
 	/// Implements SDL_SendJoystickEffect()
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, nint, int, bool> SendEffect;
+	public unsafe delegate* unmanaged[Cdecl]<nint, nint, int, SDLBool> SendEffect;
 	/// <summary>
 	/// Implements SDL_SetGamepadSensorEnabled()
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, bool, bool> SetSensorsEnabled;
+	public unsafe delegate* unmanaged[Cdecl]<nint, SDLBool, SDLBool> SetSensorsEnabled;
 	/// <summary>
 	/// Cleans up the userdata when the joystick is detached
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, void> Cleanup;
+	public unsafe delegate* unmanaged[Cdecl]<nint, void> Cleanup;
 }
 
 /// <summary>
@@ -3118,47 +3118,47 @@ public partial struct SDL_StorageInterface
 	/// <summary>
 	/// Called when the storage is closed
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, bool> close;
+	public unsafe delegate* unmanaged[Cdecl]<nint, SDLBool> close;
 	/// <summary>
 	/// Optional, returns whether the storage is currently ready for access
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, bool> ready;
+	public unsafe delegate* unmanaged[Cdecl]<nint, SDLBool> ready;
 	/// <summary>
 	/// Enumerate a directory, optional for write-only storage
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, byte*, delegate* unmanaged<nint, byte*, byte*, SDL_EnumerationResult>*, nint, bool> enumerate;
+	public unsafe delegate* unmanaged[Cdecl]<nint, byte*, delegate* unmanaged[Cdecl]<nint, byte*, byte*, SDL_EnumerationResult>*, nint, SDLBool> enumerate;
 	/// <summary>
 	/// Get path information, optional for write-only storage
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, byte*, SDL_PathInfo*, bool> info;
+	public unsafe delegate* unmanaged[Cdecl]<nint, byte*, SDL_PathInfo*, SDLBool> info;
 	/// <summary>
 	/// Read a file from storage, optional for write-only storage
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, byte*, nint, ulong, bool> read_file;
+	public unsafe delegate* unmanaged[Cdecl]<nint, byte*, nint, ulong, SDLBool> read_file;
 	/// <summary>
 	/// Write a file to storage, optional for read-only storage
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, byte*, nint, ulong, bool> write_file;
+	public unsafe delegate* unmanaged[Cdecl]<nint, byte*, nint, ulong, SDLBool> write_file;
 	/// <summary>
 	/// Create a directory, optional for read-only storage
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, byte*, bool> mkdir;
+	public unsafe delegate* unmanaged[Cdecl]<nint, byte*, SDLBool> mkdir;
 	/// <summary>
 	/// Remove a file or empty directory, optional for read-only storage
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, byte*, bool> remove;
+	public unsafe delegate* unmanaged[Cdecl]<nint, byte*, SDLBool> remove;
 	/// <summary>
 	/// Rename a path, optional for read-only storage
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, byte*, byte*, bool> rename;
+	public unsafe delegate* unmanaged[Cdecl]<nint, byte*, byte*, SDLBool> rename;
 	/// <summary>
 	/// Copy a file, optional for read-only storage
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, byte*, byte*, bool> copy;
+	public unsafe delegate* unmanaged[Cdecl]<nint, byte*, byte*, SDLBool> copy;
 	/// <summary>
 	/// Get the space remaining, optional for read-only storage
 	/// </summary>
-	public unsafe delegate* unmanaged<nint, ulong> space_remaining;
+	public unsafe delegate* unmanaged[Cdecl]<nint, ulong> space_remaining;
 }
 
 /// <summary>
@@ -3741,11 +3741,11 @@ public partial struct SDL_GPUSamplerCreateInfo
 	/// <summary>
 	/// true to enable anisotropic filtering.
 	/// </summary>
-	public bool enable_anisotropy;
+	public SDLBool enable_anisotropy;
 	/// <summary>
 	/// true to enable comparison against a reference value during lookups.
 	/// </summary>
-	public bool enable_compare;
+	public SDLBool enable_compare;
 	public byte padding1;
 	public byte padding2;
 	/// <summary>
@@ -3915,11 +3915,11 @@ public partial struct SDL_GPUColorTargetBlendState
 	/// <summary>
 	/// Whether blending is enabled for the color target.
 	/// </summary>
-	public bool enable_blend;
+	public SDLBool enable_blend;
 	/// <summary>
 	/// Whether the color write mask is enabled.
 	/// </summary>
-	public bool enable_color_write_mask;
+	public SDLBool enable_color_write_mask;
 	public byte padding1;
 	public byte padding2;
 }
@@ -4114,11 +4114,11 @@ public partial struct SDL_GPURasterizerState
 	/// <summary>
 	/// true to bias fragment depth values.
 	/// </summary>
-	public bool enable_depth_bias;
+	public SDLBool enable_depth_bias;
 	/// <summary>
 	/// true to enable depth clip, false to enable depth clamp.
 	/// </summary>
-	public bool enable_depth_clip;
+	public SDLBool enable_depth_clip;
 	public byte padding1;
 	public byte padding2;
 }
@@ -4144,7 +4144,7 @@ public partial struct SDL_GPUMultisampleState
 	/// <summary>
 	/// Enables sample masking.
 	/// </summary>
-	public bool enable_mask;
+	public SDLBool enable_mask;
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;
@@ -4183,15 +4183,15 @@ public partial struct SDL_GPUDepthStencilState
 	/// <summary>
 	/// true enables the depth test.
 	/// </summary>
-	public bool enable_depth_test;
+	public SDLBool enable_depth_test;
 	/// <summary>
 	/// true enables depth writes. Depth writes are always disabled when enable_depth_test is false.
 	/// </summary>
-	public bool enable_depth_write;
+	public SDLBool enable_depth_write;
 	/// <summary>
 	/// true enables the stencil test.
 	/// </summary>
-	public bool enable_stencil_test;
+	public SDLBool enable_stencil_test;
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;
@@ -4242,7 +4242,7 @@ public partial struct SDL_GPUGraphicsPipelineTargetInfo
 	/// <summary>
 	/// true specifies that the pipeline uses a depth-stencil target.
 	/// </summary>
-	public bool has_depth_stencil_target;
+	public SDLBool has_depth_stencil_target;
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;
@@ -4434,11 +4434,11 @@ public partial struct SDL_GPUColorTargetInfo
 	/// <summary>
 	/// true cycles the texture if the texture is bound and load_op is not LOAD
 	/// </summary>
-	public bool cycle;
+	public SDLBool cycle;
 	/// <summary>
 	/// true cycles the resolve texture if the resolve texture is bound. Ignored if a RESOLVE* store_op is not used.
 	/// </summary>
-	public bool cycle_resolve_texture;
+	public SDLBool cycle_resolve_texture;
 	public byte padding1;
 	public byte padding2;
 }
@@ -4507,7 +4507,7 @@ public partial struct SDL_GPUDepthStencilTargetInfo
 	/// <summary>
 	/// true cycles the texture if the texture is bound and any load ops are not LOAD
 	/// </summary>
-	public bool cycle;
+	public SDLBool cycle;
 	/// <summary>
 	/// The value to clear the stencil component to at the beginning of the render pass. Ignored if SDL_GPU_LOADOP_CLEAR is not used.
 	/// </summary>
@@ -4552,7 +4552,7 @@ public partial struct SDL_GPUBlitInfo
 	/// <summary>
 	/// true cycles the destination texture if it is already bound.
 	/// </summary>
-	public bool cycle;
+	public SDLBool cycle;
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;
@@ -4615,7 +4615,7 @@ public partial struct SDL_GPUStorageBufferReadWriteBinding
 	/// <summary>
 	/// true cycles the buffer if it is already bound.
 	/// </summary>
-	public bool cycle;
+	public SDLBool cycle;
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;
@@ -4646,7 +4646,7 @@ public partial struct SDL_GPUStorageTextureReadWriteBinding
 	/// <summary>
 	/// true cycles the texture if it is already bound.
 	/// </summary>
-	public bool cycle;
+	public SDLBool cycle;
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;

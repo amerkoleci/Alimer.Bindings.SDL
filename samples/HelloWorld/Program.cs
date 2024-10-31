@@ -4,6 +4,8 @@
 using static SDL3.SDL3;
 using System.Drawing;
 using SDL3;
+using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace HelloWorld;
 
@@ -36,6 +38,8 @@ public static unsafe class Program
         {
             return;
         }
+
+        SDL_AddEventWatch(&eventWatch, 0);
 
         var test = SDL_GetGamepadMappings();
 
@@ -117,5 +121,11 @@ public static unsafe class Program
     private static void OnLog(SDL_LogCategory category, SDL_LogPriority priority, string? message)
     {
         Console.WriteLine($"SDL: {message}");
+    }
+
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+    private static SDLBool eventWatch(IntPtr userdata, SDL_Event* eventPtr)
+    {
+        return true;
     }
 }

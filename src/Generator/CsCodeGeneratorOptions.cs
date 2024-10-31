@@ -12,5 +12,7 @@ public sealed class CsCodeGeneratorOptions
     public bool EnumWriteUnmanagedTag { get; set; } = true;
     public bool GenerateCallbackTypes { get; set; }
     public bool MapCLongToIntPtr { get; set; }
-    public string BooleanMarshalType { get;set; } = "Bool";
+    public string CallingConvention { get; set; } = "Cdecl";
+    public string BooleanType { get; set; } = "SDLBool";
+    public string? BooleanMarshalType { get;set; }
 }

@@ -171,14 +171,14 @@ public static unsafe partial class SDL3
     public static partial nint SDL_free(void* mem);
 
     #region SDL_hints.h
-    public static bool SDL_SetHint(ReadOnlySpan<byte> name, bool value)
+    public static SDLBool SDL_SetHint(ReadOnlySpan<byte> name, bool value)
     {
         fixed (byte* pName = name)
         fixed (byte* pValue = (value ? "1"u8 : "0"u8))
             return SDL_SetHint(pName, pValue);
     }
 
-    public static bool SDL_SetHint(string name, bool value) => SDL_SetHint(name, value ? "1" : "0");
+    public static SDLBool SDL_SetHint(string name, bool value) => SDL_SetHint(name, value ? "1" : "0");
     #endregion
 
     #region SDL_log.h
@@ -198,7 +198,7 @@ public static unsafe partial class SDL3
         SDL_SetLogOutputFunction(callback != null ? &OnNativeMessageCallback : null, IntPtr.Zero);
     }
 
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe void OnNativeMessageCallback(nint userdata, int category, SDL_LogPriority priority, byte* messagePtr)
     {
         string? message = ConvertToManaged(messagePtr);
@@ -259,14 +259,13 @@ public static unsafe partial class SDL3
     [LibraryImport(LibName)]
     public static partial SDL_DisplayID SDL_GetDisplayForRect(in Rectangle rect);
 
-    public static bool SDL_GL_SetAttribute(SDL_GLattr attr, bool value) => SDL_GL_SetAttribute(attr, value ? 1 : 0);
+    public static SDLBool SDL_GL_SetAttribute(SDL_GLattr attr, bool value) => SDL_GL_SetAttribute(attr, value ? 1 : 0);
 
-    public static bool SDL_GL_SetAttribute(SDL_GLattr attr, SDL_GLprofile profile) => SDL_GL_SetAttribute(attr, (int)profile);
+    public static SDLBool SDL_GL_SetAttribute(SDL_GLattr attr, SDL_GLprofile profile) => SDL_GL_SetAttribute(attr, (int)profile);
     #endregion
 
     [LibraryImport(LibName, EntryPoint = "SDL_PollEvent")]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    public static partial bool SDL_PollEvent(out SDL_Event @event);
+    public static partial SDLBool SDL_PollEvent(out SDL_Event @event);
 
     public static int SDL_PeepEvents(SDL_Event[] events, SDL_EventAction action, SDL_EventType minType, SDL_EventType maxType)
     {
@@ -281,7 +280,7 @@ public static unsafe partial class SDL3
     }
 
     #region SDL_vulkan.h
-    public static bool SDL_Vulkan_LoadLibrary() => SDL_Vulkan_LoadLibrary((byte*)null);
+    public static SDLBool SDL_Vulkan_LoadLibrary() => SDL_Vulkan_LoadLibrary((byte*)null);
 
     public static string[] SDL_Vulkan_GetInstanceExtensions()
     {

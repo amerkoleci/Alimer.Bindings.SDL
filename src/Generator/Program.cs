@@ -37,7 +37,8 @@ public static class Program
             Namespace = "SDL3",
             PublicVisiblity = true,
             EnumWriteUnmanagedTag = true,
-            BooleanMarshalType = "U1",
+            CallingConvention = "Cdecl"
+            //BooleanMarshalType = "U1",
         };
 
         string sdlIncludePath = Path.Combine(AppContext.BaseDirectory, "include");
@@ -118,6 +119,7 @@ public static class Program
         foreach (string header in headers)
         {
             CppCompilation compilation = CppParser.ParseFile(header, options);
+            bool printOnlyErrors = true;
 
             // Print diagnostic messages
             // Null check added in case the Messages gets modified and being able to return null (which is not the case for now).
@@ -131,15 +133,19 @@ public static class Program
                     {
                         hadErrors = true;
                         Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"[{message.Type}] {message}");
+                        Console.ResetColor();
                     }
-                    else if (message.Type == CppLogMessageType.Warning)
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                    else if (message.Type == CppLogMessageType.Info)
-                        Console.ForegroundColor = ConsoleColor.White;
+                    else if (printOnlyErrors == false)
+                    {
+                        if (message.Type == CppLogMessageType.Warning)
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                        else if (message.Type == CppLogMessageType.Info)
+                            Console.ForegroundColor = ConsoleColor.White;
 
-                    Console.WriteLine($"[{message.Type}] {message}");
-
-                    Console.ResetColor();
+                        Console.WriteLine($"[{message.Type}] {message}");
+                        Console.ResetColor();
+                    }
                 }
 
                 if (hadErrors)

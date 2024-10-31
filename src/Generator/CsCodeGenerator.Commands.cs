@@ -144,8 +144,15 @@ partial class CsCodeGenerator
         writer.WriteLine($"[LibraryImport(LibName, EntryPoint = \"{cppFunction.Name}\")]");
         if (returnCsName == "SDL_bool" || returnCsName == "bool")
         {
-            writer.WriteLine($"[return: MarshalAs(UnmanagedType.{_options.BooleanMarshalType})]");
-            returnCsName = "bool";
+            if (string.IsNullOrEmpty(_options.BooleanMarshalType))
+            {
+                returnCsName = _options.BooleanType;
+            }
+            else
+            {
+                writer.WriteLine($"[return: MarshalAs(UnmanagedType.{_options.BooleanMarshalType})]");
+                returnCsName = "bool";
+            }
         }
         else if (IsString(cppFunction.ReturnType, out bool isConstString))
         {
@@ -295,8 +302,15 @@ partial class CsCodeGenerator
 
             if (paramCsTypeName == "SDL_bool" || paramCsTypeName == "bool")
             {
-                argumentBuilder.Append($"[MarshalAs(UnmanagedType.{_options.BooleanMarshalType})] ");
-                paramCsTypeName = "bool";
+                if (string.IsNullOrEmpty(_options.BooleanMarshalType))
+                {
+                    paramCsTypeName = _options.BooleanType;
+                }
+                else
+                {
+                    argumentBuilder.Append($"[MarshalAs(UnmanagedType.{_options.BooleanMarshalType})] ");
+                    paramCsTypeName = "bool";
+                }
             }
             else if (marshalString != MarshalStringType.None && IsString(cppParameter.Type, out _))
             {
@@ -338,7 +352,13 @@ partial class CsCodeGenerator
         string returnCsName = GetCsTypeName(functionType.ReturnType);
         builder.Append(returnCsName);
 
-        return $"delegate* unmanaged<{builder}>";
+        string callingConventionCall = string.Empty;
+        if (!string.IsNullOrEmpty(_options.CallingConvention))
+        {
+            callingConventionCall = $"[{_options.CallingConvention}]";
+        }
+
+        return $"delegate* unmanaged{callingConventionCall}<{builder}>";
     }
 
     private static string GetParameterName(string name)
@@ -356,34 +376,6 @@ partial class CsCodeGenerator
         }
 
         return name;
-    }
-
-    private static bool CanBeUsedAsOutput(CppType type, out CppTypeDeclaration? elementTypeDeclaration)
-    {
-        if (type is CppPointerType pointerType)
-        {
-            if (pointerType.ElementType is CppTypedef typedef)
-            {
-                elementTypeDeclaration = typedef;
-                return true;
-            }
-            else if (pointerType.ElementType is CppClass @class
-                && @class.ClassKind != CppClassKind.Class
-                && @class.SizeOf > 0)
-            {
-                elementTypeDeclaration = @class;
-                return true;
-            }
-            else if (pointerType.ElementType is CppEnum @enum
-                && @enum.SizeOf > 0)
-            {
-                elementTypeDeclaration = @enum;
-                return true;
-            }
-        }
-
-        elementTypeDeclaration = null;
-        return false;
     }
 
     private enum MarshalStringType

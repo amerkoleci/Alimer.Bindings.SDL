@@ -23,7 +23,7 @@ public partial class CsCodeGenerator
 
     private static readonly Dictionary<string, string> s_csNameMappings = new()
     {
-        { "bool", "bool" },
+        //{ "bool", "SDLBool" },
         { "Sint8", "sbyte" },
         { "uint8_t", "byte" },
         { "Uint8", "byte" },
@@ -220,7 +220,14 @@ public partial class CsCodeGenerator
 
             string returnCsName = GetCsTypeName(functionType.ReturnType);
             builder.Append(returnCsName);
-            return $"delegate* unmanaged<{builder}>";
+
+            string callingConventionCall = string.Empty;
+            if (!string.IsNullOrEmpty(_options.CallingConvention))
+            {
+                callingConventionCall = $"[{_options.CallingConvention}]";
+            }
+
+            return $"delegate* unmanaged{callingConventionCall}<{builder}>";
         }
 
         return string.Empty;
@@ -234,7 +241,7 @@ public partial class CsCodeGenerator
                 return "void";
 
             case CppPrimitiveKind.Bool:
-                return "bool";
+                return _options.BooleanType;
 
             case CppPrimitiveKind.Char:
                 return "byte";

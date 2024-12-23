@@ -46,14 +46,14 @@ public static unsafe class Program
         var vkGetInstanceProcAddr = SDL_Vulkan_GetVkGetInstanceProcAddr();
         string[] extensions = SDL_Vulkan_GetInstanceExtensions();
 
-        SDL_GL_SetAttribute(SDL_GLattr.ContextMajorVersion, 3);
-        SDL_GL_SetAttribute(SDL_GLattr.ContextMinorVersion, 3);
-        SDL_GL_SetAttribute(SDL_GLattr.ContextProfileMask, SDL_GLprofile.Core);
+        SDL_GL_SetAttribute(SDL_GLAttr.ContextMajorVersion, 3);
+        SDL_GL_SetAttribute(SDL_GLAttr.ContextMinorVersion, 3);
+        SDL_GL_SetAttribute(SDL_GLAttr.ContextProfileMask, SDL_GLProfile.Core);
         //SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); // Always required on Mac
 
-        SDL_GL_SetAttribute(SDL_GLattr.Doublebuffer, true);
-        SDL_GL_SetAttribute(SDL_GLattr.DepthSize, 24);
-        SDL_GL_SetAttribute(SDL_GLattr.StencilSize, 8);
+        SDL_GL_SetAttribute(SDL_GLAttr.Doublebuffer, true);
+        SDL_GL_SetAttribute(SDL_GLAttr.DepthSize, 24);
+        SDL_GL_SetAttribute(SDL_GLAttr.StencilSize, 8);
 
         // Enable native IME.
         SDL_SetHint(SDL_HINT_IME_IMPLEMENTED_UI, true);

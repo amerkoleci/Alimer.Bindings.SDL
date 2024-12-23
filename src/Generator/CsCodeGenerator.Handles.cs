@@ -48,6 +48,7 @@ partial class CsCodeGenerator
         "SDL_ThreadFunction",
         "SDL_MouseButtonFlags",
         "SDL_PenCapabilityFlags",
+        "SDL_GLContextFlag",
     };
 
     private readonly HashSet<string> _generatedPointerHandles = [];
@@ -124,11 +125,16 @@ partial class CsCodeGenerator
             if (csName.EndsWith("Flags")
                 || csName == "SDL_BlendMode"
                 || csName == "SDL_Keymod"
-                || csName == "SDL_GPUShaderFormat")
+                || csName == "SDL_GPUShaderFormat"
+                || csName == "SDL_GLProfile"
+                || csName == "SDL_GLContextFlag"
+                || csName == "SDL_GLContextReleaseFlag"
+                || csName == "SDL_GLContextResetNotification")
             {
                 writer.WriteLine("[Flags]");
                 generateEnum = true;
             }
+
             if (csName == "SDL_Keycode")
             {
                 generateEnum = true;
@@ -192,6 +198,22 @@ partial class CsCodeGenerator
                     {
                         constantPrefix = "SDL_GPU_SHADERFORMAT_";
                     }
+                    else if (csName == "SDL_GLProfile")
+                    {
+                        constantPrefix = "SDL_GL_CONTEXT_PROFILE_";
+                    }
+                    else if (csName == "SDL_GLContextFlag")
+                    {
+                        constantPrefix = "SDL_GL_CONTEXT_";
+                    }
+                    else if (csName == "SDL_GLContextReleaseFlag")
+                    {
+                        constantPrefix = "SDL_GL_CONTEXT_RELEASE_BEHAVIOR_";
+                    }
+                    else if (csName == "SDL_GLContextResetNotification")
+                    {
+                        constantPrefix = "SDL_GL_CONTEXT_RESET_";
+                    }
 
                     if (!string.IsNullOrEmpty(constantPrefix))
                     {
@@ -208,6 +230,11 @@ partial class CsCodeGenerator
                             else if (csName == "SDL_Keycode")
                             {
                                 if (macro.Name == "SDLK_SCANCODE_MASK")
+                                    continue;
+                            }
+                            else if (csName == "SDL_GLContextResetNotification")
+                            {
+                                if (macro.Name == "SDL_GL_CONTEXT_RESET_ISOLATION_FLAG")
                                     continue;
                             }
 

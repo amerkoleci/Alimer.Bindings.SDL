@@ -7,10 +7,12 @@ on:
     paths-ignore:
       - '*.md'
       - 'CMakeLists.txt'
+      - .github/workflows/build_sdl_native.yml
   pull_request:
     paths-ignore:
       - '*.md'
       - 'CMakeLists.txt'
+      - .github/workflows/build_sdl_native.yml
 jobs:
   build:
     runs-on: ubuntu-latest

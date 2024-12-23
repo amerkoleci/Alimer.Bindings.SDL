@@ -68,6 +68,8 @@ partial class CsCodeGenerator
         "SDL_size_add_check_overflow",
         "SDL_INIT_INTERFACE",
         "SDL_BUTTON_MASK",
+        "SDL_SCANF_VARARG_FUNC",
+        "SDL_SCANF_VARARG_FUNCV",
     };
 
     private readonly List<CppMacro> _collectedMacros = [];

@@ -259,9 +259,9 @@ public static unsafe partial class SDL3
     [LibraryImport(LibName)]
     public static partial SDL_DisplayID SDL_GetDisplayForRect(in Rectangle rect);
 
-    public static SDLBool SDL_GL_SetAttribute(SDL_GLattr attr, bool value) => SDL_GL_SetAttribute(attr, value ? 1 : 0);
+    public static SDLBool SDL_GL_SetAttribute(SDL_GLAttr attr, bool value) => SDL_GL_SetAttribute(attr, value ? 1 : 0);
 
-    public static SDLBool SDL_GL_SetAttribute(SDL_GLattr attr, SDL_GLprofile profile) => SDL_GL_SetAttribute(attr, (int)profile);
+    public static SDLBool SDL_GL_SetAttribute(SDL_GLAttr attr, SDL_GLProfile profile) => SDL_GL_SetAttribute(attr, (int)profile);
     #endregion
 
     [LibraryImport(LibName, EntryPoint = "SDL_PollEvent")]

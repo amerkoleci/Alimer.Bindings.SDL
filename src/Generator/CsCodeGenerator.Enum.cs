@@ -111,6 +111,12 @@ partial class CsCodeGenerator
         { "SDL_GPUPresentMode", "SDL_GPU_PRESENTMODE" },
         { "SDL_GPUSwapchainComposition", "SDL_GPU_SWAPCHAINCOMPOSITION" },
         { "SDL_GPUDriver", "SDL_GPU_DRIVER" },
+
+        { "SDL_AsyncIOTaskType", "SDL_ASYNCIO_TASK" },
+        { "SDL_AsyncIOResult", "SDL_ASYNCIO" },
+        { "SDL_FileDialogType", "SDL_FILEDIALOG" },
+        { "SDL_ThreadPriority", "SDL_THREAD_PRIORITY" },
+        { "SDL_ThreadState", "SDL_THREAD" },
     };
 
     private static readonly Dictionary<string, string> s_knownEnumValueNames = new()
@@ -221,6 +227,9 @@ partial class CsCodeGenerator
         "UByte4",
         "UShort2",
         "UShort2",
+        "OpenFile",
+        "SaveFile",
+        "OpenFolder",
     };
 
     public void CollectEnums(CppCompilation compilation)

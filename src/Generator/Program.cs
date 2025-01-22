@@ -46,6 +46,7 @@ public static class Program
         List<string> headers =
         [
             Path.Combine(sdlIncludePath, "SDL3/SDL_atomic.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_asyncio.h"),
             Path.Combine(sdlIncludePath, "SDL3/SDL_audio.h"),
             Path.Combine(sdlIncludePath, "SDL3/SDL_blendmode.h"),
             Path.Combine(sdlIncludePath, "SDL3/SDL_camera.h"),

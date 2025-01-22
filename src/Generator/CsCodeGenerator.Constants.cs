@@ -118,6 +118,7 @@ partial class CsCodeGenerator
                 || cppMacro.Name.StartsWith("SDL_HAPTIC_")
                 || cppMacro.Name == "SDL_PEN_INVALID"
                 || cppMacro.Name == "SDL_PEN_MOUSEID"
+                || cppMacro.Name == "SDL_PEN_TOUCHID"
                 || cppMacro.Name == "SDL_PEN_INFO_UNKNOWN"
                 || cppMacro.Name == "SDL_PEN_CAPABILITY"
                 || cppMacro.Name == "SDL_PEN_AXIS_CAPABILITY"

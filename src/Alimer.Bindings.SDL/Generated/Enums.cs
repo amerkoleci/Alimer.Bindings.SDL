@@ -12,9 +12,57 @@ using System;
 namespace SDL3;
 
 /// <summary>
+/// Types of asynchronous I/O tasks.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.2.0.
+/// </summary>
+public enum SDL_AsyncIOTaskType
+{
+	/// <summary>
+	/// A read operation.
+	/// </summary>
+	/// <unmanaged>SDL_ASYNCIO_TASK_READ</unmanaged>
+	Read = 0,
+	/// <summary>
+	/// A write operation.
+	/// </summary>
+	/// <unmanaged>SDL_ASYNCIO_TASK_WRITE</unmanaged>
+	Write = 1,
+	/// <summary>
+	/// A close operation.
+	/// </summary>
+	/// <unmanaged>SDL_ASYNCIO_TASK_CLOSE</unmanaged>
+	Close = 2,
+}
+
+/// <summary>
+/// Possible outcomes of an asynchronous I/O task.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.2.0.
+/// </summary>
+public enum SDL_AsyncIOResult
+{
+	/// <summary>
+	/// request was completed without error
+	/// </summary>
+	/// <unmanaged>SDL_ASYNCIO_COMPLETE</unmanaged>
+	Complete = 0,
+	/// <summary>
+	/// request failed for some reason; check SDL_GetError()!
+	/// </summary>
+	/// <unmanaged>SDL_ASYNCIO_FAILURE</unmanaged>
+	Failure = 1,
+	/// <summary>
+	/// request was canceled before completing.
+	/// </summary>
+	/// <unmanaged>SDL_ASYNCIO_CANCELED</unmanaged>
+	Canceled = 2,
+}
+
+/// <summary>
 /// Audio format.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_AUDIO_BITSIZE<br/>
 /// @sa SDL_AUDIO_BYTESIZE<br/>
@@ -84,7 +132,7 @@ public enum SDL_AudioFormat : uint
 /// The blend operation used when combining source and destination pixel<br/>
 /// components.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_BlendOperation
 {
@@ -122,7 +170,7 @@ public enum SDL_BlendOperation
 /// operation. The comma-separated factors listed above are always applied in<br/>
 /// the component order red, green, blue, and alpha.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_BlendFactor
 {
@@ -181,7 +229,7 @@ public enum SDL_BlendFactor
 /// <summary>
 /// The position of camera in relation to system device.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_GetCameraPosition
 /// </summary>
@@ -196,9 +244,28 @@ public enum SDL_CameraPosition
 }
 
 /// <summary>
+/// Various types of file dialogs.<br/>
+/// This is used by SDL_ShowFileDialogWithProperties() to decide what kind of<br/>
+/// dialog to present to the user.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
+/// <br/>
+/// @sa SDL_ShowFileDialogWithProperties
+/// </summary>
+public enum SDL_FileDialogType
+{
+	/// <unmanaged>SDL_FILEDIALOG_OPENFILE</unmanaged>
+	OpenFile = 0,
+	/// <unmanaged>SDL_FILEDIALOG_SAVEFILE</unmanaged>
+	SaveFile = 1,
+	/// <unmanaged>SDL_FILEDIALOG_OPENFOLDER</unmanaged>
+	OpenFolder = 2,
+}
+
+/// <summary>
 /// The types of events that can be delivered.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_EventType
 {
@@ -627,6 +694,11 @@ public enum SDL_EventType
 	/// <unmanaged>SDL_EVENT_FINGER_MOTION</unmanaged>
 	FingerMotion = 1794,
 	/// <summary>
+	/// Touch events
+	/// </summary>
+	/// <unmanaged>SDL_EVENT_FINGER_CANCELED</unmanaged>
+	FingerCanceled = 1795,
+	/// <summary>
 	/// The clipboard or primary selection changed
 	/// </summary>
 	/// <unmanaged>SDL_EVENT_CLIPBOARD_UPDATE</unmanaged>
@@ -797,7 +869,7 @@ public enum SDL_EventType
 /// <summary>
 /// The type of action to request from SDL_PeepEvents().<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_EventAction
 {
@@ -839,7 +911,7 @@ public enum SDL_EventAction
 /// | VIDEOS      | X       | X*        |      | X          |       |            |<br/>
 /// Note that on macOS/iOS, the Videos folder is called "Movies".<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_GetUserFolder
 /// </summary>
@@ -908,7 +980,14 @@ public enum SDL_Folder
 }
 
 /// <summary>
-/// Abstract filesystem interface
+/// Types of filesystem entries.<br/>
+/// Note that there may be other sorts of items on a filesystem: devices,<br/>
+/// symlinks, named pipes, etc. They are currently reported as<br/>
+/// SDL_PATHTYPE_OTHER.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
+/// <br/>
+/// @sa SDL_PathInfo
 /// </summary>
 public enum SDL_PathType
 {
@@ -937,7 +1016,7 @@ public enum SDL_PathType
 /// <summary>
 /// Possible results from an enumeration callback.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_EnumerateDirectoryCallback
 /// </summary>
@@ -1012,7 +1091,7 @@ public enum SDL_GamepadType
 /// You can query the labels for the face buttons using<br/>
 /// SDL_GetGamepadButtonLabel()<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_GamepadButton
 {
@@ -1125,7 +1204,7 @@ public enum SDL_GamepadButton
 /// For a complete set, you should look at the button and gamepad type and have<br/>
 /// a set of symbols that work well with your art style.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_GamepadButtonLabel
 {
@@ -1159,7 +1238,7 @@ public enum SDL_GamepadButtonLabel
 /// pressed) when reported by SDL_GetGamepadAxis(). Note that this is not the<br/>
 /// same range that will be reported by the lower-level SDL_GetJoystickAxis().<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_GamepadAxis
 {
@@ -1187,7 +1266,7 @@ public enum SDL_GamepadAxis
 /// gamepad. This enum is used as part of SDL_GamepadBinding to specify those<br/>
 /// mappings.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_GamepadBindingType
 {
@@ -1204,7 +1283,7 @@ public enum SDL_GamepadBindingType
 /// <summary>
 /// HID underlying bus types.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_hid_bus_type
 {
@@ -1248,7 +1327,7 @@ public enum SDL_hid_bus_type
 /// <summary>
 /// An enumeration of hint priorities.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_HintPriority
 {
@@ -1273,7 +1352,7 @@ public enum SDL_HintPriority
 /// [Main callbacks in SDL3](https://wiki.libsdl.org/SDL3/README/main-functions#main-callbacks-in-sdl3)<br/>
 /// for complete details.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_AppResult
 {
@@ -1297,7 +1376,7 @@ public enum SDL_AppResult
 /// <summary>
 /// SDL_IOStream status, set by a read or write operation.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_IOStatus
 {
@@ -1338,7 +1417,7 @@ public enum SDL_IOStatus
 /// These map to the same "whence" concept that `fseek` or `lseek` use in the<br/>
 /// standard C runtime.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_IOWhence
 {
@@ -1367,7 +1446,7 @@ public enum SDL_IOWhence
 /// This is by no means a complete list of everything that can be plugged into<br/>
 /// a computer.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_JoystickType
 {
@@ -1399,7 +1478,7 @@ public enum SDL_JoystickType
 /// This is used by SDL_GetJoystickConnectionState to report how a device is<br/>
 /// connected to the system.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_JoystickConnectionState
 {
@@ -1419,7 +1498,7 @@ public enum SDL_JoystickConnectionState
 /// value is valid on every platform, but where a value isn't supported, a<br/>
 /// reasonable fallback will be used.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_StartTextInputWithProperties
 /// </summary>
@@ -1474,12 +1553,11 @@ public enum SDL_TextInputType
 
 /// <summary>
 /// Auto capitalization type.<br/>
-/// These are the valid values for<br/>
-/// SDL_PROP_TEXTINPUT_AUTOCAPITALIZATION_NUMBER. Not every value is valid on<br/>
-/// every platform, but where a value isn't supported, a reasonable fallback<br/>
-/// will be used.<br/>
+/// These are the valid values for SDL_PROP_TEXTINPUT_CAPITALIZATION_NUMBER.<br/>
+/// Not every value is valid on every platform, but where a value isn't<br/>
+/// supported, a reasonable fallback will be used.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_StartTextInputWithProperties
 /// </summary>
@@ -1513,7 +1591,7 @@ public enum SDL_Capitalization
 /// level, the assert category is enabled at the WARN level, test is enabled at<br/>
 /// the VERBOSE level and all other categories are enabled at the ERROR level.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_LogCategory
 {
@@ -1598,7 +1676,7 @@ public enum SDL_LogCategory
 /// <summary>
 /// The predefined log priorities<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_LogPriority
 {
@@ -1646,7 +1724,7 @@ public enum SDL_MessageBoxColorType
 /// <summary>
 /// Cursor types for SDL_CreateSystemCursor().<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_SystemCursor
 {
@@ -1751,7 +1829,7 @@ public enum SDL_SystemCursor
 /// <summary>
 /// Scroll direction types for the Scroll event<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_MouseWheelDirection
 {
@@ -1770,7 +1848,7 @@ public enum SDL_MouseWheelDirection
 /// <summary>
 /// The current status of an SDL_InitState structure.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_InitStatus
 {
@@ -1794,7 +1872,7 @@ public enum SDL_InitStatus
 /// SDL_sinf on the XTILT, YTILT, or ROTATION component, for example:<br/>
 /// `SDL_sinf(xtilt * SDL_PI_F / 180.0)`.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_PenAxis
 {
@@ -1842,7 +1920,7 @@ public enum SDL_PenAxis
 /// <summary>
 /// Pixel type.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_PixelType
 {
@@ -1880,7 +1958,7 @@ public enum SDL_PixelType
 /// <summary>
 /// Bitmap pixel order, high bit -> low bit.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_BitmapOrder
 {
@@ -1895,7 +1973,7 @@ public enum SDL_BitmapOrder
 /// <summary>
 /// Packed component order, high bit -> low bit.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_PackedOrder
 {
@@ -1922,7 +2000,7 @@ public enum SDL_PackedOrder
 /// <summary>
 /// Array component order, low byte -> high byte.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_ArrayOrder
 {
@@ -1945,7 +2023,7 @@ public enum SDL_ArrayOrder
 /// <summary>
 /// Packed component layout.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_PackedLayout
 {
@@ -2001,7 +2079,7 @@ public enum SDL_PackedLayout
 /// an alias for ABGR8888 on little-endian CPUs like x86, or an alias for<br/>
 /// RGBA8888 on big-endian CPUs.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_PixelFormat : uint
 {
@@ -2340,7 +2418,7 @@ public enum SDL_PixelFormat : uint
 /// <summary>
 /// Colorspace color type.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_ColorType
 {
@@ -2356,7 +2434,7 @@ public enum SDL_ColorType
 /// Colorspace color range, as described by<br/>
 /// https://www.itu.int/rec/R-REC-BT.2100-2-201807-I/en<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_ColorRange
 {
@@ -2378,7 +2456,7 @@ public enum SDL_ColorRange
 /// Colorspace color primaries, as described by<br/>
 /// https://www.itu.int/rec/T-REC-H.273-201612-S/en<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_ColorPrimaries
 {
@@ -2449,7 +2527,7 @@ public enum SDL_ColorPrimaries
 /// Colorspace transfer characteristics.<br/>
 /// These are as described by https://www.itu.int/rec/T-REC-H.273-201612-S/en<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_TransferCharacteristics
 {
@@ -2538,7 +2616,7 @@ public enum SDL_TransferCharacteristics
 /// Colorspace matrix coefficients.<br/>
 /// These are as described by https://www.itu.int/rec/T-REC-H.273-201612-S/en<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_MatrixCoefficients
 {
@@ -2604,7 +2682,7 @@ public enum SDL_MatrixCoefficients
 /// <summary>
 /// Colorspace chroma sample location.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_ChromaLocation
 {
@@ -2636,7 +2714,7 @@ public enum SDL_ChromaLocation
 /// function, etc.), this is not an exhaustive list, but rather a<br/>
 /// representative sample of the kinds of colorspaces supported in SDL.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_ColorPrimaries<br/>
 /// @sa SDL_ColorRange<br/>
@@ -2714,7 +2792,7 @@ public enum SDL_Colorspace
 /// The basic state for the system's power supply.<br/>
 /// These are results returned by SDL_GetPowerInfo().<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_PowerState
 {
@@ -2753,7 +2831,7 @@ public enum SDL_PowerState
 /// <summary>
 /// SDL property type<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_PropertyType
 {
@@ -2774,7 +2852,7 @@ public enum SDL_PropertyType
 /// <summary>
 /// The access pattern allowed for a texture.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_TextureAccess
 {
@@ -2798,7 +2876,7 @@ public enum SDL_TextureAccess
 /// <summary>
 /// How the logical size is mapped to the output.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_RendererLogicalPresentation
 {
@@ -2838,7 +2916,7 @@ public enum SDL_RendererLogicalPresentation
 /// The values in this enumeration are based on the USB usage page standard:<br/>
 /// https://usb.org/sites/default/files/hut1_5.pdf<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_Scancode
 {
@@ -3921,7 +3999,7 @@ public enum SDL_Scancode
 /// - -Z ... +Z : farther ... closer<br/>
 /// The gyroscope axis data is not changed when the device is rotated.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_GetCurrentDisplayOrientation
 /// </summary>
@@ -3981,7 +4059,7 @@ public enum SDL_DUMMY_ENUM
 /// <summary>
 /// The scaling mode.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_ScaleMode
 {
@@ -4000,7 +4078,7 @@ public enum SDL_ScaleMode
 /// <summary>
 /// The flip mode.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_FlipMode
 {
@@ -4029,24 +4107,56 @@ public enum SDL_FlipMode
 /// state. SDL_HINT_THREAD_PRIORITY_POLICY can be used to control aspects of<br/>
 /// this behavior.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_ThreadPriority
 {
 	/// <unmanaged>SDL_THREAD_PRIORITY_LOW</unmanaged>
-	SDL_THREAD_PRIORITY_LOW = 0,
+	Low = 0,
 	/// <unmanaged>SDL_THREAD_PRIORITY_NORMAL</unmanaged>
-	SDL_THREAD_PRIORITY_NORMAL = 1,
+	Normal = 1,
 	/// <unmanaged>SDL_THREAD_PRIORITY_HIGH</unmanaged>
-	SDL_THREAD_PRIORITY_HIGH = 2,
+	High = 2,
 	/// <unmanaged>SDL_THREAD_PRIORITY_TIME_CRITICAL</unmanaged>
-	SDL_THREAD_PRIORITY_TIME_CRITICAL = 3,
+	TimeCritical = 3,
+}
+
+/// <summary>
+/// The SDL thread state.<br/>
+/// The current state of a thread can be checked by calling SDL_GetThreadState.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
+/// <br/>
+/// @sa SDL_GetThreadState
+/// </summary>
+public enum SDL_ThreadState
+{
+	/// <summary>
+	/// The thread is not valid
+	/// </summary>
+	/// <unmanaged>SDL_THREAD_UNKNOWN</unmanaged>
+	Unknown = 0,
+	/// <summary>
+	/// The thread is currently running
+	/// </summary>
+	/// <unmanaged>SDL_THREAD_ALIVE</unmanaged>
+	Alive = 1,
+	/// <summary>
+	/// The thread is detached and can't be waited on
+	/// </summary>
+	/// <unmanaged>SDL_THREAD_DETACHED</unmanaged>
+	Detached = 2,
+	/// <summary>
+	/// The thread has finished and should be cleaned up with SDL_WaitThread()
+	/// </summary>
+	/// <unmanaged>SDL_THREAD_COMPLETE</unmanaged>
+	Complete = 3,
 }
 
 /// <summary>
 /// The preferred date format of the current system locale.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_GetDateTimeLocalePreferences
 /// </summary>
@@ -4072,7 +4182,7 @@ public enum SDL_DateFormat
 /// <summary>
 /// The preferred time format of the current system locale.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_GetDateTimeLocalePreferences
 /// </summary>
@@ -4090,6 +4200,11 @@ public enum SDL_TimeFormat
 	_12hr = 1,
 }
 
+/// <summary>
+/// An enum that describes the type of a touch device.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.2.0.
+/// </summary>
 public enum SDL_TouchDeviceType
 {
 	/// <unmanaged>SDL_TOUCH_DEVICE_INVALID</unmanaged>
@@ -4114,7 +4229,7 @@ public enum SDL_TouchDeviceType
 /// <summary>
 /// System theme.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_SystemTheme
 {
@@ -4138,7 +4253,7 @@ public enum SDL_SystemTheme
 /// <summary>
 /// Display orientation values; the way a display is rotated.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_DisplayOrientation
 {
@@ -4172,7 +4287,7 @@ public enum SDL_DisplayOrientation
 /// <summary>
 /// Window flash operation.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_FlashOperation
 {
@@ -4206,7 +4321,7 @@ public enum SDL_FlashOperation
 /// fail if the GL can't provide your requested attributes at a minimum, but<br/>
 /// you should check to see exactly what you got.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_GLAttr
 {
@@ -4345,8 +4460,9 @@ public enum SDL_GLAttr
 
 /// <summary>
 /// Possible return values from the SDL_HitTest callback.<br/>
+/// @threadsafety This function should only be called on the main thread.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_HitTest
 /// </summary>
@@ -4425,8 +4541,19 @@ public enum SDL_Sandbox
 
 /// <summary>
 /// Specifies the primitive topology of a graphics pipeline.<br/>
+/// If you are using POINTLIST you must include a point size output in the<br/>
+/// vertex shader.<br/>
+/// - For HLSL compiling to SPIRV you must decorate a float output with<br/>
+/// [[vk::builtin("PointSize")]].<br/>
+/// - For GLSL you must set the gl_PointSize builtin.<br/>
+/// - For MSL you must include a float output with the [[point_size]]<br/>
+/// decorator.<br/>
+/// Note that sized point topology is totally unsupported on D3D12. Any size<br/>
+/// other than 1 will be ignored. In general, you should avoid using point<br/>
+/// topology for both compatibility and performance reasons. You WILL regret<br/>
+/// using it.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUGraphicsPipeline
 /// </summary>
@@ -4463,7 +4590,7 @@ public enum SDL_GPUPrimitiveType
 /// Specifies how the contents of a texture attached to a render pass are<br/>
 /// treated at the beginning of the render pass.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_BeginGPURenderPass
 /// </summary>
@@ -4490,7 +4617,7 @@ public enum SDL_GPULoadOp
 /// Specifies how the contents of a texture attached to a render pass are<br/>
 /// treated at the end of the render pass.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_BeginGPURenderPass
 /// </summary>
@@ -4521,7 +4648,7 @@ public enum SDL_GPUStoreOp
 /// <summary>
 /// Specifies the size of elements in an index buffer.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUGraphicsPipeline
 /// </summary>
@@ -4603,13 +4730,12 @@ public enum SDL_GPUIndexElementSize
 /// For DEPTH_STENCIL_TARGET usage, the following formats are universally<br/>
 /// supported:<br/>
 /// - D16_UNORM<br/>
-/// - Either (but not necessarily both!) D24_UNORM or D32_SFLOAT<br/>
-/// - Either (but not necessarily both!) D24_UNORM_S8_UINT or<br/>
-/// D32_SFLOAT_S8_UINT<br/>
+/// - Either (but not necessarily both!) D24_UNORM or D32_FLOAT<br/>
+/// - Either (but not necessarily both!) D24_UNORM_S8_UINT or D32_FLOAT_S8_UINT<br/>
 /// Unless D16_UNORM is sufficient for your purposes, always check which of<br/>
 /// D24/D32 is supported before creating a depth-stencil texture!<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUTexture<br/>
 /// @sa SDL_GPUTextureSupportsFormat
@@ -5143,7 +5269,7 @@ public enum SDL_GPUTextureFormat
 /// <summary>
 /// Specifies the type of a texture.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUTexture
 /// </summary>
@@ -5181,7 +5307,7 @@ public enum SDL_GPUTextureType
 /// Used in multisampling. Note that this value only applies when the texture<br/>
 /// is used as a render target.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUTexture<br/>
 /// @sa SDL_GPUTextureSupportsSampleCount
@@ -5214,7 +5340,7 @@ public enum SDL_GPUSampleCount
 /// Specifies the face of a cube map.<br/>
 /// Can be passed in as the layer field in texture-related structs.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3
+/// @since This enum is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_GPUCubeMapFace
 {
@@ -5237,7 +5363,7 @@ public enum SDL_GPUCubeMapFace
 /// Note that mapping and copying FROM an upload transfer buffer or TO a<br/>
 /// download transfer buffer is undefined behavior.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUTransferBuffer
 /// </summary>
@@ -5252,7 +5378,7 @@ public enum SDL_GPUTransferBufferUsage
 /// <summary>
 /// Specifies which stage a shader program corresponds to.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUShader
 /// </summary>
@@ -5267,7 +5393,7 @@ public enum SDL_GPUShaderStage
 /// <summary>
 /// Specifies the format of a vertex attribute.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUGraphicsPipeline
 /// </summary>
@@ -5430,7 +5556,7 @@ public enum SDL_GPUVertexElementFormat
 /// <summary>
 /// Specifies the rate at which vertex attributes are pulled from buffers.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUGraphicsPipeline
 /// </summary>
@@ -5451,7 +5577,7 @@ public enum SDL_GPUVertexInputRate
 /// <summary>
 /// Specifies the fill mode of the graphics pipeline.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUGraphicsPipeline
 /// </summary>
@@ -5472,7 +5598,7 @@ public enum SDL_GPUFillMode
 /// <summary>
 /// Specifies the facing direction in which triangle faces will be culled.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUGraphicsPipeline
 /// </summary>
@@ -5499,7 +5625,7 @@ public enum SDL_GPUCullMode
 /// Specifies the vertex winding that will cause a triangle to be determined to<br/>
 /// be front-facing.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUGraphicsPipeline
 /// </summary>
@@ -5520,7 +5646,7 @@ public enum SDL_GPUFrontFace
 /// <summary>
 /// Specifies a comparison operator for depth, stencil and sampler operations.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUGraphicsPipeline
 /// </summary>
@@ -5578,7 +5704,7 @@ public enum SDL_GPUCompareOp
 /// Specifies what happens to a stored stencil value if stencil tests fail or<br/>
 /// pass.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUGraphicsPipeline
 /// </summary>
@@ -5634,7 +5760,7 @@ public enum SDL_GPUStencilOp
 /// The source color is the value written by the fragment shader. The<br/>
 /// destination color is the value currently existing in the texture.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUGraphicsPipeline
 /// </summary>
@@ -5675,7 +5801,7 @@ public enum SDL_GPUBlendOp
 /// The source color is the value written by the fragment shader. The<br/>
 /// destination color is the value currently existing in the texture.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUGraphicsPipeline
 /// </summary>
@@ -5753,7 +5879,7 @@ public enum SDL_GPUBlendFactor
 /// <summary>
 /// Specifies a filter operation used by a sampler.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUSampler
 /// </summary>
@@ -5774,7 +5900,7 @@ public enum SDL_GPUFilter
 /// <summary>
 /// Specifies a mipmap mode used by a sampler.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUSampler
 /// </summary>
@@ -5796,7 +5922,7 @@ public enum SDL_GPUSamplerMipmapMode
 /// Specifies behavior of texture sampling when the coordinates exceed the 0-1<br/>
 /// range.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUSampler
 /// </summary>
@@ -5822,30 +5948,24 @@ public enum SDL_GPUSamplerAddressMode
 /// <summary>
 /// Specifies the timing that will be used to present swapchain textures to the<br/>
 /// OS.<br/>
-/// Note that this value affects the behavior of<br/>
-/// SDL_AcquireGPUSwapchainTexture. VSYNC mode will always be supported.<br/>
-/// IMMEDIATE and MAILBOX modes may not be supported on certain systems.<br/>
+/// VSYNC mode will always be supported. IMMEDIATE and MAILBOX modes may not be<br/>
+/// supported on certain systems.<br/>
 /// It is recommended to query SDL_WindowSupportsGPUPresentMode after claiming<br/>
 /// the window if you wish to change the present mode to IMMEDIATE or MAILBOX.<br/>
 /// - VSYNC: Waits for vblank before presenting. No tearing is possible. If<br/>
 /// there is a pending image to present, the new image is enqueued for<br/>
-/// presentation. Disallows tearing at the cost of visual latency. When using<br/>
-/// this present mode, AcquireGPUSwapchainTexture will block if too many<br/>
-/// frames are in flight.<br/>
+/// presentation. Disallows tearing at the cost of visual latency.<br/>
 /// - IMMEDIATE: Immediately presents. Lowest latency option, but tearing may<br/>
-/// occur. When using this mode, AcquireGPUSwapchainTexture will fill the<br/>
-/// swapchain texture pointer with NULL if too many frames are in flight.<br/>
+/// occur.<br/>
 /// - MAILBOX: Waits for vblank before presenting. No tearing is possible. If<br/>
 /// there is a pending image to present, the pending image is replaced by the<br/>
-/// new image. Similar to VSYNC, but with reduced visual latency. When using<br/>
-/// this mode, AcquireGPUSwapchainTexture will fill the swapchain texture<br/>
-/// pointer with NULL if too many frames are in flight.<br/>
+/// new image. Similar to VSYNC, but with reduced visual latency.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_SetGPUSwapchainParameters<br/>
 /// @sa SDL_WindowSupportsGPUPresentMode<br/>
-/// @sa SDL_AcquireGPUSwapchainTexture
+/// @sa SDL_WaitAndAcquireGPUSwapchainTexture
 /// </summary>
 public enum SDL_GPUPresentMode
 {
@@ -5864,20 +5984,21 @@ public enum SDL_GPUPresentMode
 /// It is recommended to query SDL_WindowSupportsGPUSwapchainComposition after<br/>
 /// claiming the window if you wish to change the swapchain composition from<br/>
 /// SDR.<br/>
-/// - SDR: B8G8R8A8 or R8G8B8A8 swapchain. Pixel values are in nonlinear sRGB<br/>
-/// encoding.<br/>
-/// - SDR_LINEAR: B8G8R8A8_SRGB or R8G8B8A8_SRGB swapchain. Pixel values are in<br/>
-/// nonlinear sRGB encoding.<br/>
-/// - HDR_EXTENDED_LINEAR: R16G16B16A16_SFLOAT swapchain. Pixel values are in<br/>
-/// extended linear encoding.<br/>
-/// - HDR10_ST2048: A2R10G10B10 or A2B10G10R10 swapchain. Pixel values are in<br/>
-/// PQ ST2048 encoding.<br/>
+/// - SDR: B8G8R8A8 or R8G8B8A8 swapchain. Pixel values are in sRGB encoding.<br/>
+/// - SDR_LINEAR: B8G8R8A8_SRGB or R8G8B8A8_SRGB swapchain. Pixel values are<br/>
+/// stored in memory in sRGB encoding but accessed in shaders in "linear<br/>
+/// sRGB" encoding which is sRGB but with a linear transfer function.<br/>
+/// - HDR_EXTENDED_LINEAR: R16G16B16A16_FLOAT swapchain. Pixel values are in<br/>
+/// extended linear sRGB encoding and permits values outside of the [0, 1]<br/>
+/// range.<br/>
+/// - HDR10_ST2084: A2R10G10B10 or A2B10G10R10 swapchain. Pixel values are in<br/>
+/// BT.2020 ST2084 (PQ) encoding.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_SetGPUSwapchainParameters<br/>
 /// @sa SDL_WindowSupportsGPUSwapchainComposition<br/>
-/// @sa SDL_AcquireGPUSwapchainTexture
+/// @sa SDL_WaitAndAcquireGPUSwapchainTexture
 /// </summary>
 public enum SDL_GPUSwapchainComposition
 {
@@ -5887,15 +6008,15 @@ public enum SDL_GPUSwapchainComposition
 	SDRLinear = 1,
 	/// <unmanaged>SDL_GPU_SWAPCHAINCOMPOSITION_HDR_EXTENDED_LINEAR</unmanaged>
 	HDRExtendedLinear = 2,
-	/// <unmanaged>SDL_GPU_SWAPCHAINCOMPOSITION_HDR10_ST2048</unmanaged>
-	Hdr10St2048 = 3,
+	/// <unmanaged>SDL_GPU_SWAPCHAINCOMPOSITION_HDR10_ST2084</unmanaged>
+	Hdr10St2084 = 3,
 }
 
 /// <summary>
 /// Description of where standard I/O should be directed when creating a<br/>
 /// process.<br/>
-/// If a standard I/O stream is set to SDL_PROCESS_STDIO_INHERIT, it will go to<br/>
-/// the same place as the application's I/O stream. This is the default for<br/>
+/// If a standard I/O stream is set to SDL_PROCESS_STDIO_INHERITED, it will go<br/>
+/// to the same place as the application's I/O stream. This is the default for<br/>
 /// standard output and standard error.<br/>
 /// If a standard I/O stream is set to SDL_PROCESS_STDIO_NULL, it is connected<br/>
 /// to `NUL:` on Windows and `/dev/null` on POSIX systems. This is the default<br/>
@@ -5920,7 +6041,7 @@ public enum SDL_GPUSwapchainComposition
 /// `SDL_PROP_IOSTREAM_FILE_DESCRIPTOR_NUMBER` set. This is true for streams<br/>
 /// representing files and process I/O.<br/>
 /// <br/>
-/// @since This enum is available since SDL 3.1.3.<br/>
+/// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateProcessWithProperties<br/>
 /// @sa SDL_GetProcessProperties<br/>

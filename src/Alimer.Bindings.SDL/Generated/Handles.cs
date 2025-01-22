@@ -37,7 +37,7 @@ public enum SDL_SpinLock : int
 /// SDL Audio Device instance IDs.<br/>
 /// Zero is used to signify an invalid/null device.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.
+/// @since This datatype is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_AudioDeviceID : uint
 {
@@ -48,7 +48,7 @@ public enum SDL_AudioDeviceID : uint
 /// These predefined blend modes are supported everywhere.<br/>
 /// Additional values may be obtained from SDL_ComposeCustomBlendMode.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.<br/>
+/// @since This datatype is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_ComposeCustomBlendMode
 /// </summary>
@@ -71,7 +71,7 @@ public enum SDL_BlendMode : uint
 /// If the device is disconnected and reconnected, it will get a new ID.<br/>
 /// The value 0 is an invalid ID.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.<br/>
+/// @since This datatype is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_GetCameras
 /// </summary>
@@ -80,9 +80,9 @@ public enum SDL_CameraID : uint
 }
 
 /// <summary>
-/// Flags for path matching<br/>
+/// Flags for path matching.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.<br/>
+/// @since This datatype is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_GlobDirectory<br/>
 /// @sa SDL_GlobStorageDirectory
@@ -99,7 +99,7 @@ public enum SDL_GlobFlags : uint
 /// If the haptic device is disconnected and reconnected, it will get a new ID.<br/>
 /// The value 0 is an invalid ID.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.
+/// @since This datatype is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_HapticID : uint
 {
@@ -110,7 +110,7 @@ public enum SDL_HapticID : uint
 /// These are the flags which may be passed to SDL_Init(). You should specify<br/>
 /// the subsystems which you will be using in your application.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.<br/>
+/// @since This datatype is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_Init<br/>
 /// @sa SDL_Quit<br/>
@@ -137,7 +137,7 @@ public enum SDL_InitFlags : uint
 /// If the joystick is disconnected and reconnected, it will get a new ID.<br/>
 /// The value 0 is an invalid ID.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.
+/// @since This datatype is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_JoystickID : uint
 {
@@ -149,7 +149,7 @@ public enum SDL_JoystickID : uint
 /// If the keyboard is disconnected and reconnected, it will get a new ID.<br/>
 /// The value 0 is an invalid ID.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.
+/// @since This datatype is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_KeyboardID : uint
 {
@@ -163,11 +163,14 @@ public enum SDL_KeyboardID : uint
 /// `SDLK_*` constant for those keys that do not generate characters.<br/>
 /// A special exception is the number keys at the top of the keyboard which map<br/>
 /// to SDLK_0...SDLK_9 on AZERTY layouts.<br/>
+/// Keys with the `SDLK_EXTENDED_MASK` bit set do not map to a scancode or<br/>
+/// unicode code point.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.
+/// @since This datatype is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_Keycode : uint
 {
+	ExtendedMask = SDL3.SDLK_EXTENDED_MASK,
 	Unknown = SDL3.SDLK_UNKNOWN,
 	Return = SDL3.SDLK_RETURN,
 	Escape = SDL3.SDLK_ESCAPE,
@@ -417,12 +420,19 @@ public enum SDL_Keycode : uint
 	Softright = SDL3.SDLK_SOFTRIGHT,
 	Call = SDL3.SDLK_CALL,
 	Endcall = SDL3.SDLK_ENDCALL,
+	LeftTab = SDL3.SDLK_LEFT_TAB,
+	Level5Shift = SDL3.SDLK_LEVEL5_SHIFT,
+	MultiKeyCompose = SDL3.SDLK_MULTI_KEY_COMPOSE,
+	Lmeta = SDL3.SDLK_LMETA,
+	Rmeta = SDL3.SDLK_RMETA,
+	Lhyper = SDL3.SDLK_LHYPER,
+	Rhyper = SDL3.SDLK_RHYPER,
 }
 
 /// <summary>
 /// Valid key modifiers (possibly OR'd together).<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.
+/// @since This datatype is available since SDL 3.2.0.
 /// </summary>
 [Flags]
 public enum SDL_Keymod : ushort
@@ -430,6 +440,7 @@ public enum SDL_Keymod : ushort
 	None = SDL3.SDL_KMOD_NONE,
 	LeftShift = SDL3.SDL_KMOD_LSHIFT,
 	RightShift = SDL3.SDL_KMOD_RSHIFT,
+	Level5 = SDL3.SDL_KMOD_LEVEL5,
 	LeftControl = SDL3.SDL_KMOD_LCTRL,
 	RightControl = SDL3.SDL_KMOD_RCTRL,
 	LeftAlt = SDL3.SDL_KMOD_LALT,
@@ -447,10 +458,10 @@ public enum SDL_Keymod : ushort
 }
 
 /// <summary>
-/// SDL_MessageBox flags.<br/>
+/// Message box flags.<br/>
 /// If supported will display warning icon, etc.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.
+/// @since This datatype is available since SDL 3.2.0.
 /// </summary>
 [Flags]
 public enum SDL_MessageBoxFlags : uint
@@ -465,7 +476,7 @@ public enum SDL_MessageBoxFlags : uint
 /// <summary>
 /// SDL_MessageBoxButtonData flags.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.
+/// @since This datatype is available since SDL 3.2.0.
 /// </summary>
 [Flags]
 public enum SDL_MessageBoxButtonFlags : uint
@@ -480,7 +491,7 @@ public enum SDL_MessageBoxButtonFlags : uint
 /// If the mouse is disconnected and reconnected, it will get a new ID.<br/>
 /// The value 0 is an invalid ID.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.
+/// @since This datatype is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_MouseID : uint
 {
@@ -493,7 +504,7 @@ public enum SDL_MouseID : uint
 /// consistent as long as SDL can recognize a tool to be the same pen; but if a<br/>
 /// pen physically leaves the area and returns, it might get a new ID.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.
+/// @since This datatype is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_PenID : uint
 {
@@ -502,7 +513,7 @@ public enum SDL_PenID : uint
 /// <summary>
 /// Pen input flags, as reported by various pen events' `pen_state` field.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.
+/// @since This datatype is available since SDL 3.2.0.
 /// </summary>
 [Flags]
 public enum SDL_PenInputFlags : uint
@@ -512,7 +523,7 @@ public enum SDL_PenInputFlags : uint
 /// <summary>
 /// SDL properties ID<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.
+/// @since This datatype is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_PropertiesID : uint
 {
@@ -523,7 +534,7 @@ public enum SDL_PropertiesID : uint
 /// system, and is never reused for the lifetime of the application.<br/>
 /// The value 0 is an invalid ID.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.
+/// @since This datatype is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_SensorID : uint
 {
@@ -533,7 +544,7 @@ public enum SDL_SensorID : uint
 /// The flags on an SDL_Surface.<br/>
 /// These are generally considered read-only.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.
+/// @since This datatype is available since SDL 3.2.0.
 /// </summary>
 [Flags]
 public enum SDL_SurfaceFlags : uint
@@ -550,7 +561,7 @@ public enum SDL_SurfaceFlags : uint
 /// application will operate on, but having a way to uniquely identify a thread<br/>
 /// can be useful at times.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.<br/>
+/// @since This datatype is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_GetThreadID<br/>
 /// @sa SDL_GetCurrentThreadID
@@ -562,16 +573,34 @@ public enum SDL_ThreadID : ulong
 /// <summary>
 /// Definition of the timer ID type.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.
+/// @since This datatype is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_TimerID : uint
 {
 }
 
+/// <summary>
+/// A unique ID for a touch device.<br/>
+/// This ID is valid for the time the device is connected to the system, and is<br/>
+/// never reused for the lifetime of the application.<br/>
+/// The value 0 is an invalid ID.<br/>
+/// <br/>
+/// @since This datatype is available since SDL 3.2.0.
+/// </summary>
 public enum SDL_TouchID : ulong
 {
 }
 
+/// <summary>
+/// A unique ID for a single finger on a touch device.<br/>
+/// This ID is valid for the time the finger (stylus, etc) is touching and will<br/>
+/// be unique for all fingers currently in contact, so this ID tracks the<br/>
+/// lifetime of a single continuous touch. This value may represent an index, a<br/>
+/// pointer, or some other unique ID, depending on the platform.<br/>
+/// The value 0 is an invalid ID.<br/>
+/// <br/>
+/// @since This datatype is available since SDL 3.2.0.
+/// </summary>
 public enum SDL_FingerID : ulong
 {
 }
@@ -582,7 +611,7 @@ public enum SDL_FingerID : ulong
 /// If the display is disconnected and reconnected, it will get a new ID.<br/>
 /// The value 0 is an invalid ID.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.
+/// @since This datatype is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_DisplayID : uint
 {
@@ -592,7 +621,7 @@ public enum SDL_DisplayID : uint
 /// This is a unique ID for a window.<br/>
 /// The value 0 is an invalid ID.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.
+/// @since This datatype is available since SDL 3.2.0.
 /// </summary>
 public enum SDL_WindowID : uint
 {
@@ -601,7 +630,7 @@ public enum SDL_WindowID : uint
 /// <summary>
 /// Possible values to be set for the SDL_GL_CONTEXT_PROFILE_MASK attribute.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.
+/// @since This datatype is available since SDL 3.2.0.
 /// </summary>
 [Flags]
 public enum SDL_GLProfile : uint
@@ -615,7 +644,7 @@ public enum SDL_GLProfile : uint
 /// Possible values to be set for the SDL_GL_CONTEXT_RELEASE_BEHAVIOR<br/>
 /// attribute.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.
+/// @since This datatype is available since SDL 3.2.0.
 /// </summary>
 [Flags]
 public enum SDL_GLContextReleaseFlag : uint
@@ -627,7 +656,7 @@ public enum SDL_GLContextReleaseFlag : uint
 /// <summary>
 /// Possible values to be set SDL_GL_CONTEXT_RESET_NOTIFICATION attribute.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.
+/// @since This datatype is available since SDL 3.2.0.
 /// </summary>
 [Flags]
 public enum SDL_GLContextResetNotification : uint
@@ -650,7 +679,7 @@ public enum SDL_GLContextResetNotification : uint
 /// within a compute pass. Note that SIMULTANEOUS usage is only supported by a<br/>
 /// limited number of texture formats.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3<br/>
+/// @since This datatype is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUTexture
 /// </summary>
@@ -673,7 +702,7 @@ public enum SDL_GPUTextureUsageFlags : uint
 /// Unlike textures, READ | WRITE can be used for simultaneous read-write<br/>
 /// usage. The same data synchronization concerns as textures apply.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3<br/>
+/// @since This datatype is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUBuffer
 /// </summary>
@@ -692,7 +721,7 @@ public enum SDL_GPUBufferUsageFlags : uint
 /// Specifies the format of shader code.<br/>
 /// Each format corresponds to a specific backend that accepts it.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3<br/>
+/// @since This datatype is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUShader
 /// </summary>
@@ -711,7 +740,7 @@ public enum SDL_GPUShaderFormat : uint
 /// <summary>
 /// Specifies which color components are written in a graphics pipeline.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3<br/>
+/// @since This datatype is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUGraphicsPipeline
 /// </summary>
@@ -723,6 +752,72 @@ public enum SDL_GPUColorComponentFlags : byte
 	B = SDL3.SDL_GPU_COLORCOMPONENT_B,
 	A = SDL3.SDL_GPU_COLORCOMPONENT_A,
 	All = R | G | B | A
+}
+
+/// <summary>
+/// The asynchronous I/O operation structure.<br/>
+/// This operates as an opaque handle. One can then request read or write<br/>
+/// operations on it.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.2.0.<br/>
+/// <br/>
+/// @sa SDL_AsyncIOFromFile
+/// </summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_AsyncIO(nint value) : IEquatable<SDL_AsyncIO>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_AsyncIO Null => new(0);
+	public static implicit operator nint(SDL_AsyncIO value) => value.Value;
+	public static implicit operator SDL_AsyncIO(nint value) => new(value);
+	public static bool operator ==(SDL_AsyncIO left, SDL_AsyncIO right) => left.Value == right.Value;
+	public static bool operator !=(SDL_AsyncIO left, SDL_AsyncIO right) => left.Value != right.Value;
+	public static bool operator ==(SDL_AsyncIO left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_AsyncIO left, nint right) => left.Value != right;
+	public bool Equals(SDL_AsyncIO other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_AsyncIO other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_AsyncIO)} [0x{Value.ToString("X")}]";
+}
+
+/// <summary>
+/// A queue of completed asynchronous I/O tasks.<br/>
+/// When starting an asynchronous operation, you specify a queue for the new<br/>
+/// task. A queue can be asked later if any tasks in it have completed,<br/>
+/// allowing an app to manage multiple pending tasks in one place, in whatever<br/>
+/// order they complete.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.2.0.<br/>
+/// <br/>
+/// @sa SDL_CreateAsyncIOQueue<br/>
+/// @sa SDL_ReadAsyncIO<br/>
+/// @sa SDL_WriteAsyncIO<br/>
+/// @sa SDL_GetAsyncIOResult<br/>
+/// @sa SDL_WaitAsyncIOResult
+/// </summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_AsyncIOQueue(nint value) : IEquatable<SDL_AsyncIOQueue>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_AsyncIOQueue Null => new(0);
+	public static implicit operator nint(SDL_AsyncIOQueue value) => value.Value;
+	public static implicit operator SDL_AsyncIOQueue(nint value) => new(value);
+	public static bool operator ==(SDL_AsyncIOQueue left, SDL_AsyncIOQueue right) => left.Value == right.Value;
+	public static bool operator !=(SDL_AsyncIOQueue left, SDL_AsyncIOQueue right) => left.Value != right.Value;
+	public static bool operator ==(SDL_AsyncIOQueue left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_AsyncIOQueue left, nint right) => left.Value != right;
+	public bool Equals(SDL_AsyncIOQueue other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_AsyncIOQueue other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_AsyncIOQueue)} [0x{Value.ToString("X")}]";
 }
 
 /// <summary>
@@ -742,7 +837,7 @@ public enum SDL_GPUColorComponentFlags : byte
 /// more of them, bind them to an opened audio device, and feed data to them<br/>
 /// (or for recording, consume data from them).<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3.<br/>
+/// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateAudioStream
 /// </summary>
@@ -770,7 +865,7 @@ public readonly partial struct SDL_AudioStream(nint value) : IEquatable<SDL_Audi
 /// <summary>
 /// The opaque structure used to identify an opened SDL camera.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3.
+/// @since This struct is available since SDL 3.2.0.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_Camera(nint value) : IEquatable<SDL_Camera>
@@ -796,7 +891,7 @@ public readonly partial struct SDL_Camera(nint value) : IEquatable<SDL_Camera>
 /// <summary>
 /// The structure used to identify an SDL gamepad<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3.
+/// @since This struct is available since SDL 3.2.0.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_Gamepad(nint value) : IEquatable<SDL_Gamepad>
@@ -822,7 +917,7 @@ public readonly partial struct SDL_Gamepad(nint value) : IEquatable<SDL_Gamepad>
 /// <summary>
 /// The haptic structure used to identify an SDL haptic.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3.<br/>
+/// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_OpenHaptic<br/>
 /// @sa SDL_OpenHapticFromJoystick<br/>
@@ -852,7 +947,7 @@ public readonly partial struct SDL_Haptic(nint value) : IEquatable<SDL_Haptic>
 /// <summary>
 /// An opaque handle representing an open HID device.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3.
+/// @since This struct is available since SDL 3.2.0.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_hid_device(nint value) : IEquatable<SDL_hid_device>
@@ -882,7 +977,7 @@ public readonly partial struct SDL_hid_device(nint value) : IEquatable<SDL_hid_d
 /// SDL_OpenIO() to provide their own stream implementation behind this<br/>
 /// struct's abstract interface.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3.
+/// @since This struct is available since SDL 3.2.0.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_IOStream(nint value) : IEquatable<SDL_IOStream>
@@ -909,7 +1004,7 @@ public readonly partial struct SDL_IOStream(nint value) : IEquatable<SDL_IOStrea
 /// The joystick structure used to identify an SDL joystick.<br/>
 /// This is opaque data.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3.
+/// @since This struct is available since SDL 3.2.0.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_Joystick(nint value) : IEquatable<SDL_Joystick>
@@ -935,7 +1030,7 @@ public readonly partial struct SDL_Joystick(nint value) : IEquatable<SDL_Joystic
 /// <summary>
 /// An opaque datatype that represents a loaded shared object.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.<br/>
+/// @since This datatype is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_LoadObject<br/>
 /// @sa SDL_LoadFunction<br/>
@@ -966,7 +1061,7 @@ public readonly partial struct SDL_SharedObject(nint value) : IEquatable<SDL_Sha
 /// The structure used to identify an SDL cursor.<br/>
 /// This is opaque data.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3.
+/// @since This struct is available since SDL 3.2.0.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_Cursor(nint value) : IEquatable<SDL_Cursor>
@@ -996,7 +1091,7 @@ public readonly partial struct SDL_Cursor(nint value) : IEquatable<SDL_Cursor>
 /// Wikipedia has a thorough explanation of the concept:<br/>
 /// https://en.wikipedia.org/wiki/Mutex<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3.
+/// @since This struct is available since SDL 3.2.0.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_Mutex(nint value) : IEquatable<SDL_Mutex>
@@ -1032,7 +1127,7 @@ public readonly partial struct SDL_Mutex(nint value) : IEquatable<SDL_Mutex>
 /// about how threads are scheduled and when they can be recursively locked.<br/>
 /// These are documented in the other rwlock functions.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3.
+/// @since This struct is available since SDL 3.2.0.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_RWLock(nint value) : IEquatable<SDL_RWLock>
@@ -1064,7 +1159,7 @@ public readonly partial struct SDL_RWLock(nint value) : IEquatable<SDL_RWLock>
 /// Wikipedia has a thorough explanation of the concept:<br/>
 /// https://en.wikipedia.org/wiki/Semaphore_(programming)<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3.
+/// @since This struct is available since SDL 3.2.0.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_Semaphore(nint value) : IEquatable<SDL_Semaphore>
@@ -1095,7 +1190,7 @@ public readonly partial struct SDL_Semaphore(nint value) : IEquatable<SDL_Semaph
 /// Wikipedia has a thorough explanation of the concept:<br/>
 /// https://en.wikipedia.org/wiki/Condition_variable<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3.
+/// @since This struct is available since SDL 3.2.0.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_Condition(nint value) : IEquatable<SDL_Condition>
@@ -1121,7 +1216,7 @@ public readonly partial struct SDL_Condition(nint value) : IEquatable<SDL_Condit
 /// <summary>
 /// A structure representing rendering state<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3.
+/// @since This struct is available since SDL 3.2.0.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_Renderer(nint value) : IEquatable<SDL_Renderer>
@@ -1144,6 +1239,11 @@ public readonly partial struct SDL_Renderer(nint value) : IEquatable<SDL_Rendere
 	private string DebuggerDisplay => $"{nameof(SDL_Renderer)} [0x{Value.ToString("X")}]";
 }
 
+/// <summary>
+/// The opaque structure used to identify an opened SDL sensor.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.2.0.
+/// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_Sensor(nint value) : IEquatable<SDL_Sensor>
 {
@@ -1168,7 +1268,7 @@ public readonly partial struct SDL_Sensor(nint value) : IEquatable<SDL_Sensor>
 /// <summary>
 /// A thread-safe set of environment variables<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3.<br/>
+/// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_GetEnvironment<br/>
 /// @sa SDL_CreateEnvironment<br/>
@@ -1226,7 +1326,7 @@ public readonly partial struct SDL_iconv_data_t(nint value) : IEquatable<SDL_ico
 /// functions like SDL_OpenTitleStorage or SDL_OpenUserStorage, etc, or create<br/>
 /// an object with a custom implementation using SDL_OpenStorage.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3.
+/// @since This struct is available since SDL 3.2.0.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_Storage(nint value) : IEquatable<SDL_Storage>
@@ -1253,7 +1353,7 @@ public readonly partial struct SDL_Storage(nint value) : IEquatable<SDL_Storage>
 /// The SDL thread object.<br/>
 /// These are opaque data.<br/>
 /// <br/>
-/// @since This datatype is available since SDL 3.1.3.<br/>
+/// @since This datatype is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateThread<br/>
 /// @sa SDL_WaitThread
@@ -1280,7 +1380,12 @@ public readonly partial struct SDL_Thread(nint value) : IEquatable<SDL_Thread>
 }
 
 /// <summary>
-/// Internal display mode data
+/// Internal display mode data.<br/>
+/// This lives as a field in SDL_DisplayMode, as opaque data.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.2.0.<br/>
+/// <br/>
+/// @sa SDL_DisplayMode
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_DisplayModeData(nint value) : IEquatable<SDL_DisplayModeData>
@@ -1306,7 +1411,7 @@ public readonly partial struct SDL_DisplayModeData(nint value) : IEquatable<SDL_
 /// <summary>
 /// The struct used as an opaque handle to a window.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3.<br/>
+/// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateWindow
 /// </summary>
@@ -1397,7 +1502,7 @@ public readonly partial struct _XEvent(nint value) : IEquatable<_XEvent>
 /// <summary>
 /// An opaque handle representing the SDL_GPU context.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3
+/// @since This struct is available since SDL 3.2.0.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_GPUDevice(nint value) : IEquatable<SDL_GPUDevice>
@@ -1425,10 +1530,9 @@ public readonly partial struct SDL_GPUDevice(nint value) : IEquatable<SDL_GPUDev
 /// Used for vertices, indices, indirect draw commands, and general compute<br/>
 /// data.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3<br/>
+/// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUBuffer<br/>
-/// @sa SDL_SetGPUBufferName<br/>
 /// @sa SDL_UploadToGPUBuffer<br/>
 /// @sa SDL_DownloadFromGPUBuffer<br/>
 /// @sa SDL_CopyGPUBufferToBuffer<br/>
@@ -1467,7 +1571,7 @@ public readonly partial struct SDL_GPUBuffer(nint value) : IEquatable<SDL_GPUBuf
 /// An opaque handle representing a transfer buffer.<br/>
 /// Used for transferring data to and from the device.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3<br/>
+/// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUTransferBuffer<br/>
 /// @sa SDL_MapGPUTransferBuffer<br/>
@@ -1502,10 +1606,9 @@ public readonly partial struct SDL_GPUTransferBuffer(nint value) : IEquatable<SD
 /// <summary>
 /// An opaque handle representing a texture.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3<br/>
+/// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUTexture<br/>
-/// @sa SDL_SetGPUTextureName<br/>
 /// @sa SDL_UploadToGPUTexture<br/>
 /// @sa SDL_DownloadFromGPUTexture<br/>
 /// @sa SDL_CopyGPUTextureToTexture<br/>
@@ -1542,7 +1645,7 @@ public readonly partial struct SDL_GPUTexture(nint value) : IEquatable<SDL_GPUTe
 /// <summary>
 /// An opaque handle representing a sampler.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3<br/>
+/// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUSampler<br/>
 /// @sa SDL_BindGPUVertexSamplers<br/>
@@ -1573,7 +1676,7 @@ public readonly partial struct SDL_GPUSampler(nint value) : IEquatable<SDL_GPUSa
 /// <summary>
 /// An opaque handle representing a compiled shader object.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3<br/>
+/// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUShader<br/>
 /// @sa SDL_CreateGPUGraphicsPipeline<br/>
@@ -1604,7 +1707,7 @@ public readonly partial struct SDL_GPUShader(nint value) : IEquatable<SDL_GPUSha
 /// An opaque handle representing a compute pipeline.<br/>
 /// Used during compute passes.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3<br/>
+/// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUComputePipeline<br/>
 /// @sa SDL_BindGPUComputePipeline<br/>
@@ -1635,7 +1738,7 @@ public readonly partial struct SDL_GPUComputePipeline(nint value) : IEquatable<S
 /// An opaque handle representing a graphics pipeline.<br/>
 /// Used during render passes.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3<br/>
+/// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUGraphicsPipeline<br/>
 /// @sa SDL_BindGPUGraphicsPipeline<br/>
@@ -1675,7 +1778,7 @@ public readonly partial struct SDL_GPUGraphicsPipeline(nint value) : IEquatable<
 /// In multi-threading scenarios, you should only access a command buffer on<br/>
 /// the thread you acquired it from.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3<br/>
+/// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_AcquireGPUCommandBuffer<br/>
 /// @sa SDL_SubmitGPUCommandBuffer<br/>
@@ -1707,7 +1810,7 @@ public readonly partial struct SDL_GPUCommandBuffer(nint value) : IEquatable<SDL
 /// This handle is transient and should not be held or referenced after<br/>
 /// SDL_EndGPURenderPass is called.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3<br/>
+/// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_BeginGPURenderPass<br/>
 /// @sa SDL_EndGPURenderPass
@@ -1738,7 +1841,7 @@ public readonly partial struct SDL_GPURenderPass(nint value) : IEquatable<SDL_GP
 /// This handle is transient and should not be held or referenced after<br/>
 /// SDL_EndGPUComputePass is called.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3<br/>
+/// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_BeginGPUComputePass<br/>
 /// @sa SDL_EndGPUComputePass
@@ -1769,7 +1872,7 @@ public readonly partial struct SDL_GPUComputePass(nint value) : IEquatable<SDL_G
 /// This handle is transient and should not be held or referenced after<br/>
 /// SDL_EndGPUCopyPass is called.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3<br/>
+/// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_BeginGPUCopyPass<br/>
 /// @sa SDL_EndGPUCopyPass
@@ -1798,7 +1901,7 @@ public readonly partial struct SDL_GPUCopyPass(nint value) : IEquatable<SDL_GPUC
 /// <summary>
 /// An opaque handle representing a fence.<br/>
 /// <br/>
-/// @since This struct is available since SDL 3.1.3<br/>
+/// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_SubmitGPUCommandBufferAndAcquireFence<br/>
 /// @sa SDL_QueryGPUFence<br/>
@@ -1826,6 +1929,13 @@ public readonly partial struct SDL_GPUFence(nint value) : IEquatable<SDL_GPUFenc
 	private string DebuggerDisplay => $"{nameof(SDL_GPUFence)} [0x{Value.ToString("X")}]";
 }
 
+/// <summary>
+/// An opaque handle representing a system process.<br/>
+/// <br/>
+/// @since This datatype is available since SDL 3.2.0.<br/>
+/// <br/>
+/// @sa SDL_CreateProcess
+/// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct SDL_Process(nint value) : IEquatable<SDL_Process>
 {

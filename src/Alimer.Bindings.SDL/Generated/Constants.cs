@@ -161,6 +161,7 @@ public static partial class SDL3
 	public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_WHEEL_DEVICES => "SDL_JOYSTICK_WHEEL_DEVICES"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_WHEEL_DEVICES_EXCLUDED => "SDL_JOYSTICK_WHEEL_DEVICES_EXCLUDED"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_ZERO_CENTERED_DEVICES => "SDL_JOYSTICK_ZERO_CENTERED_DEVICES"u8;
+	public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HAPTIC_AXES => "SDL_JOYSTICK_HAPTIC_AXES"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_KEYCODE_OPTIONS => "SDL_KEYCODE_OPTIONS"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_KMSDRM_DEVICE_INDEX => "SDL_KMSDRM_DEVICE_INDEX"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_KMSDRM_REQUIRE_DRM_MASTER => "SDL_KMSDRM_REQUIRE_DRM_MASTER"u8;
@@ -720,6 +721,8 @@ public static partial class SDL3
 	public static ReadOnlySpan<byte> SDL_PROP_SURFACE_SDR_WHITE_POINT_FLOAT => "SDL.surface.SDR_white_point"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_SURFACE_HDR_HEADROOM_FLOAT => "SDL.surface.HDR_headroom"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_SURFACE_TONEMAP_OPERATOR_STRING => "SDL.surface.tonemap"u8;
+	public static ReadOnlySpan<byte> SDL_PROP_SURFACE_HOTSPOT_X_NUMBER => "SDL.surface.hotspot.x"u8;
+	public static ReadOnlySpan<byte> SDL_PROP_SURFACE_HOTSPOT_Y_NUMBER => "SDL.surface.hotspot.y"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_THREAD_CREATE_ENTRY_FUNCTION_POINTER => "SDL.thread.create.entry_function"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_THREAD_CREATE_NAME_STRING => "SDL.thread.create.name"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_THREAD_CREATE_USERDATA_POINTER => "SDL.thread.create.userdata"u8;
@@ -731,7 +734,7 @@ public static partial class SDL3
 	public const uint SDL_NS_PER_US = 1000;
 	public const int SDL_MAJOR_VERSION = 3;
 	public const int SDL_MINOR_VERSION = 2;
-	public const int SDL_MICRO_VERSION = 0;
+	public const int SDL_MICRO_VERSION = 8;
 	public static ReadOnlySpan<byte> SDL_PROP_GLOBAL_VIDEO_WAYLAND_WL_DISPLAY_POINTER => "SDL.video.wayland.wl_display"u8;
 	public const ulong SDL_WINDOW_FULLSCREEN = 0x0000000000000001;
 	public const ulong SDL_WINDOW_OPENGL = 0x0000000000000002;
@@ -906,6 +909,11 @@ public static partial class SDL3
 	public static ReadOnlySpan<byte> SDL_PROP_PROCESS_STDOUT_POINTER => "SDL.process.stdout"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_PROCESS_STDERR_POINTER => "SDL.process.stderr"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_PROCESS_BACKGROUND_BOOLEAN => "SDL.process.background"u8;
+	public const uint SDL_TRAYENTRY_BUTTON = 0x00000001u;
+	public const uint SDL_TRAYENTRY_CHECKBOX = 0x00000002u;
+	public const uint SDL_TRAYENTRY_SUBMENU = 0x00000004u;
+	public const uint SDL_TRAYENTRY_DISABLED = 0x80000000u;
+	public const uint SDL_TRAYENTRY_CHECKED = 0x40000000u;
 
 	public const SDL_AsyncIOTaskType SDL_ASYNCIO_TASK_READ = SDL_AsyncIOTaskType.Read;
 	public const SDL_AsyncIOTaskType SDL_ASYNCIO_TASK_WRITE = SDL_AsyncIOTaskType.Write;
@@ -1368,6 +1376,7 @@ public static partial class SDL3
 	public const SDL_PixelFormat SDL_PIXELFORMAT_NV21 = SDL_PixelFormat.Nv21;
 	public const SDL_PixelFormat SDL_PIXELFORMAT_P010 = SDL_PixelFormat.P010;
 	public const SDL_PixelFormat SDL_PIXELFORMAT_EXTERNAL_OES = SDL_PixelFormat.ExternalOes;
+	public const SDL_PixelFormat SDL_PIXELFORMAT_MJPG = SDL_PixelFormat.Mjpg;
 	public const SDL_PixelFormat SDL_PIXELFORMAT_RGBA32 = SDL_PixelFormat.Rgba32;
 	public const SDL_PixelFormat SDL_PIXELFORMAT_ARGB32 = SDL_PixelFormat.Argb32;
 	public const SDL_PixelFormat SDL_PIXELFORMAT_BGRA32 = SDL_PixelFormat.Bgra32;

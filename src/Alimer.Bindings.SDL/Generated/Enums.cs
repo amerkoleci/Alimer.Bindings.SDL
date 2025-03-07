@@ -2397,6 +2397,11 @@ public enum SDL_PixelFormat : uint
 	/// </summary>
 	/// <unmanaged>SDL_PIXELFORMAT_EXTERNAL_OES</unmanaged>
 	ExternalOes = 0x2053454fu,
+	/// <summary>
+	/// Motion JPEG
+	/// </summary>
+	/// <unmanaged>SDL_PIXELFORMAT_MJPG</unmanaged>
+	Mjpg = 0x47504a4du,
 	/// <unmanaged>SDL_PIXELFORMAT_RGBA32</unmanaged>
 	Rgba32 = Abgr8888,
 	/// <unmanaged>SDL_PIXELFORMAT_ARGB32</unmanaged>

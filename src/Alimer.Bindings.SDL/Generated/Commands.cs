@@ -921,7 +921,7 @@ public unsafe partial class SDL3
 	/// Physical devices can not be paused or unpaused, only logical devices<br/>
 	/// created through SDL_OpenAudioDevice() can be.<br/>
 	/// <br/>
-	/// @param dev a device opened by SDL_OpenAudioDevice().<br/>
+	/// @param devid a device opened by SDL_OpenAudioDevice().<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
 	/// @threadsafety It is safe to call this function from any thread.<br/>
@@ -932,7 +932,7 @@ public unsafe partial class SDL3
 	/// @sa SDL_AudioDevicePaused
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_PauseAudioDevice")]
-	public static partial SDLBool SDL_PauseAudioDevice(SDL_AudioDeviceID dev);
+	public static partial SDLBool SDL_PauseAudioDevice(SDL_AudioDeviceID devid);
 
 	/// <summary>
 	/// Use this function to unpause audio playback on a specified device.<br/>
@@ -946,7 +946,7 @@ public unsafe partial class SDL3
 	/// Physical devices can not be paused or unpaused, only logical devices<br/>
 	/// created through SDL_OpenAudioDevice() can be.<br/>
 	/// <br/>
-	/// @param dev a device opened by SDL_OpenAudioDevice().<br/>
+	/// @param devid a device opened by SDL_OpenAudioDevice().<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
 	/// @threadsafety It is safe to call this function from any thread.<br/>
@@ -957,7 +957,7 @@ public unsafe partial class SDL3
 	/// @sa SDL_PauseAudioDevice
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_ResumeAudioDevice")]
-	public static partial SDLBool SDL_ResumeAudioDevice(SDL_AudioDeviceID dev);
+	public static partial SDLBool SDL_ResumeAudioDevice(SDL_AudioDeviceID devid);
 
 	/// <summary>
 	/// Use this function to query if an audio device is paused.<br/>
@@ -967,7 +967,7 @@ public unsafe partial class SDL3
 	/// created through SDL_OpenAudioDevice() can be. Physical and invalid device<br/>
 	/// IDs will report themselves as unpaused here.<br/>
 	/// <br/>
-	/// @param dev a device opened by SDL_OpenAudioDevice().<br/>
+	/// @param devid a device opened by SDL_OpenAudioDevice().<br/>
 	/// @returns true if device is valid and paused, false otherwise.<br/>
 	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
@@ -977,7 +977,7 @@ public unsafe partial class SDL3
 	/// @sa SDL_ResumeAudioDevice
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_AudioDevicePaused")]
-	public static partial SDLBool SDL_AudioDevicePaused(SDL_AudioDeviceID dev);
+	public static partial SDLBool SDL_AudioDevicePaused(SDL_AudioDeviceID devid);
 
 	/// <summary>
 	/// Get the gain of an audio device.<br/>
@@ -1653,6 +1653,8 @@ public unsafe partial class SDL3
 	/// This function unpauses audio processing for a given device that has<br/>
 	/// previously been paused. Once unpaused, any bound audio streams will begin<br/>
 	/// to progress again, and audio can be generated.<br/>
+	/// Remember, SDL_OpenAudioDeviceStream opens device in a paused state, so this<br/>
+	/// function call is required for audio playback to begin on such device.<br/>
 	/// <br/>
 	/// @param stream the audio stream associated with the audio device to resume.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
@@ -2313,7 +2315,7 @@ public unsafe partial class SDL3
 	/// there _is_ a camera until the user has given you permission to check<br/>
 	/// through a scary warning popup.<br/>
 	/// <br/>
-	/// @param devid the camera device instance ID to query.<br/>
+	/// @param instance_id the camera device instance ID.<br/>
 	/// @param count a pointer filled in with the number of elements in the list,<br/>
 	/// may be NULL.<br/>
 	/// @returns a NULL terminated array of pointers to SDL_CameraSpec or NULL on<br/>
@@ -2328,7 +2330,7 @@ public unsafe partial class SDL3
 	/// @sa SDL_OpenCamera
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_GetCameraSupportedFormats")]
-	public static partial SDL_CameraSpec** SDL_GetCameraSupportedFormats(SDL_CameraID devid, out int count);
+	public static partial SDL_CameraSpec** SDL_GetCameraSupportedFormats(SDL_CameraID instance_id, out int count);
 
 	/// <summary>
 	/// Get the human-readable device name for a camera.<br/>
@@ -3425,7 +3427,7 @@ public unsafe partial class SDL3
 	/// @param numevents if action is SDL_ADDEVENT, the number of events to add<br/>
 	/// back to the event queue; if action is SDL_PEEKEVENT or<br/>
 	/// SDL_GETEVENT, the maximum number of events to retrieve.<br/>
-	/// @param action action to take; see [[#action|Remarks]] for details.<br/>
+	/// @param action action to take; see [Remarks](#remarks) for details.<br/>
 	/// @param minType minimum value of the event type to be considered;<br/>
 	/// SDL_EVENT_FIRST is a safe choice.<br/>
 	/// @param maxType maximum value of the event type to be considered;<br/>
@@ -5521,6 +5523,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @param pchGUID string containing an ASCII representation of a GUID.<br/>
 	/// @returns a SDL_GUID structure.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -12563,6 +12566,8 @@ public unsafe partial class SDL3
 	/// Get the output size in pixels of a rendering context.<br/>
 	/// This returns the true output size in pixels, ignoring any render targets or<br/>
 	/// logical size and presentation.<br/>
+	/// For the output size of the current rendering target, with logical size<br/>
+	/// adjustments, use SDL_GetCurrentRenderOutputSize() instead.<br/>
 	/// <br/>
 	/// @param renderer the rendering context.<br/>
 	/// @param w a pointer filled in with the width in pixels.<br/>
@@ -12581,9 +12586,9 @@ public unsafe partial class SDL3
 	/// <summary>
 	/// Get the current output size in pixels of a rendering context.<br/>
 	/// If a rendering target is active, this will return the size of the rendering<br/>
-	/// target in pixels, otherwise if a logical size is set, it will return the<br/>
-	/// logical size, otherwise it will return the value of<br/>
-	/// SDL_GetRenderOutputSize().<br/>
+	/// target in pixels, otherwise return the value of SDL_GetRenderOutputSize().<br/>
+	/// Rendering target or not, the output will be adjusted by the current logical<br/>
+	/// presentation state, dictated by SDL_SetRenderLogicalPresentation().<br/>
 	/// <br/>
 	/// @param renderer the rendering context.<br/>
 	/// @param w a pointer filled in with the current width.<br/>
@@ -13269,6 +13274,10 @@ public unsafe partial class SDL3
 	/// The default render target is the window for which the renderer was created.<br/>
 	/// To stop rendering to a texture and render to the window again, call this<br/>
 	/// function with a NULL `texture`.<br/>
+	/// Viewport, cliprect, scale, and logical presentation are unique to each<br/>
+	/// render target. Get and set functions for these states apply to the current<br/>
+	/// render target set by this function, and those states persist on each target<br/>
+	/// when the current render target changes.<br/>
 	/// <br/>
 	/// @param renderer the rendering context.<br/>
 	/// @param texture the targeted texture, which must be created with the<br/>
@@ -13302,21 +13311,34 @@ public unsafe partial class SDL3
 	public static partial SDL_Texture* SDL_GetRenderTarget(SDL_Renderer renderer);
 
 	/// <summary>
-	/// Set a device independent resolution and presentation mode for rendering.<br/>
+	/// Set a device-independent resolution and presentation mode for rendering.<br/>
 	/// This function sets the width and height of the logical rendering output.<br/>
-	/// The renderer will act as if the window is always the requested dimensions,<br/>
-	/// scaling to the actual window resolution as necessary.<br/>
+	/// The renderer will act as if the current render target is always the<br/>
+	/// requested dimensions, scaling to the actual resolution as necessary.<br/>
 	/// This can be useful for games that expect a fixed size, but would like to<br/>
 	/// scale the output to whatever is available, regardless of how a user resizes<br/>
 	/// a window, or if the display is high DPI.<br/>
+	/// Logical presentation can be used with both render target textures and the<br/>
+	/// renderer's window; the state is unique to each render target, and this<br/>
+	/// function sets the state for the current render target. It might be useful<br/>
+	/// to draw to a texture that matches the window dimensions with logical<br/>
+	/// presentation enabled, and then draw that texture across the entire window<br/>
+	/// with logical presentation disabled. Be careful not to render both with<br/>
+	/// logical presentation enabled, however, as this could produce<br/>
+	/// double-letterboxing, etc.<br/>
 	/// You can disable logical coordinates by setting the mode to<br/>
 	/// SDL_LOGICAL_PRESENTATION_DISABLED, and in that case you get the full pixel<br/>
-	/// resolution of the output window; it is safe to toggle logical presentation<br/>
+	/// resolution of the render target; it is safe to toggle logical presentation<br/>
 	/// during the rendering of a frame: perhaps most of the rendering is done to<br/>
 	/// specific dimensions but to make fonts look sharp, the app turns off logical<br/>
-	/// presentation while drawing text.<br/>
-	/// Letterboxing will only happen if logical presentation is enabled during<br/>
-	/// SDL_RenderPresent; be sure to reenable it first if you were using it.<br/>
+	/// presentation while drawing text, for example.<br/>
+	/// For the renderer's window, letterboxing is drawn into the framebuffer if<br/>
+	/// logical presentation is enabled during SDL_RenderPresent; be sure to<br/>
+	/// reenable it before presenting if you were toggling it, otherwise the<br/>
+	/// letterbox areas might have artifacts from previous frames (or artifacts<br/>
+	/// from external overlays, etc). Letterboxing is never drawn into texture<br/>
+	/// render targets; be sure to call SDL_RenderClear() before drawing into the<br/>
+	/// texture so the letterboxing areas are cleared, if appropriate.<br/>
 	/// You can convert coordinates in an event into rendering coordinates using<br/>
 	/// SDL_ConvertEventToRenderCoordinates().<br/>
 	/// <br/>
@@ -13341,6 +13363,8 @@ public unsafe partial class SDL3
 	/// Get device independent resolution and presentation mode for rendering.<br/>
 	/// This function gets the width and height of the logical rendering output, or<br/>
 	/// the output size in pixels if a logical resolution is not enabled.<br/>
+	/// Each render target has its own logical presentation state. This function<br/>
+	/// gets the state for the current render target.<br/>
 	/// <br/>
 	/// @param renderer the rendering context.<br/>
 	/// @param w an int to be filled with the width.<br/>
@@ -13363,6 +13387,8 @@ public unsafe partial class SDL3
 	/// presentation, based on the presentation mode and output size. If logical<br/>
 	/// presentation is disabled, it will fill the rectangle with the output size,<br/>
 	/// in pixels.<br/>
+	/// Each render target has its own logical presentation state. This function<br/>
+	/// gets the rectangle for the current render target.<br/>
 	/// <br/>
 	/// @param renderer the rendering context.<br/>
 	/// @param rect a pointer filled in with the final presentation rectangle, may<br/>
@@ -13467,6 +13493,8 @@ public unsafe partial class SDL3
 	/// SDL_SetRenderClipRect), and the top left of the area will become coordinate<br/>
 	/// (0, 0) for future drawing commands.<br/>
 	/// The area's width and height must be >= 0.<br/>
+	/// Each render target has its own viewport. This function sets the viewport<br/>
+	/// for the current render target.<br/>
 	/// <br/>
 	/// @param renderer the rendering context.<br/>
 	/// @param rect the SDL_Rect structure representing the drawing area, or NULL<br/>
@@ -13485,6 +13513,8 @@ public unsafe partial class SDL3
 
 	/// <summary>
 	/// Get the drawing area for the current target.<br/>
+	/// Each render target has its own viewport. This function gets the viewport<br/>
+	/// for the current render target.<br/>
 	/// <br/>
 	/// @param renderer the rendering context.<br/>
 	/// @param rect an SDL_Rect structure filled in with the current drawing area.<br/>
@@ -13505,6 +13535,8 @@ public unsafe partial class SDL3
 	/// This is useful if you're saving and restoring the viewport and want to know<br/>
 	/// whether you should restore a specific rectangle or NULL. Note that the<br/>
 	/// viewport is always reset when changing rendering targets.<br/>
+	/// Each render target has its own viewport. This function checks the viewport<br/>
+	/// for the current render target.<br/>
 	/// <br/>
 	/// @param renderer the rendering context.<br/>
 	/// @returns true if the viewport was set to a specific rectangle, or false if<br/>
@@ -13542,6 +13574,8 @@ public unsafe partial class SDL3
 
 	/// <summary>
 	/// Set the clip rectangle for rendering on the specified target.<br/>
+	/// Each render target has its own clip rectangle. This function sets the<br/>
+	/// cliprect for the current render target.<br/>
 	/// <br/>
 	/// @param renderer the rendering context.<br/>
 	/// @param rect an SDL_Rect structure representing the clip area, relative to<br/>
@@ -13560,6 +13594,8 @@ public unsafe partial class SDL3
 
 	/// <summary>
 	/// Get the clip rectangle for the current target.<br/>
+	/// Each render target has its own clip rectangle. This function gets the<br/>
+	/// cliprect for the current render target.<br/>
 	/// <br/>
 	/// @param renderer the rendering context.<br/>
 	/// @param rect an SDL_Rect structure filled in with the current clipping area<br/>
@@ -13577,7 +13613,9 @@ public unsafe partial class SDL3
 	public static partial SDLBool SDL_GetRenderClipRect(SDL_Renderer renderer, Rectangle* rect);
 
 	/// <summary>
-	/// Get whether clipping is enabled on the given renderer.<br/>
+	/// Get whether clipping is enabled on the given render target.<br/>
+	/// Each render target has its own clip rectangle. This function checks the<br/>
+	/// cliprect for the current render target.<br/>
 	/// <br/>
 	/// @param renderer the rendering context.<br/>
 	/// @returns true if clipping is enabled or false if not; call SDL_GetError()<br/>
@@ -13600,6 +13638,8 @@ public unsafe partial class SDL3
 	/// If this results in scaling or subpixel drawing by the rendering backend, it<br/>
 	/// will be handled using the appropriate quality hints. For best results use<br/>
 	/// integer scaling factors.<br/>
+	/// Each render target has its own scale. This function sets the scale for the<br/>
+	/// current render target.<br/>
 	/// <br/>
 	/// @param renderer the rendering context.<br/>
 	/// @param scaleX the horizontal scaling factor.<br/>
@@ -13617,6 +13657,8 @@ public unsafe partial class SDL3
 
 	/// <summary>
 	/// Get the drawing scale for the current target.<br/>
+	/// Each render target has its own scale. This function gets the scale for the<br/>
+	/// current render target.<br/>
 	/// <br/>
 	/// @param renderer the rendering context.<br/>
 	/// @param scaleX a pointer filled in with the horizontal scaling factor.<br/>
@@ -14152,14 +14194,19 @@ public unsafe partial class SDL3
 
 	/// <summary>
 	/// Read pixels from the current rendering target.<br/>
-	/// The returned surface should be freed with SDL_DestroySurface()<br/>
+	/// The returned surface contains pixels inside the desired area clipped to the<br/>
+	/// current viewport, and should be freed with SDL_DestroySurface().<br/>
+	/// Note that this returns the actual pixels on the screen, so if you are using<br/>
+	/// logical presentation you should use SDL_GetRenderLogicalPresentationRect()<br/>
+	/// to get the area containing your content.<br/>
 	/// **WARNING**: This is a very slow operation, and should not be used<br/>
 	/// frequently. If you're using this on the main rendering target, it should be<br/>
 	/// called after rendering and before SDL_RenderPresent().<br/>
 	/// <br/>
 	/// @param renderer the rendering context.<br/>
-	/// @param rect an SDL_Rect structure representing the area in pixels relative<br/>
-	/// to the to current viewport, or NULL for the entire viewport.<br/>
+	/// @param rect an SDL_Rect structure representing the area to read, which will<br/>
+	/// be clipped to the current viewport, or NULL for the entire<br/>
+	/// viewport.<br/>
 	/// @returns a new SDL_Surface on success or NULL on failure; call<br/>
 	/// SDL_GetError() for more information.<br/>
 	/// @threadsafety This function should only be called on the main thread.<br/>
@@ -17536,13 +17583,13 @@ public unsafe partial class SDL3
 
 	/// <summary>
 	/// Seeds the pseudo-random number generator.<br/>
-	/// Reusing the seed number will cause SDL_rand_*() to repeat the same stream<br/>
-	/// of 'random' numbers.<br/>
+	/// Reusing the seed number will cause SDL_rand() to repeat the same stream of<br/>
+	/// 'random' numbers.<br/>
 	/// <br/>
 	/// @param seed the value to use as a random number seed, or 0 to use<br/>
 	/// SDL_GetPerformanceCounter().<br/>
 	/// @threadsafety This should be called on the same thread that calls<br/>
-	/// SDL_rand*()<br/>
+	/// SDL_rand()<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -17980,7 +18027,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
-	/// @sa SDL_atan2f<br/>
+	/// @sa SDL_atan2<br/>
 	/// @sa SDL_atan<br/>
 	/// @sa SDL_tan
 	/// </summary>
@@ -18113,7 +18160,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
-	/// @sa SDL_copysignf<br/>
+	/// @sa SDL_copysign<br/>
 	/// @sa SDL_fabsf
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_copysignf")]
@@ -18264,7 +18311,7 @@ public unsafe partial class SDL3
 	/// <<br/>
 	/// = INF`<br/>
 	/// This function operates on double-precision floating point values, use<br/>
-	/// SDL_copysignf for single-precision floats.<br/>
+	/// SDL_fabsf for single-precision floats.<br/>
 	/// <br/>
 	/// @param x floating point value to use as the magnitude.<br/>
 	/// @returns the absolute value of `x`.<br/>
@@ -18290,7 +18337,7 @@ public unsafe partial class SDL3
 	/// <<br/>
 	/// = INF`<br/>
 	/// This function operates on single-precision floating point values, use<br/>
-	/// SDL_copysignf for double-precision floats.<br/>
+	/// SDL_fabs for double-precision floats.<br/>
 	/// <br/>
 	/// @param x floating point value to use as the magnitude.<br/>
 	/// @returns the absolute value of `x`.<br/>
@@ -18350,7 +18397,7 @@ public unsafe partial class SDL3
 	/// <<br/>
 	/// = INF`, y integer<br/>
 	/// This function operates on single-precision floating point values, use<br/>
-	/// SDL_floorf for double-precision floats.<br/>
+	/// SDL_floor for double-precision floats.<br/>
 	/// <br/>
 	/// @param x floating point value.<br/>
 	/// @returns the floor of `x`.<br/>
@@ -18415,7 +18462,7 @@ public unsafe partial class SDL3
 	/// <<br/>
 	/// = INF`, y integer<br/>
 	/// This function operates on single-precision floating point values, use<br/>
-	/// SDL_truncf for double-precision floats.<br/>
+	/// SDL_trunc for double-precision floats.<br/>
 	/// <br/>
 	/// @param x floating point value.<br/>
 	/// @returns `x` truncated to an integer.<br/>
@@ -18489,7 +18536,7 @@ public unsafe partial class SDL3
 	/// <<br/>
 	/// = y`<br/>
 	/// This function operates on single-precision floating point values, use<br/>
-	/// SDL_fmod for single-precision floats.<br/>
+	/// SDL_fmod for double-precision floats.<br/>
 	/// <br/>
 	/// @param x the numerator.<br/>
 	/// @param y the denominator. Must not be 0.<br/>
@@ -18792,7 +18839,7 @@ public unsafe partial class SDL3
 	/// If `y` is the base of the natural logarithm (e), consider using SDL_exp<br/>
 	/// instead.<br/>
 	/// This function operates on single-precision floating point values, use<br/>
-	/// SDL_powf for double-precision floats.<br/>
+	/// SDL_pow for double-precision floats.<br/>
 	/// This function may use a different approximation across different versions,<br/>
 	/// platforms and configurations. i.e, it can return a different value given<br/>
 	/// the same input on different machines or operating systems, or if SDL is<br/>
@@ -18859,8 +18906,8 @@ public unsafe partial class SDL3
 	/// = y<br/>
 	/// <<br/>
 	/// = INF`, y integer<br/>
-	/// This function operates on double-precision floating point values, use<br/>
-	/// SDL_roundf for single-precision floats. To get the result as an integer<br/>
+	/// This function operates on single-precision floating point values, use<br/>
+	/// SDL_round for double-precision floats. To get the result as an integer<br/>
 	/// type, use SDL_lroundf.<br/>
 	/// <br/>
 	/// @param x floating point value.<br/>
@@ -18893,7 +18940,7 @@ public unsafe partial class SDL3
 	/// <<br/>
 	/// = MAX_LONG`<br/>
 	/// This function operates on double-precision floating point values, use<br/>
-	/// SDL_lround for single-precision floats. To get the result as a<br/>
+	/// SDL_lroundf for single-precision floats. To get the result as a<br/>
 	/// floating-point type, use SDL_round.<br/>
 	/// <br/>
 	/// @param x floating point value.<br/>
@@ -18926,8 +18973,8 @@ public unsafe partial class SDL3
 	/// <<br/>
 	/// = MAX_LONG`<br/>
 	/// This function operates on single-precision floating point values, use<br/>
-	/// SDL_lroundf for double-precision floats. To get the result as a<br/>
-	/// floating-point type, use SDL_roundf,<br/>
+	/// SDL_lround for double-precision floats. To get the result as a<br/>
+	/// floating-point type, use SDL_roundf.<br/>
 	/// <br/>
 	/// @param x floating point value.<br/>
 	/// @returns the nearest integer to `x`.<br/>
@@ -19173,7 +19220,7 @@ public unsafe partial class SDL3
 	/// <<br/>
 	/// = INF`<br/>
 	/// This function operates on single-precision floating point values, use<br/>
-	/// SDL_tanf for double-precision floats.<br/>
+	/// SDL_tan for double-precision floats.<br/>
 	/// This function may use a different approximation across different versions,<br/>
 	/// platforms and configurations. i.e, it can return a different value given<br/>
 	/// the same input on different machines or operating systems, or if SDL is<br/>
@@ -19494,7 +19541,8 @@ public unsafe partial class SDL3
 	/// Checks if the storage container is ready to use.<br/>
 	/// This function should be called in regular intervals until it returns true -<br/>
 	/// however, it is not recommended to spinwait on this call, as the backend may<br/>
-	/// depend on a synchronous message loop.<br/>
+	/// depend on a synchronous message loop. You might instead poll this in your<br/>
+	/// game's main loop while processing events and drawing a loading screen.<br/>
 	/// <br/>
 	/// @param storage a storage container to query.<br/>
 	/// @returns true if the container is ready, false otherwise.<br/>
@@ -19740,10 +19788,10 @@ public unsafe partial class SDL3
 	/// <summary>
 	/// Enumerate a directory tree, filtered by pattern, and return a list.<br/>
 	/// Files are filtered out if they don't match the string in `pattern`, which<br/>
-	/// may contain wildcard characters '*' (match everything) and '?' (match one<br/>
+	/// may contain wildcard characters `*` (match everything) and `?` (match one<br/>
 	/// character). If pattern is NULL, no filtering is done and all results are<br/>
 	/// returned. Subdirectories are permitted, and are specified with a path<br/>
-	/// separator of '/'. Wildcard characters '*' and '?' never match a path<br/>
+	/// separator of '/'. Wildcard characters `*` and `?` never match a path<br/>
 	/// separator.<br/>
 	/// `flags` may be set to SDL_GLOB_CASEINSENSITIVE to make the pattern matching<br/>
 	/// case-insensitive.<br/>
@@ -19854,6 +19902,10 @@ public unsafe partial class SDL3
 	/// the same tone mapping that Chrome uses for HDR content, the form "*=N",<br/>
 	/// where N is a floating point scale factor applied in linear space, and<br/>
 	/// "none", which disables tone mapping. This defaults to "chrome".<br/>
+	/// - `SDL_PROP_SURFACE_HOTSPOT_X_NUMBER`: the hotspot pixel offset from the<br/>
+	/// left edge of the image, if this surface is being used as a cursor.<br/>
+	/// - `SDL_PROP_SURFACE_HOTSPOT_Y_NUMBER`: the hotspot pixel offset from the<br/>
+	/// top edge of the image, if this surface is being used as a cursor.<br/>
 	/// <br/>
 	/// @param surface the SDL_Surface structure to query.<br/>
 	/// @returns a valid property ID on success or 0 on failure; call<br/>
@@ -20795,6 +20847,29 @@ public unsafe partial class SDL3
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_BlitSurfaceUncheckedScaled")]
 	public static partial SDLBool SDL_BlitSurfaceUncheckedScaled(SDL_Surface* src, Rectangle* srcrect, SDL_Surface* dst, Rectangle* dstrect, SDL_ScaleMode scaleMode);
+
+	/// <summary>
+	/// Perform a stretched pixel copy from one surface to another.<br/>
+	/// <br/>
+	/// @param src the SDL_Surface structure to be copied from.<br/>
+	/// @param srcrect the SDL_Rect structure representing the rectangle to be<br/>
+	/// copied, may not be NULL.<br/>
+	/// @param dst the SDL_Surface structure that is the blit target.<br/>
+	/// @param dstrect the SDL_Rect structure representing the target rectangle in<br/>
+	/// the destination surface, may not be NULL.<br/>
+	/// @param scaleMode the SDL_ScaleMode to be used.<br/>
+	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
+	/// information.<br/>
+	/// @threadsafety The same destination surface should not be used from two<br/>
+	/// threads at once. It is safe to use the same source surface<br/>
+	/// from multiple threads.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.4.0.<br/>
+	/// <br/>
+	/// @sa SDL_BlitSurfaceScaled
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_StretchSurface")]
+	public static partial SDLBool SDL_StretchSurface(SDL_Surface* src, Rectangle* srcrect, SDL_Surface* dst, Rectangle* dstrect, SDL_ScaleMode scaleMode);
 
 	/// <summary>
 	/// Perform a tiled blit to a destination surface, which may be of a different<br/>
@@ -25326,6 +25401,9 @@ public unsafe partial class SDL3
 	/// buffer.<br/>
 	/// Note that certain combinations of usage flags are invalid. For example, a<br/>
 	/// buffer cannot have both the VERTEX and INDEX flags.<br/>
+	/// If you use a STORAGE flag, the data in the buffer must respect std140<br/>
+	/// layout conventions. In practical terms this means you must ensure that vec3<br/>
+	/// and vec4 fields are 16-byte aligned.<br/>
 	/// For better understanding of underlying concepts and memory management with<br/>
 	/// SDL GPU API, you may refer<br/>
 	/// [this blog post](https://moonside.games/posts/sdl-gpu-concepts-cycling/)<br/>
@@ -25603,6 +25681,9 @@ public unsafe partial class SDL3
 	/// <summary>
 	/// Pushes data to a vertex uniform slot on the command buffer.<br/>
 	/// Subsequent draw calls will use this uniform data.<br/>
+	/// The data being pushed must respect std140 layout conventions. In practical<br/>
+	/// terms this means you must ensure that vec3 and vec4 fields are 16-byte<br/>
+	/// aligned.<br/>
 	/// <br/>
 	/// @param command_buffer a command buffer.<br/>
 	/// @param slot_index the vertex uniform slot to push data to.<br/>
@@ -25617,6 +25698,9 @@ public unsafe partial class SDL3
 	/// <summary>
 	/// Pushes data to a fragment uniform slot on the command buffer.<br/>
 	/// Subsequent draw calls will use this uniform data.<br/>
+	/// The data being pushed must respect std140 layout conventions. In practical<br/>
+	/// terms this means you must ensure that vec3 and vec4 fields are 16-byte<br/>
+	/// aligned.<br/>
 	/// <br/>
 	/// @param command_buffer a command buffer.<br/>
 	/// @param slot_index the fragment uniform slot to push data to.<br/>
@@ -25631,6 +25715,9 @@ public unsafe partial class SDL3
 	/// <summary>
 	/// Pushes data to a uniform slot on the command buffer.<br/>
 	/// Subsequent draw calls will use this uniform data.<br/>
+	/// The data being pushed must respect std140 layout conventions. In practical<br/>
+	/// terms this means you must ensure that vec3 and vec4 fields are 16-byte<br/>
+	/// aligned.<br/>
 	/// <br/>
 	/// @param command_buffer a command buffer.<br/>
 	/// @param slot_index the uniform slot to push data to.<br/>
@@ -25760,6 +25847,8 @@ public unsafe partial class SDL3
 	/// <summary>
 	/// Binds texture-sampler pairs for use on the vertex shader.<br/>
 	/// The textures must have been created with SDL_GPU_TEXTUREUSAGE_SAMPLER.<br/>
+	/// Be sure your shader is set up according to the requirements documented in<br/>
+	/// SDL_CreateGPUShader().<br/>
 	/// <br/>
 	/// @param render_pass a render pass handle.<br/>
 	/// @param first_slot the vertex sampler slot to begin binding from.<br/>
@@ -25768,7 +25857,9 @@ public unsafe partial class SDL3
 	/// @param num_bindings the number of texture-sampler pairs to bind from the<br/>
 	/// array.<br/>
 	/// <br/>
-	/// @since This function is available since SDL 3.2.0.
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateGPUShader
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_BindGPUVertexSamplers")]
 	public static partial void SDL_BindGPUVertexSamplers(SDL_GPURenderPass render_pass, uint first_slot, SDL_GPUTextureSamplerBinding* texture_sampler_bindings, uint num_bindings);
@@ -25777,13 +25868,17 @@ public unsafe partial class SDL3
 	/// Binds storage textures for use on the vertex shader.<br/>
 	/// These textures must have been created with<br/>
 	/// SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ.<br/>
+	/// Be sure your shader is set up according to the requirements documented in<br/>
+	/// SDL_CreateGPUShader().<br/>
 	/// <br/>
 	/// @param render_pass a render pass handle.<br/>
 	/// @param first_slot the vertex storage texture slot to begin binding from.<br/>
 	/// @param storage_textures an array of storage textures.<br/>
 	/// @param num_bindings the number of storage texture to bind from the array.<br/>
 	/// <br/>
-	/// @since This function is available since SDL 3.2.0.
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateGPUShader
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_BindGPUVertexStorageTextures")]
 	public static partial void SDL_BindGPUVertexStorageTextures(SDL_GPURenderPass render_pass, uint first_slot, SDL_GPUTexture** storage_textures, uint num_bindings);
@@ -25792,13 +25887,17 @@ public unsafe partial class SDL3
 	/// Binds storage buffers for use on the vertex shader.<br/>
 	/// These buffers must have been created with<br/>
 	/// SDL_GPU_BUFFERUSAGE_GRAPHICS_STORAGE_READ.<br/>
+	/// Be sure your shader is set up according to the requirements documented in<br/>
+	/// SDL_CreateGPUShader().<br/>
 	/// <br/>
 	/// @param render_pass a render pass handle.<br/>
 	/// @param first_slot the vertex storage buffer slot to begin binding from.<br/>
 	/// @param storage_buffers an array of buffers.<br/>
 	/// @param num_bindings the number of buffers to bind from the array.<br/>
 	/// <br/>
-	/// @since This function is available since SDL 3.2.0.
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateGPUShader
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_BindGPUVertexStorageBuffers")]
 	public static partial void SDL_BindGPUVertexStorageBuffers(SDL_GPURenderPass render_pass, uint first_slot, SDL_GPUBuffer** storage_buffers, uint num_bindings);
@@ -25806,6 +25905,8 @@ public unsafe partial class SDL3
 	/// <summary>
 	/// Binds texture-sampler pairs for use on the fragment shader.<br/>
 	/// The textures must have been created with SDL_GPU_TEXTUREUSAGE_SAMPLER.<br/>
+	/// Be sure your shader is set up according to the requirements documented in<br/>
+	/// SDL_CreateGPUShader().<br/>
 	/// <br/>
 	/// @param render_pass a render pass handle.<br/>
 	/// @param first_slot the fragment sampler slot to begin binding from.<br/>
@@ -25814,7 +25915,9 @@ public unsafe partial class SDL3
 	/// @param num_bindings the number of texture-sampler pairs to bind from the<br/>
 	/// array.<br/>
 	/// <br/>
-	/// @since This function is available since SDL 3.2.0.
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateGPUShader
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_BindGPUFragmentSamplers")]
 	public static partial void SDL_BindGPUFragmentSamplers(SDL_GPURenderPass render_pass, uint first_slot, SDL_GPUTextureSamplerBinding* texture_sampler_bindings, uint num_bindings);
@@ -25823,13 +25926,17 @@ public unsafe partial class SDL3
 	/// Binds storage textures for use on the fragment shader.<br/>
 	/// These textures must have been created with<br/>
 	/// SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ.<br/>
+	/// Be sure your shader is set up according to the requirements documented in<br/>
+	/// SDL_CreateGPUShader().<br/>
 	/// <br/>
 	/// @param render_pass a render pass handle.<br/>
 	/// @param first_slot the fragment storage texture slot to begin binding from.<br/>
 	/// @param storage_textures an array of storage textures.<br/>
 	/// @param num_bindings the number of storage textures to bind from the array.<br/>
 	/// <br/>
-	/// @since This function is available since SDL 3.2.0.
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateGPUShader
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_BindGPUFragmentStorageTextures")]
 	public static partial void SDL_BindGPUFragmentStorageTextures(SDL_GPURenderPass render_pass, uint first_slot, SDL_GPUTexture** storage_textures, uint num_bindings);
@@ -25838,13 +25945,17 @@ public unsafe partial class SDL3
 	/// Binds storage buffers for use on the fragment shader.<br/>
 	/// These buffers must have been created with<br/>
 	/// SDL_GPU_BUFFERUSAGE_GRAPHICS_STORAGE_READ.<br/>
+	/// Be sure your shader is set up according to the requirements documented in<br/>
+	/// SDL_CreateGPUShader().<br/>
 	/// <br/>
 	/// @param render_pass a render pass handle.<br/>
 	/// @param first_slot the fragment storage buffer slot to begin binding from.<br/>
 	/// @param storage_buffers an array of storage buffers.<br/>
 	/// @param num_bindings the number of storage buffers to bind from the array.<br/>
 	/// <br/>
-	/// @since This function is available since SDL 3.2.0.
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateGPUShader
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_BindGPUFragmentStorageBuffers")]
 	public static partial void SDL_BindGPUFragmentStorageBuffers(SDL_GPURenderPass render_pass, uint first_slot, SDL_GPUBuffer** storage_buffers, uint num_bindings);
@@ -25994,6 +26105,8 @@ public unsafe partial class SDL3
 	/// <summary>
 	/// Binds texture-sampler pairs for use on the compute shader.<br/>
 	/// The textures must have been created with SDL_GPU_TEXTUREUSAGE_SAMPLER.<br/>
+	/// Be sure your shader is set up according to the requirements documented in<br/>
+	/// SDL_CreateGPUShader().<br/>
 	/// <br/>
 	/// @param compute_pass a compute pass handle.<br/>
 	/// @param first_slot the compute sampler slot to begin binding from.<br/>
@@ -26002,7 +26115,9 @@ public unsafe partial class SDL3
 	/// @param num_bindings the number of texture-sampler bindings to bind from the<br/>
 	/// array.<br/>
 	/// <br/>
-	/// @since This function is available since SDL 3.2.0.
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateGPUShader
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_BindGPUComputeSamplers")]
 	public static partial void SDL_BindGPUComputeSamplers(SDL_GPUComputePass compute_pass, uint first_slot, SDL_GPUTextureSamplerBinding* texture_sampler_bindings, uint num_bindings);
@@ -26011,13 +26126,17 @@ public unsafe partial class SDL3
 	/// Binds storage textures as readonly for use on the compute pipeline.<br/>
 	/// These textures must have been created with<br/>
 	/// SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_READ.<br/>
+	/// Be sure your shader is set up according to the requirements documented in<br/>
+	/// SDL_CreateGPUShader().<br/>
 	/// <br/>
 	/// @param compute_pass a compute pass handle.<br/>
 	/// @param first_slot the compute storage texture slot to begin binding from.<br/>
 	/// @param storage_textures an array of storage textures.<br/>
 	/// @param num_bindings the number of storage textures to bind from the array.<br/>
 	/// <br/>
-	/// @since This function is available since SDL 3.2.0.
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateGPUShader
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_BindGPUComputeStorageTextures")]
 	public static partial void SDL_BindGPUComputeStorageTextures(SDL_GPUComputePass compute_pass, uint first_slot, SDL_GPUTexture** storage_textures, uint num_bindings);
@@ -26026,13 +26145,17 @@ public unsafe partial class SDL3
 	/// Binds storage buffers as readonly for use on the compute pipeline.<br/>
 	/// These buffers must have been created with<br/>
 	/// SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_READ.<br/>
+	/// Be sure your shader is set up according to the requirements documented in<br/>
+	/// SDL_CreateGPUShader().<br/>
 	/// <br/>
 	/// @param compute_pass a compute pass handle.<br/>
 	/// @param first_slot the compute storage buffer slot to begin binding from.<br/>
 	/// @param storage_buffers an array of storage buffer binding structs.<br/>
 	/// @param num_bindings the number of storage buffers to bind from the array.<br/>
 	/// <br/>
-	/// @since This function is available since SDL 3.2.0.
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateGPUShader
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_BindGPUComputeStorageBuffers")]
 	public static partial void SDL_BindGPUComputeStorageBuffers(SDL_GPUComputePass compute_pass, uint first_slot, SDL_GPUBuffer** storage_buffers, uint num_bindings);
@@ -26091,7 +26214,9 @@ public unsafe partial class SDL3
 
 	/// <summary>
 	/// Maps a transfer buffer into application address space.<br/>
-	/// You must unmap the transfer buffer before encoding upload commands.<br/>
+	/// You must unmap the transfer buffer before encoding upload commands. The<br/>
+	/// memory is owned by the graphics driver - do NOT call SDL_free() on the<br/>
+	/// returned pointer.<br/>
 	/// <br/>
 	/// @param device a GPU context.<br/>
 	/// @param transfer_buffer a transfer buffer.<br/>
@@ -26473,6 +26598,8 @@ public unsafe partial class SDL3
 	/// The swapchain texture is managed by the implementation and must not be<br/>
 	/// freed by the user. You MUST NOT call this function from any thread other<br/>
 	/// than the one that created the window.<br/>
+	/// The swapchain texture is write-only and cannot be used as a sampler or for<br/>
+	/// another reading operation.<br/>
 	/// <br/>
 	/// @param command_buffer a command buffer.<br/>
 	/// @param window a window that has been claimed.<br/>
@@ -26490,7 +26617,8 @@ public unsafe partial class SDL3
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
 	/// @sa SDL_SubmitGPUCommandBuffer<br/>
-	/// @sa SDL_SubmitGPUCommandBufferAndAcquireFence
+	/// @sa SDL_SubmitGPUCommandBufferAndAcquireFence<br/>
+	/// @sa SDL_AcquireGPUSwapchainTexture
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_WaitAndAcquireGPUSwapchainTexture")]
 	public static partial SDLBool SDL_WaitAndAcquireGPUSwapchainTexture(SDL_GPUCommandBuffer command_buffer, SDL_Window window, SDL_GPUTexture swapchain_texture, uint* swapchain_texture_width, uint* swapchain_texture_height);
@@ -26610,6 +26738,7 @@ public unsafe partial class SDL3
 
 	/// <summary>
 	/// Releases a fence obtained from SDL_SubmitGPUCommandBufferAndAcquireFence.<br/>
+	/// You must not reference the fence after calling this function.<br/>
 	/// <br/>
 	/// @param device a GPU context.<br/>
 	/// @param fence a fence.<br/>
@@ -26884,13 +27013,13 @@ public unsafe partial class SDL3
 	/// standard input when `SDL_PROP_PROCESS_CREATE_STDIN_NUMBER` is set to<br/>
 	/// `SDL_PROCESS_STDIO_REDIRECT`.<br/>
 	/// - `SDL_PROP_PROCESS_CREATE_STDOUT_NUMBER`: an SDL_ProcessIO value<br/>
-	/// describing where standard output for the process goes go, defaults to<br/>
+	/// describing where standard output for the process goes to, defaults to<br/>
 	/// `SDL_PROCESS_STDIO_INHERITED`.<br/>
 	/// - `SDL_PROP_PROCESS_CREATE_STDOUT_POINTER`: an SDL_IOStream pointer used<br/>
 	/// for standard output when `SDL_PROP_PROCESS_CREATE_STDOUT_NUMBER` is set<br/>
 	/// to `SDL_PROCESS_STDIO_REDIRECT`.<br/>
 	/// - `SDL_PROP_PROCESS_CREATE_STDERR_NUMBER`: an SDL_ProcessIO value<br/>
-	/// describing where standard error for the process goes go, defaults to<br/>
+	/// describing where standard error for the process goes to, defaults to<br/>
 	/// `SDL_PROCESS_STDIO_INHERITED`.<br/>
 	/// - `SDL_PROP_PROCESS_CREATE_STDERR_POINTER`: an SDL_IOStream pointer used<br/>
 	/// for standard error when `SDL_PROP_PROCESS_CREATE_STDERR_NUMBER` is set to<br/>
@@ -27100,5 +27229,449 @@ public unsafe partial class SDL3
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_DestroyProcess")]
 	public static partial void SDL_DestroyProcess(SDL_Process process);
+
+	/// <summary>
+	/// Create an icon to be placed in the operating system's tray, or equivalent.<br/>
+	/// Many platforms advise not using a system tray unless persistence is a<br/>
+	/// necessary feature. Avoid needlessly creating a tray icon, as the user may<br/>
+	/// feel like it clutters their interface.<br/>
+	/// Using tray icons require the video subsystem.<br/>
+	/// <br/>
+	/// @param icon a surface to be used as icon. May be NULL.<br/>
+	/// @param tooltip a tooltip to be displayed when the mouse hovers the icon in<br/>
+	/// UTF-8 encoding. Not supported on all platforms. May be NULL.<br/>
+	/// @returns The newly created system tray icon.<br/>
+	/// @threadsafety This function should only be called on the main thread.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateTrayMenu<br/>
+	/// @sa SDL_GetTrayMenu<br/>
+	/// @sa SDL_DestroyTray
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateTray")]
+	public static partial SDL_Tray SDL_CreateTray(SDL_Surface* icon, byte* tooltip);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateTray")]
+	public static partial SDL_Tray SDL_CreateTray(SDL_Surface* icon, ReadOnlySpan<byte> tooltip);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateTray")]
+	public static partial SDL_Tray SDL_CreateTray(SDL_Surface* icon, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> tooltip);
+
+	/// <summary>
+	/// Updates the system tray icon's icon.<br/>
+	/// <br/>
+	/// @param tray the tray icon to be updated.<br/>
+	/// @param icon the new icon. May be NULL.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateTray
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayIcon")]
+	public static partial void SDL_SetTrayIcon(SDL_Tray tray, SDL_Surface* icon);
+
+	/// <summary>
+	/// Updates the system tray icon's tooltip.<br/>
+	/// <br/>
+	/// @param tray the tray icon to be updated.<br/>
+	/// @param tooltip the new tooltip in UTF-8 encoding. May be NULL.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateTray
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayTooltip")]
+	public static partial void SDL_SetTrayTooltip(SDL_Tray tray, byte* tooltip);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayTooltip")]
+	public static partial void SDL_SetTrayTooltip(SDL_Tray tray, ReadOnlySpan<byte> tooltip);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayTooltip")]
+	public static partial void SDL_SetTrayTooltip(SDL_Tray tray, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> tooltip);
+
+	/// <summary>
+	/// Create a menu for a system tray.<br/>
+	/// This should be called at most once per tray icon.<br/>
+	/// This function does the same thing as SDL_CreateTraySubmenu(), except that<br/>
+	/// it takes a SDL_Tray instead of a SDL_TrayEntry.<br/>
+	/// A menu does not need to be destroyed; it will be destroyed with the tray.<br/>
+	/// <br/>
+	/// @param tray the tray to bind the menu to.<br/>
+	/// @returns the newly created menu.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateTray<br/>
+	/// @sa SDL_GetTrayMenu<br/>
+	/// @sa SDL_GetTrayMenuParentTray
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateTrayMenu")]
+	public static partial SDL_TrayMenu SDL_CreateTrayMenu(SDL_Tray tray);
+
+	/// <summary>
+	/// Create a submenu for a system tray entry.<br/>
+	/// This should be called at most once per tray entry.<br/>
+	/// This function does the same thing as SDL_CreateTrayMenu, except that it<br/>
+	/// takes a SDL_TrayEntry instead of a SDL_Tray.<br/>
+	/// A menu does not need to be destroyed; it will be destroyed with the tray.<br/>
+	/// <br/>
+	/// @param entry the tray entry to bind the menu to.<br/>
+	/// @returns the newly created menu.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_InsertTrayEntryAt<br/>
+	/// @sa SDL_GetTraySubmenu<br/>
+	/// @sa SDL_GetTrayMenuParentEntry
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateTraySubmenu")]
+	public static partial SDL_TrayMenu SDL_CreateTraySubmenu(SDL_TrayEntry entry);
+
+	/// <summary>
+	/// Gets a previously created tray menu.<br/>
+	/// You should have called SDL_CreateTrayMenu() on the tray object. This<br/>
+	/// function allows you to fetch it again later.<br/>
+	/// This function does the same thing as SDL_GetTraySubmenu(), except that it<br/>
+	/// takes a SDL_Tray instead of a SDL_TrayEntry.<br/>
+	/// A menu does not need to be destroyed; it will be destroyed with the tray.<br/>
+	/// <br/>
+	/// @param tray the tray entry to bind the menu to.<br/>
+	/// @returns the newly created menu.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateTray<br/>
+	/// @sa SDL_CreateTrayMenu
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTrayMenu")]
+	public static partial SDL_TrayMenu SDL_GetTrayMenu(SDL_Tray tray);
+
+	/// <summary>
+	/// Gets a previously created tray entry submenu.<br/>
+	/// You should have called SDL_CreateTraySubmenu() on the entry object. This<br/>
+	/// function allows you to fetch it again later.<br/>
+	/// This function does the same thing as SDL_GetTrayMenu(), except that it<br/>
+	/// takes a SDL_TrayEntry instead of a SDL_Tray.<br/>
+	/// A menu does not need to be destroyed; it will be destroyed with the tray.<br/>
+	/// <br/>
+	/// @param entry the tray entry to bind the menu to.<br/>
+	/// @returns the newly created menu.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_InsertTrayEntryAt<br/>
+	/// @sa SDL_CreateTraySubmenu
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTraySubmenu")]
+	public static partial SDL_TrayMenu SDL_GetTraySubmenu(SDL_TrayEntry entry);
+
+	/// <summary>
+	/// Returns a list of entries in the menu, in order.<br/>
+	/// <br/>
+	/// @param menu The menu to get entries from.<br/>
+	/// @param count An optional pointer to obtain the number of entries in the<br/>
+	/// menu.<br/>
+	/// @returns a NULL-terminated list of entries within the given menu. The<br/>
+	/// pointer becomes invalid when any function that inserts or deletes<br/>
+	/// entries in the menu is called.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_RemoveTrayEntry<br/>
+	/// @sa SDL_InsertTrayEntryAt
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTrayEntries")]
+	public static partial SDL_TrayEntry SDL_GetTrayEntries(SDL_TrayMenu menu, out int count);
+
+	/// <summary>
+	/// Removes a tray entry.<br/>
+	/// <br/>
+	/// @param entry The entry to be deleted.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_GetTrayEntries<br/>
+	/// @sa SDL_InsertTrayEntryAt
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_RemoveTrayEntry")]
+	public static partial void SDL_RemoveTrayEntry(SDL_TrayEntry entry);
+
+	/// <summary>
+	/// Insert a tray entry at a given position.<br/>
+	/// If label is NULL, the entry will be a separator. Many functions won't work<br/>
+	/// for an entry that is a separator.<br/>
+	/// An entry does not need to be destroyed; it will be destroyed with the tray.<br/>
+	/// <br/>
+	/// @param menu the menu to append the entry to.<br/>
+	/// @param pos the desired position for the new entry. Entries at or following<br/>
+	/// this place will be moved. If pos is -1, the entry is appended.<br/>
+	/// @param label the text to be displayed on the entry, in UTF-8 encoding, or<br/>
+	/// NULL for a separator.<br/>
+	/// @param flags a combination of flags, some of which are mandatory.<br/>
+	/// @returns the newly created entry, or NULL if pos is out of bounds.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_TrayEntryFlags<br/>
+	/// @sa SDL_GetTrayEntries<br/>
+	/// @sa SDL_RemoveTrayEntry<br/>
+	/// @sa SDL_GetTrayEntryParent
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_InsertTrayEntryAt")]
+	public static partial SDL_TrayEntry SDL_InsertTrayEntryAt(SDL_TrayMenu menu, int pos, byte* label, SDL_TrayEntryFlags flags);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_InsertTrayEntryAt")]
+	public static partial SDL_TrayEntry SDL_InsertTrayEntryAt(SDL_TrayMenu menu, int pos, ReadOnlySpan<byte> label, SDL_TrayEntryFlags flags);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_InsertTrayEntryAt")]
+	public static partial SDL_TrayEntry SDL_InsertTrayEntryAt(SDL_TrayMenu menu, int pos, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> label, SDL_TrayEntryFlags flags);
+
+	/// <summary>
+	/// Sets the label of an entry.<br/>
+	/// An entry cannot change between a separator and an ordinary entry; that is,<br/>
+	/// it is not possible to set a non-NULL label on an entry that has a NULL<br/>
+	/// label (separators), or to set a NULL label to an entry that has a non-NULL<br/>
+	/// label. The function will silently fail if that happens.<br/>
+	/// <br/>
+	/// @param entry the entry to be updated.<br/>
+	/// @param label the new label for the entry in UTF-8 encoding.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_GetTrayEntries<br/>
+	/// @sa SDL_InsertTrayEntryAt<br/>
+	/// @sa SDL_GetTrayEntryLabel
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayEntryLabel")]
+	public static partial void SDL_SetTrayEntryLabel(SDL_TrayEntry entry, byte* label);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayEntryLabel")]
+	public static partial void SDL_SetTrayEntryLabel(SDL_TrayEntry entry, ReadOnlySpan<byte> label);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayEntryLabel")]
+	public static partial void SDL_SetTrayEntryLabel(SDL_TrayEntry entry, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> label);
+
+	/// <summary>
+	/// Gets the label of an entry.<br/>
+	/// If the returned value is NULL, the entry is a separator.<br/>
+	/// <br/>
+	/// @param entry the entry to be read.<br/>
+	/// @returns the label of the entry in UTF-8 encoding.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_GetTrayEntries<br/>
+	/// @sa SDL_InsertTrayEntryAt<br/>
+	/// @sa SDL_SetTrayEntryLabel
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTrayEntryLabel")]
+	public static partial byte* SDL_GetTrayEntryLabelPtr(SDL_TrayEntry entry);
+
+	public static string? SDL_GetTrayEntryLabel(SDL_TrayEntry entry)
+	{
+		return ConvertToManaged(SDL_GetTrayEntryLabelPtr(entry));
+	}
+
+	/// <summary>
+	/// Sets whether or not an entry is checked.<br/>
+	/// The entry must have been created with the SDL_TRAYENTRY_CHECKBOX flag.<br/>
+	/// <br/>
+	/// @param entry the entry to be updated.<br/>
+	/// @param checked true if the entry should be checked; false otherwise.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_GetTrayEntries<br/>
+	/// @sa SDL_InsertTrayEntryAt<br/>
+	/// @sa SDL_GetTrayEntryChecked
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayEntryChecked")]
+	public static partial void SDL_SetTrayEntryChecked(SDL_TrayEntry entry, SDLBool @checked);
+
+	/// <summary>
+	/// Gets whether or not an entry is checked.<br/>
+	/// The entry must have been created with the SDL_TRAYENTRY_CHECKBOX flag.<br/>
+	/// <br/>
+	/// @param entry the entry to be read.<br/>
+	/// @returns true if the entry is checked; false otherwise.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_GetTrayEntries<br/>
+	/// @sa SDL_InsertTrayEntryAt<br/>
+	/// @sa SDL_SetTrayEntryChecked
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTrayEntryChecked")]
+	public static partial SDLBool SDL_GetTrayEntryChecked(SDL_TrayEntry entry);
+
+	/// <summary>
+	/// Sets whether or not an entry is enabled.<br/>
+	/// <br/>
+	/// @param entry the entry to be updated.<br/>
+	/// @param enabled true if the entry should be enabled; false otherwise.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_GetTrayEntries<br/>
+	/// @sa SDL_InsertTrayEntryAt<br/>
+	/// @sa SDL_GetTrayEntryEnabled
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayEntryEnabled")]
+	public static partial void SDL_SetTrayEntryEnabled(SDL_TrayEntry entry, SDLBool enabled);
+
+	/// <summary>
+	/// Gets whether or not an entry is enabled.<br/>
+	/// <br/>
+	/// @param entry the entry to be read.<br/>
+	/// @returns true if the entry is enabled; false otherwise.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_GetTrayEntries<br/>
+	/// @sa SDL_InsertTrayEntryAt<br/>
+	/// @sa SDL_SetTrayEntryEnabled
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTrayEntryEnabled")]
+	public static partial SDLBool SDL_GetTrayEntryEnabled(SDL_TrayEntry entry);
+
+	/// <summary>
+	/// Sets a callback to be invoked when the entry is selected.<br/>
+	/// <br/>
+	/// @param entry the entry to be updated.<br/>
+	/// @param callback a callback to be invoked when the entry is selected.<br/>
+	/// @param userdata an optional pointer to pass extra data to the callback when<br/>
+	/// it will be invoked.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_GetTrayEntries<br/>
+	/// @sa SDL_InsertTrayEntryAt
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayEntryCallback")]
+	public static partial void SDL_SetTrayEntryCallback(SDL_TrayEntry entry, delegate* unmanaged[Cdecl]<nint, SDL_TrayEntry, void> callback, nint userdata);
+
+	/// <summary>
+	/// Simulate a click on a tray entry.<br/>
+	/// <br/>
+	/// @param entry The entry to activate.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_ClickTrayEntry")]
+	public static partial void SDL_ClickTrayEntry(SDL_TrayEntry entry);
+
+	/// <summary>
+	/// Destroys a tray object.<br/>
+	/// This also destroys all associated menus and entries.<br/>
+	/// <br/>
+	/// @param tray the tray icon to be destroyed.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateTray
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_DestroyTray")]
+	public static partial void SDL_DestroyTray(SDL_Tray tray);
+
+	/// <summary>
+	/// Gets the menu containing a certain tray entry.<br/>
+	/// <br/>
+	/// @param entry the entry for which to get the parent menu.<br/>
+	/// @returns the parent menu.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_InsertTrayEntryAt
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTrayEntryParent")]
+	public static partial SDL_TrayMenu SDL_GetTrayEntryParent(SDL_TrayEntry entry);
+
+	/// <summary>
+	/// Gets the entry for which the menu is a submenu, if the current menu is a<br/>
+	/// submenu.<br/>
+	/// Either this function or SDL_GetTrayMenuParentTray() will return non-NULL<br/>
+	/// for any given menu.<br/>
+	/// <br/>
+	/// @param menu the menu for which to get the parent entry.<br/>
+	/// @returns the parent entry, or NULL if this menu is not a submenu.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateTraySubmenu<br/>
+	/// @sa SDL_GetTrayMenuParentTray
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTrayMenuParentEntry")]
+	public static partial SDL_TrayEntry SDL_GetTrayMenuParentEntry(SDL_TrayMenu menu);
+
+	/// <summary>
+	/// Gets the tray for which this menu is the first-level menu, if the current<br/>
+	/// menu isn't a submenu.<br/>
+	/// Either this function or SDL_GetTrayMenuParentEntry() will return non-NULL<br/>
+	/// for any given menu.<br/>
+	/// <br/>
+	/// @param menu the menu for which to get the parent enttrayry.<br/>
+	/// @returns the parent tray, or NULL if this menu is a submenu.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateTrayMenu<br/>
+	/// @sa SDL_GetTrayMenuParentEntry
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTrayMenuParentTray")]
+	public static partial SDL_Tray SDL_GetTrayMenuParentTray(SDL_TrayMenu menu);
+
+	/// <summary>
+	/// Update the trays.<br/>
+	/// This is called automatically by the event loop and is only needed if you're<br/>
+	/// using trays but aren't handling SDL events.<br/>
+	/// @threadsafety This function should only be called on the main thread.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_UpdateTrays")]
+	public static partial void SDL_UpdateTrays();
 
 }

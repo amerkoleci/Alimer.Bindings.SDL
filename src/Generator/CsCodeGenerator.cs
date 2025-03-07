@@ -19,6 +19,7 @@ public partial class CsCodeGenerator
         "internal",
         "private",
         "public",
+        "checked",
     ];
 
     private static readonly Dictionary<string, string> s_csNameMappings = new()

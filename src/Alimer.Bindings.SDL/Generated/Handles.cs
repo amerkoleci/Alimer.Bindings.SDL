@@ -701,6 +701,9 @@ public enum SDL_GPUTextureUsageFlags : uint
 /// combinations are invalid.<br/>
 /// Unlike textures, READ | WRITE can be used for simultaneous read-write<br/>
 /// usage. The same data synchronization concerns as textures apply.<br/>
+/// If you use a STORAGE flag, the data in the buffer must respect std140<br/>
+/// layout conventions. In practical terms this means you must ensure that vec3<br/>
+/// and vec4 fields are 16-byte aligned.<br/>
 /// <br/>
 /// @since This datatype is available since SDL 3.2.0.<br/>
 /// <br/>
@@ -752,6 +755,21 @@ public enum SDL_GPUColorComponentFlags : byte
 	B = SDL3.SDL_GPU_COLORCOMPONENT_B,
 	A = SDL3.SDL_GPU_COLORCOMPONENT_A,
 	All = R | G | B | A
+}
+
+/// <summary>
+/// Flags that control the creation of system tray entries.<br/>
+/// Some of these flags are required; exactly one of them must be specified at<br/>
+/// the time a tray entry is created. Other flags are optional; zero or more of<br/>
+/// those can be OR'ed together with the required flag.<br/>
+/// <br/>
+/// @since This datatype is available since SDL 3.2.0.<br/>
+/// <br/>
+/// @sa SDL_InsertTrayEntryAt
+/// </summary>
+[Flags]
+public enum SDL_TrayEntryFlags : uint
+{
 }
 
 /// <summary>
@@ -1955,5 +1973,83 @@ public readonly partial struct SDL_Process(nint value) : IEquatable<SDL_Process>
 	/// <inheritdoc/>
 	public override int GetHashCode() => Value.GetHashCode();
 	private string DebuggerDisplay => $"{nameof(SDL_Process)} [0x{Value.ToString("X")}]";
+}
+
+/// <summary>
+/// An opaque handle representing a toplevel system tray object.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.2.0.
+/// </summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_Tray(nint value) : IEquatable<SDL_Tray>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_Tray Null => new(0);
+	public static implicit operator nint(SDL_Tray value) => value.Value;
+	public static implicit operator SDL_Tray(nint value) => new(value);
+	public static bool operator ==(SDL_Tray left, SDL_Tray right) => left.Value == right.Value;
+	public static bool operator !=(SDL_Tray left, SDL_Tray right) => left.Value != right.Value;
+	public static bool operator ==(SDL_Tray left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_Tray left, nint right) => left.Value != right;
+	public bool Equals(SDL_Tray other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_Tray other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_Tray)} [0x{Value.ToString("X")}]";
+}
+
+/// <summary>
+/// An opaque handle representing a menu/submenu on a system tray object.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.2.0.
+/// </summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_TrayMenu(nint value) : IEquatable<SDL_TrayMenu>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_TrayMenu Null => new(0);
+	public static implicit operator nint(SDL_TrayMenu value) => value.Value;
+	public static implicit operator SDL_TrayMenu(nint value) => new(value);
+	public static bool operator ==(SDL_TrayMenu left, SDL_TrayMenu right) => left.Value == right.Value;
+	public static bool operator !=(SDL_TrayMenu left, SDL_TrayMenu right) => left.Value != right.Value;
+	public static bool operator ==(SDL_TrayMenu left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_TrayMenu left, nint right) => left.Value != right;
+	public bool Equals(SDL_TrayMenu other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_TrayMenu other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_TrayMenu)} [0x{Value.ToString("X")}]";
+}
+
+/// <summary>
+/// An opaque handle representing an entry on a system tray object.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.2.0.
+/// </summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public readonly partial struct SDL_TrayEntry(nint value) : IEquatable<SDL_TrayEntry>
+{
+	public readonly nint Value = value;
+	public bool IsNull => Value == 0;
+	public bool IsNotNull => Value != 0;
+	public static SDL_TrayEntry Null => new(0);
+	public static implicit operator nint(SDL_TrayEntry value) => value.Value;
+	public static implicit operator SDL_TrayEntry(nint value) => new(value);
+	public static bool operator ==(SDL_TrayEntry left, SDL_TrayEntry right) => left.Value == right.Value;
+	public static bool operator !=(SDL_TrayEntry left, SDL_TrayEntry right) => left.Value != right.Value;
+	public static bool operator ==(SDL_TrayEntry left, nint right) => left.Value == right;
+	public static bool operator !=(SDL_TrayEntry left, nint right) => left.Value != right;
+	public bool Equals(SDL_TrayEntry other) => Value.Equals(other.Value);
+	/// <inheritdoc/>
+	public override bool Equals([NotNullWhen(true)] object? obj) => (obj is SDL_TrayEntry other) && Equals(other);
+	/// <inheritdoc/>
+	public override int GetHashCode() => Value.GetHashCode();
+	private string DebuggerDisplay => $"{nameof(SDL_TrayEntry)} [0x{Value.ToString("X")}]";
 }
 

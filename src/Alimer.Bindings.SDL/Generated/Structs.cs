@@ -3290,6 +3290,8 @@ public partial struct SDL_StorageInterface
 /// contiguous without padding between them, e.g. a 32x32 surface in NV12<br/>
 /// format with a pitch of 32 would consist of 32x32 bytes of Y plane followed<br/>
 /// by 32x16 bytes of UV plane.<br/>
+/// When a surface holds MJPG format data, pixels points at the compressed JPEG<br/>
+/// image and pitch is the length of that data.<br/>
 /// <br/>
 /// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
@@ -3587,7 +3589,8 @@ public partial struct SDL_GPUTextureLocation
 /// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_UploadToGPUTexture<br/>
-/// @sa SDL_DownloadFromGPUTexture
+/// @sa SDL_DownloadFromGPUTexture<br/>
+/// @sa SDL_CreateGPUTexture
 /// </summary>
 public partial struct SDL_GPUTextureRegion
 {
@@ -3808,10 +3811,16 @@ public partial struct SDL_GPUIndirectDispatchCommand
 
 /// <summary>
 /// A structure specifying the parameters of a sampler.<br/>
+/// Note that mip_lod_bias is a no-op for the Metal driver. For Metal, LOD bias<br/>
+/// must be applied via shader instead.<br/>
 /// <br/>
 /// @since This function is available since SDL 3.2.0.<br/>
 /// <br/>
-/// @sa SDL_CreateGPUSampler
+/// @sa SDL_CreateGPUSampler<br/>
+/// @sa SDL_GPUFilter<br/>
+/// @sa SDL_GPUSamplerMipmapMode<br/>
+/// @sa SDL_GPUSamplerAddressMode<br/>
+/// @sa SDL_GPUCompareOp
 /// </summary>
 public partial struct SDL_GPUSamplerCreateInfo
 {
@@ -3889,7 +3898,7 @@ public partial struct SDL_GPUSamplerCreateInfo
 /// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_GPUVertexAttribute<br/>
-/// @sa SDL_GPUVertexInputState
+/// @sa SDL_GPUVertexInputRate
 /// </summary>
 public partial struct SDL_GPUVertexBufferDescription
 {
@@ -3906,7 +3915,7 @@ public partial struct SDL_GPUVertexBufferDescription
 	/// </summary>
 	public SDL_GPUVertexInputRate input_rate;
 	/// <summary>
-	/// The number of instances to draw using the same per-instance data before advancing in the instance buffer by one element. Ignored unless input_rate is SDL_GPU_VERTEXINPUTRATE_INSTANCE
+	/// Reserved for future use. Must be set to 0.
 	/// </summary>
 	public uint instance_step_rate;
 }
@@ -3919,7 +3928,8 @@ public partial struct SDL_GPUVertexBufferDescription
 /// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_GPUVertexBufferDescription<br/>
-/// @sa SDL_GPUVertexInputState
+/// @sa SDL_GPUVertexInputState<br/>
+/// @sa SDL_GPUVertexElementFormat
 /// </summary>
 public partial struct SDL_GPUVertexAttribute
 {
@@ -4204,10 +4214,12 @@ public partial struct SDL_GPUTransferBufferCreateInfo
 /// <summary>
 /// A structure specifying the parameters of the graphics pipeline rasterizer<br/>
 /// state.<br/>
-/// NOTE: Some backend APIs (D3D11/12) will enable depth clamping even if<br/>
-/// enable_depth_clip is true. If you rely on this clamp+clip behavior,<br/>
-/// consider enabling depth clip and then manually clamping depth in your<br/>
-/// fragment shaders on Metal and Vulkan.<br/>
+/// Note that SDL_GPU_FILLMODE_LINE is not supported on many Android devices.<br/>
+/// For those devices, the fill mode will automatically fall back to FILL.<br/>
+/// Also note that the D3D12 driver will enable depth clamping even if<br/>
+/// enable_depth_clip is true. If you need this clamp+clip behavior, consider<br/>
+/// enabling depth clip and then manually clamping depth in your fragment<br/>
+/// shaders on Metal and Vulkan.<br/>
 /// <br/>
 /// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
@@ -4266,11 +4278,11 @@ public partial struct SDL_GPUMultisampleState
 	/// </summary>
 	public SDL_GPUSampleCount sample_count;
 	/// <summary>
-	/// Determines which samples get updated in the render targets. Treated as 0xFFFFFFFF if enable_mask is false.
+	/// Reserved for future use. Must be set to 0.
 	/// </summary>
 	public uint sample_mask;
 	/// <summary>
-	/// Enables sample masking.
+	/// Reserved for future use. Must be set to false.
 	/// </summary>
 	public SDLBool enable_mask;
 	public byte padding1;
@@ -4351,7 +4363,9 @@ public partial struct SDL_GPUColorTargetDescription
 /// <br/>
 /// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
-/// @sa SDL_GPUGraphicsPipelineCreateInfo
+/// @sa SDL_GPUGraphicsPipelineCreateInfo<br/>
+/// @sa SDL_GPUColorTargetDescription<br/>
+/// @sa SDL_GPUTextureFormat
 /// </summary>
 public partial struct SDL_GPUGraphicsPipelineTargetInfo
 {
@@ -4382,6 +4396,7 @@ public partial struct SDL_GPUGraphicsPipelineTargetInfo
 /// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_CreateGPUGraphicsPipeline<br/>
+/// @sa SDL_GPUShader<br/>
 /// @sa SDL_GPUVertexInputState<br/>
 /// @sa SDL_GPUPrimitiveType<br/>
 /// @sa SDL_GPURasterizerState<br/>
@@ -4434,7 +4449,8 @@ public partial struct SDL_GPUGraphicsPipelineCreateInfo
 /// <br/>
 /// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
-/// @sa SDL_CreateGPUComputePipeline
+/// @sa SDL_CreateGPUComputePipeline<br/>
+/// @sa SDL_GPUShaderFormat
 /// </summary>
 public partial struct SDL_GPUComputePipelineCreateInfo
 {

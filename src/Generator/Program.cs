@@ -98,6 +98,7 @@ public static class Program
             Path.Combine(sdlIncludePath, "SDL3/SDL_gpu.h"),
             Path.Combine(sdlIncludePath, "SDL3/SDL_main.h"),
             Path.Combine(sdlIncludePath, "SDL3/SDL_process.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_tray.h"),
         ];
 
         var options = new CppParserOptions
